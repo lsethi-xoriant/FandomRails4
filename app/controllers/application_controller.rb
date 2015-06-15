@@ -30,14 +30,23 @@ class ApplicationController < ActionController::Base
     interaction = Interaction.find(params[:interaction_id])
 
     aux = {
-      user_interactions_history: params[:user_interactions_history],
-      "#{params[:provider]}" => 1
+      providers: {
+        params[:provider] => 1
+      }
     }
+
+    if params[:user_interactions_history].present?
+      aux[:user_interactions_history] = params[:user_interactions_history]
+    end
 
     user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     
-    response[:result] = user_interaction.errors.blank?
-    
+    response[:current_user] = JSON.parse(build_current_user()) if current_user && $site.id != "disney"
+    if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
+      user_interactions_count = current_user.user_interactions.count
+      response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
+    end
+
     respond_to do |format|
       format.json { render json: response.to_json }
     end
@@ -192,6 +201,7 @@ class ApplicationController < ActionController::Base
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
+
   end
   
   def update_call_to_action_in_page_with_tag

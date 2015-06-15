@@ -11,78 +11,22 @@ class CallToActionController < ApplicationController
 
   # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
-    user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
-    cta = nil
+    user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
+    cta = CallToAction.find(params[:parent_cta_id])
+
     user_interactions.each do |user_interaction|
       aux = user_interaction.aux
       aux["to_redo"] = true
-      user_interaction.update_attributes(aux: aux.to_json)
-      unless aux["user_interactions_history"]
-        cta = user_interaction.interaction.call_to_action
-      end
+      user_interaction.update_attributes(aux: aux)
     end
+
     response = {
       calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([cta])
     }
+
     respond_to do |format|
       format.json { render json: response.to_json }
     end 
-  end
-
-  # For anonymous user
-  def last_linked_calltoaction
-    calltoaction = CallToAction.find(params[:calltoaction_id])
-    linked_interaction = calltoaction.interactions.includes(:interaction_call_to_actions).where("interaction_call_to_actions.interaction_id IS NOT NULL").references(:interaction_call_to_actions).first 
-
-    if !current_user && $site.anonymous_interaction 
-      user_interaction_info_list = params[:anonymous_user_interactions]
-      
-      calltoaction_id_to_return = calltoaction.id
-      calltoaction_to_evaluate = calltoaction.id
-      linked_call_to_actions_index = 0
-      user_interactions_history = []
-      while calltoaction_to_evaluate.present?
-        calltoaction_id_to_return = calltoaction_to_evaluate
-        linked_call_to_actions_index = linked_call_to_actions_index + 1
-        if user_interaction_info_list["user_interaction_info_list"]
-          user_interaction_info_list["user_interaction_info_list"].each do |index, user_interaction_info|
-            if user_interaction_info["calltoaction_id"] == calltoaction_to_evaluate
-              current_interaction = user_interaction_info["user_interaction"]
-              aux_parse = current_interaction["aux"]
-              if aux_parse["to_redo"] == false
-                user_interactions_history = user_interactions_history + [index]
-                calltoaction_to_evaluate = aux_parse["next_calltoaction_id"]
-              end
-              break
-            end
-          end
-          if calltoaction_to_evaluate == calltoaction_id_to_return
-            break
-          end
-        else
-          calltoaction_id_to_return = calltoaction_to_evaluate
-          break
-        end
-      end
-
-      go_on = calltoaction.id != calltoaction_id_to_return
-      if go_on
-        calltoaction = CallToAction.find(calltoaction_id_to_return)
-      end
-
-      response = {
-        go_on: go_on,
-        linked_call_to_actions_index: linked_call_to_actions_index,
-        calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([calltoaction]),
-        user_interactions_history: user_interactions_history
-      }
-      
-      respond_to do |format|
-        format.json { render json: response.to_json }
-      end 
-
-    end
-
   end
 
   def random_calltoaction
@@ -250,6 +194,7 @@ class CallToActionController < ApplicationController
       if optional_history
         step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
+        parent_cta_info = optional_history["parent_cta_info"]
       end
 
       #if current_user
@@ -260,8 +205,10 @@ class CallToActionController < ApplicationController
 
       @aux_other_params = { 
         calltoaction: calltoaction,
+        init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
+        parent_cta_info: parent_cta_info,
         sidebar_tag: sidebar_tag
       }
 
@@ -351,7 +298,7 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserCommentInteraction"
     response[:ga][:action] = "AddComment"
 
-    if current_user
+    if current_user && current_user.anonymous_id.nil?
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
@@ -520,7 +467,7 @@ class CallToActionController < ApplicationController
       provider = params[:provider]
       result, exception = update_share_interaction(interaction, provider, params[:share_with_email_address], params[:facebook_message])
       if result
-        aux["#{provider}"] = 1
+        aux["providers"][provider] = 1
         user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
         response[:ga][:label] = interaction.resource_type.downcase
       end
@@ -564,23 +511,15 @@ class CallToActionController < ApplicationController
     if user_interaction
       response["user_interaction"] = build_user_interaction_for_interaction_info(user_interaction)
       response['outcome'] = outcome
-      expire_user_interaction_cache_keys()
+      if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
+        user_interactions_count = current_user.user_interactions.count
+        response["notice_anonymous_user"] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
+      end
     end
 
-    if anonymous_user?(current_or_anonymous_user)
+    response["current_user"] = JSON.parse(build_current_user()) if current_user && $site.id != "disney"
 
-      if params["anonymous_user"]
-        anonymous_user_main_reward_count = params["anonymous_user"][get_main_reward_name()] || 0
-      else 
-        anonymous_user_main_reward_count = 0
-      end
-
-      response["main_reward_counter"] = {
-        "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][get_main_reward_name()])
-      }
-      
-    else
-      response["main_reward_counter"] = get_point
+    if !anonymous_user?(current_or_anonymous_user)
       response = setup_update_interaction_response_info(response)
     end    
     
@@ -599,13 +538,6 @@ class CallToActionController < ApplicationController
   def user_history_to_answer_map_fo_condition(current_answer, user_interactions_history, anonymous_user_storage)
     if current_user
       answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
-    elsif $site.anonymous_interaction 
-      answers_history = []
-      anonymous_user_storage["user_interaction_info_list"].each do |index, user_interaction_info|
-        if user_interactions_history.include?(user_interaction_info["user_interaction"]["interaction_id"]) # For anonymous the user_interaction id is the interaction id. He must be only one user interaction for interaction.
-          answers_history = answers_history + [user_interaction_info["user_interaction"]["answer"]["id"]]
-        end
-      end
     else
       throw Exception.new("for linked interactions the user must be logged or the anonymous navigation must be enabled")
     end

@@ -5,7 +5,16 @@ require 'fandom_utils'
 
 module ApplicationHelper
 
+  include ActionView::Helpers::SanitizeHelper
+  include AnonymousNavigationHelper
+  include CacheExpireHelper
   include CacheHelper
+  include CalendarHelper
+  include CacheKeysHelper
+  include CallToActionHelper
+  include CaptchaHelper
+  include CommentHelper
+  include ContentHelper
   include RewardingSystemHelper
   include RewardHelper
   include NoticeHelper
@@ -13,26 +22,18 @@ module ApplicationHelper
   include GrafitagHelper
   include LogHelper
   include SeoHelper
-  include EventHandlerHelper
-  include CacheKeysHelper
-  include CommentHelper
-  include CallToActionHelper
-  include CaptchaHelper
-  include CalendarHelper
+  include EventHandlerHelper 
   include ViewHelper
-  include LinkedCallToActionHelper
-  include CacheExpireHelper
+  include LinkedCallToActionHelper 
   include PeriodicityHelper
   include ModelHelper
   include RewardingRuleCheckerHelper
   include RewardingRulesCollectorHelper
   include FandomUtils
-  include FilterHelper
-  include ContentHelper
+  include FilterHelper  
   include UserInteractionHelper
   include TagHelper
-  include ActionView::Helpers::SanitizeHelper
-  
+   
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
   class TextHelperNamespace ; include ActionView::Helpers::TextHelper ; end
@@ -48,7 +49,6 @@ module ApplicationHelper
       nil
     end
   end
-
 
   def get_menu_items(property = nil)
     result = []
@@ -82,16 +82,15 @@ module ApplicationHelper
 
   def build_current_user() 
     if current_user
-      profile_completed = disney_profile_completed?()
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
         "main_reward_counter" => get_point,
         "instantwin_tickets_counter" => get_counter_about_user_reward(INSTANTWIN_TICKET_NAME),
         "username" => current_user.username,
-        "level" => nil, # (get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
-        "avatar" => current_avatar
+        "avatar" => current_avatar,
+        "anonymous_id" => current_user.anonymous_id
       }
     else
       current_user_for_view = nil
@@ -426,42 +425,39 @@ module ApplicationHelper
   end
 
   def disqus_sso
-    if current_user && ENV['DISQUS_SECRET_KEY'] && ENV['DISQUS_PUBLIC_KEY']
-      user = current_user
+    disqus = get_deploy_setting("sites/#{$site.id}/disqus", nil)
+
+    if registered_user? && disqus
       data = {
-          'id' => user.id,
-          'username' => "#{ user.first_name } #{ user.last_name }",
-          'email' => user.email,
+        'id' => current_user.id,
+        'username' => "#{ current_user.username }",
+        'email' => current_user.email,
         'avatar' =>  current_avatar
-          # 'url' => user.url
       }.to_json
    
       message = Base64.encode64(data).gsub("\n", "") # Encode the data to base64.    
       timestamp = Time.now.to_i # Generate a timestamp for signing the message.
-      sig = OpenSSL::HMAC.hexdigest('sha1', ENV['DISQUS_SECRET_KEY'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
+      sig = OpenSSL::HMAC.hexdigest('sha1', disqus['app_secret'], '%s %s' % [message, timestamp]) # Generate our HMAC signature
    
-      x = 
-        "<script type=\"text/javascript\">" +
-          "var disqus_config = function() {" +
-          "this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
-          "this.page.api_key = \"#{ ENV['DISQUS_PUBLIC_KEY'] }\";" +
-          "this.sso = {" +
-                  "name:   \"SampleNews\"," +
-                  "button:  \"//placehold.it/50x50\"," +
-                  "icon:     \"//placehold.it/50x50\"," +
-                  "url:        \"http://example.com/login/\"," +
-                  "logout:  \"http://example.com/logout/\"," +
-                  "width:   \"800\"," +
-                  "height:  \"400\"" +
-            "};" +
-          "}" +
-        "</script>"
-      
-      return x
+      "<script type=\"text/javascript\">" +
+        "var disqus_config = function() {" +
+        "this.page.remote_auth_s3 = \"#{ message } #{ sig } #{ timestamp }\";" +
+        "this.page.api_key = \"#{ disqus['app_id'] }\";" +
+        "this.sso = {" +
+                "name:   \"SampleNews\"," +
+                "button:  \"//placehold.it/50x50\"," +
+                "icon:     \"//placehold.it/50x50\"," +
+                "url:        \"http://example.com/login/\"," +
+                "logout:  \"http://example.com/logout/\"," +
+                "width:   \"800\"," +
+                "height:  \"400\"" +
+          "};" +
+        "}" +
+      "</script>"
     else
-      return "DISQUS debugger: user not logged or wrong keys."
+      return "Per commentare registrati in Fandom"
     end
-    end
+  end
 
   def calculate_month_string_ita(month_number)
       case month_number
@@ -790,7 +786,7 @@ module ApplicationHelper
     adjust_thumb_ctas(evidence_ctas_info_list)
   end
 
-  def default_aux(other, calltoaction_info_list = nil)
+  def init_aux(other, calltoaction_info_list = nil)
     property = get_property()
 
     property_info = init_property_info(property)
@@ -827,14 +823,20 @@ module ApplicationHelper
       instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
       user_win_info = user_already_won(instantwin_interaction_id)
       user_win = user_win_info[:win] ? user_win_info[:win] : nil
+
+    if property && property.name != $site.default_property
+      property_path_name = property.name
+    else
+      property_path_name = nil;
     end
 
     @aux = {
+      "site" => $site,
       "tenant" => $site.id,
       "free_provider_share" => $site.free_provider_share,
-      "anonymous_interaction" => $site.anonymous_interaction,
       "property_info" => property_info,
       "property_info_list" => property_info_list,
+      "property_path_name" => property_path_name,
       "calltoaction_evidence_info" => evidence_ctas_info_list,
       "related_calltoaction_info" => related_ctas,
       "mobile" => small_mobile_device?(),

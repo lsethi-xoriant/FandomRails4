@@ -120,9 +120,9 @@ module OrzoroHelper
     end
     
     aux = {
+      "site" => $site,
       "tenant" => $site.id,
       "calltoaction_category" => calltoaction_category,
-      "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "related_calltoaction_info" => related_calltoaction_info,

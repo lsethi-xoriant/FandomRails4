@@ -328,6 +328,8 @@ Fandom::Application.routes.draw do
       get "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
       get "/index/load_more", :to => "application#load_more_ctas_in_stream", defaults: { format: 'json' }
+      get "/users/sign_in", :to => "user#sign_in", defaults: { format: 'json' }
+      get "/call_to_action/get_related", :to => "call_to_action#get_related_ctas", defaults: { format: 'json' }
     end
   end
 
@@ -557,7 +559,7 @@ Fandom::Application.routes.draw do
   get "/newsletter_unsubscribe/:email/:security_token", :to => "newsletter#unsubscribe", :constraints => { :email => /.*/ }
   get "email_notifications_unsubscribe/:username/:security_token", :to => "notice#unsubscribe", :constraints => { :username => /.*/ }
 
-  get "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
+  post "/reset_redo_user_interactions", to: "call_to_action#reset_redo_user_interactions", defaults: { format: 'json' }
 
   # ICAL
   get "/ical/:interaction_id/:name", to: "calendar#get_ical", defaults: { format: 'ics' }

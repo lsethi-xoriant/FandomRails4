@@ -42,7 +42,10 @@ class Sites::Ballando::ApplicationController < ApplicationController
       CallToAction.active.count
     end
 
-    @aux = init_aux()
+    @aux = {
+      "tenant" => $site.id,
+      "main_reward_name" => MAIN_REWARD_NAME
+    }
 
     @calltoactions_active_interaction = Hash.new
 

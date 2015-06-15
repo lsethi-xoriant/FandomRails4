@@ -21,6 +21,7 @@ class Sites::Disney::CallToActionController < CallToActionController
       if optional_history
         step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
+        parent_cta_id = optional_history["parent_cta_id"]
       end
 
       sidebar_tag = calltoaction.user_id.present? ? "sidebar-cta-gallery" : "sidebar-cta"
@@ -29,7 +30,8 @@ class Sites::Disney::CallToActionController < CallToActionController
         calltoaction: calltoaction,
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
-        init_captcha: true,
+        parent_cta_id: parent_cta_id,
+        init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         sidebar_tag: sidebar_tag
       }
 
@@ -84,9 +86,11 @@ class Sites::Disney::CallToActionController < CallToActionController
 
   def ordering_ctas
     tag_name = get_disney_property()
+    params[:page_elements] = ["like", "comment", "share"]
+
     if params["other_params"]
       params["other_params"] = JSON.parse(params["other_params"])
-    end    
+    end
     calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
     response = {
       calltoaction_info_list: calltoaction_info_list,

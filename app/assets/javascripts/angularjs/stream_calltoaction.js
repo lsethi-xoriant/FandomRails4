@@ -16,32 +16,6 @@ streamCalltoactionModule.filter('trustAsResourceUrl', ['$sce', function($sce) {
   return $sce.trustAsResourceUrl; 
 }]);
 
-/* COIN */
-streamCalltoactionModule.animation('.slide-left', function() {
-  return {
-    // you can also capture these animation events
-    addClass : function(element, className, done) {
-    	$(element).hide('slide', {direction: 'left'}, 1000);
-    },
-    removeClass : function(element, className, done) {
-    	$(element).show('slide', {direction: 'left'}, 1000);
-    }
-  };
-});
-
-/* COIN */
-streamCalltoactionModule.animation('.slide-right', function() {
-  return {
-    // you can also capture these animation events
-    addClass : function(element, className, done) {
-    	$(element).effect( "fade", {}, 1000);
-    },
-    removeClass : function(element, className, done) {
-    	$(element).effect( "fade", {}, 1000);
-    }
-  };
-});
-
 angular.module('ng').filter('cut', function () {
   return function (value, wordwise, max, tail) {
       if (!value) return '';
@@ -210,16 +184,67 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.initCallToActionInfoList = function(calltoaction_info_list) {
     $scope.calltoactions = calltoaction_info_list;
-
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
+
+
+      if($scope.calltoaction_info.calltoaction.disqus) {  
+        $window.disqus_shortname = $scope.calltoaction_info.calltoaction.disqus.shortname; 
+
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js?https';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
 
       if($scope.calltoaction_info.optional_history.user_interactions) {
         $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
       }
 
+      if($scope.aux.parent_cta_info) {
+        $scope.parent_cta_info = $scope.aux.parent_cta_info;
+      } else {
+        $scope.parent_cta_info = $scope.calltoaction_info.calltoaction.id;
+      }
     }
   };
+
+  function getOrigResourceType(resource_type) {
+    if(resource_type == "versus" || resource_type == "quiz" || resource_type == "test") {
+      return "quiz";
+    } else {
+      return resource_type;
+    }
+  }
+
+  function interactionAllowed(interaction_info) {
+    if(isRegistratedUser()) {
+      return true;
+    } else {
+      resource_type = getOrigResourceType(interaction_info.interaction.resource_type);
+      interaction_enabled_for_anonymous = isAnonymousNavigationEnabled() && $scope.aux.site.attributes.interactions_for_anonymous.indexOf(resource_type) > -1;
+      registration_needed = interaction_info.interaction.registration_needed;
+      return interaction_enabled_for_anonymous && !registration_needed;
+    }
+  }
+
+  function isAnonymousNavigationEnabled() {
+    return ($scope.aux.site.attributes.interactions_for_anonymous != null);
+  }
+
+  function loadYTApi() {
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
+
+  function isStoredAnonymousUser() {
+    return ($scope.current_user && $scope.current_user.anonymous_id);
+  }
+
+  function isRegistratedUser() {
+    return ($scope.current_user && !$scope.current_user.anonymous_id);
+  }
 
   $scope.init = function(current_user, calltoaction_info_list, has_more, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);
@@ -272,18 +297,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
 
-    if($scope.aux.init_captcha && !$scope.current_user) {
+    if($scope.aux.init_captcha) {
       initCaptcha();
     }
 
     $scope.form_data = {};
 
     $scope.animation_in_progress = false;
-    
-    $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION = "slide-right";
-    $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION = "";
-    $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION = "call-to-action__media__description hidden-xs slide-left";
-    $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION = "call-to-action__media__description hidden-xs";
 
     $scope.interactions_timeout = new Object();
     $scope.overvideo_interaction_locked = {};
@@ -294,13 +314,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.youtube_api_ready = false;
-    $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
-    $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
     
-    var tag = document.createElement('script');
-    tag.src = "//www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    loadYTApi();
     
     if($scope.aux.kaltura) {
       kaltura_api_link = "http://cdnapi.kaltura.com/p/" + $scope.aux.kaltura.partner_id + "/sp/" + $scope.aux.kaltura.partner_id + "00/embedIframeJs/uiconf_id/" + $scope.aux.kaltura.uiconf_id + "/partner_id/" + $scope.aux.kaltura.partner_id;
@@ -313,11 +328,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     $(function(){ flowplayerReady(); });
 
-    //updateSecondaryVideoPlayers($scope.calltoactions);
-
     $scope.has_more = has_more;
 
-    $scope.initAnonymousUser();
     $scope.extraInit();
 
   };
@@ -347,59 +359,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
     
     return url;
-  };
-
-  $scope.nextRandomCallToAction = function(current_calltoaction_info) {
-    update_ga_event("UpdateCallToAction", "nextRandom", "nextRandom", 1);
-
-    except_calltoaction_id = calltoaction_info.calltoaction.id;
-    $scope.animation_in_progress = true;
-
-  	//playSound($(".click-sound")[0]);
-	
-    $http.post("/random_calltoaction", { except_calltoaction_id: except_calltoaction_id })
-      .success(function(data) { 
-    		$scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_ADD_ANIMATION;
-    		$scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_ADD_ANIMATION;
-  		
-        $(".call-to-action__share-and-win-animation").fadeTo(1500,0);  			
-  			$(".gift-image").fadeTo(1500,0);
-  			setTimeout(function(){
-  				$(".loader").removeClass("hidden");
-  				playSound($(".roll-sound")[0]);
-  			}, 1500);
-
-  			setTimeout(function(){
-          $(".call-to-action__mobile-description").html(data.calltoaction_info_list[0].calltoaction.description);
-  				$(".cta-media img.hidden-xs").attr("src", data.calltoaction_info_list[0].calltoaction.media_image);
-  				$(".cta-media img.mobile").attr("src", data.calltoaction_info_list[0].calltoaction.thumbnail_url);
-  				$(".loader").addClass("hidden");
-  				$(".gift-image").fadeTo(1500,1);
-          $(".call-to-action__share-and-win-animation").fadeTo(1500,1);
-  				playSound($(".blink-sound")[0]);
-  			}, 4500);
-			
-        setTimeout(function() {
-        	$scope.$apply(function() {
-        		//console.log(data.calltoaction_info_list[0]);
-        		$scope.calltoactions[0].calltoaction.description = data.calltoaction_info_list[0].calltoaction.description;
-        		$scope.calltoactions[0].calltoaction.aux.shop_url = data.calltoaction_info_list[0].calltoaction.aux.shop_url;
-    			  $scope.buy_product_class = $scope.BUY_PRODUCT_CLASS_REMOVE_ANIMATION;
-  				  $scope.title_product_class = $scope.TITLE_PRODUCT_CLASS_REMOVE_ANIMATION;
-				    setTimeout(function() {
-              $scope.$apply(function() {
-                $scope.initCallToActionInfoList(data.calltoaction_info_list);
-                $scope.animation_in_progress = false;
-              });
-       			}, 1500);
-    			});
-	    		$scope.initAnonymousUser();
-        }, 6000);
-        
-      }).error(function() {
-        // ERROR.
-        $scope.animation_in_progress = false;
-      });
   };
 
   $scope.playInstantWin = function() {
@@ -469,8 +428,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return overvideo_interactions;
   }
 
-  $scope.currentUserEmptyAndAnonymousInteractionEnable = function() {
-    return (!$scope.current_user && $scope.aux.anonymous_interaction);
+  $scope.isRegistrateUser = function() {
+    return ($scope.current_user && $scope.current_user.anonymous_id == null)
   };
 
   $scope.computeAvgForVote = function(interaction_info) {
@@ -478,20 +437,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     counter_aux = interaction_info.interaction.resource.counter_aux;
     if(counter_aux && !angular.equals(counter_aux, {})) {
       angular.forEach(counter_aux, function(value, key) {
-        denominator = denominator + value;
-        numerator = numerator + (parseInt(key) * value);
-      });
-      return (numerator/denominator).toFixed(0);
-    } else {
-      return 0;
-    }
-  };
-
-  $scope.computeAvgForVoteInteraction = function(interaction_info) {
-    numerator = 0; denominator = 0;
-    if(interaction_info.anonymous_user_interaction_info) {
-      vote_info_list = interaction_info.anonymous_user_interaction_info.aux.vote_info_list;
-      angular.forEach(vote_info_list, function(value, key) {
         denominator = denominator + value;
         numerator = numerator + (parseInt(key) * value);
       });
@@ -736,7 +681,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.evaluateVote = function(interaction_info) {
-    if(interaction_info.user_interaction) {
+    if(angular.isDefined(interaction_info) && interaction_info.user_interaction && interaction_info.user_interaction.aux) {
       return interaction_info.user_interaction.aux["vote"];
     } else {
       return null;
@@ -744,7 +689,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.likePressed = function(interaction_info) {
-    if(angular.isDefined(interaction_info) && interaction_info.user_interaction) {
+    if(angular.isDefined(interaction_info) && interaction_info.user_interaction && interaction_info.user_interaction.aux) {
       return interaction_info.user_interaction.aux["like"];
     } else {
       return false;
@@ -814,70 +759,20 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $window.getAnonymousUserStorage = function() {
-    return $scope.current_user ? null : JSON.parse(localStorage["anonymous_user_storage"]);
-  };
-
-  $window.setAnonymousUserStorageAttr = function(name, value) {
-    anonymous_user = getAnonymousUserStorage();
-    anonymous_user[name] = value; //eval("anonymous_user." + name + " = " + value);
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user));
-  };
-
-  $scope.updateAnonymousUserStorageUserInteractions = function(user_interaction) {
-    anonymous_user_storage = getAnonymousUserStorage();
-
-    if(!anonymous_user_storage.user_interaction_info_list) {
-      anonymous_user_storage.user_interaction_info_list = new Object();
-    }
-
-    anonymous_user_storage.user_interaction_info_list[user_interaction.interaction_id] = user_interaction;
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
-
-  };
-
-  function initAnonymousUserStorage() {
-    anonymous_user_storage = new Object();
-    localStorage.setItem("anonymous_user_storage", JSON.stringify(anonymous_user_storage));
-  }
-
-  $scope.initAnonymousUser = function() {
-
-    if($scope.currentUserEmptyAndAnonymousInteractionEnable() && localStorage["anonymous_user_storage"] == null) {
-      initAnonymousUserStorage();      
-    } else if ($scope.current_user && localStorage["anonymous_user_storage"] != null) {
-      clearAnonymousUserStorage();
-    }
-
-    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-      $scope.updateCallToActionInfoWithAnonymousUserStorage();
-
-      if($scope.calltoaction_info) {
-        $scope.goToLastLinkedCallToAction();
-      }
+  function currentPointRewardName() {
+    if($scope.aux.property_path_name) {
+      return ($scope.aux.property_path_name + "-point");
+    } else {
+      return "point";
     }
   };
 
-
-  function clearAnonymousUserStorage() {
-    localStorage.removeItem("anonymous_user_storage");
-  }
-
-  $scope.updateCallToActionInfoWithAnonymousUserStorage = function() {
-    anonymous_user = getAnonymousUserStorage();
-    if(anonymous_user.user_interaction_info_list) {
-      angular.forEach(anonymous_user.user_interaction_info_list, function(user_interaction_info) { 
-        updateUserInteraction(user_interaction_info.calltoaction_id, user_interaction_info.interaction_id, user_interaction_info.user_interaction);
-      });
-    }
-  };
-
-  function updateUserInteraction(calltoaction_id, interaction_id, user_interaction) {
+  function adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, user_interaction_info) {
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     if(calltoaction_info) {
       angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
         if(interaction_info.interaction.id == interaction_id) {
-          interaction_info.user_interaction = user_interaction;
+          interaction_info.user_interaction = user_interaction_info;
         }
       });
     }
@@ -1055,10 +950,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.calltoactions.push(calltoaction_info);
         appendYTIframe(calltoaction_info);
       });
-
-      if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-        $scope.updateCallToActionInfoWithAnonymousUserStorage();
-      }
 
       $scope.has_more = data.has_more;
 
@@ -1389,6 +1280,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
   
   //////////////////////// FLOWPLAYER API /////////////////////////////
+
   function flowplayerPlayer(playerId, media_data) {
     this.playerManager = null;
     this.playerId = playerId;
@@ -1477,26 +1369,33 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $window.updateStartVideoInteraction = function(calltoaction_id, interaction_id) {
+  function buildUserInteractionForStorage(user_interaction, calltoaction_id, interaction_id) {
+    return {
+      "user_interaction": user_interaction,
+      "calltoaction_id": parseInt(calltoaction_id),
+      "interaction_id": parseInt(interaction_id)
+    }
+  }
+
+  $window.updateStartVideoInteraction = function(calltoaction_id) {
     if(!$scope.play_event_tracked[calltoaction_id]) {
 
       $scope.play_event_tracked[calltoaction_id] = true;
 
-      play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
-      if(play_interaction_info == null) {
-        console.log("You must enable the play interaction for this calltoaction.");
-        return;
-      }
+      var play_interaction_info = $scope.getPlayInteraction(calltoaction_id);
+      var interaction_id = play_interaction_info.interaction.id;
 
       play_interaction_info.hide = true; 
-
+      
       update_interaction_path = "/update_interaction";
       if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
         update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
       }
 
-      $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
+      $http.post(update_interaction_path, { interaction_id: interaction_id })
         .success(function(data) {
+
+          if(data.current_user) $scope.current_user = data.current_user;
     
           // GOOGLE ANALYTICS
           if(data.ga) {
@@ -1506,21 +1405,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             });
           }
 
-          // Update local storage for anonymous user.
-          if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-            setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
-            
-            user_interaction_for_storage = new Object();
-            user_interaction_for_storage["user_interaction"] = data.user_interaction;
-            user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
-            user_interaction_for_storage["interaction_id"] = interaction_id;
-  
-            $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-          } 
-
           // Interaction after user response.
           if($scope.current_user) {           
-            updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
             play_interaction_info.status = data.interaction_status;
             calltoaction_info.status = JSON.parse(data.calltoaction_status);
             $scope.current_user.main_reward_counter = data.main_reward_counter;
@@ -1536,10 +1422,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
-  
-  $scope.goToLogin = function(){
-  	location.href = "/users/sign_up";
-  };
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
     if($scope.aux.free_provider_share && provider != "email") {
@@ -1547,7 +1429,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       shareWithApp(calltoaction_info, interaction_info, provider);
     }
-   
   };
 
   function stripTags(text) {
@@ -1555,41 +1436,46 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
-    if(provider == "direct_url") {
-      $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+    if(!interactionAllowed(interaction_info)) {
+      showRegistrateView();
     } else {
-      message = calltoaction_info.calltoaction.title;
-      url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
+      if(provider == "direct_url") {
+        $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+      } else {
+        message = calltoaction_info.calltoaction.title;
+        url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
 
-      cta_url = encodeURI(url_to_share);
+        cta_url = encodeURI(url_to_share);
 
-      switch(provider) {
-        case "facebook":    
-          share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
-          break;
-        case "twitter":
-          share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
-          break;
-        case "whatsapp":
-          share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
-          break;
-        case "gplus":
-          share_url = "https://plus.google.com/share?url=" + cta_url;
-          break;
-        case "linkedin":
-          share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
-          break;
+        switch(provider) {
+          case "facebook":    
+            share_url = "https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]=" + cta_url;
+            break;
+          case "twitter":
+            share_url = "https://twitter.com/intent/tweet?url=" + cta_url + "&text=" + encodeURIComponent(message);
+            break;
+          case "whatsapp":
+            share_url = "whatsapp://send?text=" + encodeURIComponent(message) + " " + cta_url;
+            break;
+          case "gplus":
+            share_url = "https://plus.google.com/share?url=" + cta_url;
+            break;
+          case "linkedin":
+            share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
+            break;
+        }
       }
-    }
 
-    if(typeof share_url !== 'undefined') {
-      window.open(share_url);
+      if(typeof share_url !== 'undefined') window.open(share_url);
+ 
+      $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
+        .success(function(data) {
+          if(data.current_user) $scope.current_user = data.current_user;
+          if(data.notice_anonymous_user) {
+            showRegistrateView();
+          }
+        });
     }
-    
-    $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
-      .success(function(data) {
-      });
-
   };
 
   $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
@@ -1602,74 +1488,77 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {
-     if(interaction_info.user_interaction) {
-      share_with_email_address = interaction_info.user_interaction.share_to_email;
-      facebook_message = interaction_info.user_interaction.facebook_message;
+    if(!interactionAllowed(interaction_info)) {
+      showRegistrateView();
     } else {
-      share_with_email_address = null;
-      facebook_message = null;
+      if(interaction_info.user_interaction) {
+        share_with_email_address = interaction_info.user_interaction.share_to_email;
+        facebook_message = interaction_info.user_interaction.facebook_message;
+      } else {
+        share_with_email_address = null;
+        facebook_message = null;
+      }
+
+      interaction_id = interaction_info.interaction.id;
+      calltoaction_id = calltoaction_info.calltoaction.id;
+
+      button = $("#" + provider + "-interaction-" + interaction_id);
+      button.attr('disabled', true);
+      current_button_html = button.html();
+      button.html("condivisione in corso");
+
+      update_interaction_path = "/update_interaction";
+      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
+      }
+
+      $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
+        .success(function(data) {
+
+          button.attr('disabled', false);
+          button.html(current_button_html);
+
+          if(!data.share.result) { 
+            interaction_info.user_interaction.errors = data.share.exception;
+            return;
+          }
+
+          adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+          $scope.current_user.main_reward_counter = data.main_reward_counter;  
+          interaction_info.status = data.interaction_status;
+
+          $scope.aux.share_interaction_daily_done = true;
+
+          $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
+
+          if(data.ga) {
+            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+            });
+          }
+
+        }).error(function() {
+          // ERRORE
+        });
     }
+  }
 
-    interaction_id = interaction_info.interaction.id;
-    calltoaction_id = calltoaction_info.calltoaction.id;
-
-    button = $("#" + provider + "-interaction-" + interaction_id);
-    button.attr('disabled', true);
-    current_button_html = button.html();
-    button.html("condivisione in corso");
-
-    update_interaction_path = "/update_interaction";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-    }
-
-    $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
-      .success(function(data) {
-
-        button.attr('disabled', false);
-        button.html(current_button_html);
-
-        if(!data.share.result) { 
-          interaction_info.user_interaction.errors = data.share.exception;
-          return;
-        }
-
-        updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-        $scope.current_user.main_reward_counter = data.main_reward_counter;  
-        updateUserRewardInView(data.main_reward_counter.general);
-        interaction_info.status = data.interaction_status;
-
-        $scope.aux.share_interaction_daily_done = true;
-
-        $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
-
-        if(data.ga) {
-          update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-          angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-            update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-          });
-        }
-
-      }).error(function() {
-        // ERRORE
-      });
+  function openWindowForDownloadInteraction(resource_type) {
+    // This feature outwits the popup block
+    if(resource_type == "download") newWindow = window.open();
   }
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
-    if($scope.current_user || $scope.aux.anonymous_interaction) {
+    
+    var resource_type = interaction_info.interaction.resource_type;
+    if(interactionAllowed(interaction_info)) {
 
       if(!$scope.answer_in_progress) {
-        $scope.answer_in_progress = true;
-
+        
         enableWaitingAudio("stop");
-
-        if(!angular.isUndefined(before_callback)) {
-          before_callback();
-        }
-
-        if(interaction_info.interaction.resource_type == "download") {
-          newWindow = window.open();
-        }
+        if(!angular.isUndefined(before_callback)) before_callback();
+        openWindowForDownloadInteraction(resource_type)
 
         if (!angular.isUndefined(before_callback_timeout)) {
           $timeout(function() {
@@ -1682,21 +1571,22 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
           
     } else {
-
       showRegistrateView();
-
     }
   };
 
   $scope.updateAnswerAjax = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    $scope.answer_in_progress = true;
+    
     interaction_id = interaction_info.interaction.id;
 
+    // TODO: adjust with product current_property_info
     update_interaction_path = "/update_interaction";
     if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
       update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
     }
 
-    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history, anonymous_user_storage: getAnonymousUserStorage() })
+    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history })
       .success(function(data) {
         $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
       }).error(function() {
@@ -1707,6 +1597,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
+
+    if(data.current_user) $scope.current_user = data.current_user;
+    if(data.notice_anonymous_user) showRegistrateView();
 
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
@@ -1721,36 +1614,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
-    if($scope.current_user) {
-
-      $scope.current_user.main_reward_counter = data.main_reward_counter;
-      updateUserRewardInView(data.main_reward_counter.general);
-
-    } else if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-
-      // Update local storage for anonymous user.
-      if(data.main_reward_counter) {
-        setAnonymousUserStorageAttr($scope.aux.main_reward_name, data.main_reward_counter.general);
-      }
-
-      user_interaction_for_storage = new Object();
-      user_interaction_for_storage["user_interaction"] = data.user_interaction;
-      user_interaction_for_storage["calltoaction_id"] = calltoaction_id;
-      user_interaction_for_storage["interaction_id"] = interaction_id;
-
-      $scope.updateAnonymousUserStorageUserInteractions(user_interaction_for_storage);
-    } else {
-      // Nothing to do.
-    }
-
-    // Interaction after user response.
-    updateUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
     calltoaction_info.status = JSON.parse(data.calltoaction_status);
+
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
+
     if(data.answer) {
-      if(data.answer.media_type == "YOUTUBE") {
+      if(data.answer.media_type == "IMAGE") {
+        calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
+        calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
+      } else if(data.answer.media_type == "YOUTUBE") {
         if(calltoaction_info.calltoaction.media_type != "YOUTUBE") {
           calltoaction_info.calltoaction.media_type = "YOUTUBE";
           calltoaction_info.calltoaction.vcode = data.answer.media_data;
@@ -1761,12 +1636,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         else {
           $scope.updateYTIframe(calltoaction_info, data.answer.media_data, true);
         }
-      }
-    }
-    if(data.answer) {
-      if(data.answer.media_type == "IMAGE") {
-        calltoaction_info.calltoaction.media_image_from_answer_type = "IMAGE";
-        calltoaction_info.calltoaction.media_image_from_answer = data.answer_media_image_url;
       }
     }
 
@@ -1824,8 +1693,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       interaction_info.user_interaction.feedback = data.user_interaction.outcome;
 
       if(interaction_info.interaction.resource_type == "like") {
-        like_pressed = interaction_info.user_interaction.aux["like"]
-        if(like_pressed) {
+        if($scope.likePressed(interaction_info)) {
           interaction_info.interaction.resource.counter += 1;
         } else {
           interaction_info.interaction.resource.counter -= 1;
@@ -1846,10 +1714,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     if(interaction_info.interaction.resource_type == "vote" || interaction_info.interaction.resource_type == "versus") {
-      if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-        interaction_info.anonymous_user_interaction_info = data.user_interaction;
-      }
-      //interaction_info.interaction.resource.vote_info = data.vote_info;
       interaction_info.interaction.resource.counter_aux = data.counter_aux; 
     }
 
@@ -1869,11 +1733,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }
           $timeout(function() { 
             $scope.linked_call_to_actions_index = $scope.linked_call_to_actions_index + 1;
-            if($scope.currentUserEmptyAndAnonymousInteractionEnable()) {
-              updateInteractionsHistory(data.user_interaction.interaction_id);
-            } else {
-              updateInteractionsHistory(data.user_interaction.id);
-            }
+            updateInteractionsHistory(data.user_interaction.id);
 
             $scope.initCallToActionInfoList(data.next_call_to_action_info_list);
             initializeVideoAfterPageRender();
@@ -1900,39 +1760,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return total;
   };
 
-  $scope.goToLastLinkedCallToAction = function() {
-    $scope.parent_calltoaction_info = $scope.calltoaction_info;
-    $scope.compute_in_progress = true;
-
-    anonymous_user_storage = getAnonymousUserStorage()
-    call_last_linked_calltoaction = false;
-    angular.forEach(anonymous_user_storage.user_interaction_info_list, function(user_interaction_info) {
-      if(user_interaction_info.calltoaction_id == $scope.calltoaction_info.calltoaction.id && user_interaction_info.user_interaction.aux) {
-        aux = user_interaction_info.user_interaction.aux;
-        if(aux["next_calltoaction_id"]) {
-          call_last_linked_calltoaction = true;
-        }
-      }
-    });
-    
-    if(call_last_linked_calltoaction) {
-      // Too long for get.
-      $http.post("/last_linked_calltoaction", { "anonymous_user_interactions": getAnonymousUserStorage(), "calltoaction_id": $scope.calltoaction_info.calltoaction.id })
-      .success(function(data) { 
-        if(data.go_on) {
-          $scope.initCallToActionInfoList(data.calltoaction_info_list);
-          $scope.linked_call_to_actions_index = data.linked_call_to_actions_index;
-          $scope.user_interactions_history = data.user_interactions_history;
-          $scope.updateCallToActionInfoWithAnonymousUserStorage();
-        }
-        $scope.compute_in_progress = false;
-      }).error(function() {
-        $scope.compute_in_progress = false;
-      });
-    }
-
-  }
-
   function initializeVideoAfterPageRender() {
     $timeout(function() { 
 
@@ -1950,7 +1777,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
-    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history })
+    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history, parent_cta_id: $scope.aux.parent_cta_info.calltoaction.id })
       .success(function(data) {   
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
         $scope.linked_call_to_actions_index = 1;
@@ -1982,16 +1809,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       $scope.linked_call_to_actions_index = 1;
       $scope.user_interactions_history = [];
-      $scope.updateCallToActionInfoWithAnonymousUserStorage();
+      $scope.updateCallToActionInfoListWithAnonymousUserStorage();
     }, 200);
   }
 
   $scope.resetToRedo = function(interaction_info) {
-    if($scope.current_user) {
-      resetRedoUserInteractionsForLoggedUser(interaction_info);
-    } else {
-      resetRedoUserInteractionsForAnonymousUser(interaction_info);
-    }
+    resetRedoUserInteractionsForLoggedUser(interaction_info);
   };
 
   $scope.computePercentageForVersus = function(interaction_info, answer_id) {
@@ -2031,12 +1854,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.userAnswerInAlwaysVisibleInteraction = function(interaction_id, data) {
     showMarkerNearInteraction(interaction_id);
-
-    if(!$scope.current_user && $scope.aux.anonymous_interaction) {
-      updateUserRewardInView(data.main_reward_counter);
-    } else {
-      updateUserRewardInView(data.main_reward_counter.general);
-    }
+    updateUserRewardInView(data.main_reward_counter.general);
 
     $("#home-undervideo-interaction-" + interaction_id).html(data.feedback); 
   };
@@ -2281,7 +2099,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $window.updateUserRewardInView = function(counter) {
     $scope.current_user.main_reward_counter.general = counter;
-    //$(".user-reward-counter").html("+" + counter + " <span class=\"glyphicon glyphicon-star\"></span> punti");
   };
   
   //////////////////////// COLUMN VIEW HELPER ////////////////////////////////////////
@@ -2317,7 +2134,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       .success(function(data) {
         if(data.errors) {
           alert("ERROR");
-        } else if(!$scope.current_user && !data.captcha_evaluate) {
+        } else if($scope.aux.init_captcha && !data.captcha_evaluate) {
           $("#comment-captcha-error").modal("show");
           interaction_info.interaction.captcha = "data:image/jpeg;base64," + data.captcha.image;
           interaction_info.interaction.resource.comment_info.user_captcha = "";
@@ -2417,7 +2234,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.buyReward = function(reward_id){
   	$http.post("/reward/buy" , { reward_id: reward_id })
 	    .success(function(data) { 
-	    	console.log(data);
 	      $(".cta-preview__locked-layer--reward").html(data.html);
 	    }).error(function() {
 	      // ERROR.

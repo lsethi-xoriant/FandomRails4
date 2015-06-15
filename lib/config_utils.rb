@@ -49,7 +49,8 @@ module ConfigUtils
     attribute :public_pages, :default => Set.new([])
     attribute :periodicity_kinds, :default => [PERIOD_KIND_DAILY, PERIOD_KIND_WEEKLY, PERIOD_KIND_MONTHLY]
     attribute :required_attrs, :default => []
-    attribute :anonymous_interaction, :default => false
+    attribute :interactions_for_anonymous, :default => nil
+    attribute :interactions_for_anonymous_limit, :default => nil
     attribute :init_ctas, :default => 3
     attribute :force_landing, :default => false
     attribute :search_results_per_page, :default => 5

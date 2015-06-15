@@ -6,10 +6,27 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :fandom_before_filter
   before_action :configure_permitted_parameters
 
+  skip_before_filter :require_no_authentication, :if => :stored_anonymous_user?
   skip_before_filter :verify_authenticity_token
 
+  def adjust_anonymous_user(params)
+    resource = current_user
+    resource.assign_attributes(email: nil, username: nil)
+    resource.assign_attributes(params)
+    if resource.valid? # TODO: comment this
+      resource.assign_attributes(anonymous_id: nil)
+      sign_out(current_user)
+    end
+    resource
+  end
+
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:first_name, :last_name, :username, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation) }
+    devise_parameter_sanitizer.for(:account_update) { |u| permit(u) }
+    devise_parameter_sanitizer.for(:sign_up) { |u| permit(u) }
+  end
+
+  def permit(u)
+    u.permit(:first_name, :last_name, :username, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation, :privacy, :anonymous_id)
   end
 
   def new
@@ -18,46 +35,20 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    build_resource(sign_up_params)
+    if stored_anonymous_user?
+      self.resource = adjust_anonymous_user(sign_up_params)
+    else
+      build_resource(sign_up_params)
+    end
 
     # Aggancio i dati del provider se arrivo da un oauth non andato a buon fine.
     append_provider(resource) if session["oauth"] && session["oauth"]["params"]
-    resource.required_attrs = get_site_from_request(request)["required_attrs"]
 
     if resource.save
       yield resource if block_given?
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
-
-        if $site.anonymous_interaction && params[:user_interaction_info_list].present?
-          anonymous_interaction_map = {}
-
-          JSON.parse(params[:user_interaction_info_list]).each_with_index do |user_interaction_info, index|
-            begin
-              interaction_id = user_interaction_info["interaction_id"]
-              md5_to_validate_user_interaction = Digest::MD5.hexdigest("#{MD5_FANDOM_PREFIX}#{interaction_id}")
-              if md5_to_validate_user_interaction == user_interaction_info["user_interaction"]["hash"] 
-                interaction = Interaction.find(interaction_id)
-                answer_id = user_interaction_info["user_interaction"]["answer"]["id"]
-                aux = JSON.parse(user_interaction_info["user_interaction"]["aux"])
-                if aux.has_key?("user_interactions_history") && aux["user_interactions_history"].present?
-                  user_interactions_history_updated = []
-                  aux["user_interactions_history"].each do |user_interaction_history|
-                    if anonymous_interaction_map.has_key?(user_interaction_history)
-                      user_interactions_history_updated = user_interactions_history_updated + [anonymous_interaction_map[user_interaction_history]]
-                    end
-                  end
-                  aux["user_interactions_history"] = user_interactions_history_updated
-                end
-                user_interaction, outcome = create_or_update_interaction(resource, interaction, answer_id, nil, aux.to_json)
-                anonymous_interaction_map[index] = user_interaction.id
-              end
-            rescue Exception => exception
-              log_error("registration with storage restore error", { exception: exception.to_s }) 
-            end
-          end
-        end
 
         setUpAccount()
         log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })

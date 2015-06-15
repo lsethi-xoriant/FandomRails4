@@ -61,11 +61,11 @@ class Sites::Coin::ApplicationController < ApplicationController
       @current_user_info = build_current_user()
     end
 
-    @aux = init_aux()
+    @aux = init_coint_aux
 
   end
 
-  def init_aux
+  def init_coint_aux
 
     if cookies[:from_registration].blank?
       from_registration = false

@@ -25,13 +25,13 @@ class Sites::Orzoro::CallToActionController < CallToActionController
       calltoaction = calltoaction.where("call_to_actions.id > ?", calltoaction_id).first  
       unless calltoaction
         calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags)
-          .where("call_to_action_tags.tag_id = ?", category_id).first
+          .where("call_to_action_tags.tag_id = ?", category_id).references(:call_to_action_tags).first
       end                                                        
     else 
       calltoaction = calltoaction.where("call_to_actions.id < ?", calltoaction_id).last
       unless calltoaction
         calltoaction = CallToAction.order("call_to_actions.id ASC").active.includes(:call_to_action_tags)
-          .where("call_to_action_tags.tag_id = ?", category_id).last
+          .where("call_to_action_tags.tag_id = ?", category_id).references(:call_to_action_tags).last
       end  
     end
 

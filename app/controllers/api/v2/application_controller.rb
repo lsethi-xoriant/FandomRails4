@@ -21,7 +21,7 @@
       params = request.params
       params["page_elements"] = ["like", "comment", "share"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
-      ctas_highlighted = get_cta_highlighted_carousel()
+      ctas_highlighted = map_highlight_ctas_in_content_preview(get_cta_highlighted_carousel())
   
       result = {
         'call_to_action_info_list' => calltoaction_info_list,
@@ -74,5 +74,24 @@
       end
 
       result.nil? ? "" : result
+    end
+    
+    def map_highlight_ctas_in_content_preview(hightlight_ctas)
+      content_previews = []
+      hightlight_ctas.each do |cta|
+        content_previews << ContentPreview.new(
+          type: "cta",
+          id: cta["id"],
+          thumb_url: cta["thumbnail_medium_url"], 
+          title: cta["title"], 
+          status: cta["status"],
+          comments: cta["comment"],
+          likes: cta["like"],
+          tags: nil,
+          votes: cta["vote"],
+          slug: cta["slug"],
+        )
+      end
+      content_previews
     end
 end

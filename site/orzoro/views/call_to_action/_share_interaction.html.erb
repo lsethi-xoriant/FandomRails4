@@ -6,15 +6,15 @@
   </button>
 
   <!-- FACEBOOK -->   
-  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook share-interaction__cta__info__fb-button" ng-click="shareWith(parent_cta_info, interaction_info, 'facebook')"><i class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></i></button>
 
   <!-- TWITTER -->   
-  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(parent_cta_info, interaction_info, 'twitter')"><i class="fa fa-twitter share-interaction__cover__info__glyphicon-tt"></i></button>
 
   <!-- WHATSAPP -->   
-  <button ng-if="interaction_info.interaction.resource.providers.whatsapp && aux.mobile" class="btn btn-green share-interaction__cta__info__wa-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.whatsapp && aux.mobile" class="btn btn-green share-interaction__cta__info__wa-button" ng-click="shareWith(parent_cta_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp"></i></button>
 
   <!-- GPLUS -->   
-  <button ng-if="interaction_info.interaction.resource.providers.gplus" class="btn btn-red share-interaction__cta__info__gplus-button" ng-click="shareWith(parent_calltoaction_info, interaction_info, 'gplus')"><i class="fa fa-google-plus"></i></button>
+  <button ng-if="interaction_info.interaction.resource.providers.gplus" class="btn btn-red share-interaction__cta__info__gplus-button" ng-click="shareWith(parent_cta_info, interaction_info, 'gplus')"><i class="fa fa-google-plus"></i></button>
   
 </div>

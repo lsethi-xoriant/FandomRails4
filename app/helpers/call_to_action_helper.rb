@@ -344,10 +344,29 @@ module CallToActionHelper
         else
           optional_history = {}
         end
+
+        if calltoaction.media_type == "YOUTUBE"
+          if calltoaction.media_data.present?
+            if calltoaction.media_data.include?(",")
+              vcodes = calltoaction.media_data.split(",")
+              vcode = vcodes.first
+            else
+              vcode = calltoaction.media_data
+            end
+          end
+        end
+
+        if calltoaction.enable_disqus
+          disqus_setting = get_deploy_setting("sites/#{$site.id}/disqus", nil)
+          if disqus_setting
+            disqus = { shortname: disqus_setting["app_shortname"] }
+          end
+        end
         
         calltoaction_info = {
             "calltoaction" => { 
               "id" => calltoaction.id,
+              "disqus" => disqus,
               "name" => calltoaction.name,
               "slug" => calltoaction.slug,
               "detail_url" => cta_url(calltoaction),
@@ -356,7 +375,9 @@ module CallToActionHelper
               "title" => calltoaction.title,
               "description" => calltoaction.description,
               "media_type" => calltoaction.media_type,
-              "media_image" => calltoaction.media_image(:extra_large), 
+              "media_image" => calltoaction.media_image(:extra_large),
+              "vcode" => vcode,
+              "vcodes" => vcodes, 
               "media_data" => get_cta_media_data(calltoaction), 
               "thumbnail_url" => calltoaction.thumbnail_url,
               "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
@@ -438,6 +459,10 @@ module CallToActionHelper
           end
         end
       end
+    end
+
+    if calltoaction_info_list.length == 1 && calltoaction_info_list[0]["calltoaction"]["disqus"]
+      calltoaction_info_list[0]["calltoaction"]["disqus"]["sso"] = disqus_sso
     end
 
     adjust_counters(interaction_ids, calltoaction_info_list, comments)
@@ -522,6 +547,7 @@ module CallToActionHelper
             "id" => interaction.id,
             "when_show_interaction" => when_show_interaction,
             "overvideo_active" => false,
+            "registration_needed" => (interaction.registration_needed || false),
             "seconds" => interaction.seconds,
             "resource_type" => resource_type,
             "resource" => {

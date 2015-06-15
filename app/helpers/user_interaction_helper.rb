@@ -60,7 +60,7 @@ module UserInteractionHelper
       if next_cta  
         next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
         next_cta_info = next_cta_info_list.first
-        update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids) 
+        update_cta_info_optional_history(cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids) 
       else
         next_cta_info_list = nil
       end
@@ -84,11 +84,12 @@ module UserInteractionHelper
     [next_cta, linked_user_interaction_id]
   end
 
-  def update_cta_info_optional_history(next_cta_info, prev_cta_info, linked_user_interaction_ids)
+  def update_cta_info_optional_history(parent_cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids)
     optional_index_count = prev_cta_info["optional_history"]["optional_index_count"]
     optional_total_count = prev_cta_info["optional_history"]["optional_total_count"]
 
     next_cta_info["optional_history"] = {
+      "parent_cta_info" => parent_cta_info,
       "user_interactions" => linked_user_interaction_ids,
       "optional_total_count" => optional_total_count,
       "optional_index_count" => optional_index_count
@@ -226,13 +227,66 @@ module UserInteractionHelper
     end
   end
 
+  def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux)
+    user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
+
+    case resource_type
+    when "share"
+      if user_interaction
+        providers = aux["providers"]
+        providers.each do |provider, increment|
+          value = user_interaction_aux["providers"][provider] 
+          user_interaction_aux["providers"][provider] = value.present? ? (value + increment) : increment
+        end
+      end
+    when "like"
+      if user_interaction
+        like = user_interaction_aux["like"]
+        user_interaction_aux = { like: !like }
+        counter_value = !like ? 1 : -1
+      else
+        counter_value = 1
+      end
+      adjust_counter!(interaction, counter_value)
+    when "vote"
+      vote = aux["vote"]
+      if user_interaction
+        if user_interaction_aux["vote_info_list"]["#{vote}"].present?
+          user_interaction_aux["vote_info_list"]["#{vote}"] = user_interaction_aux["vote_info_list"]["#{vote}"] + 1
+        else
+          user_interaction_aux["vote_info_list"]["#{vote}"] = 1
+        end
+      else
+        user_interaction_aux["vote_info_list"] = { vote => 1 }
+      end
+      adjust_counter!(interaction, vote)
+    when "quiz"
+      if interaction.resource.quiz_type == "VERSUS"
+        adjust_counter!(interaction, answer_id.to_s)
+      end
+    when "randomresource"
+      next_random_cta = aux["next_random_cta"]
+      user_interaction_aux["next_random_cta"] = (user_interaction_aux["next_random_cta"] || []) + next_random_cta        
+    end
+
+    return user_interaction_aux
+  end
+
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     aux = JSON.parse(aux)
 
-    if !anonymous_user?(user) || interaction.stored_for_anonymous
-      user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-      expire_cache_key(get_share_interaction_daily_done_cache_key(user.id))
+    if !interaction_allowed?(interaction.resource_type.downcase, user)
+      log_error('an interaction not allowed for anonymous user has been invoked', { user_id: user.id, interaction_id: interaction.id, cta_id: interaction.call_to_action_id })
+      raise Exception.new("an interaction not allowed for anonymous user has been invoked")
     end
+
+    if anonymous_user?(user)
+      user = create_and_sign_in_stored_anonymous_user()
+    elsif stored_anonymous_user?(user)
+      user.update_attribute(:updated_at, Time.now)
+    end
+
+    user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
     
     if user_interaction
       if interaction.resource.one_shot
@@ -240,73 +294,26 @@ module UserInteractionHelper
         raise Exception.new("one shot interaction attempted more than once")
       end
 
-      case interaction.resource_type.downcase
-      when "share"
-        aux = merge_aux(aux, user_interaction.aux)
-      when "like"
-        like_updated = !user_interaction.aux["like"]
-        aux = { like: like_updated }.to_json
-        like_value = like_updated ? 1 : -1
-        adjust_counter!(interaction, like_value)
-      when "vote"
-        vote = aux["vote"]
-        aux = user_interaction.aux
-        if aux["vote_info_list"]["#{vote}"].present?
-          aux["vote_info_list"]["#{vote}"] = aux["vote_info_list"]["#{vote}"] + 1
-        else
-          aux["vote_info_list"]["#{vote}"] = 1
-        end
-        adjust_counter!(interaction, vote)
-      when "quiz"
-        if interaction.resource.quiz_type == "VERSUS"
-          adjust_counter!(interaction, answer_id.to_s)
-        end
-      when "randomresource"
-        next_random_cta = aux["next_random_cta"]
-        aux = user_interaction.aux
-        aux["next_random_cta"] = (aux["next_random_cta"] || []) + next_random_cta        
-      end
-
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
+      
       UserCounter.update_counters(interaction, user_interaction, user, false) 
-
     else
-
-      case interaction.resource_type.downcase
-      when "like"
-         adjust_counter!(interaction, 1)
-      when "vote"
-        vote = aux["vote"]
-        aux["vote_info_list"] = { vote => 1 }
-        adjust_counter!(interaction, vote)
-      when "quiz"
-        if interaction.resource.quiz_type == "VERSUS"
-          adjust_counter!(interaction, answer_id.to_s)
-        end
-      end
-
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
-      unless anonymous_user?(user)
-        UserCounter.update_counters(interaction, user_interaction, user, true)
-      end
+      UserCounter.update_counters(interaction, user_interaction, user, true)
     end
 
-    unless anonymous_user?(user)
-      expire_cache_key(get_cta_completed_or_reward_status_cache_key(get_main_reward_name, interaction.call_to_action_id, user.id))
-    end
-
-    if anonymous_user?(user) && !$site.anonymous_interaction
-      outcome = compute_outcome(user_interaction)
-    else
-      outcome = compute_save_and_notify_outcome(user_interaction)
-    end
+    outcome = compute_save_and_notify_outcome(user_interaction)
     outcome.info = []
     outcome.errors = []
-    
+
     if user_interaction.outcome.present?
-      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-      interaction_outcome.merge!(outcome)
+      if outcome.present?
+        interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+        interaction_outcome.merge!(outcome)
+      end
     else
       interaction_outcome = outcome
     end
@@ -326,10 +333,8 @@ module UserInteractionHelper
     end
 
     user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
-
-    if !anonymous_user?(user) || interaction.stored_for_anonymous
-      user_interaction.save
-    end
+    
+    user_interaction.save
   
     [user_interaction, outcome]
   

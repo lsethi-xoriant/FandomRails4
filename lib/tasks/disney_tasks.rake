@@ -22,7 +22,9 @@ namespace :disney_tasks do
       secret_access_key: aruba_settings[:secret_access_key],
       s3_endpoint: aruba_settings[:s3_endpoint]
     )
+    
     tmp_path = aruba_settings[:download_temp_file]
+    FileUtils.mkdir_p(tmp_path)
 
     aruba_bucket = aruba_s3.buckets[aruba_settings[:bucket]]
     bucket = s3.buckets[aws_settings[:bucket]]

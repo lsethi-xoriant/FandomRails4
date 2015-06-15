@@ -251,9 +251,9 @@ module DisneyHelper
     end
 
     aux = {
+      "site" => $site,
       "default_property" => $site.default_property,
       "tenant" => $site.id,
-      "anonymous_interaction" => $site.anonymous_interaction,
       "main_reward_name" => MAIN_REWARD_NAME,
       "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "filter_info" => filter_info,

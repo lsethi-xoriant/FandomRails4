@@ -13,7 +13,7 @@ class User < ActiveRecordWithJSON
     :major_date, :gender, :aux, :confirmation_token, :confirmation_sent_at, :confirmed_at,
     :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at, :sign_in_count, :current_sign_in_at, 
     :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :unconfirmed_email, :authentication_token, :created_at, :updated_at, 
-    :avatar_file_name, :avatar_content_type, :avatar_file_size, :avatar_updated_at
+    :avatar_file_name, :avatar_content_type, :avatar_file_size, :avatar_updated_at, :anonymous_id
 
   json_attributes [[:aux, EmptyAux]]
 
@@ -28,10 +28,9 @@ class User < ActiveRecordWithJSON
   has_many :call_to_actions
 
   before_save :set_date_of_birth
-  before_create :set_username_if_not_required
+  before_save :set_username_if_not_required
   before_update :set_current_avatar
   before_create :default_values
-
 
   has_attached_file :avatar, :styles => { :medium => "300x300#", :thumb => "100x100#" }, 
                     :convert_options => { :medium => '-quality 60', :thumb => '-quality 60' }
@@ -53,7 +52,7 @@ class User < ActiveRecordWithJSON
   after_initialize :set_attrs
 
   def set_username_if_not_required
-    unless required_attr?("username")
+    if !required_attr?("username") && self.username.blank?
       self.username = email
     end
   end
@@ -100,9 +99,7 @@ class User < ActiveRecordWithJSON
   end
 
   def required_attr?(attr_name)
-    if required_attrs.present? # Registration update from instantwin form
-      required_attrs.include?(attr_name) || $site.required_attrs.include?(attr_name)
-    elsif $site.required_attrs.present?
+    if $site.required_attrs.present? # Registration update from instantwin form
       $site.required_attrs.include?(attr_name)
     else
       false
@@ -194,9 +191,7 @@ class User < ActiveRecordWithJSON
   end
   
   def set_current_avatar
-    if avatar.present? && !self.avatar_selected_url
-      self.avatar_selected_url = avatar.url(:thumb)
-    end
+    self.avatar_selected_url = avatar.url(:thumb) if avatar.present?
   end
   
   def default_values

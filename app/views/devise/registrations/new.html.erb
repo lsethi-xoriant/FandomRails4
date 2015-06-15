@@ -96,10 +96,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    <% if get_site_from_request(request)["anonymous_interaction"] %>
-      anonymous_user = localStorage['<%= get_site_from_request(request)["id"] %>'];
-      $("#user_interaction_info_list").val(JSON.stringify(JSON.parse(anonymous_user)["user_interaction_info_list"]));
-    <% end %>
+    anonymous_user = localStorage['anonymous_user_storage'];
+    $("#user_interaction_info_list").val(JSON.stringify(JSON.parse(anonymous_user)["user_interaction_info_list"]));
   });
 </script>
 

@@ -45,7 +45,12 @@ class Sites::Forte::ApplicationController < ApplicationController
       CallToAction.active.count
     end
 
-    @aux = init_aux()
+    @aux = {
+      "tenant" => $site.id,
+      "anonymous_interaction" => $site.anonymous_interaction,
+      "main_reward_name" => MAIN_REWARD_NAME
+    }
+
     @aux[:calltoactions_reward] = Hash.new
     @calltoactions.each do |calltoaction|
       @aux[:calltoactions_reward][calltoaction.id] = calltoaction.rewards.first.cost if cta_locked?(calltoaction)
@@ -54,14 +59,6 @@ class Sites::Forte::ApplicationController < ApplicationController
     @calltoactions_active_interaction = Hash.new
 
     @home = true
-  end
-
-  def init_aux()
-    {
-      "tenant" => $site.id,
-      "anonymous_interaction" => $site.anonymous_interaction,
-      "main_reward_name" => MAIN_REWARD_NAME
-    }
   end
 
   def gigya_socialize_redirect
