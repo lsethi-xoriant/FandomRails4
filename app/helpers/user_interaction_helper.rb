@@ -89,7 +89,7 @@ module UserInteractionHelper
     optional_total_count = prev_cta_info["optional_history"]["optional_total_count"]
 
     next_cta_info["optional_history"] = {
-      "parent_cta_id" => parent_cta_info["calltoaction"]["id"],
+      "parent_cta_info" => parent_cta_info,
       "user_interactions" => linked_user_interaction_ids,
       "optional_total_count" => optional_total_count,
       "optional_index_count" => optional_index_count
@@ -227,7 +227,7 @@ module UserInteractionHelper
     end
   end
 
-  def adjust_user_interaction_aux(resource_type, user_interaction, aux)
+  def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
 
     case resource_type
@@ -294,12 +294,12 @@ module UserInteractionHelper
         raise Exception.new("one shot interaction attempted more than once")
       end
 
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, aux)
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
       
       UserCounter.update_counters(interaction, user_interaction, user, false) 
     else
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, aux)
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
   
       UserCounter.update_counters(interaction, user_interaction, user, true)

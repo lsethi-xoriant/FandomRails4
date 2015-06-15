@@ -11,19 +11,19 @@ class CallToActionController < ApplicationController
 
   # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
-    user_interactions = UserInteraction.where(id: params[:user_interaction_ids])
-    cta = nil
+    user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
+    cta = CallToAction.find(params[:parent_cta_id])
+
     user_interactions.each do |user_interaction|
       aux = user_interaction.aux
       aux["to_redo"] = true
-      user_interaction.update_attributes(aux: aux.to_json)
-      unless aux["user_interactions_history"]
-        cta = user_interaction.interaction.call_to_action
-      end
+      user_interaction.update_attributes(aux: aux)
     end
+
     response = {
       calltoaction_info_list: build_cta_info_list_and_cache_with_max_updated_at([cta])
     }
+
     respond_to do |format|
       format.json { render json: response.to_json }
     end 
@@ -194,7 +194,7 @@ class CallToActionController < ApplicationController
       if optional_history
         step_index = optional_history["optional_index_count"]
         step_count = optional_history["optional_total_count"]
-        parent_cta_id = optional_history["parent_cta_id"]
+        parent_cta_info = optional_history["parent_cta_info"]
       end
 
       #if current_user
@@ -208,7 +208,7 @@ class CallToActionController < ApplicationController
         init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
         linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
         linked_call_to_actions_count: step_count,
-        parent_cta_id: parent_cta_id,
+        parent_cta_info: parent_cta_info,
         sidebar_tag: sidebar_tag
       }
 

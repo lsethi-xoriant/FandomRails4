@@ -187,10 +187,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.calltoactions.length == 1) {
       $scope.calltoaction_info = $scope.calltoactions[0];
 
+
+      if($scope.calltoaction_info.calltoaction.disqus) {  
+        $window.disqus_shortname = $scope.calltoaction_info.calltoaction.disqus.shortname; 
+
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js?https';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
       if($scope.calltoaction_info.optional_history.user_interactions) {
         $scope.user_interactions_history = $scope.calltoaction_info.optional_history.user_interactions;
       }
 
+      if($scope.aux.parent_cta_info) {
+        $scope.parent_cta_info = $scope.aux.parent_cta_info;
+      } else {
+        $scope.parent_cta_info = $scope.calltoaction_info.calltoaction.id;
+      }
     }
   };
 
@@ -1763,7 +1777,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
-    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history })
+    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history, parent_cta_id: $scope.aux.parent_cta_info.calltoaction.id })
       .success(function(data) {   
         $scope.initCallToActionInfoList(data.calltoaction_info_list);
         $scope.linked_call_to_actions_index = 1;

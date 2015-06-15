@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
       }
     }
 
+    if params[:user_interactions_history].present?
+      aux[:user_interactions_history] = params[:user_interactions_history]
+    end
+
     user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     
     response[:current_user] = JSON.parse(build_current_user()) if current_user && $site.id != "disney"
