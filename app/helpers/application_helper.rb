@@ -823,6 +823,7 @@ module ApplicationHelper
       instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
       user_win_info = user_already_won(instantwin_interaction_id)
       user_win = user_win_info[:win] ? user_win_info[:win] : nil
+    end
 
     if property && property.name != $site.default_property
       property_path_name = property.name
