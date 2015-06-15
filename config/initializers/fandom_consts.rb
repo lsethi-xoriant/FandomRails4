@@ -58,6 +58,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   RANKING_USER_PER_PAGE = 10
   
   MAIN_REWARD_NAME = "point"
+  INSTANTWIN_TICKET_NAME = "instantwin-ticket"
   TO_BE_NOTIFIED_REWARD_NAME = "to-be-notified"  
   
   MAILER_DEFAULT_FROM = "noreply@shado.tv"

@@ -87,6 +87,7 @@ module ApplicationHelper
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
         "main_reward_counter" => get_point,
+        "instantwin_tickets_counter" => get_counter_about_user_reward(INSTANTWIN_TICKET_NAME),
         "username" => current_user.username,
         "level" => nil, # (get_current_level["level"]["name"] rescue "nessun livello"),
         "notifications" => get_unread_notifications_count(),
@@ -578,10 +579,37 @@ module ApplicationHelper
       cta.title
     end
   end
+
+  def registration_fully_completed?
+    true
+  end
   
   def extra_field_to_html(field)
     ac = ActionController::Base.new()
-    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name'], is_required: field['required']  }, layout: false, formats: :html
+
+    if field["type"] == "enum"
+      case field["selection"]["type"]
+      when "simple"
+        enum_values = field["selection"]["values"]
+      when "range"
+        extremes = field["selection"]["values"].split("-")
+        enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
+      when "setting"
+        enum_values = Setting.find_by_name(field["selection"]["values"]).value
+      end
+    end
+
+    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", 
+      locals: { 
+        title: field["title"], 
+        label: field["label"], 
+        name: field["name"], 
+        required: field["required"], 
+        values: field["type"] == "enum" ? enum_values : field["values"], 
+        ng_model: field["ng_model"] 
+        }, 
+      layout: false, 
+      formats: :html
   end
   
   def are_properties_used?(rewards_to_show)
@@ -794,6 +822,13 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
+    instantwin_call_to_action = CallToAction.valid.find_by_name("instantwin-call-to-action")
+    if instantwin_call_to_action
+      instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
+      user_win_info = user_already_won(instantwin_interaction_id)
+      user_win = user_win_info[:win] ? user_win_info[:win] : nil
+    end
+
     @aux = {
       "tenant" => $site.id,
       "free_provider_share" => $site.free_provider_share,
@@ -807,7 +842,13 @@ module ApplicationHelper
       "flash_notice" => flash[:notice],
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
-      "menu_items" => get_menu_items(property)
+      "menu_items" => get_menu_items(property),
+      "instant_win_info" => {
+        "interaction_id" => instantwin_interaction_id,
+        "win" => user_win,
+        "message" => user_win_info[:message],
+        "in_progress" => false
+      }
     }
 
     if other

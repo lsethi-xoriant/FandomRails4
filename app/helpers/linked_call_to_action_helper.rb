@@ -186,8 +186,10 @@ module LinkedCallToActionHelper
         # if called on a new cta, linked_cta is a hash containing a list of { "condition" => <condition>, "cta_id" => <next cta id> } hashes
         links = interaction.resource.linked_cta rescue nil
         unless links
-          params["call_to_action"]["interactions_attributes"].each do |key, value|
-            links = value["resource_attributes"]["linked_cta"] if value["id"] == interaction.id.to_s
+          if params["call_to_action"]["interactions_attributes"]
+            params["call_to_action"]["interactions_attributes"].each do |key, value|
+              links = value["resource_attributes"]["linked_cta"] if value["id"] == interaction.id.to_s
+            end
           end
         end
         if links

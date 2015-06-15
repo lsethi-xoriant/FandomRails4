@@ -26,7 +26,19 @@
   <p class="properties__right-bar-level">{{current_user.level}}</p>
   <span class="label label-warning cta-cover__winnable-reward__label">
     +{{current_user.main_reward_counter}}<span class="cta-cover__glyphicon-icon fa fa-star">
-  </span>  
+  </span> 
+</div>
+
+<div ng-if="current_user" ng-if="aux.instant_win_info.interaction_id">
+  <% if !registration_fully_completed? %>
+    <button type="button" class="btn btn-primary" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+      Gioca
+    </button>
+  <% else %>
+    <button type="button" class="btn btn-primary" ng-click="openInstantWinModal()">
+      Gioca
+    </button>
+  <% end %>
 </div>
 
 <div ng-if="current_user && current_user.notifications > 0" class="properties__right-bar-notifications">

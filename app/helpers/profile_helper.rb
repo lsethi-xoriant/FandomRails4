@@ -145,7 +145,7 @@ module ProfileHelper
 
   def user_for_registation_form()
     if current_user.aux
-      aux = JSON.parse(current_user.aux)
+      aux = current_user.aux
       contest = aux[:contest]
       role = aux[:role]
     end

@@ -1,0 +1,133 @@
+<div class="modal fade" id="modal-interaction-instant-win-registration" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        <div class="row">
+          <div class="col-md-12 text-center"> 
+            <p class="instant-win__modal-title">Gioca e vinci!</p><br/>
+          </div>
+          <div class="col-md-10 col-md-offset-1">
+            <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
+              <div ng-if="form_data.current_user.errors" class="row">
+                <div class="col-md-12">
+                  <ul class="list-unstyled form-error">
+                    <p>Errori nell'inserimento dei dati:</p>
+                    <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <% if instantwin_cta_id %>
+                <% unless CallToAction.find(instantwin_cta_id).extra_fields.blank? %>
+                  <div class="form-group">
+                    <div class="col-xs-12">
+                      <% JSON.parse(CallToAction.find(instantwin_cta_id).extra_fields["instantwin_form_attributes"]).each do |extra_field| %>
+                        <%= extra_field_to_html(extra_field).html_safe %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <div class="row">
+                <div class="col-sm-4 col-sm-offset-8">
+                  <button type="submit" class="btn btn-primary instant-win__button btn-block">COMPLETA</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" ng-if="!aux.instant_win_info.win">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <div class="row">
+          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general > 0" class="col-md-8 col-md-offset-2 text-center">         
+            <p ng-if="!aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">Gioca e vinci</p>
+            <p ng-if="aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">&nbsp;</p>
+            <div ng-if="aux.instant_win_info.in_progress" class="fountainG-container">
+              <div id="fountainG_1" class="fountainG">
+              </div>
+              <div id="fountainG_2" class="fountainG">
+              </div>
+              <div id="fountainG_3" class="fountainG">
+              </div>
+              <div id="fountainG_4" class="fountainG">
+              </div>
+              <div id="fountainG_5" class="fountainG">
+              </div>
+              <div id="fountainG_6" class="fountainG">
+              </div>
+              <div id="fountainG_7" class="fountainG">
+              </div>
+              <div id="fountainG_8" class="fountainG">
+              </div>
+            </div>
+          </div>
+          <div ng-if="aux.instant_win_info.win == false" class="col-md-8 col-md-offset-2 text-center">
+            <p ng-if="current_user.main_reward_counter.general > 0" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">{{aux.instant_win_info.message}}</span></p>
+            <p ng-if="current_user.main_reward_counter.general < 1" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Hai esaurito i biglietti</span></p>
+          </div>
+          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general < 1" class="col-md-8 col-md-offset-2 text-center">
+            <p class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Hai esaurito i biglietti</span></p>
+          </div>
+          <div class="col-md-1 col-md-offset-3 text-right instant-win__ticket-pre hidden-xs"><p class="instant-win__ticket-pre-text">Hai</p></div>
+          <div class="col-md-4 col-xs-12 instant-win__ticket-column">
+            <div class="panel panel-default instant-win__ticket-panel">
+              <div class="panel-body instant-win__ticket-panel-body text-right">
+                <span class="instant-win__ticket-value">{{current_user.instantwin_tickets_counter}}</span><img class="instant-win__ticket-img" src="<%= asset_path("coin/reward-ticket.png") %>">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 text-left instant-win__ticket-post hidden-xs"><p class="instant-win__ticket-post-text">biglietti</p></div>       
+          <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="col-md-12 text-center">
+            <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.main_reward_counter.general < 1)}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
+          </div>
+        </div>
+      </div>
+      <div ng-if="!aux.instant_win_info.interaction_id" class="modal-body">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Concorso non attivo</p>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer instant-win__modal-footer">
+      </div> -->
+    </div>
+  </div>
+  <div class="modal-dialog" ng-if="aux.instant_win_info.win == true">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <div class="row instant-win__win-row">
+          <div class="col-md-4 col-md-offset-2 col-xs-6 col-xs-offset-3">
+            <img style="width: 100%" src="<%= asset_path("coin/gift-instant-win.png") %>">
+          </div>
+          <div class="col-md-4 col-xs-12 text-left">
+            <p class="instant-win__win-text-title">Hai vinto!</p>
+            <p class="instant-win__win-text-description">{{aux.instant_win_info.message}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer instant-win__modal-footer">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p class="instant-win__footer__text-1">Complimenti! Hai vinto {{aux.instant_win_info.message}}!</p>
+            <p class="instant-win__footer__text-3">Controlla il tuo indirizzo email, digitato in fase di registrazione al concorso: ti abbiamo inviato una comunicazione, valida ai fini dell'accettazione del premio. Se non dovessi ricevere nessuna email controlla la tua casella di spam.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

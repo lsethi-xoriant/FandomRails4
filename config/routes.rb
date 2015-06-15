@@ -16,7 +16,7 @@ Fandom::Application.routes.draw do
         get '/privacy_policy', :to => 'application#show_privacy_policy'
         get '/cookies_policy', :to => 'application#show_cookies_policy'
         get '/stores', :to => 'application#show_stores'
-        get "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
+        post "profile/complete_for_contest", :to => "application#complete_for_contest", defaults: { format: 'json' }
         devise_scope :user do
           post "/users", :to => "registrations#create"
           get 'auth/:provider/callback', :to => 'sessions#create'
@@ -493,13 +493,14 @@ Fandom::Application.routes.draw do
   post "profile/notices/mark_all_as_viewed", :to => "notice#mark_all_as_viewed", defaults: { format: 'json' }
   get "profile/notices/get_recent_notice", :to => "notice#get_user_latest_notices", defaults: { format: 'json' }
   get "profile/remove-provider/:provider", :to => "profile#remove_provider"
-  get "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
+  post "profile/complete_for_contest", :to => "profile#complete_for_contest", defaults: { format: 'json' }
 
   get "/sign_in_fb_from_page", :to => "application#sign_in_fb_from_page"
   get "/sign_in_tt_from_page", :to => "application#sign_in_tt_from_page"
   get "/sign_in_simple_from_page", :to => "application#sign_in_simple_from_page"
 
   get "/playticket", :to => "instantwin#play_ticket_mb"
+  post "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
   get "/winners", :to => "instantwin#show_winners"
 
   get "/anchor_provider_from_calltoaction/:calltoaction_id", to: "application#anchor_provider_from_calltoaction"

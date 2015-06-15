@@ -193,10 +193,6 @@ class ApplicationController < ActionController::Base
       "enable_comment_polling" => get_deploy_setting('comment_polling', true)
     }
   end
-
-  def registration_fully_completed?
-    true
-  end
   
   def update_call_to_action_in_page_with_tag
 

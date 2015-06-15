@@ -213,6 +213,7 @@ module RewardHelper
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
+
     if current_user
       reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
         

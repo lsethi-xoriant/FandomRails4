@@ -22,10 +22,10 @@
       <div ng-if="!ordering_in_progress" class="row">
         <div class="col-sm-12">
           <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="!append_ctas_in_progress && has_more">
-            <button class="btn btn-primary" href="javascript: void(0)" ng-click="appendCallToAction();"><span>Carica altri</span></button>
+            <button class="btn btn-primary" ng-click="appendCallToAction();"><span>Carica altri</span></button>
           </div>
           <div id="append-other" class="text-center" style="margin-bottom: 20px;" ng-if="append_ctas_in_progress && has_more">
-            <button class="btn btn-primary" href="javascript: void(0)"><span>Caricamento in corso</span></button>
+            <button class="btn btn-primary"><span>Caricamento in corso</span></button>
           </div>
         </div>
       </div>

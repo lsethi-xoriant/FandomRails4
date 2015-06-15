@@ -6,13 +6,13 @@ include ApplicationHelper
 include CacheHelper
 
 class InstantwinController < ApplicationController
-  
+
   def show_winners
     @winners = Array.new
     today_midnight = DateTime.now.midnight.utc
     wins = PlayticketEvent.where("winner = true AND used_at < ?", today_midnight)
     @winner_per_page = 9
-    
+
     wins.each do |win_event|
       winner = Hash.new
       winner['avatar'] = user_avatar(win_event.user)
@@ -21,9 +21,9 @@ class InstantwinController < ApplicationController
       @winners.push(winner)
     end
   end
-  
+
   def play_ticket
-    response = Hash.new
+    response = {}
 
     if current_user
       interaction = Interaction.find(params[:interaction_id])
@@ -38,7 +38,7 @@ class InstantwinController < ApplicationController
           response[:win] = true
           response['message'] = prize.title
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
-          send_winner_email(JSON.parse(instantwin.reward_info)['prize_code'],prize)
+          # send_winner_email(instantwin.reward_info['prize_code'],prize)
           expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
           log_synced("assigning instant win to user", { 'instantwin_id' => instantwin.id })
         end
@@ -46,31 +46,31 @@ class InstantwinController < ApplicationController
         create_or_update_interaction(current_user, interaction, nil, nil, aux.to_json)
         expire_cache_key(get_reward_points_for_user_key(interaction.resource.reward.name, current_user.id))
         response['prize'] = prize
-        
+
       elsif !has_tickets(interaction.id)
         response['message'] = "Hai esaurito i biglietti"
         response[:win] = false
       else
         response['message'] = "Hai già vinto un premio"
         response[:win] = false
-      end 
-      
+      end
+
     end
 
     response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
-    
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end
-    
+
   end
-  
+
   def check_win(interaction, time)
     instantwin = interaction.resource.instantwins.where("valid_from <= ? AND (valid_to IS NULL or valid_to >= ?) AND won = false", time, time).first
     if instantwin.nil?
       [instantwin, nil]
     else
-      reward = Reward.find(JSON.parse(instantwin.reward_info)['reward_id'])
+      reward = Reward.find(instantwin.reward_info['reward_id'])
       instantwin.update_attribute(:won, true)
       [instantwin, reward]
     end
