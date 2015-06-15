@@ -329,6 +329,7 @@ Fandom::Application.routes.draw do
       get "/index", :to => "application#index", defaults: { format: 'json' }
       get "/index/load_more", :to => "application#load_more_ctas_in_stream", defaults: { format: 'json' }
       get "/users/sign_in", :to => "user#sign_in", defaults: { format: 'json' }
+      get "/call_to_action/get_related", :to => "call_to_action#get_related_ctas", defaults: { format: 'json' }
     end
   end
 
