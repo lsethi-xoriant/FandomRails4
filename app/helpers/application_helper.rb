@@ -577,35 +577,40 @@ module ApplicationHelper
   end
 
   def registration_fully_completed?
+    $site.required_attrs.each do |attribute|
+      return false unless current_user[attribute].present?
+    end
     true
   end
-  
-  def extra_field_to_html(field)
+
+  def extra_field_to_html(field, ng_model_name = nil)
     ac = ActionController::Base.new()
 
-    if field["type"] == "enum"
-      case field["selection"]["type"]
-      when "simple"
-        enum_values = field["selection"]["values"]
-      when "range"
-        extremes = field["selection"]["values"].split("-")
-        enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
-      when "setting"
-        enum_values = Setting.find_by_name(field["selection"]["values"]).value
-      end
-    end
+    enum_values = get_enum_values(field["selection"]) if field["type"] == "enum"
 
     ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", 
       locals: { 
-        title: field["title"], 
         label: field["label"], 
         name: field["name"], 
         required: field["required"], 
         values: field["type"] == "enum" ? enum_values : field["values"], 
-        ng_model: field["ng_model"] 
-        }, 
+        ng_model: ng_model_name 
+      }, 
       layout: false, 
       formats: :html
+  end
+
+  def get_enum_values(field_selection)
+    case field_selection["type"]
+    when "simple"
+      enum_values = field_selection["values"]
+    when "range"
+      extremes = field_selection["values"].split("-")
+      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
+    when "setting"
+      enum_values = Setting.find_by_name(field_selection["values"]).value
+    end
+    enum_values
   end
   
   def are_properties_used?(rewards_to_show)

@@ -4,7 +4,7 @@
       <%= title %>
     </label>
 		<div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
-			<%= text_field_tag "extra_fields_#{name}", nil, { :class => "form-control", :placeholder => label, "ng-model" => ng_model + '.' + name } %>
+			<%= text_field_tag "extra_fields_#{name}", nil, { :class => "form-control", :placeholder => label, "ng-model" => (ng_model ? ng_model + '.' + name : nil) } %>
 		</div>
 	</div>
 </div>

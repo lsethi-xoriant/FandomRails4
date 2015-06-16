@@ -3,7 +3,7 @@
     <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #000;">
       <%= title %>
     </label>
-    <input id="extra_fields_age_#{name}" name="extra_fields_age" type="checkbox" value="1" ng-model="#{ (ng_model + '.' + name) || 'form_data.' + name }">
+    <input id="extra_fields_age_#{name}" name="extra_fields_age" type="checkbox" value="1" ng-model="#{ ng_model ? (ng_model + '.' + name) : ('form_data.' + name) }">
 		<label style="color: #fff;"><%= label %></label>
 	</div>
 </div>

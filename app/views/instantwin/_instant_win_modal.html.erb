@@ -25,7 +25,7 @@
                   <div class="form-group">
                     <div class="col-xs-12">
                       <% JSON.parse(CallToAction.find(instantwin_cta_id).extra_fields["instantwin_form_attributes"]).each do |extra_field| %>
-                        <%= extra_field_to_html(extra_field).html_safe %>
+                        <%= extra_field_to_html(extra_field, "form_data.current_user").html_safe %>
                       <% end %>
                     </div>
                   </div>
