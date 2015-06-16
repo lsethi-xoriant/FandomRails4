@@ -349,8 +349,8 @@ module BrowseHelper
   
   def get_contents_from_ordering(tag)
     ordering_names = get_extra_fields!(tag)['ordering']
-    ctas = CallToAction.active.where("name in (?)", ordering_names.split(",")).to_a
-    tags = Tag.where("name in (?)", ordering_names.split(","))
+    ctas = CallToAction.active.where("name IN (?) AND id IN (SELECT call_to_action_id FROM call_to_action_tags WHERE tag_id = #{tag.id})", ordering_names.split(",")).to_a
+    tags = Tag.where("name IN (?) AND id IN (SELECT tag_id FROM tags_tags WHERE other_tag_id = #{tag.id})", ordering_names.split(","))
     contents = order_elements(tag, (tags + ctas))
     prepare_contents(contents)
   end
