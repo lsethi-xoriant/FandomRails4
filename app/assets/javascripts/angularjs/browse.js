@@ -108,11 +108,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
     };
     
     $scope.load_more = function(offset){
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      	var loadMoreUrl = "/" + $scope.aux.current_property_info.path + "/browse/index_category_load_more.json";
-      } else {
-      	var loadMoreUrl = "/browse/index_category_load_more.json";
-      } 
+      loadMoreUrl = $scope.updatePathWithProperty("/browse/index_category_load_more.json")
 
   		$http.get(loadMoreUrl, {
 	      params: {

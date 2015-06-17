@@ -34,4 +34,7 @@ Fandom::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.active_support.test_order = :sorted
+  config.active_record.raise_in_transactional_callbacks = true
 end

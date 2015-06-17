@@ -9,12 +9,12 @@ namespace :anon_navigation do
 
     adjust_user_interactions(user_ids, anonymous_user)
     adjust_user_comment_interactions(user_ids, anonymous_user)  
-    adjust_counters(user_ids, anonymous_user)
+    adjust_counters_for_users(user_ids, anonymous_user)
 
     users.destroy_all()
   end
 
-  def adjust_counters(user_ids, anonymous_user)
+  def adjust_counters_for_users(user_ids, anonymous_user)
     counter_rewards = Reward.includes(reward_tags: :tag).where("tags.name = 'counter'").references(:reward_tags, :tags)
 
     counter_rewards.each do |reward|

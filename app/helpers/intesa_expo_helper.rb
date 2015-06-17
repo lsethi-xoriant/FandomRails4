@@ -182,6 +182,13 @@ module IntesaExpoHelper
         calltoaction_evidence_info
       end
     end
+
+    current_property = get_property()
+    if current_property && current_property.name != $site.default_property
+      property_path_name = current_property.name
+    else
+      property_path_name = nil;
+    end
     
     aux = {
       "site" => $site,
@@ -201,6 +208,7 @@ module IntesaExpoHelper
       "page_stripes" => page_stripes,
       "context_root" => $context_root,
       "language" => get_intesa_property(),
+      "property_path_name" => property_path_name,
       "current_property_info" => { "path" => get_intesa_property() }
     }
 
