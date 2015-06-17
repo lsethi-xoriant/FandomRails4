@@ -7,7 +7,7 @@
     <ul class="slides">
       <li ng-repeat="content in aux.property_info_list.contents" class="text-center properties__flexslider-item" ng-init="content.image_visible = content.thumb_thumb_url" ng-mouseover="content.image_visible = content.thumb_hover_thumb_url" ng-mouseleave="content.image_visible = content.thumb_thumb_url">
         <a class="properties__flexslider-a" href="/{{content.extra_fields.url}}"> 
-          <img class="properties__flexslider-image" ng-src="{{content.image_visible}}" ng-style="{'border-bottom': '4px solid ' + content.extra_fields.background}">     
+          <img class="properties__flexslider-image" ng-src="{{content.image_visible}}" ng-style="{'border-bottom': '4px solid ' + content.extra_fields.background_color}">     
         </a>
       </li>
     </ul>

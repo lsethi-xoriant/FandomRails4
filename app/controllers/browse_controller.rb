@@ -66,7 +66,12 @@ class BrowseController < ApplicationController
       log_info('full search', { query: @query })
     end
 
-    contents, total = get_contents_with_match(params[:query], 0, get_current_property)
+    property = get_property()
+    if property
+      property_name = property.name
+    end
+
+    contents, total = get_contents_with_match(params[:query], 0, property_name)
 
     if total == 0
       handle_no_result(params[:query])
@@ -96,7 +101,13 @@ class BrowseController < ApplicationController
 
   def full_search_load_more
     offset = params[:offset].to_i
-    contents, total = get_contents_with_match(params[:query], offset, get_current_property)
+
+    property = get_property()
+    if property
+      property_name = property.name
+    end
+
+    contents, total = get_contents_with_match(params[:query], offset, property_name)
     contents = prepare_contents(contents)
     
     contents = compute_cta_status_contents(contents, current_or_anonymous_user)
@@ -235,11 +246,6 @@ class BrowseController < ApplicationController
   
   def get_search_cache_key_params(term)
     term
-  end
-  
-  #hook for filter search result in specific property if multiproperty site
-  def get_current_property
-    nil
   end
   
 end

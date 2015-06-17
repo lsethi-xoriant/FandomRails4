@@ -112,7 +112,7 @@ RailsAdmin.config do |config|
 
   config.model User do
     edit do
-      exclude_fields :confirmation_token, :authentication_token
+      exclude_fields :confirmation_token, :authentication_token, :authentications, :user_interactions, :user_comment_interactions, :user_rewards, :user_counters, :user_upload_interactions, :call_to_actions
     end
   end
   

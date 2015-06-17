@@ -1405,12 +1405,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             });
           }
 
-          // Interaction after user response.
-          if($scope.current_user) {           
-            play_interaction_info.status = data.interaction_status;
-            calltoaction_info.status = JSON.parse(data.calltoaction_status);
-            $scope.current_user.main_reward_counter = data.main_reward_counter;
-          }
+          calltoaction_info = getCallToActionInfo(calltoaction_id);
+          adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+          calltoaction_info.status = data.calltoaction_status;
           
         }).error(function() {
           // ERROR.
@@ -1615,7 +1612,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-    calltoaction_info.status = JSON.parse(data.calltoaction_status);
+    calltoaction_info.status = data.calltoaction_status;
 
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
@@ -1777,13 +1774,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function resetRedoUserInteractionsForLoggedUser() {
-    $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history, parent_cta_id: $scope.aux.parent_cta_info.calltoaction.id })
+    $scope.calltoaction_info.class = "trivia-interaction__update-answer--fade_out";
+    $timeout(function() { 
+      $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.user_interactions_history, parent_cta_id: $scope.aux.parent_cta_info.calltoaction.id })
       .success(function(data) {   
-        $scope.initCallToActionInfoList(data.calltoaction_info_list);
+       $scope.initCallToActionInfoList(data.calltoaction_info_list);
+        $scope.calltoaction_info.hide_class = "";
+        $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide"
+        $timeout(function() { 
+          $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+        }, 500);
+
         $scope.linked_call_to_actions_index = 1;
         $scope.user_interactions_history = [];
+
+
       }).error(function() {
       });
+    }, 200);
   }
 
   function resetRedoUserInteractionsForAnonymousUser(interaction_info) {
