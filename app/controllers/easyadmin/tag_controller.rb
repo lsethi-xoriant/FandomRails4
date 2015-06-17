@@ -196,7 +196,11 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
           if tag_extra_fields.present?
             ordering = tag_extra_fields["ordering"]
             if ordering
-              @ordered_elements = ordering.gsub(/\s+/, "").split(",")
+              @ordered_elements = []
+              ordered_names = ordering.gsub(/\s+/, "").split(",")
+              ordered_names.each do |name|
+                @ordered_elements << name if content_tagged_with_tag?(name, tag.id)
+              end
             end
           end
 
@@ -236,6 +240,20 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       end
     end
 
+  end
+
+  def content_tagged_with_tag?(content_name, tag_id)
+    content = nil
+    [CallToAction, Tag, Reward].each do |klass|
+      content = klass.find_by_name(content_name) if content.nil?
+    end
+    if content.class == CallToAction
+      return CallToActionTag.where(:call_to_action_id => content.id, :tag_id => tag_id).any?
+    elsif content.class == Tag
+      return TagsTag.where(:tag_id => content.id, :other_tag_id => tag_id).any?
+    elsif content.class == Reward
+      return RewardTag.where(:reward_id => content.id, :tag_id => tag_id).any?
+    end
   end
 
   def update_updated_at

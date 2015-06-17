@@ -75,8 +75,8 @@ module UserInteractionHelper
     user_interactions.each do |user_interaction|
       aux = user_interaction.aux
       to_redo = aux["to_redo"]
-      if aux["next_calltoaction_id"] && !to_redo
-        next_cta = CallToAction.find(aux["next_calltoaction_id"])
+      if aux["next_cta_id"] && !to_redo
+        next_cta = CallToAction.find(aux["next_cta_id"])
         linked_user_interaction_id = user_interaction.id
         break
       end
@@ -227,7 +227,7 @@ module UserInteractionHelper
     end
   end
 
-  def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux)
+  def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
 
     case resource_type
@@ -245,6 +245,7 @@ module UserInteractionHelper
         user_interaction_aux = { like: !like }
         counter_value = !like ? 1 : -1
       else
+        user_interaction_aux = { like: true }
         counter_value = 1
       end
       adjust_counter!(interaction, counter_value)
@@ -272,6 +273,45 @@ module UserInteractionHelper
     return user_interaction_aux
   end
 
+  def update_user_counters(interaction, user_interaction, user)
+    UserCounter.update_counters(interaction, user_interaction, user, user_interaction.present?)
+  end
+
+  def adjust_outcome_for_trivia(interaction, user_interaction, user, outcome)
+    predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
+    if user_interaction.outcome.present?
+      correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
+      correct_answer_outcome.merge!(predict_outcome_with_correct_answer)
+    else
+      correct_answer_outcome = predict_outcome_with_correct_answer
+    end
+    outcome[:correct_answer] = correct_answer_outcome
+    outcome
+  end
+
+  def compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)
+    new_outcome = compute_save_and_notify_outcome(user_interaction)
+    new_outcome.info = []
+    new_outcome.errors = []
+
+    if user_interaction.outcome.present?
+      interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
+      interaction_outcome.merge!(new_outcome)
+    else
+      interaction_outcome = new_outcome
+    end
+
+    outcome = { win: new_outcome }
+
+    is_trivia_interaction = interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
+    if is_trivia_interaction
+      outcome = adjust_outcome_for_trivia(interaction, user_interaction, user, outcome)
+    end
+
+    user_interaction.assign_attributes(outcome: outcome.to_json)
+    [user_interaction, new_outcome]
+  end
+
   def create_or_update_interaction(user, interaction, answer_id, like, aux = "{}")
     aux = JSON.parse(aux)
 
@@ -287,56 +327,25 @@ module UserInteractionHelper
     end
 
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-    
+    aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
+
     if user_interaction
       if interaction.resource.one_shot
         log_error('one shot interaction attempted more than once', { user_id: user_interaction.user.id, interaction_id: user_interaction.interaction.id, cta_id: user_interaction.interaction.call_to_action.id })
         raise Exception.new("one shot interaction attempted more than once")
       end
 
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
-      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, like: like, aux: aux)
-      
-      UserCounter.update_counters(interaction, user_interaction, user, false) 
+      user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, aux: aux)  
     else
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
-  
-      UserCounter.update_counters(interaction, user_interaction, user, true)
     end
 
-    outcome = compute_save_and_notify_outcome(user_interaction)
-    outcome.info = []
-    outcome.errors = []
+    update_user_counters(interaction, user_interaction, user)
 
-    if user_interaction.outcome.present?
-      if outcome.present?
-        interaction_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["win"])
-        interaction_outcome.merge!(outcome)
-      end
-    else
-      interaction_outcome = outcome
-    end
-
-    outcome_for_user_interaction = { win: interaction_outcome }
-
-    is_trivia_interaction = interaction.resource_type.downcase == "quiz" && interaction.resource.quiz_type.downcase == "trivia"
-    if is_trivia_interaction
-      predict_outcome_with_correct_answer = predict_outcome(interaction, user, true)
-      if user_interaction.outcome.present?
-        interaction_correct_answer_outcome = Outcome.new(JSON.parse(user_interaction.outcome)["correct_answer"])
-        interaction_correct_answer_outcome.merge!(predict_outcome_with_correct_answer)
-      else
-        interaction_correct_answer_outcome = predict_outcome_with_correct_answer
-      end
-      outcome_for_user_interaction[:correct_answer] = interaction_correct_answer_outcome
-    end
-
-    user_interaction.assign_attributes(outcome: outcome_for_user_interaction.to_json)
-    
+    user_interaction, outcome = compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)    
     user_interaction.save
   
     [user_interaction, outcome]
-  
   end
+
 end

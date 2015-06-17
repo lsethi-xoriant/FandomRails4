@@ -1,0 +1,12 @@
+<div class="row form-group">
+  <div class="text-center">
+    <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #000;">
+      <%= title %>
+    </label>
+    <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
+      <% values.split(",").each do |option| %>
+        <%= radio_button_tag(name, option, false, { "ng-model" => (ng_model ? ng_model + '.' + name : nil) }) %>
+      <% end %>
+    </div>
+  </div>
+</div>

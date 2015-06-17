@@ -18,6 +18,8 @@ gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-instagram'
+gem "omniauth-google-oauth2"
+gem 'omniauth-linkedin-oauth2'
 gem 'koala'
 gem 'twitter'
 gem 'hirb'

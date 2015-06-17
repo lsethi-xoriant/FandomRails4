@@ -175,3 +175,6 @@
     </div>
   </div>
 </div>
+
+<%= render partial: "/instantwin/instant_win_modal", 
+  locals: { instantwin_cta_id: InstantwinInteraction.first ? Interaction.where(:resource_type => InstantwinInteraction, :resource_id => InstantwinInteraction.first.id).first.call_to_action_id : nil } %>

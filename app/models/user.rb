@@ -99,7 +99,7 @@ class User < ActiveRecordWithJSON
   end
 
   def required_attr?(attr_name)
-    if $site.required_attrs.present?
+    if $site.required_attrs.present? # Registration update from instantwin form
       $site.required_attrs.include?(attr_name)
     else
       false

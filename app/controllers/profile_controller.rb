@@ -1,9 +1,14 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-class ProfileController < ApplicationController  
+class ProfileController < ApplicationController
+  include ProfileHelper
+  include ApplicationHelper
+  include RankingHelper
+  include RewardHelper
+
   before_filter :check_user_logged
-  
+
   def check_user_logged
     if current_user.nil? || stored_anonymous_user?
       if cookies[:connect_from_page].blank?
@@ -20,11 +25,9 @@ class ProfileController < ApplicationController
 
   def complete_for_contest
     user_params = params[:user]
-    
-    required_attrs = get_site_from_request(request)["required_attrs"] + ["province", "birth_date", "gender", "location"]
+
+    required_attrs = get_site_from_request(request)["required_attrs"] # array
     user_params = user_params.merge(required_attrs: required_attrs)
-    user_params[:aux][:$validating_model] = "UserAux"  
-    user_params[:major_date] = CONTEST_START_DATE
 
     response = {}
     if !current_user.update_attributes(user_params)

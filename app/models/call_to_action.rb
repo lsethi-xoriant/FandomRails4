@@ -89,7 +89,7 @@ class CallToAction < ActiveRecordWithJSON
      default_url: "/assets/media-image-default.jpg"
 
   has_attached_file :thumbnail, 
-    :styles => { 
+    :styles => {
       :carousel => "1024x320^", 
       :medium => "524x393^", 
       :thumb => "262x147^",

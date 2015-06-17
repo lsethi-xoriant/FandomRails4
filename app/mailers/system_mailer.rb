@@ -17,7 +17,7 @@ class SystemMailer < ActionMailer::Base
   end  
 
   def win_mail(user, reward, time_to_win, request)
-    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
+    subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"] rescue ""
     @reward = reward
   	@cuser = user
   	@ticket_id = time_to_win

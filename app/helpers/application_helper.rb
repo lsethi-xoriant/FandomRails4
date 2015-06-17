@@ -86,6 +86,7 @@ module ApplicationHelper
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
         "main_reward_counter" => get_point,
+        "instantwin_tickets_counter" => get_counter_about_user_reward(INSTANTWIN_TICKET_NAME),
         "username" => current_user.username,
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
@@ -574,10 +575,42 @@ module ApplicationHelper
       cta.title
     end
   end
-  
-  def extra_field_to_html(field)
+
+  def registration_fully_completed?
+    $site.required_attrs.each do |attribute|
+      return false unless current_user[attribute].present?
+    end
+    true
+  end
+
+  def extra_field_to_html(field, ng_model_name = nil)
     ac = ActionController::Base.new()
-    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", locals: { label: field['label'], name: field['name'], is_required: field['required']  }, layout: false, formats: :html
+
+    enum_values = get_enum_values(field["selection"]) if field["type"] == "enum"
+
+    ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", 
+      locals: { 
+        label: field["label"], 
+        name: field["name"], 
+        required: field["required"], 
+        values: field["type"] == "enum" ? enum_values : field["values"], 
+        ng_model: ng_model_name 
+      }, 
+      layout: false, 
+      formats: :html
+  end
+
+  def get_enum_values(field_selection)
+    case field_selection["type"]
+    when "simple"
+      enum_values = field_selection["values"]
+    when "range"
+      extremes = field_selection["values"].split("-")
+      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
+    when "setting"
+      enum_values = Setting.find_by_name(field_selection["values"]).value
+    end
+    enum_values
   end
   
   def are_properties_used?(rewards_to_show)
@@ -790,6 +823,19 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
+    instantwin_call_to_action = CallToAction.valid.find_by_name("instantwin-call-to-action")
+    if instantwin_call_to_action
+      instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
+      user_win_info = user_already_won(instantwin_interaction_id)
+
+      instant_win_info = {
+        "interaction_id" => instantwin_interaction_id,
+        "win" => user_win_info[:win],
+        "message" => user_win_info[:message],
+        "in_progress" => false
+      }
+    end
+
     if property && property.name != $site.default_property
       property_path_name = property.name
     else
@@ -810,7 +856,8 @@ module ApplicationHelper
       "flash_notice" => flash[:notice],
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
-      "menu_items" => get_menu_items(property)
+      "menu_items" => get_menu_items(property),
+      "instant_win_info" => instant_win_info
     }
 
     if other

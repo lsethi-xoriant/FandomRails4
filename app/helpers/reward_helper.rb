@@ -106,18 +106,11 @@ module RewardHelper
       user = current_or_anonymous_user
     end
 
-    call_to_action_completed_or_reward_status = cache_short(get_cta_completed_or_reward_status_cache_key(reward_name, calltoaction.id, user.id)) do
-      if call_to_action_completed?(calltoaction, user)
-        CACHED_NIL
-      else
-        compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
-      end
-    end
-
-    if !cached_nil?(call_to_action_completed_or_reward_status)
-      JSON.parse(call_to_action_completed_or_reward_status)
-    else 
+    if call_to_action_completed?(calltoaction, user)
       nil
+    else
+      call_to_action_completed_or_reward_status = compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
+      JSON.parse(call_to_action_completed_or_reward_status)
     end
   end
 
@@ -213,6 +206,7 @@ module RewardHelper
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
+
     if current_user
       reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
         

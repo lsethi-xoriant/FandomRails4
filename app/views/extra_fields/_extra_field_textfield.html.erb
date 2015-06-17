@@ -1,8 +1,10 @@
 <div class="row form-group">
 	<div class="text-center">
-		<label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #fff;"></label>
+		<label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #000;">
+      <%= title %>
+    </label>
 		<div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
-			<%= text_field_tag "extra_fields_#{name}", nil, { class: "form-control", :placeholder => label } %>
+			<%= text_field_tag "extra_fields_#{name}", nil, { :class => "form-control", :placeholder => label, "ng-model" => (ng_model ? ng_model + '.' + name : nil) } %>
 		</div>
 	</div>
 </div>
