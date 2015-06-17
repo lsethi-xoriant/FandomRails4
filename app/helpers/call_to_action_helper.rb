@@ -563,7 +563,8 @@ module CallToActionHelper
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
-              "url" => resource_url
+              "url" => resource_url,
+              "one_shot" => resource.one_shot
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
