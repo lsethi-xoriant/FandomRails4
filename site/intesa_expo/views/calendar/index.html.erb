@@ -111,7 +111,8 @@
 		<div class="container main-container" >	
 			<div class="row">
 			  <div class="col-md-12 hidden-xs" style="padding-top: 25px;">
-			    <p class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
+			    <p ng-if="aux.language != 'en'" class="text-center" style="margin-bottom: -20px;">Calendario Mensile</p>
+          <p ng-if="aux.language == 'en'" class="text-center" style="margin-bottom: -20px;">Monthly Calendar</p>
 					<div id="full-calendar"></div> <!-- /#full-calendar -->   
 				</div>
         <div class="col-md-12 visible-xs text-center" style="padding-top: 25px;">

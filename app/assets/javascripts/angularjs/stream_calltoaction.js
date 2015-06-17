@@ -342,8 +342,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	element.play();
   };
 
+  $scope.updatePathWithProperty = function(path) {
+    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
+      path = "/" + $scope.aux.current_property_info.path + "" + path;
+    }
+    return path
+  }
+
   $scope.acceptCookies = function() {
-    $http.post("/user_cookies")
+    $http.post($scope.updatePathWithProperty("/user_cookies"))
       .success(function(data) { 
         $("#cookies-bar").fadeOut("slow");
       }).error(function() {
