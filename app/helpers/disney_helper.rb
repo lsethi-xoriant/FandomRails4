@@ -250,6 +250,12 @@ module DisneyHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
+    if current_property && current_property.name != $site.default_property
+      property_path_name = current_property.name
+    else
+      property_path_name = nil;
+    end
+
     aux = {
       "site" => $site,
       "default_property" => $site.default_property,
@@ -261,6 +267,7 @@ module DisneyHelper
       "current_property_info" => current_property_info,
       "calltoaction_evidence_info" => calltoaction_evidence_info,
       "related_calltoaction_info" => related_calltoaction_info,
+      "property_path_name" => property_path_name,
       "mobile" => small_mobile_device?(),
       "free_provider_share" => $site.free_provider_share,
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),

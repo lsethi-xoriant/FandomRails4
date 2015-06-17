@@ -343,10 +343,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
       play_interaction_info.hide = true; 
 
-      update_interaction_path = "/update_interaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-      }
+      update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
 
       $http.post(update_interaction_path, { interaction_id: play_interaction_info.interaction.id })
         .success(function(data) {
