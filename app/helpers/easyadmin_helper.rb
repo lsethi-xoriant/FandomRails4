@@ -1,19 +1,6 @@
 # encoding: utf-8
 module EasyadminHelper
 
-  def link_to_add_check_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Check.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/check_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_check_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_comment_fields(name, f, association, resource)
-    link_to_add_fields(name, f, association, resource)
-  end
-
   def link_to_add_fields(name, f, association, resource, template = resource)
     new_object = Interaction.new
 
@@ -32,80 +19,10 @@ module EasyadminHelper
     link_to name, "#", :onclick => h("add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\", \"#{template}\")"), class: "btn btn-primary btn-block", remote: true
   end
 
-  def link_to_add_download_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Download.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/download_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_download_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_play_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Play.new(title: "#PLAY#{ DateTime.now.strftime("%Y%m%d") }")
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/play_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_play_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_share_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Share.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/share_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_share_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_like_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Like.new(title: "#LIKE#{ DateTime.now.strftime("%Y%m%d") }")
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/like_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_like_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_quiz_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Quiz.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/quiz_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_quiz_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_versus_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Quiz.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/versus_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_versus_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-
-  def link_to_add_answer_quiz_fields(name, f, association)
+  def link_to_add_answer_fields(name, f, association, resource, template = resource)
     new_object = Answer.new
     fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/answer_quiz_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_answer_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-secondary btn-xs", remote: true 
-  end
-
-  def link_to_add_answer_versus_fields(name, f, association)
-    new_object = Answer.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/answer_versus_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_answer_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-secondary btn-xs", remote: true 
-  end
-
-  def link_to_add_answer_test_fields(name, f, association)
-    new_object = Answer.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/answer_test_form", f: builder)
+      render("/easyadmin/call_to_action/answer_#{template}_form", f: builder)
     end
     link_to name, "#", :onclick => h("add_answer_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-secondary btn-xs", remote: true 
   end
@@ -116,33 +33,6 @@ module EasyadminHelper
       render("/easyadmin/easyadmin/contest_form", f: builder)
     end
     link_to name, "#", :onclick => h("add_contest_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
-  end
-  
-  def link_to_add_upload_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Upload.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/upload_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_upload_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary", remote: true 
-  end
-  
-  def link_to_add_vote_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = Vote.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/vote_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_vote_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary", remote: true 
-  end
-
-  def link_to_add_random_fields(name, f, association)
-    new_object = Interaction.new
-    new_object.resource = RandomResource.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
-      render("/easyadmin/call_to_action/random_form", f: builder)
-    end
-    link_to name, "#", :onclick => h("add_random_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: "btn btn-primary btn-block", remote: true 
   end
 
   def link_to_remove_fields(name, resource, template = resource)

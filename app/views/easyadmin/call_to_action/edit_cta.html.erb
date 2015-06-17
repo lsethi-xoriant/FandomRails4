@@ -111,14 +111,14 @@
 
       <div class="row">
         <div class="col-md-10"><h3>TRIVIA</h3></div>
-        <div class="col-md-2"><%= link_to_add_quiz_fields "AGGIUNGI TRIVIA", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI TRIVIA", f, :interactions, "quiz" %></div>
       </div>
 
       <div id="tmp-quiz-add"></div>
 
       <%= f.fields_for :interactions do |builder| %>
-        <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "TRIVIA" %>
-          <%= render 'quiz_form', :f => builder %>
+        <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "TRIVIA" %>
+          <%= render '/easyadmin/call_to_action/quiz_form', :f => builder %>
         <% end %>
       <% end %>
 
@@ -137,7 +137,7 @@
 
       <div class="row">
         <div class="col-md-10"><h3>RANDOM</h3></div>
-        <div class="col-md-2"><%= link_to_add_random_fields "AGGIUNGI RANDOM", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI RANDOM", f, :interactions, "randomResource", "random" %></div>
       </div>
 
       <div id="tmp-random-add"></div>
@@ -150,72 +150,72 @@
 
       <div class="row">
         <div class="col-md-10"><h3>VERSUS</h3></div>
-        <div class="col-md-2"><%= link_to_add_versus_fields "AGGIUNGI VERSUS", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI VERSUS", f, :interactions, "quiz", "versus" %></div>
       </div>
 
       <div id="tmp-versus-add"></div>
 
       <%= f.fields_for :interactions do |builder| %>
-        <% if builder.object.resource_type == 'Quiz' && builder.object.resource.quiz_type == "VERSUS" %>
-          <%= render 'versus_form', :f => builder %>
+        <% if builder.object.resource_type == "Quiz" && builder.object.resource.quiz_type == "VERSUS" %>
+          <%= render '/easyadmin/call_to_action/versus_form', :f => builder %>
         <% end %>
       <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>CHECK</h3></div>
-        <div class="col-md-2"><%= link_to_add_check_fields "AGGIUNGI CHECK", f, :interactions %></div>
-      </div> 
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI CHECK", f, :interactions, "check" %></div>
+      </div>      
 
       <div id="tmp-check-add"></div>
 
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Check" %>
-          <%= render 'check_form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/check_form', :f => builder %>
         <% end %>
       <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>LIKE</h3></div>
-        <div class="col-md-2"><%= link_to_add_like_fields "AGGIUNGI LIKE", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI LIKE", f, :interactions, "like" %></div>
       </div>
 
       <div id="tmp-like-add"></div>
-      
+
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Like" %>
-          <%= render 'like_form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/like_form', :f => builder %>
         <% end %>
       <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>DOWNLOAD</h3></div>
-        <div class="col-md-2"><%= link_to_add_download_fields "AGGIUNGI DOWNLOAD", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI DOWNLOAD", f, :interactions, "download" %></div>
       </div>
 
       <div id="tmp-download-add"></div>
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Download" %>
-          <%= render 'download_form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/download_form', :f => builder %>
         <% end %>
       <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>COMMENTI</h3></div>
-        <div class="col-md-2"><%= link_to_add_comment_fields "AGGIUNGI COMMENTI", f, :interactions, "comment" %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI COMMENTI", f, :interactions, "comment" %></div>
       </div>
 
       <div id="tmp-comment-add"></div>
       
       <%= f.fields_for :interactions do |builder| %>
         <% if builder.object.resource_type == "Comment" %>
-          <%= render 'comment_form', :f => builder %>
+          <%= render '/easyadmin/call_to_action/comment_form', :f => builder %>
         <% end %>
       <% end %>
 
       <div class="row">
         <div class="col-md-10"><h3>LINK</h3></div>
-        <div class="col-md-2"><%= link_to_add_comment_fields "AGGIUNGI LINK", f, :interactions, "link" %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI LINK", f, :interactions, "link" %></div>
       </div>
 
       <div id="tmp-link-add"></div>
@@ -225,8 +225,8 @@
           <%= render 'link_form', :f => builder %>
         <% end %>
       <% end %>
-
-    <h3>UPLOAD <p style="float: right;"><%= link_to_add_upload_fields "AGGIUNGI UPLOAD", f, :interactions %></p></h3>
+      
+      <h3>UPLOAD <p style="float: right;"><%= link_to_add_fields "AGGIUNGI UPLOAD", f, :interactions, "upload" %></p></h3>
       <hr/>
 
       <div id="tmp-upload-add"></div>
@@ -237,7 +237,7 @@
         <% end %>
       <% end %>
       
-      <h3>VOTA <p style="float: right;"><%= link_to_add_vote_fields "AGGIUNGI VOTA", f, :interactions %></p></h3>
+      <h3>VOTA <p style="float: right;"><%= link_to_add_fields "AGGIUNGI VOTA", f, :interactions, "vote" %></p></h3>
       <hr/>
 
       <div id="tmp-vote-add"></div>
@@ -247,10 +247,10 @@
           <%= render '/easyadmin/call_to_action/vote_form', :f => builder %>
         <% end %>
       <% end %>
-
+      
       <div class="row">
         <div class="col-md-10"><h3>SHARE</h3></div>
-        <div class="col-md-2"><%= link_to_add_share_fields "AGGIUNGI SHARE", f, :interactions %></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI SHARE", f, :interactions, "share" %></div>
       </div>
 
       <div id="tmp-share-add"></div>
