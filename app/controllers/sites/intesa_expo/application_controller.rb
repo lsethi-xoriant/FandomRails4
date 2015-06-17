@@ -97,6 +97,14 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     if params[:vcode].present?
       if @calltoaction_info_list[0]["calltoaction"]["vcodes"].include?(params[:vcode])
         @calltoaction_info_list[0]["calltoaction"]["vcode"] = params[:vcode]
+        @calltoaction_info_list[0]["calltoaction"]["extra_fields"]["spotlight"] = "<script type=\"text/javascript\">
+          var axel = Math.random() + \"\";
+          var a = axel * 10000000000000;
+          document.write('<iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=' + a + '?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>');
+          </script>
+          <noscript>
+          <iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=1?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>
+          </noscript>"
       end
     end
 

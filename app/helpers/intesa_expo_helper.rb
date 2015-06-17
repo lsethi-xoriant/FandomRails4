@@ -183,6 +183,7 @@ module IntesaExpoHelper
       end
     end
 
+    current_property = get_property()
     if current_property && current_property.name != $site.default_property
       property_path_name = current_property.name
     else
