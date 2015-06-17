@@ -28,9 +28,9 @@ class Ability
     user ||= User.new # User not logged.
     if user && user.role == "admin"
       can :manage, :all 
-      can :access, :rails_admin
     elsif user && user.role == "editor"
       can :manage, :all 
+      cannot :access, :rails_admin
       cannot :manage, :rewards
       cannot :manage, :rankings
       cannot :manage, :settings
