@@ -8,39 +8,32 @@ class CallToActionTest < ActionController::TestCase
 
   # TEST GALLERY SECTION
 
-  test "top ctas taken ordered by comments are correctly shown" do
+  test "top ctas taken and appended ordered by comments are correctly shown" do
     limit = 3
-    property_tag = get_random_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, limit)
-    cta_info_list.each do |cta_info|
-      counter = get_comment_counter(cta_info)
-      puts "#{counter}+++++---------------"
-    end
-  end
+    ordering = "comment"
 
-  def get_comment_counter(cta_info)
-    counter = 0
-    cta_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-      if interaction_info["interaction"]["resource_type"] == "comment"
-        puts interaction_info["interaction"]
-        counter = interaction_info["interaction"]["resource"]["comment_info"]["comments_total_count"]
-        break
-      end
-    end
-    counter
+    property_tag = get_default_property()
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
+ 
+    assert ctas_ordered_by_comment_count?(cta_info_list)
+
+    calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
+    cta_info_list, has_more = get_next_ctas(property_tag, calltoaction_ids_shown, ordering, limit)
+
+    assert ctas_ordered_by_comment_count?(cta_info_list)
   end
 
   test "top ctas taken and appended are tagged with param property" do
     limit = 3
+    ordering = "recent"
+
     property_tag = get_random_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, limit)
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
 
     assert ctas_tagged_with?(cta_info_list, property_tag)
 
     calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
-
-    params =  { ordering: "recent", calltoaction_ids_shown: calltoaction_ids_shown }
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, limit)
+    cta_info_list, has_more = get_next_ctas(property_tag, calltoaction_ids_shown, ordering, limit)
 
     result = true
     cta_info_list.each do |cta_info|
@@ -76,6 +69,35 @@ class CallToActionTest < ActionController::TestCase
       result = result && cta_tagged
     end
     result
+  end
+
+  def ctas_ordered_by_comment_count?(cta_info_list)
+    prev_counter = nil
+    result = true
+
+    cta_info_list.each do |cta_info|
+      counter = get_comment_counter(cta_info)
+      result = result && (prev_counter.nil? || prev_counter >= counter)
+      prev_counter = counter
+    end
+
+    result
+  end
+
+  def get_next_ctas(property_tag, calltoaction_ids_shown, ordering, limit)
+    params =  { ordering: ordering, calltoaction_ids_shown: calltoaction_ids_shown }
+    get_ctas_for_stream(property_tag.name, params, limit)
+  end
+
+  def get_comment_counter(cta_info)
+    counter = 0
+    cta_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+      if interaction_info["interaction"]["resource_type"] == "comment"
+        counter = interaction_info["interaction"]["resource"]["counter"]
+        break
+      end
+    end
+    counter
   end
 
   def get_random_property

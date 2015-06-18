@@ -6,6 +6,8 @@ class Download < ActiveRecord::Base
   
   has_one :interaction, as: :resource
 
+  do_not_validate_attachment_file_type :attachment
+
   validates_presence_of :attachment, unless: Proc.new { |c| ical_fields }
   before_validation :set_ical_fields
 
