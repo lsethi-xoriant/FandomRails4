@@ -53,7 +53,9 @@ module UserInteractionHelper
         if next_cta
           next_cta_to_return = next_cta
         end
-        prev_cta_info["optional_history"]["optional_index_count"] = prev_cta_info["optional_history"]["optional_index_count"] + 1
+        if prev_cta_info["optional_history"].present?
+          prev_cta_info["optional_history"]["optional_index_count"] = prev_cta_info["optional_history"]["optional_index_count"] + 1
+        end
       end
       next_cta = next_cta_to_return
       
@@ -229,6 +231,7 @@ module UserInteractionHelper
 
   def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
+    user_interaction_aux["to_redo"] = aux["to_redo"] if aux["to_redo"]
 
     case resource_type
     when "share"

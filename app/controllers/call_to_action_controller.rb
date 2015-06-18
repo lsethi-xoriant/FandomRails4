@@ -479,10 +479,11 @@ class CallToActionController < ApplicationController
 
     linked_cta = nil
     if interaction.interaction_call_to_actions.any?
-      aux[:to_redo] = false
       linked_cta = compute_linked_cta(interaction, params[:user_interactions_history], params[:params])
       next_cta_id = linked_cta.nil? ? nil : linked_cta.id
     end
+
+    aux[:to_redo] = false
 
     aux[:user_interactions_history] = params[:user_interactions_history] if params[:user_interactions_history]
     aux[:next_cta_id] = next_cta_id if next_cta_id
