@@ -275,10 +275,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.calltoaction_ordering = "recent";
 
-    if($scope.aux.current_property_info) {
-      $scope.current_tag_id = $scope.aux.current_property_info.id;
-    }
-
     if($scope.aux.mobile) {
       $scope.coverCommentsLimit = 1;
     } else {
@@ -343,7 +339,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.acceptCookies = function() {
-    $http.post("/user_cookies")
+    $http.post($scope.updatePathWithProperty("/user_cookies"))
       .success(function(data) { 
         $("#cookies-bar").fadeOut("slow");
       }).error(function() {
@@ -360,6 +356,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     return url;
   };
+
+  $scope.updatePathWithProperty = function(path) {
+    if($scope.aux.property_path_name) {
+      path = "/" + $scope.aux.property_path_name + "" + path;
+    }
+    return path
+  }
 
   $scope.playInstantWin = function() {
     update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
@@ -750,8 +753,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $window.update_ga_event = function(category, action, label, value) {
-    if($scope.aux && $scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      category = $scope.aux.current_property_info.path + "_" + category;
+    if($scope.aux.property_path_name) {
+      category = $scope.aux.property_path_name + "_" + category;
     }
 
     if($scope.google_analytics_code.length > 0) {
@@ -905,10 +908,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     other_params = $scope.updateOrderingOtherParams();
 
-    ordering_ctas = "/ordering_ctas";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      ordering_ctas = "/" + $scope.aux.current_property_info.path + "" + ordering_ctas;
-    }
+    ordering_ctas = $scope.updatePathWithProperty("/ordering_ctas");
 
     $scope.ordering_in_progress = true;
 
@@ -931,10 +931,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $("#append-other button").attr('disabled', true);
     $scope.append_ctas_in_progress = true;
 
-    append_calltoaction_path = "/append_calltoaction";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      append_calltoaction_path = "/" + $scope.aux.current_property_info.path + "" + append_calltoaction_path;
-    }
+    append_calltoaction_path = $scope.updatePathWithProperty("/append_calltoaction");
 
     calltoaction_ids_shown = [];
     angular.forEach($scope.calltoactions, function(_info) {
@@ -1387,10 +1384,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       play_interaction_info.hide = true; 
       
-      update_interaction_path = "/update_interaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-      }
+      update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
 
       $http.post(update_interaction_path, { interaction_id: interaction_id })
         .success(function(data) {
@@ -1504,10 +1498,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       current_button_html = button.html();
       button.html("condivisione in corso");
 
-      update_interaction_path = "/update_interaction";
-      if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-      }
+      update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
 
       $http.post(update_interaction_path, { interaction_id: interaction_id, share_with_email_address: share_with_email_address, provider: provider, facebook_message: facebook_message })
         .success(function(data) {
@@ -1577,11 +1568,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     
     interaction_id = interaction_info.interaction.id;
 
-    // TODO: adjust with product current_property_info
-    update_interaction_path = "/update_interaction";
-    if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-      update_interaction_path = "/" + $scope.aux.current_property_info.path + "" + update_interaction_path;
-    }
+    update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
 
     $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.user_interactions_history })
       .success(function(data) {

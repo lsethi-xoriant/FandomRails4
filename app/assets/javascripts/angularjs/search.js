@@ -51,11 +51,8 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 	
 	$scope.getResults = function(val) {
 		
-		api_path = "/browse/autocomplete_search";
-        if($scope.aux.current_property_info && $scope.aux.current_property_info.path) {
-        	api_path = "/" + $scope.aux.current_property_info.path + "" + api_path;
-        }
-		
+		api_path = $scope.updatePathWithProperty("/browse/autocomplete_search");
+
 	    return $http.get(api_path, {
 	      params: {
 	        q: val,

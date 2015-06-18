@@ -11,18 +11,19 @@ class CallToActionTest < ActionController::TestCase
   test "top ctas taken ordered by comments are correctly shown" do
     limit = 3
     property_tag = get_random_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "comment" }, limit)
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, limit)
     cta_info_list.each do |cta_info|
       counter = get_comment_counter(cta_info)
-      puts "#{counter}---------------"
+      puts "#{counter}+++++---------------"
     end
   end
 
   def get_comment_counter(cta_info)
     counter = 0
     cta_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
-      if interaction_info["interaction"]["resource_type"] == "Comment"
-        counter = interaction_info["interaction"]["counter"]
+      if interaction_info["interaction"]["resource_type"] == "comment"
+        puts interaction_info["interaction"]
+        counter = interaction_info["interaction"]["resource"]["comment_info"]["comments_total_count"]
         break
       end
     end
