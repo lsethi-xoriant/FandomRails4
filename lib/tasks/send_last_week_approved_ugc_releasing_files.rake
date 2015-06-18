@@ -43,7 +43,7 @@ def send_releasing_files(tenant, emails, days, max_releasing_files)
   end
   body << releasing_files_text
 
-  SystemMailer.send_approved_comments_mail(emails, tenant, days, body).deliver
+  SystemMailer.send_approved_comments_mail(emails, tenant, days, body, "Report call to action utente approvate negli ultimi #{ days } giorni su #{ tenant.capitalize }").deliver
   puts "Mails sent."
 
 end
