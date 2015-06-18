@@ -12,7 +12,7 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.url}}">{{item.title}}</a>
+            <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.extra_fields.url}}">{{item.title}}</a>
             </li>
           </ul>
         </div>
@@ -42,7 +42,7 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.url}}">{{item.title}}</a>
+        <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.extra_fields.url}}">{{item.title}}</a>
         </li>
         <hr style="margin-top: 5px; margin-bottom: 5px;">
         <li ng-repeat="property in aux.property_info_list">
