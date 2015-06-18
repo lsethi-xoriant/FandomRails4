@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 class User < ActiveRecordWithJSON
+  # this is from simple_token_authentication used by API
+  acts_as_token_authenticatable
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable

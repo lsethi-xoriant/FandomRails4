@@ -126,3 +126,4 @@ gem 'sys-proctable'
 gem 'breach-mitigation-rails'
 gem "font-awesome-rails"
 gem 'flexslider'
+gem 'simple_token_authentication', '~> 1.0'
