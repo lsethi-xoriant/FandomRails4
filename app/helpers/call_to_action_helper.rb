@@ -804,8 +804,8 @@ module CallToActionHelper
       media_type = "YOUTUBE"
       media_data = params["vcode"]
     else
-      media_image = cta_template.media_image
-      thumbnail = cta_template.thumbnail
+      media_image = params["upload"] # cta_template.media_image
+      thumbnail = params["upload"] # cta_template.thumbnail
       media_type = "IMAGE"
       media_data = nil
     end
