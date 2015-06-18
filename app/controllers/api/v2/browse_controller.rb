@@ -1,8 +1,4 @@
- class Api::V2::BrowseController < ApplicationController
-    #doorkeeper_for :all # Per autorizzare un contenuto
-    #before_filter :check_application_client
-    
-    respond_to :json
+ class Api::V2::BrowseController < Api::V2::BaseController
     
     def get_stripe_from_tag
       stripe =  get_content_previews(params[:tag_name])

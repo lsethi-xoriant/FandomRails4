@@ -1,6 +1,4 @@
- class Api::V2::ApplicationController < ApplicationController
-    
-    respond_to :json
+ class Api::V2::ApplicationController < Api::V2::BaseController   
     
     # possible (GET) params: 
     #   ordering = recent | view | comment

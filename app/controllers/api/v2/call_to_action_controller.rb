@@ -1,6 +1,4 @@
- class Api::V2::CallToActionController < ApplicationController
-    
-    respond_to :json
+ class Api::V2::CallToActionController < Api::V2::BaseController    
     
     def get_related_ctas
       cta = CallToAction.find(params["cta_id"])
