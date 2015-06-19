@@ -10,7 +10,7 @@ class CallToActionTest < ActionController::TestCase
     limit = 3
     ordering = "comment"
 
-    property_tag = get_random_property()
+    property_tag = get_default_property()
     cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
  
     assert ctas_ordered_by_comment_count?(cta_info_list), "not all ctas are correctly ordered"
@@ -28,7 +28,7 @@ class CallToActionTest < ActionController::TestCase
     limit = 3
     ordering = "recent"
 
-    property_tag = get_random_property()
+    property_tag = get_default_property()
     cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
 
     assert ctas_tagged_with?(cta_info_list, property_tag), "not all ctas are tagged with current property tag"
@@ -50,7 +50,7 @@ class CallToActionTest < ActionController::TestCase
 
   test "there are other ctas to be added if the variable has more is true" do
     limit = 3
-    property_tag = get_random_property()
+    property_tag = get_default_property()
     cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, limit)
     ctas_count = get_ctas(property_tag).count
 
