@@ -495,7 +495,7 @@ class CallToActionController < ApplicationController
     when "like"
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     when "share"
-      user_interaction, outcome, response = update_share_interaction(interaction, aux, params[:provider], params[:share_with_email_address], params[:facebook_message])
+      user_interaction, outcome, response = update_share_interaction(interaction, aux, params[:provider], params[:share_with_email_address], params[:facebook_message], response)
     when "vote"
       aux[:vote] = params[:params]
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
@@ -655,7 +655,7 @@ class CallToActionController < ApplicationController
     response
   end
 
-  def update_share_interaction(interaction, aux, provider, address, facebook_message = " ")
+  def update_share_interaction(interaction, aux, provider, address, facebook_message = " ", response)
     unless current_user
       throw Exception.new("the user must be logged")
     end
@@ -693,7 +693,7 @@ class CallToActionController < ApplicationController
     end
 
     if is_share_valid
-      aux.merge!( { "providers" => { provider => 1 } })
+      aux["providers"] = { provider => 1 }
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
     end
