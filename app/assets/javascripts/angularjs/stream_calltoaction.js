@@ -438,6 +438,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.computeAvgForVote = function(interaction_info) {
     numerator = 0; denominator = 0;
     counter_aux = interaction_info.interaction.resource.counter_aux;
+    console.log(counter_aux);
     if(counter_aux && !angular.equals(counter_aux, {})) {
       angular.forEach(counter_aux, function(value, key) {
         denominator = denominator + value;
@@ -1588,6 +1589,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
       interaction_info.interaction.resource.counter_aux = data.counter_aux;
+      console.log(data.counter_aux);
     }
 
     // Google analytics.
