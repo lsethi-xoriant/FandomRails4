@@ -1583,8 +1583,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
 
-    if(data.current_user) $scope.current_user = data.current_user;
-    if(data.notice_anonymous_user) showRegistrateView();
+    if(data.current_user) {
+      console.log(data.current_user);
+      $scope.current_user = data.current_user;
+    }
+
+    if(data.notice_anonymous_user) { 
+      showRegistrateView();
+    }
 
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
