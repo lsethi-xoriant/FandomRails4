@@ -48,7 +48,11 @@ class ProfileController < ApplicationController
 
   def index
     if small_mobile_device?
-      redirect_to "/profile/index"
+      if $context_root.present?
+        redirect_to "/#{$context_root}/profile/index"
+      else
+        redirect_to "/profile/index"
+      end
     else
       if $context_root.present?
         redirect_to "/#{$context_root}/users/edit"
@@ -57,6 +61,7 @@ class ProfileController < ApplicationController
       end
     end
   end
+
 
   def remove_provider
     provider_name = "#{params[:provider]}_#{$site.id}"
@@ -102,7 +107,7 @@ class ProfileController < ApplicationController
     elsif property.present?
       property_name = property.name
       gallery_tag_ids = gallery_tags.map { |t| t.id }
-      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?) AND ", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
+      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
     else 
       []
     end
