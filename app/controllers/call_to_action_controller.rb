@@ -691,7 +691,7 @@ class CallToActionController < ApplicationController
     end
 
     if is_share_valid
-      aux["providers"][provider] = 1
+      aux.merge!( { "providers" => { provider => 1 } })
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response[:ga][:label] = interaction.resource_type.downcase
     end
