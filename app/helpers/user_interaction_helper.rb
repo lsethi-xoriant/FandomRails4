@@ -213,7 +213,7 @@ module UserInteractionHelper
       if counter
         if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"
           aux = counter.aux
-          aux[value] = aux[value] ? (aux[value] + 1) : 1
+          aux["#{value}"] = aux["#{value}"] ? (aux["#{value}"] + 1) : 1
           counter.update_attributes(counter: (counter.counter + 1), aux: aux.to_json)
         else
           counter.update_attribute(:counter, counter.counter + value)
