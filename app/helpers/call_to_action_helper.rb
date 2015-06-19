@@ -175,9 +175,9 @@ module CallToActionHelper
       if in_gallery != "all"
         gallery_calltoaction = CallToAction.find(in_gallery)
         gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL", gallery_tag.id).references(:call_to_action_tags)
+        calltoactions = CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL AND call_to_actions.approved", gallery_tag.id).references(:call_to_action_tags)
       else
-        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL")
+        calltoactions = CallToAction.active_with_media.where("call_to_actions.user_id IS NOT NULL AND call_to_actions.approved")
       end
     else
       if tag
@@ -563,8 +563,7 @@ module CallToActionHelper
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
-              "url" => resource_url,
-              "one_shot" => resource.one_shot
+              "url" => resource_url
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),

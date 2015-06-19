@@ -50,28 +50,15 @@ module RewardHelper
   #   ctas           - list of ctas to evaluate
   #   reward_name    - name of the reward that ctas contribute to obtain 
   def cta_to_reward_statuses_by_user(user, ctas, reward_name) 
-    cta_to_reward_statuses = cache_long(get_cta_to_reward_statuses_by_user_cache_key(user.id)) do
-      result = {}
-      ctas.each do |cta|
-        result[cta.id] = cta_reward_statuses(user, cta, reward_name)
-      end
-      result
-    end
-    updated = false
+    cta_to_reward_statuses = {}
     ctas.each do |cta|
-      unless cta_to_reward_statuses.key? cta.id
-        updated = true
-        cta_to_reward_statuses[cta.id] = cta_reward_statuses(user, cta, reward_name)
-      end
-    end
-    if updated
-      cache_write_long(get_cta_to_reward_statuses_by_user_cache_key(user.id), cta_to_reward_statuses)
+      cta_to_reward_statuses[cta.id] = cta_reward_statuses(user, cta, reward_name)
     end
     cta_to_reward_statuses
   end
 
   def cta_reward_statuses(user, cta, reward_name)
-    if call_to_action_completed?(cta)
+    if call_to_action_completed?(cta, user)
       nil
     else
       winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(cta, user)

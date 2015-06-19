@@ -48,36 +48,28 @@ module BrowseHelper
       }
     }
     
-    cache_medium(get_recent_content_previews_cache_key(params)) do
-    
-      recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
-      recent_contents = prepare_contents(recent)
-      recent_contents = compute_cta_status_contents(recent_contents, current_or_anonymous_user)
+    recent = get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
+    recent_contents = prepare_contents(recent)
+    recent_contents = compute_cta_status_contents(recent_contents, current_or_anonymous_user)
 
-      browse_section = ContentSection.new(
-        {
-          key: "recent",
-          title: "I piu recenti",
-          icon_url: get_browse_section_icon(nil),
-          contents: recent_contents,
-          view_all_link: build_viewall_link("/browse/view_recent"),
-          column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
-        }
-      )
-      
-    end
+    browse_section = ContentSection.new(
+      {
+        key: "recent",
+        title: "I piu recenti",
+        icon_url: get_browse_section_icon(nil),
+        contents: recent_contents,
+        view_all_link: build_viewall_link("/browse/view_recent"),
+        column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+      }
+    )  
   end
 
   def get_recent_ctas(tags, params = {})
-    cache_medium(get_recent_contents_cache_key( params[:limit], tags.map{ |t| t.id })) do
-      
-      params[:conditions] = {
-        without_user_cta: true
-      }
-      
-      get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
-      
-    end
+    params[:conditions] = {
+      without_user_cta: true
+    }
+    
+    get_ctas_with_tags_in_and(tags.map{|t| t.id}, params)
   end
   
   def build_viewall_link(url)
@@ -96,7 +88,7 @@ module BrowseHelper
     end
     cta_statuses = {}
     unless cta_ids.empty?
-      cta_statuses = cta_to_reward_statuses_by_user(current_or_anonymous_user, CallToAction.includes(:interactions).where("call_to_actions.id in (?)", cta_ids).references(:interactions).to_a, 'point')
+      cta_statuses = cta_to_reward_statuses_by_user(user, CallToAction.includes(:interactions).where("call_to_actions.id in (?)", cta_ids).references(:interactions).to_a, 'point')
     end
     contents.each do |content|
       if content.type == "cta"
