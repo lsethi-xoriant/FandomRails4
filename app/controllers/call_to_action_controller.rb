@@ -662,7 +662,7 @@ class CallToActionController < ApplicationController
 
     provider_json = interaction.resource.providers[provider]
     is_share_valid = true
-    exception = nil
+    error = nil
 
     begin 
 
@@ -682,7 +682,8 @@ class CallToActionController < ApplicationController
         if address =~ Devise.email_regexp
           send_share_interaction_email(address, interaction.call_to_action)
         else
-          throw Exception.new("Formato non valido")
+          is_share_valid = false
+          error = "Formato non valido"
         end
       else
         is_share_valid = false
@@ -690,6 +691,7 @@ class CallToActionController < ApplicationController
 
     rescue Exception => exception
       is_share_valid = false
+      error = exception.to_s
     end
 
     if is_share_valid
@@ -700,7 +702,7 @@ class CallToActionController < ApplicationController
 
     response[:share] = Hash.new
     response[:share][:result] = is_share_valid
-    response[:share][:exception] = exception 
+    response[:share][:exception] = error 
 
     [user_interaction, outcome, response]
   end
