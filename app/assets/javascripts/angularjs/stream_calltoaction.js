@@ -1584,7 +1584,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     interaction_id = interaction_info.interaction.id;
 
     if(data.current_user) {
-      console.log(data.current_user);
       $scope.current_user = data.current_user;
     }
 
@@ -1595,7 +1594,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(data.counter) {
       interaction_info.interaction.resource.counter = data.counter;
       interaction_info.interaction.resource.counter_aux = data.counter_aux;
-      console.log(data.counter_aux);
     }
 
     // Google analytics.
