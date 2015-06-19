@@ -96,7 +96,11 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
     if params[:vcode].present?
       if @calltoaction_info_list[0]["calltoaction"]["vcodes"].include?(params[:vcode])
-        @calltoaction_info_list[0]["calltoaction"]["vcode"] = params[:vcode]
+
+        if @calltoaction_info_list[0]["calltoaction"]["vcodes"][0..2].include?(params[:vcode])
+          @calltoaction_info_list[0]["calltoaction"]["vcode"] = params[:vcode]
+        end
+
         @calltoaction_info_list[0]["calltoaction"]["extra_fields"]["spotlight"] = "<script type=\"text/javascript\">
           var axel = Math.random() + \"\";
           var a = axel * 10000000000000;
