@@ -412,6 +412,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     cta.save
 
+    CallToActionTag.where(:call_to_action_id => cta.id).pluck(:tag_id).each do |tag_id|
+      update_updated_at_recursive(tag_id, Time.now)
+    end
+
     respond_to do |format|
       format.json { render :json => risp.to_json }
     end
