@@ -212,7 +212,7 @@ Fandom::Application.routes.draw do
           post "/append_comments", :to => "call_to_action#append_comments", defaults: { format: 'json' }
           post "/add_comment", :to => "call_to_action#add_comment", defaults: { format: 'json' }
           get "/new_comments_polling", :to => "call_to_action#new_comments_polling", defaults: { format: 'json' }
-          get "/ranking/page", :to => "ranking#get_rank_page"
+          post "/ranking/page", :to => "ranking#get_rank_page"
         end
       end
     end
@@ -314,7 +314,7 @@ Fandom::Application.routes.draw do
   # get "/classifica/:id", :to => "ranking#show"
   get "classifiche", :to => "ranking#show_rankings_page"
   get "bootcamp", :to => "ranking#show_vote_rankings_page"
-  get "/ranking/:page", :to => "ranking#get_rank_page"
+  post "/ranking/page", :to => "ranking#get_rank_page"
   post "/ranking/vote/page", :to => "ranking#get_vote_rank_page"
   get "/ranking/show/:id", :to => "ranking#show_single_rank"
   get "/ranking/vote/:id", :to => "ranking#show_vote_rank"

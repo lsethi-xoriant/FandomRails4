@@ -372,8 +372,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -538,10 +537,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
+    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -563,6 +562,25 @@ CREATE SEQUENCE events_id_seq
 --
 
 ALTER SEQUENCE events_id_seq OWNED BY events.id;
+
+
+--
+-- Name: events_id_seq1; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE events_id_seq1
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq1; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq1 OWNED BY events.id;
 
 
 --
@@ -718,7 +736,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean,
     registration_needed boolean
 );
@@ -2195,8 +2212,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -2541,7 +2557,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean,
     registration_needed boolean
 );
@@ -4018,8 +4033,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -4364,9 +4378,7 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
-    stored_for_anonymous boolean,
-    registration_needed boolean
+    stored_for_anonymous boolean
 );
 
 
@@ -5393,8 +5405,7 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255),
-    anonymous_id character varying
+    gender character varying(255)
 );
 
 
@@ -7662,8 +7673,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -8008,7 +8018,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean,
     registration_needed boolean
 );
@@ -11306,8 +11315,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -11652,7 +11660,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean,
     registration_needed boolean
 );
@@ -13129,8 +13136,7 @@ CREATE TABLE call_to_actions (
     aux json,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    extra_fields json DEFAULT '{}'::json,
-    interaction_call_to_action_id integer
+    extra_fields json DEFAULT '{}'::json
 );
 
 
@@ -13475,7 +13481,6 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    interaction_call_to_action_id integer,
     stored_for_anonymous boolean,
     registration_needed boolean
 );
@@ -23364,13 +23369,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -23424,13 +23422,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -23779,13 +23770,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -23839,13 +23823,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -24194,13 +24171,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -24254,13 +24224,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -24443,13 +24406,6 @@ CREATE INDEX index_user_rewards_on_user_id ON user_rewards USING btree (user_id)
 --
 
 CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING btree (((aux ->> 'extra_fields'::text)));
-
-
---
--- Name: index_users_on_anonymous_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
 
 
 --
@@ -25010,13 +24966,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -25070,13 +25019,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -25826,13 +25768,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -25886,13 +25821,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -26241,13 +26169,6 @@ CREATE INDEX index_call_to_actions_on_instagram_media_id ON call_to_actions USIN
 
 
 --
--- Name: index_call_to_actions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_call_to_actions_on_interaction_call_to_action_id ON call_to_actions USING btree (interaction_call_to_action_id);
-
-
---
 -- Name: index_call_to_actions_on_name; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -26301,13 +26222,6 @@ CREATE INDEX index_interaction_call_to_actions_on_interaction_id ON interaction_
 --
 
 CREATE INDEX index_interaction_ctas_on_interaction_id_and_cta_id ON interaction_call_to_actions USING btree (interaction_id, call_to_action_id);
-
-
---
--- Name: index_interactions_on_interaction_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_interactions_on_interaction_call_to_action_id ON interactions USING btree (interaction_call_to_action_id);
 
 
 --
@@ -27326,13 +27240,7 @@ INSERT INTO schema_migrations (version) VALUES ('20150212101118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212111531');
 
-INSERT INTO schema_migrations (version) VALUES ('20150212131531');
-
-INSERT INTO schema_migrations (version) VALUES ('20150212140258');
-
 INSERT INTO schema_migrations (version) VALUES ('20150212143420');
-
-INSERT INTO schema_migrations (version) VALUES ('20150212143421');
 
 INSERT INTO schema_migrations (version) VALUES ('20150212162357');
 
@@ -27341,8 +27249,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150213081903');
 INSERT INTO schema_migrations (version) VALUES ('20150216160308');
 
 INSERT INTO schema_migrations (version) VALUES ('20150219101047');
-
-INSERT INTO schema_migrations (version) VALUES ('20150227151410');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227151546');
 

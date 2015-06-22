@@ -33,6 +33,7 @@ module ApplicationHelper
   include FilterHelper  
   include UserInteractionHelper
   include TagHelper
+  include ProfileHelper
    
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
