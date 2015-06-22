@@ -22,6 +22,10 @@
       <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
     </div>
   </div>
+  <div class="form-group">
+    <label class="text-input">Gravity position</label>
+    <%= f.select(:media_image_gravity_position, [["north", "north"], ["center", "center"], ["south", "south"]], {}, { :class => "form-control"}) %>
+  </div>
 </div>
 
 <div class="form-group media-upload-form-group">

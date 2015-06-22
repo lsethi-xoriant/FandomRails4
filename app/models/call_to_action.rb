@@ -38,7 +38,8 @@ class CallToAction < ActiveRecordWithJSON
     :aws_transcoding, 
     :media_image_content_type, 
     :media_image_file_size, 
-    :media_image_file_name
+    :media_image_file_name,
+    :thumbnail_gravity_position, :media_image_gravity_position
 
   json_attributes [[:aux, EmptyAux], [:extra_fields, EmptyAux]]
 
@@ -47,7 +48,8 @@ class CallToAction < ActiveRecordWithJSON
 
   attr_accessor :activation_date_time, :interaction_watermark_url, :release_required, :privacy_required,
                 :button_label, :alternative_description, :enable_for_current_user, :shop_url, 
-                :aws_transcoding, :valid_from_date_time, :valid_to_date_time
+                :aws_transcoding, :valid_from_date_time, :valid_to_date_time,
+                :thumbnail_gravity_position, :media_image_gravity_position
 
   validates_presence_of :title
   validates_presence_of :name
@@ -74,11 +76,24 @@ class CallToAction < ActiveRecordWithJSON
     styles: lambda { |image| 
       if image.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}
         {
-          :extra_large => { :geometry => "1024x768>", :quality => 90, :watermark_path => image.instance.get_watermark },
-          :large => { :geometry => "600x600>", :watermark_path => image.instance.get_watermark },
-          :extra => { :geometry => '260x150#' },
-          :medium => { :geometry => '300x300#' },
-          :thumb => { :geometry => '100x100#' }
+          extra_large: { 
+            watermark_path: image.instance.get_watermark,
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "1024x768^", "-extent", "1024x768"], 
+            quality: 90
+          },
+          large: {
+            watermark_path: image.instance.get_watermark,
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "600x600^", "-extent", "600x600"]
+          },
+          extra: {
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "260x150^", "-extent", "260x150"]
+          },
+          medium: {
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "300x300^", "-extent", "300x300"]
+          },
+          thumb: {
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "100x100^", "-extent", "100x100"]
+          }
         }
       elsif image.content_type =~ %r{^(image|(x-)?application)/(pdf)$}
         { }
@@ -89,17 +104,16 @@ class CallToAction < ActiveRecordWithJSON
      default_url: "/assets/media-image-default.jpg"
 
   has_attached_file :thumbnail, 
-    :styles => {
-      :carousel => "1024x320^", 
-      :medium => "524x393^", 
-      :thumb => "262x147^",
-      :wide => "1024x576"
-    }, 
-    :convert_options => { 
-      :carousel => " -crop '1024x320+0+40'", 
-      :medium => " -crop '524x393+0+0'", 
-      :thumb => " -crop '262x147+0+0'" 
-    }
+    styles: lambda { |image| 
+      {
+        extra_large: { convert_options: "-gravity north -thumbnail 1024x768^ -extent 1024x768" },
+        wide: { convert_options: "-gravity north -thumbnail 1024x576^ -extent 1024x576" },
+        medium: { convert_options: "-gravity north -thumbnail 524x393^ -extent 524x393" }, 
+        thumb: { convert_options: "-gravity north -thumbnail 262x147^ -extent 262x147" },
+        carousel: { convert_options: "-gravity north -thumbnail 1024x320^ -extent 1024x320" }
+      }
+    },
+    source_file_options:  { all: '-background transparent' }
 
   has_many :interaction_call_to_actions
   has_many :interactions, dependent: :destroy
@@ -121,6 +135,11 @@ class CallToAction < ActiveRecordWithJSON
   scope :valid, -> { where("call_to_actions.valid_from <= ? AND call_to_actions.valid_to >= ? AND
                             call_to_actions.valid_to IS NOT NULL AND call_to_actions.valid_from IS NOT NULL AND 
                             call_to_actions.user_id IS NULL", Time.now, Time.now) }
+
+  
+  def self.gravity_position(instance_aux)
+    instance_aux && instance_aux["media_image_gravity_position"] ? instance_aux["media_image_gravity_position"] : "north"
+  end
 
   def media_image_url
     media_image.url
