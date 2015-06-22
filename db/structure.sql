@@ -537,10 +537,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
+    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
-    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -4378,7 +4378,8 @@ CREATE TABLE interactions (
     resource_type character varying(255),
     call_to_action_id integer,
     aux json,
-    stored_for_anonymous boolean
+    stored_for_anonymous boolean,
+    registration_needed boolean
 );
 
 
@@ -5405,7 +5406,8 @@ CREATE TABLE users (
     newsletter boolean,
     avatar_selected_url character varying(255),
     aux json,
-    gender character varying(255)
+    gender character varying(255),
+    anonymous_id character varying
 );
 
 
@@ -15194,7 +15196,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -23404,6 +23406,13 @@ CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
+
+
+--
 -- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -23802,6 +23811,13 @@ CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
 --
 
 CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
 
 
 --
@@ -24206,6 +24222,13 @@ CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
+
+
+--
 -- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -24409,6 +24432,13 @@ CREATE INDEX index_user_uploads_on_aux_fields ON user_upload_interactions USING 
 
 
 --
+-- Name: index_users_on_anonymous_id; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_anonymous_id ON users USING btree (anonymous_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -24597,6 +24627,13 @@ CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
 --
 
 CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
 
 
 --
@@ -25001,6 +25038,13 @@ CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
+
+
+--
 -- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -25399,6 +25443,13 @@ CREATE INDEX index_events_on_request_uri ON events USING btree (request_uri);
 --
 
 CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
+
+
+--
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
 
 
 --
@@ -25803,6 +25854,13 @@ CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
+
+
+--
 -- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -26204,6 +26262,13 @@ CREATE INDEX index_events_on_timestamp ON events USING btree ("timestamp");
 
 
 --
+-- Name: index_instantwins_on_reward_info_prize_code; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_instantwins_on_reward_info_prize_code ON instantwins USING btree (((reward_info ->> 'prize_code'::text)));
+
+
+--
 -- Name: index_interaction_call_to_actions_on_call_to_action_id; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -26477,6 +26542,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: created_at_users_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX created_at_users_idx ON users USING btree (created_at);
+
 
 --
 -- Name: index_answers_on_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
@@ -27277,4 +27349,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150608085400');
 INSERT INTO schema_migrations (version) VALUES ('20150610135146');
 
 INSERT INTO schema_migrations (version) VALUES ('20150611135346');
+
+INSERT INTO schema_migrations (version) VALUES ('20150622132011');
 
