@@ -1,7 +1,7 @@
 // Easyadmin call to action forms methods //
 
 function add_fields(link, association, content, resource) {
-  if(resource == "play" || resource == "share" || resource == "comment" || resource == "like" || resource == "upload" || resource == "vote" || resource == "random") {
+  if(resource == "play" || resource == "share" || resource == "comment" || resource == "like" || resource == "upload" || resource == "vote" || resource == "random" || resource == "instantwin") {
     if(!window[resource + "_counter"]) {
       window[resource + "_counter"] = true;
       var new_id = new Date().getTime();
@@ -16,56 +16,6 @@ function add_fields(link, association, content, resource) {
   }
 }
 
-// function add_like_fields(link, association, content) {
-//   if(!like_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-like-add").prepend(content.replace(regexp, new_id));
-//     like_counter = true;
-//   }
-// }
-
-// function add_download_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-download-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_play_fields(link, association, content) {
-//   if(!play_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-play-add").prepend(content.replace(regexp, new_id));
-//     play_counter = true;
-//   }
-// }
-
-// function add_versus_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-versus-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_check_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-check-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_quiz_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-quiz-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_upload_fields(link, association, content) {
-//   if(!upload_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
-//   }
-// }
-
 function add_answer_fields(link, association, content) {
   var new_id = new Date().getTime();
   var regexp = new RegExp("new_" + association, "g");
@@ -75,39 +25,6 @@ function add_answer_fields(link, association, content) {
     updateMedia(obj);
   });
 }
-
-// function add_share_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-share-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_comment_fields(link, association, content) {
-//   if(!comment_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
-//     comment_counter = true;
-//   }
-// }
-
-// function add_vote_fields(link, association, content) {
-//   if(!vote_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
-//     vote_counter = true;
-//   }
-// }
-
-// function add_random_fields(link, association, content) {
-//   if(!random_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-random-add").prepend(content.replace(regexp, new_id));
-//     random_counter = true;
-//   }
-// }
 
 function remove_fields(link, resource) {
   switch(resource) {
@@ -148,6 +65,10 @@ function remove_fields(link, resource) {
     case "random":
       $(link).parent().parent().parent().remove();
       random_counter = false;
+      break;
+    case "instantwin":
+      $(link).parent().parent().parent().remove();
+      instantwin_counter = false;
       break;
     default:
       $(link).closest(".panel-" + resource).remove();
