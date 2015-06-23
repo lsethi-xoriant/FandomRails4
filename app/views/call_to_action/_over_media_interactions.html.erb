@@ -1,0 +1,62 @@
+<!-- OVER MEDIA INTERACTIONS -->
+<div class="play-interaction__container over-media-{{interaction_info.interaction.resource_type}}-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia">
+
+  <div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-xs-12 text-center" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/vote_interaction" %>
+  </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-8 col-sm-offset-2 over-media__col">
+    <%= render partial: "/call_to_action/trivia_interaction" %>
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+
+    <div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        </span>  
+      </div>
+    </div>
+  </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 over-media__col">
+    <%= render partial: "/call_to_action/versus_interaction" %>
+    <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
+        <span class="label label-success cta-cover__winnable-reward__label">
+          Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+        </span> 
+      </div>
+    </div>
+
+    <div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
+        <span class="label label-warning cta-cover__winnable-reward__label">
+          +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        </span>  
+      </div>
+    </div>
+  </div>
+  <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/check_interaction" %>
+  </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/share_interaction" %>
+  </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-sm-12" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/upload_interaction" %>
+  </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'download'" class="col-sm-12" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/download_interaction" %>
+  </div>  
+  <div ng-if="interaction_info.interaction.resource_type == 'link'" class="col-sm-12" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/link_interaction" %>
+  </div> 
+  <div ng-if="interaction_info.interaction.resource_type == 'randomresource'" class="col-sm-12 text-center" style="position: absolute; bottom: 15px;">
+    <%= render partial: "/call_to_action/random_interaction" %>
+  </div>
+
+</div>

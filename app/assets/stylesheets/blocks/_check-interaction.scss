@@ -9,3 +9,10 @@
 .check-interaction__container .interaction__winnable-reward--undervideo__row {
   background: #efefef;
 }
+
+.play-interaction__container {
+  .check-interaction__container, .interaction__winnable-reward--undervideo__row {
+    background: transparent !important;
+    border: none;
+  }
+}

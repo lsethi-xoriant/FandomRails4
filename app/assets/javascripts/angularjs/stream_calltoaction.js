@@ -712,6 +712,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END");
   };
 
+  $scope.filterVisibleInteractionsUnderMedia = function(interaction_info) {
+    return filterVisibleInteractionsByPositioning(interaction_info, "UNDER_MEDIA");
+  }
+
+  $scope.filterVisibleInteractionsOverMedia = function(interaction_info) {
+    return filterVisibleInteractionsByPositioning(interaction_info, "OVER_MEDIA"); 
+  };
+
+  function filterVisibleInteractionsByPositioning(interaction_info, positioning) {
+    return $scope.filterAlwaysVisibleInteractions(interaction_info) && interaction_info.interaction.interaction_positioning == positioning;
+  }
+
   $scope.filterAlwaysVisibleInteractions = function(interaction_info) {
     return (interaction_info.interaction.when_show_interaction == "SEMPRE_VISIBILE");
   };

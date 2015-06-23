@@ -457,6 +457,8 @@ module CallToActionHelper
           if interaction_info_list["interaction"]["when_show_interaction"].include?("OVERVIDEO")
             interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
           end
+
+          interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
         end
       end
     end
@@ -540,12 +542,11 @@ module CallToActionHelper
           ical = resource.ical_fields
         end
 
-        when_show_interaction = interaction.when_show_interaction
-
         interaction_info_list << {
           "interaction" => {
             "id" => interaction.id,
-            "when_show_interaction" => when_show_interaction,
+            "when_show_interaction" => interaction.when_show_interaction,
+            "interaction_positioning" => interaction.interaction_positioning,
             "overvideo_active" => false,
             "registration_needed" => (interaction.registration_needed || false),
             "seconds" => interaction.seconds,
@@ -668,9 +669,7 @@ module CallToActionHelper
   end
 
   def always_shown_interactions(calltoaction)
-    cache_short("always_shown_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
-    end
+    calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
   end
 
   def enable_interactions(calltoaction)
