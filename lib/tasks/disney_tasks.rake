@@ -53,7 +53,7 @@ namespace :disney_tasks do
       gallery_ctas.each_with_index do |cta, index|
         logger.info "#{log_head(gallery_tag.name)} cta #{cta.id} tracking start"
 
-        extra_fields = JSON.parse(cta.extra_fields || "{}")
+        extra_fields = cta.extra_fields || "{}"
         check_age = extra_fields["age"].present?
 
         user = cta.user
