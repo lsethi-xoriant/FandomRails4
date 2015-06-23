@@ -49,7 +49,7 @@ namespace :aws_tasks do
       ctas.each do |cta|
         object = bucket.objects["#{s3_output_folder}/web_mp4/aws_transcoding-#{cta.id}.mp4"]
         
-        aux = JSON.parse(cta.aux || "{}")
+        aux = cta.aux || "{}"
 
         if object.exists?
           
@@ -181,7 +181,7 @@ namespace :aws_tasks do
 
         job = video_transcoding(output_key, video_url, transcoder_client, pipeline_id, s3_output_folder, preset)
 
-        aux = JSON.parse(cta.aux)
+        aux = cta.aux
         aux["aws_transcoding_media_status"] = "inprogress"
         aux["aws_transcoding_media_start_time"] = Time.now.utc
         cta.update_attribute(:aux, aux.to_json)

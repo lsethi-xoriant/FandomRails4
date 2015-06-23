@@ -331,6 +331,7 @@ Fandom::Application.routes.draw do
       get "/users/sign_in", :to => "user#user_sign_in", defaults: { format: 'json' }
       get "/users/sign_up", :to => "user#user_sign_up", defaults: { format: 'json' }
       get "/call_to_action/get_related", :to => "call_to_action#get_related_ctas", defaults: { format: 'json' }
+      post "/call_to_action/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
     end
   end
 

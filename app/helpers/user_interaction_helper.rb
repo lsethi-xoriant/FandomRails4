@@ -350,5 +350,199 @@ module UserInteractionHelper
   
     [user_interaction, outcome]
   end
+  
+  def update_interaction_helper(params)
+    interaction = Interaction.find(params[:interaction_id])
+    calltoaction = interaction.call_to_action
+
+    aux = {}
+    response = {}
+    response[:calltoaction_id] = interaction.call_to_action_id;
+
+    response[:ga] = Hash.new
+    response[:ga][:category] = "UserInteraction"
+    response[:ga][:action] = "CreateOrUpdate"
+    response[:ga][:label] = interaction.resource_type 
+
+    linked_cta = nil
+    if interaction.interaction_call_to_actions.any?
+      linked_cta = compute_linked_cta(interaction, params[:user_interactions_history], params[:params])
+      next_cta_id = linked_cta.nil? ? nil : linked_cta.id
+    end
+
+    aux[:to_redo] = false
+
+    aux[:user_interactions_history] = params[:user_interactions_history] if params[:user_interactions_history]
+    aux[:next_cta_id] = next_cta_id if next_cta_id
+
+    case interaction.resource_type.downcase
+    when "quiz"
+      answer = Answer.find(params[:params])
+      user_interaction, outcome, response = update_quiz_interaction(interaction, answer, aux, response)
+    when "like"
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+    when "share"
+      user_interaction, outcome, response = update_share_interaction(interaction, aux, params[:provider], params[:share_with_email_address], params[:facebook_message], response)
+    when "vote"
+      aux[:vote] = params[:params]
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+      response["counter_aux"], response["counter"] = get_interaction_counter_from_view_counter(interaction.id)
+    when "randomresource"
+      user_interaction, outcome, response = update_cta_and_interaction_status(calltoaction, interaction, response)
+    when "download"
+      response["download_interaction_attachment"] = interaction.resource.attachment.url
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
+    else
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
+    end
+
+    if user_interaction
+      response[:user_interaction] = build_user_interaction_for_interaction_info(user_interaction)
+      response[:outcome] = outcome
+      if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
+        user_interactions_count = current_user.user_interactions.count
+        response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
+      end
+    end 
+    
+    response = update_cta_and_interaction_status(calltoaction, interaction, response)
+
+    if linked_cta.present?
+      response[:next_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([linked_cta])
+    end
+
+    if current_user && $site.id != "disney"
+      response[:current_user] = JSON.parse(build_current_user())
+    elsif $site.id == "disney"
+      response[:current_user] = build_disney_current_user()
+    end
+    
+    return response
+  
+  end
+
+  #function moved from call_to_action_controller
+  
+  def compute_linked_cta(interaction, user_interactions_history, current_answer)
+    interaction_call_to_actions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
+
+    linked_cta = nil
+    symbolic_name_to_counter = nil
+
+    interaction_call_to_actions.each do |interaction_call_to_action|
+      if interaction_call_to_action.condition.present?
+        # the symbolic_name_to_counter is populated "lazily" only if there is at least one condition present
+        if symbolic_name_to_counter.nil?
+          symbolic_name_to_counter = user_history_to_answer_map_fo_condition(current_answer, user_interactions_history)
+        end
+        condition = interaction_call_to_action.condition
+        condition_name, condition_params = condition.first
+        if get_linked_call_to_action_conditions[condition_name].call(symbolic_name_to_counter, condition_params)
+          linked_cta = interaction_call_to_action.call_to_action
+        end
+      else
+        linked_cta = interaction_call_to_action.call_to_action
+        break
+      end
+    end
+
+    linked_cta
+  end
+  
+  def update_quiz_interaction(interaction, answer, aux, response)
+    user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, answer.id, nil, aux.to_json)
+    
+    quiz_type = interaction.resource.quiz_type.downcase
+
+    response["answer"] = answer
+    response["has_answer_media"] = answer.answer_with_media?
+
+    answers = interaction.resource.answers
+    response["answers"] = build_answers_for_resource(interaction, answers, quiz_type, user_interaction)
+    
+    if answer.media_type == "IMAGE" && answer.media_image
+      response["answer_media_image_url"] = answer.media_image.url
+    end
+
+    if answer.call_to_action_id
+      answer_cta = answer.call_to_action
+      response["next_call_to_action_info_list"] = build_cta_info_list_and_cache_with_max_updated_at([answer_cta])
+    end
+
+    response["counter_aux"], response["counter"] = get_interaction_counter_from_view_counter(interaction.id)
+
+    if quiz_type == "trivia"
+      response[:ga][:label] = "#{interaction.resource.quiz_type.downcase}-answer-#{answer.correct ? "right" : "wrong"}"
+    else 
+      response[:ga][:label] = interaction.resource.quiz_type.downcase
+    end
+
+    [user_interaction, outcome, response]
+  end
+
+  def update_share_interaction(interaction, aux, provider, address, facebook_message = " ", response)
+    unless current_user
+      throw Exception.new("the user must be logged")
+    end
+
+    provider_json = interaction.resource.providers[provider]
+    is_share_valid = true
+    error = nil
+
+    begin 
+
+      case provider 
+      when "facebook"
+        link = provider_json["link"].present? ? provider_json["link"] : "#{root_url}?calltoaction_id=#{interaction.call_to_action_id}"
+        current_user.facebook(request.site.id).put_wall_post(facebook_message, 
+              { name: provider_json["message"], description: provider_json["description"], link: link, picture: "#{interaction.resource.picture.url}" })
+      when "twitter"   
+        if Rails.env == "production"
+          media = URI.parse("#{interaction.resource.picture.url}").open
+          current_user.twitter(request.site.id).update_with_media("#{interaction.call_to_action.title} #{provider_json["message"]}", media)
+        else
+          current_user.twitter(request.site.id).update("#{interaction.call_to_action.title} #{provider_json["message"]}")
+        end
+      when "email"
+        if address =~ Devise.email_regexp
+          send_share_interaction_email(address, interaction.call_to_action)
+        else
+          is_share_valid = false
+          error = "Formato non valido"
+        end
+      else
+        is_share_valid = false
+      end
+
+    rescue Exception => exception
+      is_share_valid = false
+      error = exception.to_s
+    end
+
+    if is_share_valid
+      aux["providers"] = { provider => 1 }
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
+      response[:ga][:label] = interaction.resource_type.downcase
+    end
+
+    response[:share] = Hash.new
+    response[:share][:result] = is_share_valid
+    response[:share][:exception] = error 
+
+    [user_interaction, outcome, response]
+  end
+  
+  def get_interaction_counter_from_view_counter(interaction_id)
+    counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction_id).first
+    counter_aux = counter ? counter.aux : {}
+    counter = counter ? counter.counter : 0
+    [counter_aux, counter]
+  end
+  
+  def update_cta_and_interaction_status(cta, interaction, response)
+    response[:interaction_status] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
+    response[:calltoaction_status] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
+    response
+  end
 
 end
