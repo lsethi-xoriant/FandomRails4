@@ -39,15 +39,15 @@ $filters-item-margin-right: 15px;
 }
 
 .filters__title {
-    color: #fff;
-    text-transform: capitalize;
-    text-shadow: 0 1px #000;
-    top: 65px;
-    font-size: 18px;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-    right: 0;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 0 1px #000;
+  top: 45%;
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 .filters__title--gallery {

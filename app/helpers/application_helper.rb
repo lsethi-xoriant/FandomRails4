@@ -42,6 +42,16 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def adjust_path_with_property(path)
+    if path_to_adjust == ("/" + $site.default_property)
+      "/"
+    elsif $context_root && path.include?("/#{$context_root}/")
+      "/#{context_root}#{url}";
+    else
+      path
+    end
+  end
+
   def get_property()
     property_name = $context_root || $site.default_property
     if(property_name)
@@ -850,6 +860,7 @@ module ApplicationHelper
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
+      "context_root" => $context_root,
       "free_provider_share" => $site.free_provider_share,
       "property_info" => property_info,
       "property_info_list" => property_info_list,

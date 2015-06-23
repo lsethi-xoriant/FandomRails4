@@ -54,12 +54,12 @@ class BrowseController < ApplicationController
   
   def handle_no_result(query)
     flash[:notice] = get_not_found_message(query)
-    go_to_browse
   end
 
   def full_search
     if params[:query].blank?
       handle_no_result("")
+      redirect_to adjust_path_with_property("/browse")
       return
     else
       @query = params[:query]
@@ -92,9 +92,11 @@ class BrowseController < ApplicationController
       }
     }
 
+    debugger
+
     @query = params[:query]
     if @contents.empty?
-      redirect_to "/browse"
+      redirect_to adjust_path_with_property("/browse")
     end
 
   end

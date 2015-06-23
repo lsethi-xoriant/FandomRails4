@@ -348,7 +348,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.linkTo = function(url) {
-    if(url == "/" + $scope.aux.default_property) {
+    default_property = $scope.aux.site.attributes.default_property;
+
+    if(url == "/" + default_property) {
       return "/"
     } else if($scope.aux.context_root && url.indexOf("/" + $scope.aux.context_root + "/") < 0) {
       url = "/" + $scope.aux.context_root + "" + url;
