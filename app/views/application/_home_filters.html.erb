@@ -4,7 +4,7 @@
     <ul class="slides">
       <li ng-repeat="content in stripe.contents" class="text-center filters__flexslider-desktop-item">
         <%= light_link_to("/browse/category/{{content.slug}}", class: "filters__flexslider-a") do %>
-          <img ng-if="content.thumb_url" class="filters__flexslider-image" ng-src="{{content.thumb_url}}">  
+          <img ng-if="content.thumb_url" class="filters__flexslider-image" ng-src="{{content.thumb_thumb_url}}">  
           <img ng-if="!content.thumb_url" class="filters__flexslider-image" src="//placehold.it/262x147/108ff7/108ff7">
           <div  ng-if="!content.thumb_url"  class="filters__title">{{content.title}}</div>   
         <% end %>

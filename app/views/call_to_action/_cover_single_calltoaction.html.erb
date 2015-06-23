@@ -31,13 +31,14 @@
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
           </span>  
         </div> 
+
         <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id == null">
-          <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
-            <span class="{{calltoaction_info.miniformat.icon}}"></span>
-            {{calltoaction_info.miniformat.title}}
-          </span>
+          <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
+            <%= render partial: "/call_to_action/miniformat" %>
+          </div>
           <p>{{calltoaction_info.calltoaction.title}}</p>
         </div>
+
         <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id">
           <div class="row">
             <div class="col-xs-10">

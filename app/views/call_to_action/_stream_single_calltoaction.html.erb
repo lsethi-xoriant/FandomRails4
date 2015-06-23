@@ -1,9 +1,8 @@
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id == null">
   <div class="col-xs-6 cta__miniformat-col">
-    <span ng-if="calltoaction_info.miniformat" class="label label-default cta-cover__miniformat" style="background-color: {{calltoaction_info.miniformat.label_background}} !important; color: {{calltoaction_info.miniformat.label_color}} !important;">
-      <span class="{{calltoaction_info.miniformat.icon}}"></span>
-      {{calltoaction_info.miniformat.title}}
-    </span>
+    <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
+      <%= render partial: "/call_to_action/miniformat" %>
+    </div>
   </div>
   <div class="col-xs-6 text-right">
     <!-- CALLTOACTION WINNABLE REWARD COUNT -->

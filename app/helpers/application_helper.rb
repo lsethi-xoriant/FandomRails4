@@ -716,9 +716,11 @@ module ApplicationHelper
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta, anonymous_user),
       "thumbnail_carousel_url" => cta.thumbnail(:carousel),
       "thumbnail_medium_url" => cta.thumbnail(:medium),
+      "thumbnail_wide_url" => cta.thumbnail(:wide),
       "title" => cta.title,
       "description" => cta.description,
       "flag" => build_grafitag_for_calltoaction(cta, "flag"),
+      "miniformat" => build_grafitag_for_calltoaction(cta, "miniformat"),
       "interaction_ids" => interaction_ids
     }
 
@@ -843,6 +845,8 @@ module ApplicationHelper
       property_path_name = nil;
     end
 
+    assets = Tag.find("assets")
+
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
@@ -858,7 +862,8 @@ module ApplicationHelper
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
-      "instant_win_info" => instant_win_info
+      "instant_win_info" => instant_win_info,
+      "assets" => assets
     }
 
     if other

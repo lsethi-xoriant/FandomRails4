@@ -4,6 +4,7 @@ $filters-item-margin-right: 15px;
 
 .filters__flexslider-main-row {
     min-height: 30px;
+    border-top: 1px solid #ccc;
 }
 
 .filters__flexslider-desktop, .filters__flexslider-mobile {
@@ -124,6 +125,7 @@ $filters-item-margin-right: 15px;
         .flex-direction-nav a {
             color: #999 !important;
             margin: -10px 0 0 !important;
+            opacity: 0.7 !important;
         }
 
         .flex-direction-nav .flex-prev {

@@ -34,7 +34,7 @@
 }
 
 .ctas__thumbs-up, .ctas__glyphicon-comment {
-    font-size: 22px;
+    font-size: 22px !important;
     margin-right: 5px;
 }
 
@@ -65,8 +65,8 @@
     color: #fff;
     font-size: 24px;
     font-weight: bold;
-    //margin-bottom: 10px;
-    /*margin: 0;*/
+    margin-bottom: 10px;
+    margin-top: 5px;
     text-shadow: 0 1px #000;
 }
 
@@ -113,6 +113,12 @@
 
 @media (min-width: $screen-sm-min) { 
   .ctas__flexslider {
+
+    .filters__flexslider-item {
+        height: 480px;
+        overflow: hidden;
+    }
+
     .flex-direction-nav a {
         color: rgba(255, 255, 255, 0.3) !important;
         margin: -15px 0 0 !important;

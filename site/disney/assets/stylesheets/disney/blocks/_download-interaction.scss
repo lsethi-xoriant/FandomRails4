@@ -1,0 +1,18 @@
+/* DOWNLOAD INTERACTION*/
+
+.download-undervideo-interaction__row {
+  margin-bottom: 15px;
+}
+
+.download-interaction__container {
+  background: #efefef;
+  padding-top: 15px;
+  padding-bottom: 18px;
+}
+
+.play-interaction__container {
+  .download-interaction__container, .interaction__winnable-reward--undervideo__row {
+    background: transparent !important;
+    border: none;
+  }
+}
