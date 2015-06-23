@@ -38,7 +38,7 @@ class InstantwinController < ApplicationController
           response[:win] = true
           response['message'] = prize.title
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
-          # send_winner_email(instantwin.reward_info['prize_code'],prize)
+          send_winner_email(instantwin.reward_info['prize_code'],prize)
           expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
           log_synced("assigning instant win to user", { 'instantwin_id' => instantwin.id })
         end

@@ -15,6 +15,12 @@ namespace :disney_tasks do
       secret_access_key: aws_settings[:secret_access_key],
       s3_endpoint: "s3-#{aws_settings[:region]}.amazonaws.com"
     )
+    # this configuration is needed to avoid s3 library use multipart upload because it's not supported by aruba.
+    # The best way to avoid it would be to pass the "sigle_request" parameter in writes, but for some reason
+    # after we moved to ruby 2.2 / rails 4.2 it stopped working
+    AWS.config(
+      s3_multipart_threshold: 1024*1024*1024*1024 # 1 terabyte
+    )
 
     aruba_settings = get_deploy_setting("sites/disney/disney_backup_aws", false)
     aruba_s3 = AWS::S3.new(
@@ -47,7 +53,7 @@ namespace :disney_tasks do
       gallery_ctas.each_with_index do |cta, index|
         logger.info "#{log_head(gallery_tag.name)} cta #{cta.id} tracking start"
 
-        extra_fields = JSON.parse(cta.extra_fields || "{}")
+        extra_fields = cta.extra_fields || "{}"
         check_age = extra_fields["age"].present?
 
         user = cta.user

@@ -737,7 +737,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -2558,7 +2559,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -4379,7 +4381,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -6200,7 +6203,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -8021,7 +8025,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -9842,7 +9847,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -11663,7 +11669,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -13484,7 +13491,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -15196,7 +15204,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -27343,6 +27351,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150608085400');
 INSERT INTO schema_migrations (version) VALUES ('20150610135146');
 
 INSERT INTO schema_migrations (version) VALUES ('20150611135346');
+
+INSERT INTO schema_migrations (version) VALUES ('20150622132011');
 
 INSERT INTO schema_migrations (version) VALUES ('20150623074631');
 

@@ -38,7 +38,7 @@ namespace :instantwin_demo do
     instantwins_to_be_created = ((contest_end_datetime - contest_start_datetime).to_i * 24 * 60 * 60) / INTERVAL_WIN_SECONDS
 
     start_time = Time.now
-    puts "#{ instantwins_to_be_created } instantwins to be created \nStart time: #{start_time}"
+    puts "#{instantwins_to_be_created} instantwins to be created \nStart time: #{start_time}"
     STDOUT.flush
 
     while prize_start_datetime <= contest_end_datetime
@@ -46,11 +46,11 @@ namespace :instantwin_demo do
       win_time = prize_start_datetime + (0..(INTERVAL_WIN_SECONDS - 1)).to_a.sample.seconds
       win_time_end = win_time + WIN_PRIZE_SECONDS.seconds # time to win the prize
       prize_end_datetime = prize_start_datetime + (INTERVAL_WIN_SECONDS - 1).seconds
-      unique_id = Digest::MD5.hexdigest("#{ prize_counter }")
+      unique_id = Digest::MD5.hexdigest("#{prize_counter}")
 
       while Instantwin.where("(reward_info->>'prize_code') = ?", unique_id).present?
         prize_counter += 1
-        unique_id = Digest::MD5.hexdigest("#{ prize_counter }")
+        unique_id = Digest::MD5.hexdigest("#{prize_counter}")
       end
 
       reward_info = { 
@@ -67,7 +67,7 @@ namespace :instantwin_demo do
       )
 
       if (prize_counter % 5000) == 0
-        puts "#{ prize_counter } / #{ instantwins_to_be_created } instantwins created in #{ Time.now - start_time } seconds"
+        puts "#{prize_counter} / #{instantwins_to_be_created} instantwins created in #{ Time.now - start_time } seconds"
         STDOUT.flush
       end
 

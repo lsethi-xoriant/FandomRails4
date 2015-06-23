@@ -6,4 +6,11 @@
       
       respond_with related_content_previews.to_json
     end
+    
+    def update_interaction
+      response = update_interaction_helper(params)
+      respond_to do |format|
+        format.json { render :json => response.to_json }
+      end
+    end
 end

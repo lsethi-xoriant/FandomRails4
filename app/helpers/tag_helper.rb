@@ -265,4 +265,13 @@ module TagHelper
     filter_results(ctas, query)
   end
 
+  def update_updated_at_recursive(tag_id, updated_at)
+    tag = Tag.find(tag_id)
+    tag.updated_at = updated_at
+    tag.save
+    TagsTag.where("tag_id = #{tag_id}").each do |tags_tag|
+      update_updated_at_recursive(tags_tag.other_tag_id, updated_at)
+    end
+  end
+
 end

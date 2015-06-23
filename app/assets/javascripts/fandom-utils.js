@@ -1,7 +1,7 @@
 // Easyadmin call to action forms methods //
 
 function add_fields(link, association, content, resource) {
-  if(resource == "play" || resource == "share" || resource == "comment" || resource == "like" || resource == "upload" || resource == "vote" || resource == "random") {
+  if(resource == "play" || resource == "share" || resource == "comment" || resource == "like" || resource == "upload" || resource == "vote" || resource == "random" || resource == "instantwin") {
     if(!window[resource + "_counter"]) {
       window[resource + "_counter"] = true;
       var new_id = new Date().getTime();
@@ -16,56 +16,6 @@ function add_fields(link, association, content, resource) {
   }
 }
 
-// function add_like_fields(link, association, content) {
-//   if(!like_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-like-add").prepend(content.replace(regexp, new_id));
-//     like_counter = true;
-//   }
-// }
-
-// function add_download_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-download-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_play_fields(link, association, content) {
-//   if(!play_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-play-add").prepend(content.replace(regexp, new_id));
-//     play_counter = true;
-//   }
-// }
-
-// function add_versus_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-versus-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_check_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-check-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_quiz_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-quiz-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_upload_fields(link, association, content) {
-//   if(!upload_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-upload-add").prepend(content.replace(regexp, new_id));
-//   }
-// }
-
 function add_answer_fields(link, association, content) {
   var new_id = new Date().getTime();
   var regexp = new RegExp("new_" + association, "g");
@@ -75,39 +25,6 @@ function add_answer_fields(link, association, content) {
     updateMedia(obj);
   });
 }
-
-// function add_share_fields(link, association, content) {
-//   var new_id = new Date().getTime();
-//   var regexp = new RegExp("new_" + association, "g");
-//   $("#tmp-share-add").prepend(content.replace(regexp, new_id));
-// }
-
-// function add_comment_fields(link, association, content) {
-//   if(!comment_counter) {
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-comment-add").prepend(content.replace(regexp, new_id));
-//     comment_counter = true;
-//   }
-// }
-
-// function add_vote_fields(link, association, content) {
-//   if(!vote_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-vote-add").prepend(content.replace(regexp, new_id));
-//     vote_counter = true;
-//   }
-// }
-
-// function add_random_fields(link, association, content) {
-//   if(!random_counter){
-//     var new_id = new Date().getTime();
-//     var regexp = new RegExp("new_" + association, "g");
-//     $("#tmp-random-add").prepend(content.replace(regexp, new_id));
-//     random_counter = true;
-//   }
-// }
 
 function remove_fields(link, resource) {
   switch(resource) {
@@ -149,6 +66,10 @@ function remove_fields(link, resource) {
       $(link).parent().parent().parent().remove();
       random_counter = false;
       break;
+    case "instantwin":
+      $(link).parent().parent().parent().remove();
+      instantwin_counter = false;
+      break;
     default:
       $(link).closest(".panel-" + resource).remove();
   }
@@ -156,21 +77,21 @@ function remove_fields(link, resource) {
 
 // Tagbox alert message //
 
-function showTagboxAlert(idTextField, unactiveTagsName, allTagsName, newTagMessage) {
+function showTagboxAlert(idTextField, unactiveElementsName, allElementsName, newElementMessage) {
 
   values = $(idTextField).select2("val");
 
-  unactiveTagsSelected = intersect(values, unactiveTagsName);
+  unactiveTagsSelected = intersect(values, unactiveElementsName);
   if(unactiveTagsSelected.length > 0) {
-      var unactiveTagMessageDiv = $(renderTagboxAlertDiv("Attenzione: tag '" + unactiveTagsSelected + "' non attivo/i"));
+    var unactiveElementMessageDiv = $(renderTagboxAlertDiv("Attenzione: '" + unactiveTagsSelected + "' non attivo/a"));
   }
 
-  existentTagsSelected = intersect(values, allTagsName);
+  existentTagsSelected = intersect(values, allElementsName);
   if(existentTagsSelected.length != values.length) {
-      var newTagMessageDiv = $(renderTagboxAlertDiv(newTagMessage));
+    var newElementMessageDiv = $(renderTagboxAlertDiv(newElementMessage));
   }
 
-  $(idTextField + "_message").empty().append(unactiveTagMessageDiv, newTagMessageDiv);
+  $(idTextField + "_message").empty().append(unactiveElementMessageDiv, newElementMessageDiv);
 };
 
 function intersect(a, b) {
@@ -502,12 +423,12 @@ function initializeTextboxWithJsonField(json_field, formName, modelName, fieldNa
 
 // Interaction call to actions //
 
-function addButtonHandlerForInteractionCallToActionFields(fieldName, linkedCta, conditionNames, ctaList) {
+function addButtonHandlerForInteractionCallToActionFields(fieldName, linkedCta, conditionNames, ctaList, unactiveCtaList) {
   var elementRemoved = 0;
   $('#add-button-for-' + fieldName + '-fields').click(function(e) {
     e.preventDefault();
     var counter = $('#text-boxes-for-' + fieldName + '-fields').children().length + 1 + elementRemoved;
-      addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, null, counter, true);
+      addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, unactiveCtaList, null, counter, true);
   });
 
   $('#text-boxes-for-' + fieldName + '-fields').on('click','.btn', function(e) {
@@ -519,14 +440,15 @@ function addButtonHandlerForInteractionCallToActionFields(fieldName, linkedCta, 
   if(linkedCta != null) {
     cnt = 1;
     linkedCta.forEach(function(ictaCondition) {
-      addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, ictaCondition, cnt, true)
+      addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, unactiveCtaList, ictaCondition, cnt, true)
       cnt += 1;
     });
   };
 };
 
-function addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, ictaCondition, counter, addRemoveButton) {
-  attributeIndex = fieldName.substring(fieldName.indexOf("-") + 1, fieldName.length)
+function addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaList, unactiveCtaList, ictaCondition, counter, addRemoveButton) {
+  attributeIndex = fieldName.substring(fieldName.indexOf("-") + 1, fieldName.length);
+  allCtaList = ctaList.concat(unactiveCtaList);
 
   jQuery('<div/>', {
     id: 'extra-fields-for-' + fieldName + '-' + counter,
@@ -590,13 +512,17 @@ function addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaL
     class: 'form-control col-lg-3'
   }).appendTo('#extra-fields-cta-id-for-' + fieldName + '-' + counter);
 
+  message = jQuery('<p/>', {
+    id: 'cta-id-for-' + fieldName + '-field-' + counter + '_message'
+  }).appendTo('#extra-fields-cta-id-for-' + fieldName + '-' + counter);
+
   // *** VALUES *** //
   if(ictaCondition != null) {
     conditionSelect.val(ictaCondition[0]);
     parametersInput.val(ictaCondition[1]);
-    for(var i = 0; i < ctaList.length; i++) {
-      if(ctaList[i].id == ictaCondition[2]) {
-        ctaIdInput.val(ctaList[i].id);
+    for(var i = 0; i < allCtaList.length; i++) {
+      if(allCtaList[i].id == ictaCondition[2]) {
+        ctaIdInput.val(allCtaList[i].id);
       };
     };
   };
@@ -605,16 +531,28 @@ function addInteractionCallToActionFieldElements(fieldName, conditionNames, ctaL
     maximumSelectionSize: 1, 
     createSearchChoice: function() { return null; },
     formatSelection: function(item) { return item.text; },
-    formatNoMatches: function (term) { return "Nessuna Call to Action trovata"; },
-    formatSelectionTooBig: function (limit) { return "Puoi selezionare una sola Call to Action"; },
+    formatNoMatches: function(term) { return "Nessuna Call to Action trovata"; },
+    formatSelectionTooBig: function(limit) { return "Puoi selezionare una sola Call to Action"; },
     placeholder: "", 
-    tags: ctaList, 
+    tags: ctaList.concat(unactiveCtaList), 
     tokenSeparators: [","] 
-  })
+  });
+
+  unactiveCtaNameList = []
+  ctaNameList = []
+  for(var i = 0; i < unactiveCtaList.length; i++) {
+    unactiveCtaNameList = unactiveCtaNameList.concat(unactiveCtaList[i].name)
+  }
+  for(var i = 0; i < ctaList.length; i++) {
+    ctaNameList = ctaNameList.concat(ctaList[i].text)
+  }
+
+  // $('#cta-id-for-' + fieldName + '-field-' + counter).on("change", function(e) {
+  //   showTagboxAlert('#cta-id-for-' + fieldName + '-field-' + counter, unactiveCtaNameList, ctaNameList, "");
+  // });
 
   // *** REMOVE *** //
   if(addRemoveButton != false) {
-    // $('#extra-fields-for-' + fieldName + '-' + counter).append('<label id ="remove-button-label-for-' + fieldName + '-field-' + counter + '" class="col-lg-6">Elimina</label>');
     $('#extra-fields-for-' + fieldName + '-' + counter).append('<br/><a id = "remove-link-for-' + fieldName + '-field-' + counter + '" href="#" class="col-lg-1 btn btn-primary btn-xs">Rimuovi</a>');
   }
 };

@@ -331,6 +331,7 @@ Fandom::Application.routes.draw do
       get "/users/sign_in", :to => "user#user_sign_in", defaults: { format: 'json' }
       get "/users/sign_up", :to => "user#user_sign_up", defaults: { format: 'json' }
       get "/call_to_action/get_related", :to => "call_to_action#get_related_ctas", defaults: { format: 'json' }
+      post "/call_to_action/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
     end
   end
 
@@ -340,7 +341,7 @@ Fandom::Application.routes.draw do
 
     # TAG
     match "tag/filter", :to => "tag#filter", via: [:get, :post]
-    get "tag/clone/:id", :to => "tag#clone"
+    post "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering", via: [:get, :post]
     match "tag/retag", :to => "tag#retag_tag", via: [:get, :post]
     post "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
@@ -381,7 +382,7 @@ Fandom::Application.routes.draw do
     post "cta/save", :to => "call_to_action#save_cta"
     patch "cta/update", :to => "call_to_action#update_cta"
     post "cta/hide/:id", :to => "call_to_action#hide_cta"
-    get "cta/clone/:id", :to => "call_to_action#clone"
+    post "cta/clone/:id", :to => "call_to_action#clone"
     post "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
     post "cta/send_reason_for_not_approving", :to => "call_to_action#send_reason_for_not_approving"
 
@@ -398,7 +399,7 @@ Fandom::Application.routes.draw do
     get "reward/new", :to => "easyadmin_reward#new"
     post "reward/save", :to => "easyadmin_reward#save"
     patch "reward/update", :to => "easyadmin_reward#update"
-    get "reward/clone/:id", :to => "easyadmin_reward#clone"
+    post "reward/clone/:id", :to => "easyadmin_reward#clone"
     
     # INSTANT WIN
     get "contest", :to => "easyadmin#index_contest"
