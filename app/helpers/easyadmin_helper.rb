@@ -101,6 +101,24 @@ module EasyadminHelper
     period_ids.empty? ? 0 : UserReward.where("reward_id = #{reward_id} AND period_id IN (#{period_ids.join(', ')})").pluck("sum(counter)").first.to_i
   end
 
+  def get_step_and_ending_test_cta()
+    cta_list = []
+    unactive_cta_list = []
+
+    CallToAction.includes(call_to_action_tags: :tag)
+    .select('call_to_actions.id, call_to_actions.name')
+    .where("tags.name='step' OR tags.name = 'ending'")
+    .references(:call_to_action_tags)
+    .order("activated_at DESC").each do |cta| 
+      if (cta.activated_at.nil? || cta.activated_at > Time.now.utc)
+        unactive_cta_list << {"id" => cta.id, "text" => cta.name}
+      else
+        cta_list << {"id" => cta.id, "text" => cta.name}
+      end
+    end
+    [cta_list, unactive_cta_list]
+  end
+
   def render_update_banner(updated_at, instance)
 
     if instance.class == CallToAction
