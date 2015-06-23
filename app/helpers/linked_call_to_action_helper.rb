@@ -70,14 +70,14 @@ module LinkedCallToActionHelper
                 cycles << path
                 return seen_nodes[path[0]], cycles
               else
-                path << cta_id
                 if seen_nodes[cta_id].nil?
+                  path << cta_id
                   cta_child = CallToAction.find(cta_id)
                   cta_child_node = Node.new(cta_child.id)
                 else
                   cta_child_node = seen_nodes[cta_id]
                 end
-                tree.children << cta_child_node
+                tree.children << cta_child_node unless is_a_child(tree, cta_id)
                 add_next_cta(seen_nodes, cta_child_node, cycles, path)
               end
             end
@@ -90,6 +90,13 @@ module LinkedCallToActionHelper
     def self.in_cycles(cta_id, cycles)
       cycles.each do |cycle|
         return true if cycle.include?(cta_id)
+      end
+      false
+    end
+
+    def self.is_a_child(node, cta_id)
+      node.children.each do |child|
+        return true if child.value == cta_id
       end
       false
     end
@@ -134,7 +141,7 @@ module LinkedCallToActionHelper
   # Examples
   #
   #    n = Node.new("Banana")
-  #    # => #<LinkedCallToActionHelper::Node:0x007fd237682930 @value=5, @children=[]>
+  #    # => #<LinkedCallToActionHelper::Node:0x007fd237682930 @value="Banana", @children=[]>
   #
   #    n.children.push(Node.new("Apple"))
   #    # => [#<LinkedCallToActionHelper::Node:0x007fd237637368 @value="Apple", @children=[]>]
