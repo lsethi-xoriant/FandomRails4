@@ -42,7 +42,7 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
-  def darken_color(hex_color, amount = 0.4)
+  def darken_color(hex_color, amount = 0.8)
     hex_color = hex_color.gsub('#','')
     rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
     "#%02x%02x%02x" % rgb
