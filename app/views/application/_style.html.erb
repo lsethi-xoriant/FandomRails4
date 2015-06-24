@@ -9,6 +9,30 @@
     }
   <% end %>
 
+  .profile-menu-block {
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .profile-menu-block__item--active {
+    background-color: <%= darken_color(aux["property_info"]['extra_fields']["background_color"]) %> !important;
+  }
+
+  .relateds-flexslider__item-panel:hover .cta-preview__title {
+    color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .relateds__icon-container {
+    background: <%= aux["property_info"]['extra_fields']["background_color"] %> !important; 
+    background: -webkit-linear-gradient(<%= aux["property_info"]['extra_fields']["background_color"] %>, darken_color(<%= aux["property_info"]['extra_fields']["background_color"] %>)) !important;
+    background: -o-linear-gradient(<%= aux["property_info"]['extra_fields']["background_color"] %>, <%= darken_color(aux["property_info"]['extra_fields']["background_color"]) %>) !important;
+    background: -moz-linear-gradient(<%= aux["property_info"]['extra_fields']["background_color"] %>, <%= darken_color(aux["property_info"]['extra_fields']["background_color"]) %>) !important;
+    background: linear-gradient(<%= aux["property_info"]['extra_fields']["background_color"] %>, <%= darken_color(aux["property_info"]['extra_fields']["background_color"]) %>) !important;
+  }
+
+  .cta-cover__media_type--content {
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
   .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
     background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }

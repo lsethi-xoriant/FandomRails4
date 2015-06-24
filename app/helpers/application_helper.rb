@@ -42,8 +42,20 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def darken_color(hex_color, amount = 0.4)
+    hex_color = hex_color.gsub('#','')
+    rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
+    "#%02x%02x%02x" % rgb
+  end
+
+  def lighten_color(hex_color, amount = 0.6)
+    hex_color = hex_color.gsub('#','')
+    rgb = hex_color.scan(/../).map(&:hex).map{ |color| [(color + 255) * amount, 255].min }.map(&:round)
+    "#%02x%02x%02x" % rgb
+  end
+
   def adjust_path_with_property(path)
-    if path_to_adjust == ("/" + $site.default_property)
+    if path == ("/" + $site.default_property)
       "/"
     elsif $context_root && path.include?("/#{$context_root}/")
       "/#{context_root}#{url}";
