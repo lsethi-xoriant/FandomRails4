@@ -30,17 +30,26 @@
 
     def facebook_sign_in
       token = params[:token]
-      token = "CAAJn9fHaIYgBALw5lX74nCPhyWLaCAEYeZBXZB6MujbA6weQT95lLAl1krZBZCrNqfqHNIlAvZCiqL12PMRA3QDDi4aszfopWWKZAegsedY6NJMdF8ABLIN2oYA3FY5Bq8hGucKC7nJk2hWnbs1x6XA6PixZC3rG90JJm5P0vwjpZAbnGxuLuG35M1gtzuFCJodu4dP4Ggox3JxA2k4fgOoQ"
       koala = Koala::Facebook::API.new(token)
       facebook_user = koala.get_object('me')
+      log_info("api facebook sign in", { data: facebook_user })
 
       # TODO: handle authentications table
       user = User.find_by_email(facebook_user["email"])
       if user
+        user.authentication_token = Devise.friendly_token
+        user.save()
         respond_with_json user
       else
         password = Devise.friendly_token.first(8)
-        user = User.create(email: facebook_user["email"], first_name: facebook_user["first_name"], last_name: facebook_user["last_name"], password: password, password_confirmation: password)
+        authentication_token = Devise.friendly_token
+        user = User.create(
+          email: facebook_user["email"], 
+          first_name: facebook_user["first_name"], 
+          last_name: facebook_user["last_name"], 
+          password: password, 
+          password_confirmation: password, 
+          authentication_token: authentication_token)
         if user.errors.blank?
           respond_with_json user
         else
