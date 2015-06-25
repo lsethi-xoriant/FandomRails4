@@ -45,7 +45,7 @@
       end
 
       params = request.params
-      params["page_elements"] = ["like", "comment", "share"]
+      params["page_elements"] = ["like", "comment", "share", "quiz"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       
       result = {
