@@ -384,7 +384,7 @@ Fandom::Application.routes.draw do
     post "cta/save", :to => "call_to_action#save_cta"
     patch "cta/update", :to => "call_to_action#update_cta"
     post "cta/hide/:id", :to => "call_to_action#hide_cta"
-    get "cta/clone/:id", :to => "call_to_action#clone"
+    match "cta/clone/:id", :to => "call_to_action#clone", via: [:get, :post]
     post "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
     post "cta/send_reason_for_not_approving", :to => "call_to_action#send_reason_for_not_approving"
 
@@ -401,7 +401,7 @@ Fandom::Application.routes.draw do
     get "reward/new", :to => "easyadmin_reward#new"
     post "reward/save", :to => "easyadmin_reward#save"
     patch "reward/update", :to => "easyadmin_reward#update"
-    post "reward/clone/:id", :to => "easyadmin_reward#clone"
+    get "reward/clone/:id", :to => "easyadmin_reward#clone"
     
     # INSTANT WIN
     get "contest", :to => "easyadmin#index_contest"
