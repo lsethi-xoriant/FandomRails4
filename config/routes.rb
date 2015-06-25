@@ -343,7 +343,7 @@ Fandom::Application.routes.draw do
 
     # TAG
     match "tag/filter", :to => "tag#filter", via: [:get, :post]
-    post "tag/clone/:id", :to => "tag#clone"
+    get "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering", via: [:get, :post]
     match "tag/retag", :to => "tag#retag_tag", via: [:get, :post]
     post "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
