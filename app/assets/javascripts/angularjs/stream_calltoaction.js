@@ -36,7 +36,29 @@ angular.module('ng').filter('cut', function () {
   };
 });
 
+var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
+
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
+
+  function adjustPercentageAnimation(times, percentage, cta_info) {
+    $("#percentage_circle_value_" + cta_info.calltoaction.id).html(times);
+    percentage_circle_name = "#percentage_circle_" + cta_info.calltoaction.id;
+
+    if(percentage < 100) {
+      $(percentage_circle_name).removeClass("p" + percentage);
+      percentage = percentage + 1;
+      $(percentage_circle_name).addClass("p" + percentage);
+      setTimeout(function(){
+        adjustPercentageAnimation(times, percentage, cta_info);
+      }, 10);
+    } else if(times > 1) {
+      $(percentage_circle_name).removeClass("p" + percentage);
+      adjustPercentageAnimation((times - 1), 0, cta_info)
+    } else {
+      cta_info.percentage_animation = false;
+    }
+
+  }
 
   $scope.zerosBeforeNumber = function(number, zero_length) {
     for (i = 0; i < zero_length; i++) { 
@@ -422,7 +444,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function getOvervideoInteractionAtSeconds(calltoaction_id, seconds) {
-    overvideo_interaction = null;
+    var overvideo_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" && interaction_info.interaction.seconds == seconds) {
@@ -1965,11 +1987,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           if(calltoaction_info.calltoaction.media_type == "YOUTUBE"){
           	youtube_player = getPlayer(calltoaction_id);
           	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
-          	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
 
-          	if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
-            	executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
-          	}
+          	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
+            enable_percentage_animation = getOvervideoInteractionAtSeconds(calltoaction_id, (youtube_player_current_time + OVERVIDEO_COUNTDOWN_ANIMATION_TIME + 1));            
+
+            if(enable_percentage_animation != null && !calltoaction_info.percentage_animation) {
+              calltoaction_info.percentage_animation = true;
+              adjustPercentageAnimation(OVERVIDEO_COUNTDOWN_ANIMATION_TIME, 0, calltoaction_info);
+          	} else if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
+              executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
+          	} 
           }
         }
       }

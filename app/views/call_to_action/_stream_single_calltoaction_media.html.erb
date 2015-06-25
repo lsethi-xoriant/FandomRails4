@@ -15,6 +15,14 @@
       <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
     </div>
 
+    <div ng-if="calltoaction_info.percentage_animation" id="percentage_circle_{{calltoaction_info.calltoaction.id}}" class="percentage_circle percentage_circle_overvideo p0">
+      <span id="percentage_circle_value_{{calltoaction_info.calltoaction.id}}" class="percentace_circle_value"></span>
+      <div class="percentage_circle_slice">
+        <div class="percentage_circle_bar"></div>
+        <div class="percentage_circle_fill"></div>
+      </div>
+    </div>
+
     <!-- PLAY INTERACTION -->
     <div class="play-interaction__container" ng-if="(interaction_info = getPlayInteraction(calltoaction_info.calltoaction.id)) && !interaction_info.hide">
       <div class="col-md-12 text-center hidden-xs">

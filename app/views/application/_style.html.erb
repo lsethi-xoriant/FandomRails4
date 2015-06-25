@@ -9,6 +9,22 @@
     }
   <% end %>
 
+  .percentage_circle_bar, .percentage_circle_fill {
+    border-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .percentage_circle {
+    background-color: <%= lighten_color(aux["property_info"]['extra_fields']["background_color"], 0.5) %> !important;
+  }
+
+  .percentage_circle:after {
+    background-color: #eee !important;
+  }
+
+  .percentace_circle_value {
+    color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
   .reward-catalogue-header {
      background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }
