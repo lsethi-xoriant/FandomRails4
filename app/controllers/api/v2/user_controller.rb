@@ -28,7 +28,7 @@
       if user.errors.blank?
         respond_with_json user
       else
-        respond_with_errors user.errors
+        respond_with_errors user.errors.full_messages
       end
     end
 
