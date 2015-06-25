@@ -21,7 +21,7 @@ class SystemMailer < ActionMailer::Base
     @reward = reward
   	@cuser = user
   	@ticket_id = time_to_win
-  	
+
   	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - Hai vinto #{@reward.title}")
   end
 
@@ -30,7 +30,7 @@ class SystemMailer < ActionMailer::Base
     @reward = reward
   	@cuser = user
   	@ticket_id = time_to_win
-  
+
   	mail(to: [ "", "concorsi@shado.tv" ], subject: "#{subject} - #{@reward.title}")
   end
   
