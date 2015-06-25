@@ -92,8 +92,6 @@ class BrowseController < ApplicationController
       }
     }
 
-    debugger
-
     @query = params[:query]
     if @contents.empty?
       redirect_to adjust_path_with_property("/browse")
