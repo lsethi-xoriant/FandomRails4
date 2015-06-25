@@ -4,7 +4,7 @@
       <!-- MEDIA -->
       <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
 
-      <div class="share-interaction__container hidden-xs" ng-if="!isLastStepInLinkedCallToAction()">
+      <div class="share-interaction__container hidden-xs" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info)">
         <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
           <%= render partial: "/call_to_action/share_interaction" %>
         </div>
@@ -40,7 +40,7 @@
           <h2 class="cta__description" ng-bind-html="calltoaction_info.calltoaction.description"></h2>
 
           <!-- MOBILE -->
-          <div ng-if="shareInteractionPresent(calltoaction_info) && !isLastStepInLinkedCallToAction()" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row visible-xs">
+          <div ng-if="shareInteractionPresent(calltoaction_info) && !isLastStepInLinkedCallToAction(calltoaction_info)" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="row visible-xs">
             <div id="share-interaction-{{interaction_info.interaction.id}}" class="share-undervideo-interaction__row">
               <%= render partial: "/call_to_action/share_interaction" %>
             </div>

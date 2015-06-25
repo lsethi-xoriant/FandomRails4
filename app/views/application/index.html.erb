@@ -4,12 +4,6 @@
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
-  <%= render partial: "/application/search", locals: { query: nil } %>
-
-  <div class="row main-row filters__flexslider-main-row">
-    <%= render partial: "/application/home_filters" %>
-  </div>
-
   <div class="row main-row main-row__covers">
     <div class="col-md-7 main-row__covers-left-col">
       <%= render partial: "application/ordering" %>
@@ -38,10 +32,18 @@
 
     </div>
     <div class="col-md-5 text-center">
-       <div class="row adv-square__row">
+      <div class="row adv-square__row">
+        <div class="col-sm-12 text-right" style="margin-bottom: 15px;">
+          <img style="max-width: 100%;" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=ADV%20300x250&w=300&h=250">
+        </div>
         <%= render partial: "/call_to_action/widgets" %>
       </div>
     </div>
   </div>
+
+  <div class="row main-row filters__flexslider-main-row">
+    <%= render partial: "/application/home_filters" %>
+  </div>
+  <%= render partial: "/application/search", locals: { query: nil } %>
 
 </div>

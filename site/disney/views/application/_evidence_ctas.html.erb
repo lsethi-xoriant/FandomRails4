@@ -20,14 +20,11 @@
             </span>  
           </div> 
 
-          <img class="hidden-xs" ng-src="{{calltoaction.thumbnail_wide_url}}">
+          <img class="hidden-xs" ng-src="{{calltoaction.thumbnail_carousel_url}}">
           <img class="visible-xs" ng-src="{{calltoaction.thumbnail_medium_url}}">
           <div class="col-xs-12 ctas__info">
-            <div ng-repeat="miniformat in [calltoaction.miniformat]" ng-if="calltoaction.miniformat">
-              <%= render partial: "/call_to_action/miniformat" %>
-            </div>
             <p class="ctas__title">{{calltoaction.title}}</p>
-            <!-- <p class="hidden-xs" style="color: #fff; margin-bottom: 15px; margin-top: 5px;" ng-bind-html="calltoaction.description | cut:true:70"></p> -->
+            <p class="hidden-xs" style="color: #fff; margin-bottom: 15px; margin-top: 5px;" ng-bind-html="calltoaction.description | cut:true:70"></p>
             <%= light_link_to("/call_to_action/{{calltoaction.slug}}", class: "btn btn-primary ctas__button hidden-xs") do %>
               <span>Vai</span>
             <% end %>

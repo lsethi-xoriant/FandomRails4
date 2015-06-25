@@ -45,6 +45,7 @@ module ContentHelper
     attr_accessor :thumb_thumb_url
     attr_accessor :thumb_medium_url
     attr_accessor :thumb_hover_thumb_url
+    attr_accessor :thumb_original_url
     attr_accessor :description
     attr_accessor :long_description
     attr_accessor :detail_url
@@ -78,6 +79,7 @@ module ContentHelper
       @thumb_thumb_url = params[:thumb_thumb_url]
       @thumb_wide_url = params[:thumb_wide_url]
       @thumb_hover_thumb_url = params[:thumb_hover_thumb_url]
+      @thumb_original_url = params[:thumb_original_url]
       @thumb_medium_url = params[:thumb_medium_url]
       @description = params[:description]
       @long_description = params[:long_description]
@@ -136,6 +138,7 @@ module ContentHelper
       has_thumb = true
       thumb_medium_url = get_upload_extra_field_processor(thumb_field, "medium")
       thumb_thumb_url = get_upload_extra_field_processor(thumb_field, "thumb")
+      thumb_original_url = get_upload_extra_field_processor(thumb_field, "original")
     else
       has_thumb = false
     end
@@ -179,6 +182,7 @@ module ContentHelper
       thumb_thumb_url: thumb_thumb_url,
       thumb_hover_thumb_url: thumb_hover_thumb_url,
       thumb_url: thumb_medium_url,
+      thumb_original_url: thumb_original_url,
       title: tag.title,
       long_description: long_description,
       description: description,  

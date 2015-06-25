@@ -1,3 +1,3 @@
-<div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterRemoveShareInteractionsExceptLastStep | filter:filterRemovePlayInteractions | filter:filterAlwaysVisibleInteractions | filter:filterRemoveDownloadInteractions | filter:filterRemoveLikeInteractions">
+<div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterRemoveShareInteractionsExceptLastStep | filter:filterVisibleInteractionsUnderMedia | filter:filterRemoveLikeInteractions">
   <%= render partial: "/call_to_action/undervideo_interaction" %>
 </div>

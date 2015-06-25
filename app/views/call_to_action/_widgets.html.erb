@@ -3,7 +3,7 @@
   <%= light_link_to("{{content.detail_url}}", "ng-if" => "content.type == 'cta'") do %>
     <div class="row text-left">
       <div class="col-xs-12">
-        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+        <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.extra_fields.background_color}">
           <p class="cta__sidebar-panel__header-title">In evidenza</p>
         </div>
       </div>
@@ -38,7 +38,7 @@
   <% end %>
   <!-- TAG -->
   <a target="_blank" href="{{content.extra_fields.url}}" ng-if="content.type == 'tag'"> 
-    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag"> 
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag" ng-if="content.extra_fields.layout != 'image'"> 
       <div class="row">
         <div class="col-xs-12">
           <p class="cta__sidebar-panel__header-title--tag">{{content.title}}</p>
@@ -48,12 +48,19 @@
           <p class="cta-preview__title">{{content.long_description | cut:true:70}}</p>
         </div>
       </div>
+    </div>
+    <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag" ng-if="content.extra_fields.layout == 'image'"> 
+      <div class="row">
+        <div class="col-xs-12" style="padding: 0;">
+          <img class="cta-preview__image--tag" ng-src="{{content.thumb_original_url}}">            
+        </div>
+      </div>
     </div>  
   </a>
   <!-- FAN OF THE DAY -->
   <div class="row text-left" ng-if="content.type == 'fan-of-the-day-widget'">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.extra_fields.background_color}">
         <p class="cta__sidebar-panel__header-title">Fan del giorno</p>
       </div>
     </div>
@@ -84,7 +91,7 @@
   <!-- RANKING -->
   <div class="row text-left" ng-if="content.type == 'ranking-widget'">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.extra_fields.background_color}">
         <p class="cta__sidebar-panel__header-title">{{content.extra_fields.widget_info.rank.attributes.title}}</p>
       </div>
     </div>
@@ -118,7 +125,7 @@
 
   <div ng-if="content.type == 'gallery-ranking-widget'" class="row text-left">
     <div class="col-xs-12">
-      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.background_color}">
+      <div class="cta__sidebar-panel__header" ng-style="{'background-color': aux.property_info.extra_fields.background_color}">
         <p class="cta__sidebar-panel__header-title">Classifica gallery</p>
       </div>
     </div>

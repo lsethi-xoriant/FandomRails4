@@ -7,7 +7,30 @@
   color: #fff;
 }
 
-.main-menu__row {
+.navbar-item--socials {
+  .navbar-item--socials-container {
+    background-color: #000;
+    a:last-child {
+      .fa {
+        padding-right: 25px;
+      }
+    }
+    a:first-child {
+      .fa {
+        padding-left: 25px;
+      }
+    }
+    .fa {
+      color: #fff;
+      font-size: 24px;
+      line-height: 40px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .fa:hover {
+      color: $blu;
+    }
+  }
 }
 
 .navbar__avatar {

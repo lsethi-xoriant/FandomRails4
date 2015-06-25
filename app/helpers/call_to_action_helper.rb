@@ -420,19 +420,16 @@ module CallToActionHelper
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
-        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
-
-        # Recursive method invoked with single cta in page with at least one interaction with next_calltoaction_id set
-        next_cta_info_list = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
+        calltoaction_info_list, is_calltoaction_info_list_updated = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, interactions_to_compute)
       
-        if next_cta_info_list
-          calltoaction_info_list = next_cta_info_list
-        else
-          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        if is_calltoaction_info_list_updated
+          cta_ids = calltoaction_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
+          calltoactions = CallToAction.where(id: cta_ids)
         end
 
-        # adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
@@ -457,6 +454,8 @@ module CallToActionHelper
           if interaction_info_list["interaction"]["when_show_interaction"].include?("OVERVIDEO")
             interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
           end
+
+          interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
         end
       end
     end
@@ -540,12 +539,11 @@ module CallToActionHelper
           ical = resource.ical_fields
         end
 
-        when_show_interaction = interaction.when_show_interaction
-
         interaction_info_list << {
           "interaction" => {
             "id" => interaction.id,
-            "when_show_interaction" => when_show_interaction,
+            "when_show_interaction" => interaction.when_show_interaction,
+            "interaction_positioning" => interaction.interaction_positioning,
             "overvideo_active" => false,
             "registration_needed" => (interaction.registration_needed || false),
             "seconds" => interaction.seconds,
@@ -668,9 +666,7 @@ module CallToActionHelper
   end
 
   def always_shown_interactions(calltoaction)
-    cache_short("always_shown_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
-    end
+    calltoaction.interactions.where("when_show_interaction = ? AND required_to_complete = ?", "SEMPRE_VISIBILE", true).order("seconds ASC").to_a
   end
 
   def enable_interactions(calltoaction)

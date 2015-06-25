@@ -18,6 +18,10 @@
 				  <label class="text-input">Visibile</label>
 				  <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
 				</div>
+				<div class="form-group">
+				  <label class="text-input">Posizione</label>
+				   <%= f.select(:interaction_positioning, [["UNDER_MEDIA", "UNDER_MEDIA"], ["OVER_MEDIA", "OVER_MEDIA"]], {}, { :class => "form-control" }) %>
+				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="form-group">

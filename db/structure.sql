@@ -537,10 +537,10 @@ CREATE TABLE events (
     pid integer,
     message character varying(255),
     request_uri character varying(255),
-    "timestamp" timestamp without time zone,
     level character varying(255),
     tenant character varying(255),
     user_id integer,
+    "timestamp" timestamp without time zone,
     data json
 );
 
@@ -737,7 +737,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -2558,7 +2559,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -4379,7 +4381,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -6200,7 +6203,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -8021,7 +8025,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -9842,7 +9847,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -11663,7 +11669,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -13484,7 +13491,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -15305,7 +15313,8 @@ CREATE TABLE interactions (
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
-    registration_needed boolean
+    registration_needed boolean,
+    interaction_positioning character varying
 );
 
 
@@ -26544,13 +26553,6 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 SET search_path = public, pg_catalog;
 
 --
--- Name: created_at_users_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX created_at_users_idx ON users USING btree (created_at);
-
-
---
 -- Name: index_answers_on_call_to_action_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -27351,4 +27353,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150610135146');
 INSERT INTO schema_migrations (version) VALUES ('20150611135346');
 
 INSERT INTO schema_migrations (version) VALUES ('20150622132011');
+
+INSERT INTO schema_migrations (version) VALUES ('20150623074631');
 

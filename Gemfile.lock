@@ -396,9 +396,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    paperclip-ffmpeg (1.2.0)
-      paperclip (>= 2.5.2)
-      rails
     paperclip-watermark (1.0.0)
       paperclip (>= 2.3.8)
     pg (0.18.2)
@@ -596,7 +593,6 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-twitter
   paperclip
-  paperclip-ffmpeg
   paperclip-watermark
   pg
   protected_attributes

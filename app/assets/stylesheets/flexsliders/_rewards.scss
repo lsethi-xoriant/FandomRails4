@@ -76,6 +76,7 @@
     position: relative;
     margin-left: 0;
     margin-right: 0;
+
     .flex-direction-nav a:before {
       -webkit-transition: color 300ms ease 0s;
       transition: color 300ms ease 0s;
@@ -89,9 +90,11 @@
     }
     .flex-direction-nav .flex-next {
       right: -30px;
+      opacity: 1;
     }
     .flex-direction-nav .flex-prev {
       left: -30px;
+      opacity: 1;
     }
   }
 }

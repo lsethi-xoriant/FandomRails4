@@ -51,9 +51,11 @@
   }
 
   .check-undervideo-interaction__row, 
-  .link-undervideo-interaction__row {
+  .link-undervideo-interaction__row,
+  .download-undervideo-interaction__row {
     .interaction__winnable-reward--undervideo__row {
       border: none !important;
+      margin-bottom: 0px;
     }
   }
 

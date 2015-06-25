@@ -42,6 +42,28 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def darken_color(hex_color, amount = 0.8)
+    hex_color = hex_color.gsub('#','')
+    rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
+    "#%02x%02x%02x" % rgb
+  end
+
+  def lighten_color(hex_color, amount = 0.6)
+    hex_color = hex_color.gsub('#','')
+    rgb = hex_color.scan(/../).map(&:hex).map{ |color| [(color + 255) * amount, 255].min }.map(&:round)
+    "#%02x%02x%02x" % rgb
+  end
+
+  def adjust_path_with_property(path)
+    if path == ("/" + $site.default_property)
+      "/"
+    elsif $context_root && path.include?("/#{$context_root}/")
+      "/#{context_root}#{url}";
+    else
+      path
+    end
+  end
+
   def get_property()
     property_name = $context_root || $site.default_property
     if(property_name)
@@ -718,9 +740,11 @@ module ApplicationHelper
       "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta, anonymous_user),
       "thumbnail_carousel_url" => cta.thumbnail(:carousel),
       "thumbnail_medium_url" => cta.thumbnail(:medium),
+      "thumbnail_wide_url" => cta.thumbnail(:wide),
       "title" => cta.title,
       "description" => cta.description,
       "flag" => build_grafitag_for_calltoaction(cta, "flag"),
+      "miniformat" => build_grafitag_for_calltoaction(cta, "miniformat"),
       "interaction_ids" => interaction_ids
     }
 
@@ -845,9 +869,12 @@ module ApplicationHelper
       property_path_name = nil;
     end
 
+    assets = Tag.find("assets")
+
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
+      "context_root" => $context_root,
       "free_provider_share" => $site.free_provider_share,
       "property_info" => property_info,
       "property_info_list" => property_info_list,
@@ -860,7 +887,8 @@ module ApplicationHelper
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
-      "instant_win_info" => instant_win_info
+      "instant_win_info" => instant_win_info,
+      "assets" => assets
     }
 
     if other

@@ -3,7 +3,8 @@
 
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
-    :points, :added_points, :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed
+    :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed,
+    :interaction_positioning
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action

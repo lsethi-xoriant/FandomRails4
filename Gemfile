@@ -30,12 +30,10 @@ gem 'httparty'
 gem 'angularjs-rails', "1.2.16"
 
 gem "paperclip" #, "3.4.2"
+gem 'paperclip-watermark'
 gem "simple_form"
 
 gem "hamster"
-
-gem 'paperclip-watermark'
-gem 'paperclip-ffmpeg' 
 
 gem 'fastclick-rails' #, '~> 1.0.1'
 gem 'icalendar'

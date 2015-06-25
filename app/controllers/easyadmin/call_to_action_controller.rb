@@ -42,6 +42,15 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
+
+    aux = {}
+
+    if params[:call_to_action]["media_image_gravity_position"]
+      aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
+    end
+
+    @cta.aux = aux
+
     save_interaction_call_to_action_linking(@cta) unless @cta.errors.any?
     if @cta.errors.any?
       @tag_list = params[:tag_list]
@@ -63,13 +72,24 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def update_cta
+
     if params[:part] == "user_cta_image" && params[:call_to_action]
       params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image']
     end
     @cta = CallToAction.find(params[:id])
+
+    aux = @cta.aux || {}
+
     if params[:call_to_action]["media_image"] && ALLOWED_UPLOAD_MEDIA_TYPES.include?(params[:call_to_action]["media_type"])
-      @cta.aux = (@cta.aux rescue {}).merge({ "aws_transcoding_media_status" => "requested" }).to_json
+      aux["aws_transcoding_media_status"] = "requested"
     end
+
+    if params[:call_to_action]["media_image_gravity_position"]
+      aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
+    end
+
+    @cta.aux = aux
+
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
     saved_linking = save_interaction_call_to_action_linking(@cta)
@@ -384,6 +404,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     else
       @extra_options = @cta.extra_fields
     end
+
+    if @cta.aux && @cta.aux["media_image_gravity_position"]
+      @cta.media_image_gravity_position = @cta.aux["media_image_gravity_position"]
+    end
+
     @interaction_call_to_actions = []
     @cta.interactions.each do |interaction|
       InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
