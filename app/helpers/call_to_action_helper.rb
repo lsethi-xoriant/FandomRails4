@@ -420,19 +420,16 @@ module CallToActionHelper
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
-        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
-
-        # Recursive method invoked with single cta in page with at least one interaction with next_calltoaction_id set
-        next_cta_info_list = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, user_interactions, interactions_to_compute)
+        calltoaction_info_list, is_calltoaction_info_list_updated = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, interactions_to_compute)
       
-        if next_cta_info_list
-          calltoaction_info_list = next_cta_info_list
-        else
-          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        if is_calltoaction_info_list_updated
+          cta_ids = calltoaction_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
+          calltoactions = CallToAction.where(id: cta_ids)
         end
 
-        # adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)

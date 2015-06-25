@@ -384,7 +384,7 @@ Fandom::Application.routes.draw do
     post "cta/save", :to => "call_to_action#save_cta"
     patch "cta/update", :to => "call_to_action#update_cta"
     post "cta/hide/:id", :to => "call_to_action#hide_cta"
-    post "cta/clone/:id", :to => "call_to_action#clone"
+    get "cta/clone/:id", :to => "call_to_action#clone"
     post "cta/update_user_cta_image/:id", :to => "call_to_action#edit_cta"
     post "cta/send_reason_for_not_approving", :to => "call_to_action#send_reason_for_not_approving"
 

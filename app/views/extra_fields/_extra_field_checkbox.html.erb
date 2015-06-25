@@ -1,9 +1,8 @@
 <div class="row form-group">
-	<div class="col-sm-12 text-center">
+	<div class="text-center">
     <label class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-1 text-left" style="color: #000;">
-      <%= title %>
+      <%= label %>
     </label>
-    <input id="extra_fields_age_#{name}" name="extra_fields_age" type="checkbox" value="1" ng-model="#{ ng_model ? (ng_model + '.' + name) : ('form_data.' + name) }">
-		<label style="color: #fff;"><%= label %></label>
+    <input id="extra_fields_#{name}" name="extra_fields_#{name}" type="checkbox" value="1" ng-model="<%= "#{ ng_model ? (ng_model + '.' + name) : ('form_data.' + name) }" %>">
 	</div>
 </div>

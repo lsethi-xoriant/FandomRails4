@@ -44,15 +44,15 @@
   </div>
 </div> 
 
-<div class="col-sm-12 text-center interaction__redo-col" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()" ng-click="resetToRedo(interaction_info)">
+<div class="col-sm-12 text-center interaction__redo-col" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)" ng-click="resetToRedo(calltoaction_info)">
   <div class="row">
     <div class="col-xs-12 interaction__redo-span-col">
       <span>Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
     </div>
   </div>
 </div>
-<!-- TEST -->
 
+<!-- TEST -->
 <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.feedback && checkUndervideoInteractionTypes(interaction_info)" class="row undervideo-interaction__feedback">
   <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-12 interaction__feedback-col">
     <div class="interaction__feedback-circle interaction__feedback-circle--green text-center">

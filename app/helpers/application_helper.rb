@@ -602,10 +602,12 @@ module ApplicationHelper
   end
 
   def registration_fully_completed?
-    $site.required_attrs.each do |attribute|
-      return false unless current_user[attribute].present?
+    if current_user
+      $site.required_attrs.each do |attribute|
+        return false unless current_user[attribute].present?
+      end
+      true
     end
-    true
   end
 
   def extra_field_to_html(field, ng_model_name = nil)

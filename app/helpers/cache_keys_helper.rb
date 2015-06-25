@@ -258,6 +258,11 @@ module CacheKeysHelper
     "active_ctas_cache_key"
   end
 
+  def get_recent_ctas_cache_key(tag_names, ts, params)
+    extra_key = get_extra_key_from_params(params)
+    "#{tag_names.present? ? "#{tag_names}" : nil}ctas_with_tags_in_and_#{ts}_#{extra_key}"
+  end
+
   # Tags
   # ~~~~~
   

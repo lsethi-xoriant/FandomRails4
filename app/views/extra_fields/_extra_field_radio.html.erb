@@ -5,6 +5,7 @@
     </label>
     <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0">
       <% values.split(",").each do |option| %>
+        <%= option %>
         <%= radio_button_tag(name, option, false, { "ng-model" => (ng_model ? ng_model + '.' + name : nil) }) %>
       <% end %>
     </div>
