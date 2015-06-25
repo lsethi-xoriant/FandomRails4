@@ -25,7 +25,7 @@
   </div>
 </div> 
 
-<div class="col-sm-12 text-center interaction__redo-col" ng-if="linked_call_to_actions_count && isLastStepInLinkedCallToAction()" ng-click="resetToRedo(interaction_info)">
+<div class="col-sm-12 text-center interaction__redo-col" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)" ng-click="resetToRedo(calltoaction_info)">
   <div class="row">
     <div class="col-xs-12 interaction__redo-span-col">
       <span>Rifai il test <span class="fa fa-refresh undervideo-interaction__fa-refresh"></span></span>
@@ -46,10 +46,10 @@
   <%= render partial: "/call_to_action/vote_interaction" %>
 </div>  
 
-<div class="col-sm-12" ng-if="linked_call_to_actions_count && !isLastStepInLinkedCallToAction()" style="margin-top: 15px; margin-bottom: 15px;">
+<div class="col-sm-12" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info)" style="margin-top: 15px; margin-bottom: 15px;">
   <div class="row">
     <div class="col-xs-10 col-xs-offset-1 text-center">
-      <p class="undervideo-interaction__progress-text">{{linked_call_to_actions_index}} / {{linked_call_to_actions_count - 1}}</p>
+      <p class="undervideo-interaction__progress-text">{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
       <div class="progress undervideo-interaction__progress">
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (linked_call_to_actions_index/linked_call_to_actions_count*100) + '%' }">
         </div>

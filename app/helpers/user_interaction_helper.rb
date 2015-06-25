@@ -25,53 +25,61 @@ module UserInteractionHelper
   end
 
   def get_user_interactions_with_interaction_id(interaction_ids, user)
-    user_interactions = UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id).references(:interactions)
-    if anonymous_user?(user)
-      user_interactions = user_interactions.where("interactions.stored_for_anonymous")
-    end
-    user_interactions
+    UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id).references(:interactions)
   end
 
-  # TODO: in future implement this feature with a cached graph in build_cta_info
-  def check_and_find_next_cta_from_user_interactions(cta_info_list, user_interactions, interactions_to_compute) 
-    next_cta_info_list = nil
-    if cta_info_list.length == 1 && user_interactions.any?
-      # TODO: for semplicity reasons only the first test CTA is handled in a CTA stream (i.e. only the single page cta is handled)
-      cta_info = cta_info_list.first
+  def init_or_update_linked_user_interaction_ids(user_interaction_ids, value)
+    if value.present?
+      user_interaction_ids << value
+    else
+      user_interaction_ids
+    end
+  end
 
-      prev_cta_info = cta_info
+  def check_and_find_next_cta_from_user_interactions(cta_info_list, interactions_to_compute) 
+    result_cta_info_list = []
+    is_cta_info_list_updated = false
 
-      linked_user_interaction_ids = []
+    cta_info_list.each do |cta_info|  
+      index = 1
 
-      next_cta, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(user_interactions)
-      linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
-      next_cta_to_return = next_cta
-      while next_cta
-        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta.id).references(:interactions)
-        next_cta, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(user_interactions)
-        linked_user_interaction_ids << linked_user_interaction_id if linked_user_interaction_id
-        if next_cta
-          next_cta_to_return = next_cta
-        end
-        if prev_cta_info["optional_history"].present?
-          prev_cta_info["optional_history"]["optional_index_count"] = prev_cta_info["optional_history"]["optional_index_count"] + 1
-        end
-      end
-      next_cta = next_cta_to_return
+      interaction_ids = extract_interaction_ids_from_call_to_action_info_list([cta_info])
+      user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+      next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
+      linked_user_interaction_ids = init_or_update_linked_user_interaction_ids([], linked_user_interaction_id)
       
-      if next_cta  
-        next_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([next_cta], interactions_to_compute)
-        next_cta_info = next_cta_info_list.first
-        update_cta_info_optional_history(cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids) 
-      else
-        next_cta_info_list = nil
+      result_cta_info = next_cta_info if next_cta_info.present?
+      while next_cta_info
+        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta_info.id).references(:interactions)
+        next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(next_cta_info, user_interactions)
+        linked_user_interaction_ids = init_or_update_linked_user_interaction_ids(linked_user_interaction_ids, linked_user_interaction_id)
+        result_cta_info = next_cta_info if next_cta_info.present?
+        index = index + 1
       end
+              
+      if result_cta_info  
+        parent_cta_info = cta_info
+        result_cta_info = build_cta_info_list_and_cache_with_max_updated_at([result_cta_info], interactions_to_compute).first
+        result_cta_info["optional_history"] = update_cta_info_optional_history(parent_cta_info, result_cta_info, linked_user_interaction_ids, index) 
+        is_cta_info_list_updated = true
+      else
+        result_cta_info = cta_info
+      end
+      result_cta_info_list << result_cta_info
     end
-
-    next_cta_info_list
+    [result_cta_info_list, is_cta_info_list_updated]
   end
 
-  def check_and_find_next_cta_from_user_interactions_computation(user_interactions)
+  def update_cta_info_optional_history(parent_cta_info, cta_info, linked_user_interaction_ids, index)
+    {
+      "parent_cta_info" => parent_cta_info,
+      "user_interactions" => linked_user_interaction_ids,
+      "optional_index_count" => index,
+      "optional_total_count" => parent_cta_info["optional_history"]["optional_total_count"],
+    }
+  end
+
+  def check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
     next_cta = nil
     linked_user_interaction_id = nil
     user_interactions.each do |user_interaction|
@@ -84,21 +92,6 @@ module UserInteractionHelper
       end
     end
     [next_cta, linked_user_interaction_id]
-  end
-
-  def update_cta_info_optional_history(parent_cta_info, next_cta_info, prev_cta_info, linked_user_interaction_ids)
-    optional_index_count = prev_cta_info["optional_history"]["optional_index_count"]
-    optional_total_count = prev_cta_info["optional_history"]["optional_total_count"]
-
-    next_cta_info["optional_history"] = {
-      "parent_cta_info" => parent_cta_info,
-      "user_interactions" => linked_user_interaction_ids,
-      "optional_total_count" => optional_total_count,
-      "optional_index_count" => optional_index_count
-    }
-
-    # TODO: remove this line and fix orzoro templates 
-    next_cta_info["calltoaction"]["extra_fields"]["linked_call_to_actions_count"] = optional_total_count
   end
 
   def build_current_user_reward(reward)
@@ -231,7 +224,7 @@ module UserInteractionHelper
 
   def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
-    user_interaction_aux["to_redo"] = aux["to_redo"] if aux["to_redo"]
+    user_interaction_aux["to_redo"] = aux["to_redo"]
 
     case resource_type
     when "share"
@@ -408,7 +401,8 @@ module UserInteractionHelper
     response = update_cta_and_interaction_status(calltoaction, interaction, response)
 
     if linked_cta.present?
-      response[:next_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([linked_cta])
+      parent_cta = CallToAction.find(params[:parent_cta_id])
+      response[:next_call_to_action_info] = build_cta_info_list_and_cache_with_max_updated_at([parent_cta]).first
     end
 
     if current_user && $site.id != "disney"
@@ -417,7 +411,7 @@ module UserInteractionHelper
       response[:current_user] = build_disney_current_user()
     end
     
-    return response
+    response
   
   end
 
