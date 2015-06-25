@@ -50,7 +50,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $(percentage_circle_name).addClass("p" + percentage);
       setTimeout(function(){
         adjustPercentageAnimation(times, percentage, cta_info);
-      }, 5);
+      }, 10);
     } else if(times > 1) {
       $(percentage_circle_name).removeClass("p" + percentage);
       adjustPercentageAnimation((times - 1), 0, cta_info)
@@ -1989,7 +1989,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           	youtube_player_current_time = Math.floor(youtube_player.playerManager.getCurrentTime()); 
 
           	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
-            enable_percentage_animation = getOvervideoInteractionAtSeconds(calltoaction_id, (youtube_player_current_time + OVERVIDEO_COUNTDOWN_ANIMATION_TIME));            
+            enable_percentage_animation = getOvervideoInteractionAtSeconds(calltoaction_id, (youtube_player_current_time + OVERVIDEO_COUNTDOWN_ANIMATION_TIME + 1));            
 
             if(enable_percentage_animation != null && !calltoaction_info.percentage_animation) {
               calltoaction_info.percentage_animation = true;
