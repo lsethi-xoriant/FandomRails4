@@ -24,8 +24,8 @@ class BrowseController < ApplicationController
     
   end
 
-  # Get an array of tags to use to filter contents. 
-  # Filter contents in base of current property
+  # Get an array of tags to filter contents. 
+  # Filter contents according to current property
   def get_search_tags_for_tenant
     property = get_property()
     if property
@@ -109,9 +109,9 @@ class BrowseController < ApplicationController
 
     contents, total = get_contents_with_match(params[:query], offset, property_name)
     contents = prepare_contents(contents)
-    
+
     contents = compute_cta_status_contents(contents, current_or_anonymous_user)
-    
+
     respond_to do |format|
       format.json { render :json => contents.to_json }
     end
@@ -158,7 +158,7 @@ class BrowseController < ApplicationController
       [tag, property]
     end
   end
-  
+
   def index_category_load_more
     category = Tag.find(params[:tag_id])
     params[:limit] = {
@@ -172,10 +172,10 @@ class BrowseController < ApplicationController
       format.json { render :json => contents.to_json }
     end
   end
-  
+
   def view_all
   end
-  
+
   def view_all_recent
     params = {
       limit:{
@@ -183,13 +183,11 @@ class BrowseController < ApplicationController
         perpage: DEFAULT_VIEW_ALL_ELEMENTS + 1
       }
     }
-    
-    contents = get_recent_ctas(get_search_tags_for_tenant, params)
+
+    contents = get_recent_ctas_with_cache(get_search_tags_for_tenant, params)
     @has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
     contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
-    
     @contents = compute_cta_status_contents(contents, current_or_anonymous_user)
-    
     @per_page = DEFAULT_VIEW_ALL_ELEMENTS
   end
   
@@ -200,7 +198,7 @@ class BrowseController < ApplicationController
         perpage: DEFAULT_VIEW_ALL_ELEMENTS + 1
       }
     }
-    contents = get_recent_ctas(get_search_tags_for_tenant, parameters)
+    contents = get_recent_ctas_with_cache(get_search_tags_for_tenant, parameters)
     has_more = contents.count > DEFAULT_VIEW_ALL_ELEMENTS
     contents = prepare_contents(contents.slice(0, DEFAULT_VIEW_ALL_ELEMENTS))
     contents = compute_cta_status_contents(contents, current_or_anonymous_user)
