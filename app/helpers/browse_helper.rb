@@ -229,7 +229,7 @@ module BrowseHelper
       perpage = params[:limit][:perpage]
       params[:limit][:perpage] = perpage + 1
     rescue Exception => exception
-      throw Exception.new("perpage in content previews must be setting")
+      throw Exception.new("perpage in content previews must be set")
     end
 
     tag_ids = tags.map { |tag| tag.id }
@@ -325,16 +325,16 @@ module BrowseHelper
     merged = (tags + ctas)
     prepare_contents(merged, params)
   end
-  
+
   def merge_contents_for_autocomplete(ctas,tags)
     merged = (tags.sort_by(&:created_at).reverse + ctas.sort_by(&:created_at).reverse)
     prepare_contents_for_autocomplete(merged)
   end
-  
+
   def merge_search_contents(ctas, tags)
     (tags.sort_by(&:created_at).reverse + ctas.sort_by(&:created_at).reverse)
   end
-  
+
   def add_content_tags(tags, element)
     hidden_tags_ids = get_hidden_tag_ids
     element.tags.each do |k, t|
@@ -344,7 +344,7 @@ module BrowseHelper
     end
     tags
   end
-  
+
   def get_category_tag_ids
     cache_short("category_tag_ids") do
       hidden_tags_ids = get_hidden_tag_ids
