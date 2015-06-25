@@ -43,9 +43,11 @@ module ApplicationHelper
   end
 
   def darken_color(hex_color, amount = 0.8)
-    hex_color = hex_color.gsub('#','')
-    rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
-    "#%02x%02x%02x" % rgb
+    if hex_color.present?
+      hex_color = hex_color.gsub('#','')
+      rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
+      "#%02x%02x%02x" % rgb
+    end
   end
 
   def lighten_color(hex_color, amount = 0.6)
