@@ -119,6 +119,15 @@ module EasyadminHelper
     [cta_list, unactive_cta_list]
   end
 
+  def get_random_interaction_tag(randomform)
+    if params["action"] == "clone"
+      CallToAction.find(params["id"]).interactions.each do |interaction|
+        return RandomResource.find(interaction.resource.id).tag if interaction.resource_type == "RandomResource"
+      end
+    end
+    return RandomResource.find(randomform.object.id).tag rescue nil
+  end
+
   def render_update_banner(updated_at, instance)
 
     if instance.class == CallToAction

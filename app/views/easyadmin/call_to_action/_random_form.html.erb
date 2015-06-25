@@ -31,7 +31,7 @@
           <div class="form-group">
             <label class="text-input">Tag</label>
             <% tag_text_field_id = randomform.object_name.gsub("[", "_").gsub("]", "") + "_tag" %>
-            <%= render_html_tag_box(tag_text_field_id, (RandomResource.find(randomform.object.id).tag rescue nil), "Tag non esistente!", 1) %>
+            <%= render_html_tag_box(tag_text_field_id, get_random_interaction_tag(randomform), "Tag non esistente!", 1) %>
             <script type="text/javascript">
               $("#" + "<%= tag_text_field_id %>").attr("name", "<%= "#{randomform.object_name}[tag]" %>");
             </script>

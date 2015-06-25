@@ -26,6 +26,7 @@ class InstantwinController < ApplicationController
     response = {}
 
     if current_user
+
       interaction = Interaction.find(params[:interaction_id])
       if has_tickets(interaction.id) && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
@@ -38,7 +39,8 @@ class InstantwinController < ApplicationController
           response[:win] = true
           response['message'] = prize.title
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
-          send_winner_email(instantwin.reward_info['prize_code'],prize)
+          assign_reward(current_user, prize.name, 1, request.site)
+          send_winner_email(instantwin.reward_info['prize_code'], prize)
           expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
           log_synced("assigning instant win to user", { 'instantwin_id' => instantwin.id })
         end
@@ -46,7 +48,6 @@ class InstantwinController < ApplicationController
         create_or_update_interaction(current_user, interaction, nil, nil, aux.to_json)
         expire_cache_key(get_reward_points_for_user_key(interaction.resource.reward.name, current_user.id))
         response['prize'] = prize
-
       elsif !has_tickets(interaction.id)
         response['message'] = "Hai esaurito i biglietti"
         response[:win] = false
@@ -77,8 +78,8 @@ class InstantwinController < ApplicationController
   end
 
   def send_winner_email(time_to_win, price)
-    SystemMailer.win_mail(current_user, price, time_to_win, request).deliver
-    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win, request).deliver
+    SystemMailer.win_mail(current_user, price, time_to_win, request).deliver_now
+    SystemMailer.win_admin_notice_mail(current_user, price, time_to_win, request).deliver_now
   end
 
 end

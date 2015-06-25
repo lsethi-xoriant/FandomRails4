@@ -64,6 +64,31 @@ module BrowseHelper
     )  
   end
 
+  def get_recent_ctas_with_cache(tags, params = {})
+    if tags.any?
+      tags.each do |tag|
+        tag_names_for_cache += "#{tag.name}_"
+      end
+      timestamp = from_updated_at_to_timestamp(get_last_updated_at(Tag, tags))
+    else
+      tag_names_for_cache = ""
+      timestamp = from_updated_at_to_timestamp(get_last_updated_at(CallToAction))
+    end
+
+    ctas = cache_forever(get_recent_ctas_cache_key(tag_names_for_cache, timestamp, params)) do
+      get_recent_ctas(tags, params)
+    end
+  end
+
+  def get_last_updated_at(klass, instances = nil)
+    if instances
+      last_updated_at = klass.where(:id => instances.map{ |i| i.id }).maximum(:updated_at)
+    else
+      last_updated_at = klass.maximum(:updated_at)
+    end
+    last_updated_at
+  end
+
   def get_recent_ctas(tags, params = {})
     params[:conditions] = {
       without_user_cta: true
@@ -199,7 +224,7 @@ module BrowseHelper
     end      
   end
   
-  def get_content_previews_with_tags(tags, params = {}) # TODO: removed carouse_elements
+  def get_content_previews_with_tags(tags, params = {}) # TODO: removed carousel_elements
     begin
       perpage = params[:limit][:perpage]
       params[:limit][:perpage] = perpage + 1
@@ -366,7 +391,7 @@ module BrowseHelper
   # This methods is used to obtain a list of content previews starting from a tag name and a list of tags derived from the context (i.e: current property or language)
   #   main_tag_name - the name of the tag that rappresent the content previews container
   #   other_tags    - list of context tag such as current property tag or language tag, these tags will be used to filter contents. It could be empty.
-  #   params        - a dictionary containing further conditions to retrive content from DB (see get_cta_where_clause_from_params for detail)
+  #   params        - a dictionary containing further conditions to retrieve content from DB (see get_cta_where_clause_from_params for detail)
   def get_content_previews(main_tag_name, other_tags = [], params = {}, number_of_elements = nil)
     # Carousel elements if setted in content tag, if in section tag needs to be passed as function params
     main_tag = Tag.find_by_name(main_tag_name)
@@ -387,7 +412,7 @@ module BrowseHelper
       else
         carousel_elements = number_of_elements
       end
-      
+
       if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
         content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
       else

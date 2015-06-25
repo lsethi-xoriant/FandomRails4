@@ -415,6 +415,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.openInstantWinModal = function() {
+    delete $scope.aux.instant_win_info.win;
   	$(".click-sound").trigger("play");
     $("#modal-interaction-instant-win").modal("show");
   };

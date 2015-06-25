@@ -16,11 +16,19 @@
     end
 
     def user_sign_up
-      user = User.create(params[:user])
+      authentication_token = Devise.friendly_token
+      user = User.create(
+        email: params["email"], 
+        first_name: params["first_name"], 
+        last_name: params["last_name"], 
+        password: params["password"], 
+        password_confirmation: params["password_confirmation"], 
+        authentication_token: authentication_token)
+
       if user.errors.blank?
         respond_with_json user
       else
-        respond_with_errors user.errors
+        respond_with_errors user.errors.full_messages
       end
     end
 
