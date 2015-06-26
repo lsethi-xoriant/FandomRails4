@@ -57,7 +57,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       cta_info.percentage_animation = false;
     }
-
   }
 
   $scope.zerosBeforeNumber = function(number, zero_length) {
@@ -1994,6 +1993,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if(enable_percentage_animation != null && !calltoaction_info.percentage_animation) {
               calltoaction_info.percentage_animation = true;
               adjustPercentageAnimation(OVERVIDEO_COUNTDOWN_ANIMATION_TIME, 0, calltoaction_info);
+              youtube_player.setPlaybackRate(0.5);
           	} else if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
               executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
           	} 
