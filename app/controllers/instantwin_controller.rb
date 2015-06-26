@@ -30,7 +30,7 @@ class InstantwinController < ApplicationController
       interaction = Interaction.find(params[:interaction_id])
       if has_tickets(interaction.id) && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
-        instantwin, prize  = check_win(interaction, time)
+        instantwin, prize = check_win(interaction, time)
         if instantwin.nil?
           response[:win] = false
           response['message'] = "Non hai vinto, gioca ancora."
@@ -55,11 +55,11 @@ class InstantwinController < ApplicationController
         response['message'] = "Hai già vinto un premio"
         response[:win] = false
       end
+      response["instantwin_tickets_counter"] = get_counter_about_user_reward(interaction.resource.reward.name)
 
     end
 
     response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
-    response["instantwin_tickets_counter"] = get_counter_about_user_reward(interaction.resource.reward.name)
 
     respond_to do |format|
       format.json { render :json => response.to_json }
