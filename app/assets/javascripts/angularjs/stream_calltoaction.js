@@ -769,7 +769,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.hasCtaHistory = function(cta_info) {
-    return (cta_info.optional_history && cta_info.optional_history.optional_total_count);
+    return (cta_info.optional_history != null && cta_info.optional_history.optional_total_count != null);
   };
 
   $scope.isLastStepInLinkedCallToAction = function(cta_info) {
@@ -787,6 +787,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterRemoveLikeInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "like");
+  };
+
+  $scope.filterRemoveCommentInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "comment");
   };
 
   $scope.filterRemoveLinkInteractions = function(interaction_info) {
