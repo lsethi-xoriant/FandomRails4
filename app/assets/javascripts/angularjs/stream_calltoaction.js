@@ -48,7 +48,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(angular.isUndefined(comment_info.user_text)) {
       comment_info.user_text = String.fromCodePoint(emoticon);
     } else {
-      comment_info.user_text = comment_info.user_text + " " + String.fromCodePoint(emoticon);
+      comment_info.user_text = comment_info.user_text + "" + String.fromCodePoint(emoticon);
     }
   }
 

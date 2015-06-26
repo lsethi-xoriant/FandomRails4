@@ -19,10 +19,13 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       $scope.form_data.current_user.username = $scope.current_user.username;
     }
 
+    if($scope.aux.flash_notice == "privacy-addition") {
+      $("#privacy-modal").modal("show");
+    }
+
     if($scope.aux.flash_notice == "from-disney-registration") {
       $("#modal__from-disney-registration").modal("show");
     }
-
   };
 
   $scope.angularReady = function() {
