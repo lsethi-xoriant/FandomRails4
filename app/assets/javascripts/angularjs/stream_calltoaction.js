@@ -40,6 +40,18 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.fromCodeToHtml = function(code) {
+    return "&#" + code + ";";
+  }
+
+  $scope.addEmoticonToComment = function(emoticon, comment_info) {
+    if(angular.isUndefined(comment_info.user_text)) {
+      comment_info.user_text = String.fromCodePoint(emoticon);
+    } else {
+      comment_info.user_text = comment_info.user_text + " " + String.fromCodePoint(emoticon);
+    }
+  }
+
   function adjustPercentageAnimation(times, percentage, cta_info) {
     $("#percentage_circle_value_" + cta_info.calltoaction.id).html(times);
     percentage_circle_name = "#percentage_circle_" + cta_info.calltoaction.id;

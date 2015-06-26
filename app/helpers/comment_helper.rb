@@ -1,5 +1,5 @@
 module CommentHelper
-  
+
   ############ BALLANDO ############
   def get_last_comments_to_view(interaction)
     cache_short(get_calltoaction_last_comments_cache_key(interaction.call_to_action_id)) do

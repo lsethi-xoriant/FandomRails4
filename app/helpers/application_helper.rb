@@ -839,7 +839,6 @@ module ApplicationHelper
       else
         ugc_cta = nil
       end
-
     else
       related_ctas = nil
     end
@@ -893,6 +892,7 @@ module ApplicationHelper
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
       "instant_win_info" => instant_win_info,
+      "emoticons" => EMOTICONS,
       "assets" => assets
     }
 
