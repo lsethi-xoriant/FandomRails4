@@ -146,8 +146,9 @@ module TagHelper
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     elsif hidden_tags_ids.empty? && !tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      tag_ids_subselect += " AND tags.id not in (#{exclude_tag_ids.join(",")}))" if exclude_tag_ids.any?
-      tags = tags.where("tags.id in (#{tag_ids_subselect})")
+      tags_where_clause = "tags.id in (#{tag_ids_subselect})"
+      tags_where_clause += " AND tags.id not in (#{exclude_tag_ids.join(",")})" if exclude_tag_ids.any?
+      tags = tags.where(tags_where_clause)
     end
 
     if params[:limit]
