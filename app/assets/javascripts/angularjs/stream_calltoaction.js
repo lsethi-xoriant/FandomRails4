@@ -57,7 +57,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       cta_info.percentage_animation = false;
     }
-
   }
 
   $scope.zerosBeforeNumber = function(number, zero_length) {
@@ -771,7 +770,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.hasCtaHistory = function(cta_info) {
-    return (cta_info.optional_history && cta_info.optional_history.optional_total_count);
+    return (cta_info.optional_history != null && cta_info.optional_history.optional_total_count != null);
   };
 
   $scope.isLastStepInLinkedCallToAction = function(cta_info) {
@@ -789,6 +788,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterRemoveLikeInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type != "like");
+  };
+
+  $scope.filterRemoveCommentInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "comment");
   };
 
   $scope.filterRemoveLinkInteractions = function(interaction_info) {
@@ -1995,6 +1998,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             if(enable_percentage_animation != null && !calltoaction_info.percentage_animation) {
               calltoaction_info.percentage_animation = true;
               adjustPercentageAnimation(OVERVIDEO_COUNTDOWN_ANIMATION_TIME, 0, calltoaction_info);
+              youtube_player.setPlaybackRate(0.5);
           	} else if(video_started && overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
               executeInteraction(youtube_player, calltoaction_id, overvideo_interaction);
           	} 
