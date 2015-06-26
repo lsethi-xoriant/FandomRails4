@@ -408,6 +408,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $scope.aux.instant_win_info.in_progress = false;
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
+          $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
         }, 3000);
       }).error(function() {
         // ERROR.

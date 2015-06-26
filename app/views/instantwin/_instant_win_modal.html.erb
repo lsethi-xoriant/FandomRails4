@@ -52,7 +52,7 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <div class="row">
-          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general > 0" class="col-md-8 col-md-offset-2 text-center">         
+          <div ng-if="aux.instant_win_info.win == null && current_user.instantwin_tickets_counter > 0" class="col-md-8 col-md-offset-2 text-center">         
             <p ng-if="!aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">Gioca e vinci</p>
             <p ng-if="aux.instant_win_info.in_progress" class="instant-win__modal-title-with-result">&nbsp;</p>
             <div ng-if="aux.instant_win_info.in_progress" class="fountainG-container">
@@ -75,10 +75,9 @@
             </div>
           </div>
           <div ng-if="aux.instant_win_info.win == false" class="col-md-8 col-md-offset-2 text-center">
-            <p ng-if="current_user.main_reward_counter.general > 0" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">{{aux.instant_win_info.message}}</span></p>
-            <p ng-if="current_user.main_reward_counter.general < 1" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Hai esaurito i biglietti</span></p>
+            <p ng-if="current_user.instantwin_tickets_counter < 1" class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Hai esaurito i biglietti</span></p>
           </div>
-          <div ng-if="aux.instant_win_info.win == null && current_user.main_reward_counter.general < 1" class="col-md-8 col-md-offset-2 text-center">
+          <div ng-if="aux.instant_win_info.win == null && current_user.instantwin_tickets_counter < 1" class="col-md-8 col-md-offset-2 text-center">
             <p class="instant-win__modal-title-with-result instant-win__modal-title-with-result-not-win">PECCATO<span class="instant-win__modal-title-with-result-description">Hai esaurito i biglietti</span></p>
           </div>
           <div class="col-md-1 col-md-offset-3 text-right instant-win__ticket-pre hidden-xs"><p class="instant-win__ticket-pre-text">Hai</p></div>
@@ -91,7 +90,7 @@
           </div>
           <div class="col-md-1 text-left instant-win__ticket-post hidden-xs"><p class="instant-win__ticket-post-text">biglietti</p></div>       
           <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="col-md-12 text-center">
-            <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.main_reward_counter.general < 1)}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
+            <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
           </div>
         </div>
       </div>
