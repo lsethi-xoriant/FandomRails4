@@ -20,6 +20,7 @@
 </div>
 
 <div class="col-sm-3 text-left" ng-if="isRegistrateUser()">
+
   <%= light_link_to("/profile") do %>
     <p class="properties__right-bar-text">{{current_user.username}}</p>
   <% end %>  
@@ -30,15 +31,16 @@
 
   <%# TODO: remove ruby code, if the paga is initialize with first button how the second will be appared??? %>
   <div ng-if="aux.instant_win_info.interaction_id">
-    <% if !registration_fully_completed? %>
-      <button type="button" class="btn btn-primary" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
-        Gioca
-      </button>
-    <% else %>
+    <div ng-if="current_user.registration_fully_completed">
       <button type="button" class="btn btn-primary" ng-click="openInstantWinModal()">
         Gioca
       </button>
-    <% end %>
+    </div>
+    <div ng-if="!current_user.registration_fully_completed">
+      <button type="button" class="btn btn-primary" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+        Gioca
+      </button>
+    </div>
   </div>
 
 </div>

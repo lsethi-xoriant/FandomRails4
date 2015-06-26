@@ -117,7 +117,8 @@ module ApplicationHelper
         "username" => current_user.username,
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
-        "anonymous_id" => current_user.anonymous_id
+        "anonymous_id" => current_user.anonymous_id,
+        "registration_fully_completed" => registration_fully_completed?
       }
     else
       current_user_for_view = nil
@@ -635,7 +636,7 @@ module ApplicationHelper
       enum_values = field_selection["values"]
     when "range"
       extremes = field_selection["values"].split("-")
-      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
+      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).map{ |n| format("%0#{extremes.last.size}d", n) }.to_a
     when "setting"
       enum_values = Setting.find_by_name(field_selection["values"]).value
     end
