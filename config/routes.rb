@@ -486,7 +486,6 @@ Fandom::Application.routes.draw do
   get "/landing", :to => "landing#index"
 
   get "profile", :to => "profile#index"
-  get "profile/index", :to => "profile#index_mobile"
   get "profile/rankings", :to => "profile#rankings"
   get "profile/rewards", :to => "profile#rewards"
   get "profile/notices", :to => "profile#notices"
