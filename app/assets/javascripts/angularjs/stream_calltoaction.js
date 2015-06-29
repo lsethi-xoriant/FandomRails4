@@ -64,9 +64,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         adjustPercentageAnimation(times, percentage, cta_info);
       }, 10);
     } else if(times > 1) {
+      preinteractionAnimationSound();
       $(percentage_circle_name).removeClass("p" + percentage);
       adjustPercentageAnimation((times - 1), 0, cta_info)
     } else {
+      preinteractionAnimationSound();
       cta_info.percentage_animation = false;
     }
   }
@@ -425,6 +427,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         // ERROR.
       });
   };
+
+  function preinteractionAnimationSound() {
+    $(".preinteraction-sound").trigger("play");
+  }
 
   $scope.openInstantWinModal = function() {
     delete $scope.aux.instant_win_info.win;
