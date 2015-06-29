@@ -41,6 +41,7 @@ class GalleryController < ApplicationController
       }
     end
 
+    params["page_elements"] = ["like", "comment", "share"]
     @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
 
     @aux_other_params = { 
@@ -88,31 +89,20 @@ class GalleryController < ApplicationController
       }
     end
 
+    params["page_elements"] = ["like", "comment", "share"]
     gallery_tag_name = @gallery_tag.name
     @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, params, $site.init_ctas)
-    # @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(galleries_user_cta, ["like", "comment", "share", "vote"])
+          
+    gallery_tag_adjust_for_view = build_gallery_tag_for_view(@gallery_tag, cta, upload_interaction)
 
     @aux_other_params = { 
       "upload_interaction_resource" => upload_interaction.resource,
       "gallery" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user]
+      "gallery_user" => params[:user],
+      gallery_tag: gallery_tag_adjust_for_view
     }
-
-    if get_extra_fields!(cta)['form_extra_fields']
-      @extra_fields = JSON.parse(get_extra_fields!(cta)['form_extra_fields'].squeeze(" "))['fields']
-    else
-      @extra_fields = nil
-    end
-
-    @uploaded = false
-    @error = false
-    if !flash[:notice].blank?
-      @uploaded = true
-    elsif !flash[:error].blank?
-      @error = true
-    end
   end
 
   def get_gallery_ctas(gallery = nil)

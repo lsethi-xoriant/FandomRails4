@@ -597,16 +597,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
   
-  $scope.getGalleryUploadInteraction = function(interaction_info_list) {
-    comment_interaction = null;
-    angular.forEach(interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.resource_type == "upload") {
-        comment_interaction = interaction_info;
-      }
-    });
-    return comment_interaction;
-  };
-  
   $scope.getNumber = function(num) {
     return new Array(num);   
   };

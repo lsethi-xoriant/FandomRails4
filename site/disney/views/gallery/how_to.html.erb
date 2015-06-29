@@ -14,7 +14,7 @@
 	  	<h1 class="category-header__title--gallery"><%= @gallery_tag.title %></h1>
 	  	<div class="category-header__filter-area--gallery">
 	  		<% if small_mobile_device? %>
-	  			<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary btn-md"} do %>Partecipa<% end %>
+	  			<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary btn-sm"} do %>Partecipa<% end %>
 	  		<% else %>
 	  			<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary btn-lg"} do %>Partecipa<% end %>
 	  		<% end %>
