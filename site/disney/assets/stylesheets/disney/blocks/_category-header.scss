@@ -37,6 +37,10 @@
 }
 
 @media (max-width: $screen-sm-min) {
+  .category-header__filter-area--gallery {
+    left: 15px;
+  }
+
   .category-header {
     height: auto;
     overflow: hidden;
@@ -56,9 +60,10 @@
   }
   
   .category-header__title--gallery{
-    font-size: 24px;
+    font-size: 18px !important;
     text-shadow: 1px 1px #000;
-    display: none;
+    left: 15px;
+    margin-top: 15px;
   }
 
 }

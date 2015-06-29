@@ -132,11 +132,8 @@ module DisneyHelper
 
       in_gallery = nil
 
-      if calltoaction.user_id
-        in_gallery = calltoaction.id
-        gallery_calltoaction = CallToAction.find(in_gallery)
-        
-        main_related_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+      if calltoaction.user_id        
+        main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "gallery").first
         gallery_tag = main_related_tag
 
         if main_related_tag.present?
@@ -152,6 +149,11 @@ module DisneyHelper
             "extra_fields" => get_extra_fields!(gallery_calltoaction)
           }
 
+          gallery_upload_interaction = gallery_calltoaction.interactions.find_by_resource_type("Upload")
+          
+          gallery_tag_adjust_for_view =  build_gallery_tag_for_view(gallery_tag, gallery_calltoaction, gallery_upload_interaction)
+
+          in_gallery = gallery_calltoaction.id
           related_tag_name = main_related_tag.name
           image_background = get_upload_extra_field_processor(get_extra_fields!(main_related_tag)['background_image'], :original)
 
@@ -256,6 +258,10 @@ module DisneyHelper
       property_path_name = nil;
     end
 
+    if other && other.has_key?(:gallery_tag) 
+      gallery_tag_adjust_for_view = other[:gallery_tag]
+    end
+
     aux = {
       "site" => $site,
       "default_property" => $site.default_property,
@@ -273,7 +279,8 @@ module DisneyHelper
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "sidebar_info" => sidebar_info,
-      "gallery_calltoaction" => gallery_calltoaction_adjust_for_view
+      "gallery_calltoaction" => gallery_calltoaction_adjust_for_view,
+      "gallery_tag" => gallery_tag_adjust_for_view
     }
 
     if other

@@ -1,0 +1,21 @@
+<div class="row" ng-style="{'background-image': 'url(' + aux.gallery_tag.background_image + ')'}">
+  <div class="col-xs-12 gallery-cta">
+    <div class="row main-row gallery-cta__upload-area">
+      <div class="col-sm-4">
+        <img class="img-responsive hidden-xs" ng-src="{{aux.gallery_tag.thumbnail_medium}}" />
+      </div>
+      <div class="col-sm-7">
+        <div ng-bind-html="aux.gallery_tag.description"></div>
+        <p>&nbsp;</p>
+        <div class="row">
+          <div class="col-xs-12 text-left">
+            <a ng-if="aux.gallery_tag.url_gallery_rules" href="/gallery/{{aux.gallery_tag.url_gallery_rules}}/{{aux.gallery_calltoaction.id}}" class="btn btn-default gallery-cta__rule-button">{{aux.gallery_tag.label_gallery_rules}}</a>
+            <button ng-if="aux.gallery_tag.active" id="partecipa" class="btn btn-primary" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
+          </div>
+        </div>
+        <div ng-if="aux.gallery_tag.active"><%= render partial: "/gallery/gallery_calltoaction" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
