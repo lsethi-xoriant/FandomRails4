@@ -2,22 +2,22 @@
   <h1>CONTENUTI GENERATI DAGLI UTENTI</h1>
 </div> <!-- #content-header --> 
 
-  <div id="content-container">
+<div id="content-container">
 
-  <% if flash[:notice] %>
-    <div class="row">
-      <div class="col-md-12">         
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="alert alert-success"><%= flash[:notice] %></div>
-            </div>
+<% if flash[:notice] %>
+  <div class="row">
+    <div class="col-md-12">         
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="alert alert-success"><%= flash[:notice] %></div>
           </div>
-      </div>
+        </div>
     </div>
-  <% end %>
-  <% if cookies[:updated_at] %>
-    <%= render_update_banner(cookies[:updated_at], @cta) %>
-  <% end %>
+  </div>
+<% end %>
+<% if cookies[:updated_at] %>
+  <%= render_update_banner(cookies[:updated_at], @cta) %>
+<% end %>
 
 <ul class="nav nav-tabs">
   <li class="<%= page == "to_approve" ? "active" : "" %>"><a href="/easyadmin/cta/to_approve">Contenuti da approvare</a></li>
@@ -67,5 +67,8 @@
   </div>
   <div class="col-md-1">
     </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
+  </div>
+  <div class="col-md-1">
+    </br><%= submit_tag 'ESPORTA', class: 'btn btn-primary' %>
   </div>
 </div>

@@ -354,7 +354,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @username_filter = params[:username_filter]
     @email_filter = params[:email_filter]
 
-    if params[:commit] == "FILTRA"
+    if params[:commit] == "FILTRA" || params[:commit] == "ESPORTA"
       unless @tag_list.blank?
         cta_ids = get_tagged_objects(CallToAction.where(where_conditions), params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
         where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.join(', ')})")
@@ -378,6 +378,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
     @ctas = CallToAction.where(where_conditions).page(page).per(per_page).order("activated_at ASC NULLS LAST")
 
+    if params[:commit] == "ESPORTA"
+      export_user_call_to_actions(CallToAction.where(where_conditions).order("activated_at ASC NULLS LAST").pluck(:id))
+    end
+
     if params[:commit] == "RESET"
       @title_filter = @slug_filter = params[:tag_list] = @username_filter = @email_filter = nil
     end
@@ -386,7 +390,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
 
-    render template: "/easyadmin/call_to_action/index_user_cta_#{params[:approvation_status]}"
+    render template: "/easyadmin/call_to_action/index_user_cta_#{params[:approvation_status]}" if params[:commit] != "ESPORTA"
 
   end
 

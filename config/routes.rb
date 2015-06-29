@@ -111,7 +111,7 @@ Fandom::Application.routes.draw do
           get "settings/properties", :to => "settings#properties_settings"
           get "settings/properties/save", :to => "settings#save_properties_settings"
         end
-        
+
         get "/iur", to: "application#iur"
         post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
         post "profile/complete_registration", :to => "profile#complete_registration", defaults: { format: 'json' }
