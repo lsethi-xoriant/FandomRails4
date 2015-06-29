@@ -2007,7 +2007,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           	overvideo_interaction = getOvervideoInteractionAtSeconds(calltoaction_id, youtube_player_current_time);
             enable_percentage_animation = getOvervideoInteractionAtSeconds(calltoaction_id, (youtube_player_current_time + OVERVIDEO_COUNTDOWN_ANIMATION_TIME + 1));            
 
-            if(enable_percentage_animation != null && !calltoaction_info.percentage_animation) {
+            preinteraction_animation = !(calltoaction_info.calltoaction.extra_fields.preinteraction_animation && calltoaction_info.calltoaction.extra_fields.preinteraction_animation.value == false);
+            if(enable_percentage_animation != null && !calltoaction_info.percentage_animation && preinteraction_animation) {
               calltoaction_info.percentage_animation = true;
               adjustPercentageAnimation(OVERVIDEO_COUNTDOWN_ANIMATION_TIME, 0, calltoaction_info);
               youtube_player.setPlaybackRate(0.5);
