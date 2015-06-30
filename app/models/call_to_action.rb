@@ -78,12 +78,12 @@ class CallToAction < ActiveRecordWithJSON
         {
           extra_large: { 
             watermark_path: image.instance.get_watermark,
-            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "1024x768^", "-extent", "1024x768"], 
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "1024x768^"], 
             quality: 90
           },
           large: {
             watermark_path: image.instance.get_watermark,
-            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "600x600^", "-extent", "600x600"]
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "600x600^"]
           },
           extra: {
             convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "260x150^", "-extent", "260x150"]
