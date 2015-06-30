@@ -144,6 +144,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     errors = [];
 
     if(!angular.equals(extra_fields, {})) {
+      console.log(extra_fields[0]);
       angular.forEach(extra_fields, function(extra_field) {
         if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
           errors.push(extra_field['label']);

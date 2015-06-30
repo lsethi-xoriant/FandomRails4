@@ -2,10 +2,6 @@ module TagHelper
 
   def build_gallery_tag_for_view(gallery_tag, gallery_calltoaction, upload_interaction)
     form_extra_fields = JSON.parse(get_extra_fields!(gallery_calltoaction)['form_extra_fields'].squeeze(" "))['fields'] rescue []
-    form_string = ""
-    form_extra_fields.each do |field|
-      form_string = form_string + extra_field_to_html(field).html_safe
-    end
 
     {
       "upload_interaction" => build_interaction_info_list(gallery_calltoaction, "upload").first,
@@ -15,8 +11,7 @@ module TagHelper
       "thumbnail_medium" => get_upload_extra_field_processor(get_extra_fields!(gallery_tag)['thumbnail_upload'], :medium),
       "active" => upload_interaction.when_show_interaction != "MAI_VISIBILE",
       "type" => (upload_interaction.aux["configuration"]["type"] rescue "flowplayer"),
-      "form_string" => form_string,
-      "form_extra_fields" => (form_extra_fields || {}).to_json,
+      "form_extra_fields" => (form_extra_fields || {}),
       "button" => (get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media*" : "#{get_extra_fields!(gallery_tag)['label_button']}*")
     }
   end
