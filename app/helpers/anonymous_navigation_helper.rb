@@ -11,12 +11,12 @@ module AnonymousNavigationHelper
 
   def stored_anonymous_user?(user = nil)
     user = current_user unless user
-    user && user.anonymous_id.present?
+    user && !user.anonymous_id.blank?
   end
 
   def registered_user?(user = nil)
     user = current_user unless user
-    user && user.anonymous_id.nil?
+    user && user.anonymous_id.blank?
   end
 
   def new_stored_anonymous_user()

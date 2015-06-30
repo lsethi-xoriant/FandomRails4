@@ -484,7 +484,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return overvideo_interactions;
   }
 
-  $scope.isRegistrateUser = function() {
+  $scope.isRegistratedUser = function() {
     return ($scope.current_user && $scope.current_user.anonymous_id == null)
   };
 

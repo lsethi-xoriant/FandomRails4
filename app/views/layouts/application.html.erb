@@ -29,7 +29,7 @@
   <div ng-cloak>
 
     <audio ng-if="aux.assets.extra_fields.preinteraction_sound" class="preinteraction-sound hidden">
-      <source src="{{aux.assets.extra_fields.preinteraction_sound.url}}" type="audio/mpeg" />
+      <source ng-src="{{aux.assets.extra_fields.preinteraction_sound.url}}" type="audio/mpeg" />
     </audio>
   
     <%= render partial: "/application/style", locals: { aux: @aux } %>

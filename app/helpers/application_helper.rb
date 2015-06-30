@@ -109,6 +109,7 @@ module ApplicationHelper
 
   def build_current_user() 
     if current_user
+      anonymous_id = current_user.anonymous_id.blank? ? nil : current_user.anonymous_id
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
@@ -117,7 +118,7 @@ module ApplicationHelper
         "username" => current_user.username,
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
-        "anonymous_id" => current_user.anonymous_id,
+        "anonymous_id" => anonymous_id,
         "registration_fully_completed" => registration_fully_completed?
       }
     else
