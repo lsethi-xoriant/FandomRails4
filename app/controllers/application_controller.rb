@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
       property_name = property.name
       featured_content_previews = get_content_previews(featured_tag_name, [property])
     else
-      featured_content_previews = get_content_previews(featured_tag_name)
+      featured_content_previews = nil
     end
 
     params = { "page_elements" => ["like", "comment", "share"] }

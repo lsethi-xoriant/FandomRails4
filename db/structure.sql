@@ -17,6 +17,13 @@ CREATE SCHEMA ballando;
 
 
 --
+-- Name: braun_ic; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA braun_ic;
+
+
+--
 -- Name: coin; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -628,7 +635,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2450,7 +2457,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -4272,7 +4279,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -6094,7 +6101,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -7916,7 +7923,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -9738,7 +9745,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -11560,7 +11567,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -13382,7 +13389,7 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
-    reward_id integer NOT NULL,
+    currency_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

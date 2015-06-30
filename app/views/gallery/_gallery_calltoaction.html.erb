@@ -55,21 +55,19 @@
                 <i class="fa fa-check-circle" ng-if="form_data.releasing"></i>
               </div>
             </div>
-              
-            <div class="row form-group gallery-cta__first-step" ng-if="aux.gallery_tag.form_extra_fields">
-              <div class="col-sm-12">
-                <input id="extra_fields_age_age" name="extra_fields_age" type="checkbox" value="1" ng-model="form_data.age">
-                <label style="color: #555555;">Dichiaro di non aver ancora compiuto 17 anni*</label>
-              </div>
-            </div>
 
-            <%# TODO: not work
             <div class="row form-group gallery-cta__first-step" ng-if="aux.gallery_tag.form_extra_fields">
-              <div class="col-xs-12" ng-bind-html="aux.gallery_tag.form_string | unsafe">
+              <div class="col-xs-12" ng-repeat="field in aux.gallery_tag.form_extra_fields">
+                <!-- CHECKBOX -->
+                <div class="row text-left gallery__extra-field" ng-if="field.type == 'checkbox'">
+                  <div class="col-sm-12">
+                    <input id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="checkbox" value="1" ng-model="form_data[field.name]">
+                    <label style="color: #555555;">{{field.label}}<span ng-if="field.required">*</span></label>
+                  </div>
+                </div>
               </div>
             </div>
-            %>
-              
+                        
             <div class="row form-group gallery-cta__last-step">
               <div class="col-sm-8 text-left" ng-if="aux.gallery_tag.upload_interaction.interaction.resource.upload_info.privacy.required">
                 <input id="privacy" class="" name="privacy" type="checkbox" value="1" ng-model="form_data.privacy">
@@ -78,7 +76,7 @@
               </div>
 
               <div class="col-sm-12 text-center" ng-if="!form_data.progress">
-                <button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery.calltoaction.id + '/' + aux.gallery_tag.upload_interaction.interaction.id), aux.gallery_tag.form_extra_fields, aux.gallery_tag.upload_interaction)">CARICA</button>
+                <button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery_tag.gallery_calltoaction.id + '/' + aux.gallery_tag.upload_interaction.interaction.id), aux.gallery_tag.form_extra_fields, aux.gallery_tag.upload_interaction)">CARICA</button>
                 
                 <a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
               </div>

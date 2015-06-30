@@ -826,8 +826,10 @@ module ApplicationHelper
   def init_aux(other, calltoaction_info_list = nil)
     property = get_property()
 
-    property_info = init_property_info(property)
-    property_info_list = init_property_info_list()
+    if property.present?
+      property_info = init_property_info(property)
+      property_info_list = init_property_info_list()
+    end
 
     if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
       cta = other[:calltoaction] || other["calltoaction"]

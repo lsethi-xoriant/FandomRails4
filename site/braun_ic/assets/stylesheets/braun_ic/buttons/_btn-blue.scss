@@ -1,0 +1,55 @@
+.btn-blue { 
+  color: #FFFFFF; 
+  background: #3399FF; 
+  background: -webkit-linear-gradient(#61AAF2, #3399FF);
+  background: -o-linear-gradient(#61AAF2, #3399FF);
+  background: -moz-linear-gradient(#61AAF2, #3399FF);
+  background: linear-gradient(#61AAF2, #3399FF);
+  border-color: #036CD6; 
+  -webkit-box-shadow: 0px 4px 0px 0px #036CD6;
+  -moz-box-shadow: 0px 4px 0px 0px #036CD6;
+  box-shadow: 0px 4px 0px 0px #036CD6;
+}
+ 
+.btn-blue:hover, 
+.btn-blue:focus, 
+.btn-blue:active, 
+.btn-blue.active, 
+.open .dropdown-toggle.btn-blue { 
+  color: #FFFFFF; 
+  background: #59A6F2; 
+  border-color: #036CD6; 
+} 
+ 
+.btn-blue:active, 
+.btn-blue.active, 
+.open .dropdown-toggle.btn-blue { 
+  box-shadow: outset none;
+  position: relative;
+  top: 3px;
+  background-image: none; 
+} 
+ 
+.btn-blue.disabled, 
+.btn-blue[disabled], 
+fieldset[disabled] .btn-blue, 
+.btn-blue.disabled:hover, 
+.btn-blue[disabled]:hover, 
+fieldset[disabled] .btn-blue:hover, 
+.btn-blue.disabled:focus, 
+.btn-blue[disabled]:focus, 
+fieldset[disabled] .btn-blue:focus, 
+.btn-blue.disabled:active, 
+.btn-blue[disabled]:active, 
+fieldset[disabled] .btn-blue:active, 
+.btn-blue.disabled.active, 
+.btn-blue[disabled].active, 
+fieldset[disabled] .btn-blue.active { 
+  background: #3399FF; 
+  border-color: #036CD6; 
+} 
+ 
+.btn-blue .badge { 
+  color: #3399FF; 
+  background: #FFFFFF; 
+}

@@ -1,0 +1,55 @@
+.btn-red { 
+  color: #FFFFFF; 
+  background: #BF0C19; 
+  background: -webkit-linear-gradient(#e73141, #BF0C19);
+  background: -o-linear-gradient(#e73141, #BF0C19);
+  background: -moz-linear-gradient(#e73141, #BF0C19);
+  background: linear-gradient(#e73141, #BF0C19);
+  border-color: #99050F; 
+  -webkit-box-shadow: 0px 4px 0px 0px #99050F;
+  -moz-box-shadow: 0px 4px 0px 0px #99050F;
+  box-shadow: 0px 4px 0px 0px #99050F;
+} 
+ 
+.btn-red:hover, 
+.btn-red:focus, 
+.btn-red:active, 
+.btn-red.active, 
+.open .dropdown-toggle.btn-red { 
+  color: #FFFFFF; 
+  background: #C4313B; 
+  border-color: #99050F; 
+} 
+ 
+.btn-red:active, 
+.btn-red.active, 
+.open .dropdown-toggle.btn-red { 
+  box-shadow: outset none;
+  position: relative;
+  top: 3px;
+  background-image: none; 
+} 
+ 
+.btn-red.disabled, 
+.btn-red[disabled], 
+fieldset[disabled] .btn-red, 
+.btn-red.disabled:hover, 
+.btn-red[disabled]:hover, 
+fieldset[disabled] .btn-red:hover, 
+.btn-red.disabled:focus, 
+.btn-red[disabled]:focus, 
+fieldset[disabled] .btn-red:focus, 
+.btn-red.disabled:active, 
+.btn-red[disabled]:active, 
+fieldset[disabled] .btn-red:active, 
+.btn-red.disabled.active, 
+.btn-red[disabled].active, 
+fieldset[disabled] .btn-red.active { 
+  background: #BF0C19; 
+  border-color: #99050F; 
+} 
+ 
+.btn-red .badge { 
+  color: #BF0C19; 
+  background: #FFFFFF; 
+}
