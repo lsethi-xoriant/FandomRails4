@@ -231,7 +231,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       ordering = ordering_array.map { |element| element.to_s }.join(",")
 
       tag = Tag.find_by_name(params[:tag])
-      extra_fields = tag.extra_fields
+      extra_fields = get_extra_fields!(tag)
       extra_fields["ordering"] = ordering
       if tag.update_attribute(:extra_fields, extra_fields)
         flash[:notice] = "Ordinamento per il tag '#{tag.name}' salvato con successo"
