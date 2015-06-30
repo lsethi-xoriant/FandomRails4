@@ -52,8 +52,15 @@ class SessionsController < Devise::SessionsController
       sign_out(current_user)
     end
 
-    if !warden.authenticate(auth_options)
-      self.resource = warden.authenticate!(auth_options)
+    self.resource = warden.authenticate(auth_options)
+    if self.resource.nil?
+      begin
+        self.resource = warden.authenticate!(auth_options)
+      rescue Exception => e
+        sign_in(anonymous_user)
+        raise
+      end
+    else
     end
 
     set_flash_message(:notice, :signed_in) if is_navigational_format?

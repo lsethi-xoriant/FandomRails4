@@ -1,7 +1,3 @@
-<% if !cookies[:IntesaSanpaoloTracciatura] && @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].present? %>
-  <%= @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].html_safe %>
-<% end %>
-
 <div ng-if="calltoaction_info.calltoaction.extra_fields.layout == 'press'">
   <%= render partial: "/call_to_action/stream_single_calltoaction_press" %>
 </div>
