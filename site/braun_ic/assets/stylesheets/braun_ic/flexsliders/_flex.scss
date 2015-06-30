@@ -1,0 +1,17 @@
+/* GENERAL */ 
+
+.flex-viewport-shadow {
+    bottom: -6px;
+    position: absolute;
+    right: -1px;
+    top: -6px;
+    width: 6px;
+    z-index: 100;
+    border-right: 1px solid transparent;
+    background-image: radial-gradient(farthest-corner at 100% 50%, rgba(0, 0, 0, 0.5) 0%, transparent 75%);
+    background-image: -webkit-radial-gradient(100% 50%, rgba(0,0,0,0.5) 0%, transparent 75%);
+}
+
+.flex-disabled {
+    display: none !important;
+}

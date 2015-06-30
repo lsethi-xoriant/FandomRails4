@@ -29,6 +29,11 @@ Tag.create(name: "miniformat", description: "serve per poter visualizzare l'icon
 
 Tag.create(name: "gallery", description: "serve per poter abilitare la gallery", locked: true)
 
+Tag.create(name: "sidebar-home", description: "", locked: true)
+
+Tag.create(name: "assets", description: "", locked: true)
+
+Tag.create(name: "menu-item", description: "", locked: true)
 
 Setting.create(key: "rewarding.rules", value: <<-EOF
 EOF
