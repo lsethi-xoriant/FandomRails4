@@ -74,12 +74,13 @@ class Sites::Disney::RegistrationsController < RegistrationsController
         user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
       end
     else
-      unless privacy_addition_accepted?(user.aux)
-        flash["notice"] = "privacy-addition"
-        aux = user.aux || {}
-        aux["privacy_addition"] = true
-        user.update_attribute(:aux, aux)
-      end
+      flash["notice"] = "privacy-addition"
+      # unless privacy_addition_accepted?(user.aux)
+      #   flash["notice"] = "privacy-addition"
+      #   aux = user.aux || {}
+      #   aux["privacy_addition"] = true
+      #   user.update_attribute(:aux, aux)
+      # end
     end
 
     if user.errors.any?

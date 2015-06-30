@@ -4,6 +4,7 @@ module TagHelper
     form_extra_fields = JSON.parse(get_extra_fields!(gallery_calltoaction)['form_extra_fields'].squeeze(" "))['fields'] rescue []
 
     {
+      "gallery_calltoaction" => gallery_calltoaction,
       "upload_interaction" => build_interaction_info_list(gallery_calltoaction, "upload").first,
       "description" => gallery_tag.description,
       "extra_fields" => gallery_tag.extra_fields,
