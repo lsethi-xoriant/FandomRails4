@@ -405,7 +405,6 @@ module BrowseHelper
       end
     end
 
-    # TODO: cache change about number_of_elements????
     content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name_for_cache, timestamp, params)) do
       if number_of_elements.nil?
         carousel_elements = get_elements_for_browse_carousel(main_tag)
@@ -414,7 +413,7 @@ module BrowseHelper
       end
 
       if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
-        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, [], carousel_elements, params)
+        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, other_tags, carousel_elements, params)
       else
         content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
       end
