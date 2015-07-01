@@ -362,20 +362,6 @@ class CallToActionController < ApplicationController
     end    
   end
 
-  def update_random_interaction(cta, interaction, aux, response)
-    # TODO: Optimize next random call to action searching (with cache?)
-    tag = Tag.find_by_name(interaction.resource.tag)
-    ctas_without_me_count = get_ctas(tag).where("call_to_actions.id <> ?", cta.id).count
-    next_random_cta = ctas_without_me.offset(rand(ctas_without_me_count)).first
-
-    user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)    
-
-    response[:next_random_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([next_random_cta])
-    response[:ga][:label] = interaction.resource_type
-
-    [user_interaction, outcome, response]
-  end
-
   def update_interaction
     
 =begin    
