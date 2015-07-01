@@ -58,7 +58,7 @@ class Sites::Coin::ApplicationController < ApplicationController
     @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(@calltoactions)
     
     if current_user
-      @current_user_info = build_current_user()
+      @current_user_info = build_current_user().to_json
     end
 
     @aux = init_coint_aux

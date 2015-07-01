@@ -8,7 +8,15 @@
     end
     
     def update_interaction
+      send_anonymous_user = current_user.nil?
+
       response = update_interaction_helper(params)
+
+      # update_interaction will create a new user if the user was not logged, it needs to be passed explicitly in the mobile API
+      if send_anonymous_user
+        response[:anonymous_user] = current_user
+      end
+
       respond_to do |format|
         format.json { render :json => response.to_json }
       end
