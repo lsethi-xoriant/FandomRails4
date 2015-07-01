@@ -80,7 +80,7 @@
             </div>
 
             <div class="col-md-12 share-interaction__modal-input-col" ng-if="current_user"> 
-              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mario@rossi.it" name="address">
+              <input ng-model="interaction_info.user_interaction.share_to_email" class="form-control" type="text" placeholder="mariorossi@example.com" name="address">
             </div>
             <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="current_user">
               <button id="email-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-primary btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'email')">CONDIVIDI</button>

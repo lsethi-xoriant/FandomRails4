@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
 
     user_interaction, response[:outcome] = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     
-    response[:current_user] = JSON.parse(build_current_user()) if current_user && $site.id != "disney"
+    response[:current_user] = build_current_user() if current_user && $site.id != "disney"
     if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
       user_interactions_count = current_user.user_interactions.count
       response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
       property_name = property.name
       featured_content_previews = get_content_previews(featured_tag_name, [property])
     else
-      featured_content_previews = get_content_previews(featured_tag_name)
+      featured_content_previews = nil
     end
 
     params = { "page_elements" => ["like", "comment", "share"] }

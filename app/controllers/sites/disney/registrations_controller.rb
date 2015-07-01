@@ -73,7 +73,15 @@ class Sites::Disney::RegistrationsController < RegistrationsController
       else
         user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
       end
-
+      flash["notice"] = "privacy-addition"
+    else
+      flash["notice"] = "privacy-addition"
+      # unless privacy_addition_accepted?(user.aux)
+      #   flash["notice"] = "privacy-addition"
+      #   aux = user.aux || {}
+      #   aux["privacy_addition"] = true
+      #   user.update_attribute(:aux, aux)
+      # end
     end
 
     if user.errors.any?
@@ -89,6 +97,15 @@ class Sites::Disney::RegistrationsController < RegistrationsController
     cookies.delete :SWID, domain: ".disneychannel.it"
 
     redirect_to from_iur_authenticate
+  end
+
+  def privacy_addition_accepted?(aux)
+    if aux.present? && aux["privacy_addition"]
+      privacy_addition = aux["privacy_addition"]
+    else
+      privacy_addition = false
+    end
+    privacy_addition
   end
 
 end

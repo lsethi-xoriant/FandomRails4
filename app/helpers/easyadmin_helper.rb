@@ -128,6 +128,45 @@ module EasyadminHelper
     return RandomResource.find(randomform.object.id).tag rescue nil
   end
 
+  def export_user_call_to_actions(call_to_action_ids)
+    aux_columns = get_cta_columns_from_json_fields(call_to_action_ids, "aux")
+
+    transcoding_settings = get_deploy_setting("sites/#{$site.id}/transcoding", false)
+    if transcoding_settings
+      original_media_path = "#{transcoding_settings[:s3_output_folder]}/original/"
+    end
+
+    csv = "ID;Slug;Media;Liberatoria"
+    csv += ";" + aux_columns.map{ |col| col.capitalize.gsub("_", " ") }.join(";") if aux_columns.any?
+    csv += "\n"
+
+    CallToAction.where(:id => call_to_action_ids).each do |cta|
+      csv << "#{cta.id};#{cta.slug};#{ original_media_path ? "#{original_media_path}#{cta.user_id}-#{cta.id}-media.mp4" : cta.media_image.url };#{ cta.releasing_file.file.url if cta.releasing_file.present? }"
+      cta_aux = cta.aux
+      if cta_aux
+        aux_columns.each do |aux_column|
+          csv << ";#{cta_aux[aux_column]}"
+        end
+      end
+      csv << "\n"
+    end
+
+    send_data(csv, :tye => 'text/csv; charset=utf-8; header=present', :filename => "user_call_to_actions_#{Time.now.strftime("%Y_%m_%d_%H_%M")}.csv")
+  end
+
+  def get_cta_columns_from_json_fields(cta_ids, json_field)
+    columns = Set.new
+    cta_ids.each do |cta_id|
+      json_field_hash = CallToAction.find(cta_id)[json_field]
+      if json_field_hash
+        json_field_hash.keys.each do |key|
+          columns = columns.add(key)
+        end
+      end
+    end
+    columns
+  end
+
   def render_update_banner(updated_at, instance)
 
     if instance.class == CallToAction

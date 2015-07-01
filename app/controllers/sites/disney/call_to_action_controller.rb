@@ -6,55 +6,6 @@ class Sites::Disney::CallToActionController < CallToActionController
     get_disney_property()
   end
 
-  def show
-
-    calltoaction_id = params[:id]
-    
-    calltoaction = CallToAction.includes(:interactions).references(:interactions).active.find(calltoaction_id)
-
-    if calltoaction
-      log_call_to_action_viewed(calltoaction)
-
-      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
-      
-      optional_history = @calltoaction_info_list.first["optional_history"]
-      if optional_history
-        step_index = optional_history["optional_index_count"]
-        step_count = optional_history["optional_total_count"]
-        parent_cta_id = optional_history["parent_cta_id"]
-      end
-
-      sidebar_tag = calltoaction.user_id.present? ? "sidebar-cta-gallery" : "sidebar-cta"
-
-      @aux_other_params = { 
-        calltoaction: calltoaction,
-        linked_call_to_actions_index: step_index, # init in build_cta_info_list_and_cache_with_max_updated_at for recoursive ctas
-        linked_call_to_actions_count: step_count,
-        parent_cta_id: parent_cta_id,
-        init_captcha: (current_user.nil? || current_user.anonymous_id.present?),
-        sidebar_tag: sidebar_tag
-      }
-
-      set_seo_info_for_cta(calltoaction)
-
-      descendent_calltoaction_id = params[:descendent_id]
-      if(descendent_calltoaction_id)
-        calltoaction_to_share = CallToAction.find(descendent_calltoaction_id)
-        extra_fields = JSON.parse(calltoaction_to_share.extra_fields)
-
-        @seo_info["title"] = strip_tags(extra_fields["linked_result_title"]) rescue ""
-        @seo_info["meta_description"] = strip_tags(extra_fields["linked_result_description"]) rescue ""
-        @seo_info["meta_image"] = strip_tags(extra_fields["linked_result_image"]["url"]) rescue ""
-      end
-      
-    else
-
-      redirect_to "/"
-
-    end
-
-  end
-
   def expire_user_interaction_cache_keys()
   end
 

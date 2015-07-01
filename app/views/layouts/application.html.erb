@@ -24,9 +24,13 @@
 
 <% init_aux(@aux_other_params, @calltoaction_info_list) %>  
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= build_current_user() %>, <%= calltoaction_info_list %>, <%= @has_more || false %>, null, '<%= ga_code() %>', null, <%= @aux.to_json %>)">
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="StreamCalltoactionCtrl" ng-init="init(<%= build_current_user().to_json %>, <%= calltoaction_info_list %>, <%= @has_more || false %>, null, '<%= ga_code() %>', null, <%= @aux.to_json %>)">
 
   <div ng-cloak>
+
+    <audio ng-if="aux.assets.extra_fields.preinteraction_sound" class="preinteraction-sound hidden">
+      <source ng-src="{{aux.assets.extra_fields.preinteraction_sound.url}}" type="audio/mpeg" />
+    </audio>
   
     <%= render partial: "/application/style", locals: { aux: @aux } %>
     <%= render partial: "/application/user_bar" %>

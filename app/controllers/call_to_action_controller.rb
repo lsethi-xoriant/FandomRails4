@@ -280,7 +280,7 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserCommentInteraction"
     response[:ga][:action] = "AddComment"
 
-    if current_user && current_user.anonymous_id.nil?
+    if registered_user?(current_user)
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
@@ -362,89 +362,7 @@ class CallToActionController < ApplicationController
     end    
   end
 
-  def update_random_interaction(cta, interaction, aux, response)
-    # TODO: Optimize next random call to action searching (with cache?)
-    tag = Tag.find_by_name(interaction.resource.tag)
-    ctas_without_me_count = get_ctas(tag).where("call_to_actions.id <> ?", cta.id).count
-    next_random_cta = ctas_without_me.offset(rand(ctas_without_me_count)).first
-
-    user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)    
-
-    response[:next_random_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([next_random_cta])
-    response[:ga][:label] = interaction.resource_type
-
-    [user_interaction, outcome, response]
-  end
-
   def update_interaction
-    
-=begin    
-    interaction = Interaction.find(params[:interaction_id])
-    calltoaction = interaction.call_to_action
-
-    aux = {}
-    response = {}
-    response[:calltoaction_id] = interaction.call_to_action_id;
-
-    response[:ga] = Hash.new
-    response[:ga][:category] = "UserInteraction"
-    response[:ga][:action] = "CreateOrUpdate"
-    response[:ga][:label] = interaction.resource_type 
-
-    linked_cta = nil
-    if interaction.interaction_call_to_actions.any?
-      linked_cta = compute_linked_cta(interaction, params[:user_interactions_history], params[:params])
-      next_cta_id = linked_cta.nil? ? nil : linked_cta.id
-    end
-
-    aux[:to_redo] = false
-
-    aux[:user_interactions_history] = params[:user_interactions_history] if params[:user_interactions_history]
-    aux[:next_cta_id] = next_cta_id if next_cta_id
-
-    case interaction.resource_type.downcase
-    when "quiz"
-      answer = Answer.find(params[:params])
-      user_interaction, outcome, response = update_quiz_interaction(interaction, answer, aux, response)
-    when "like"
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
-    when "share"
-      user_interaction, outcome, response = update_share_interaction(interaction, aux, params[:provider], params[:share_with_email_address], params[:facebook_message], response)
-    when "vote"
-      aux[:vote] = params[:params]
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
-      response["counter_aux"], response["counter"] = get_interaction_counter_from_view_counter(interaction.id)
-    when "randomresource"
-      user_interaction, outcome, response = update_cta_and_interaction_status(calltoaction, interaction, response)
-    when "download"
-      response["download_interaction_attachment"] = interaction.resource.attachment.url
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
-    else
-      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
-    end
-
-    if user_interaction
-      response[:user_interaction] = build_user_interaction_for_interaction_info(user_interaction)
-      response[:outcome] = outcome
-      if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
-        user_interactions_count = current_user.user_interactions.count
-        response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
-      end
-    end 
-    
-    response = update_cta_and_interaction_status(calltoaction, interaction, response)
-
-    if linked_cta.present?
-      response[:next_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([linked_cta])
-    end
-
-    if current_user && $site.id != "disney"
-      response[:current_user] = JSON.parse(build_current_user())
-    elsif $site.id == "disney"
-      response[:current_user] = build_disney_current_user()
-    end
-=end
-    
     response = update_interaction_helper(params)
     
     respond_to do |format|

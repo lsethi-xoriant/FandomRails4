@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def darken_color(hex_color, amount = 0.8)
-    if hex_color.present?
+    if hex_color
       hex_color = hex_color.gsub('#','')
       rgb = hex_color.scan(/../).map(&:hex).map{ |color| color * amount }.map(&:round)
       "#%02x%02x%02x" % rgb
@@ -51,9 +51,11 @@ module ApplicationHelper
   end
 
   def lighten_color(hex_color, amount = 0.6)
-    hex_color = hex_color.gsub('#','')
-    rgb = hex_color.scan(/../).map(&:hex).map{ |color| [(color + 255) * amount, 255].min }.map(&:round)
-    "#%02x%02x%02x" % rgb
+    if hex_color
+      hex_color = hex_color.gsub('#','')
+      rgb = hex_color.scan(/../).map(&:hex).map{ |color| [(color + 255) * amount, 255].min }.map(&:round)
+      "#%02x%02x%02x" % rgb
+    end
   end
 
   def adjust_path_with_property(path)
@@ -107,6 +109,7 @@ module ApplicationHelper
 
   def build_current_user() 
     if current_user
+      anonymous_id = current_user.anonymous_id.blank? ? nil : current_user.anonymous_id
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
@@ -115,12 +118,13 @@ module ApplicationHelper
         "username" => current_user.username,
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
-        "anonymous_id" => current_user.anonymous_id
+        "anonymous_id" => anonymous_id,
+        "registration_fully_completed" => registration_fully_completed?
       }
     else
       current_user_for_view = nil
     end
-    current_user_for_view.to_json
+    current_user_for_view
   end
   
   def get_cta_event_start_end(cta_interactions)
@@ -633,7 +637,7 @@ module ApplicationHelper
       enum_values = field_selection["values"]
     when "range"
       extremes = field_selection["values"].split("-")
-      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).to_a
+      enum_values = ((extremes.first.to_i)..(extremes.last.to_i)).map{ |n| format("%0#{extremes.last.size}d", n) }.to_a
     when "setting"
       enum_values = Setting.find_by_name(field_selection["values"]).value
     end
@@ -823,8 +827,10 @@ module ApplicationHelper
   def init_aux(other, calltoaction_info_list = nil)
     property = get_property()
 
-    property_info = init_property_info(property)
-    property_info_list = init_property_info_list()
+    if property.present?
+      property_info = init_property_info(property)
+      property_info_list = init_property_info_list()
+    end
 
     if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
       cta = other[:calltoaction] || other["calltoaction"]
@@ -836,7 +842,6 @@ module ApplicationHelper
       else
         ugc_cta = nil
       end
-
     else
       related_ctas = nil
     end
@@ -890,6 +895,7 @@ module ApplicationHelper
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
       "instant_win_info" => instant_win_info,
+      "emoticons" => EMOTICONS,
       "assets" => assets
     }
 

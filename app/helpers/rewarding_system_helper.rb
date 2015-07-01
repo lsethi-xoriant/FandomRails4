@@ -215,7 +215,6 @@ module RewardingSystemHelper
         user: user,
         cta: cta,
         correct_answer: get_correct_answer(user_interaction),
-        counters: {},
         uncountable_user_reward_names: Set.new(),
         user_unlocked_names: Set.new(),
         user_rewards: fill_user_rewards({}),
@@ -228,7 +227,6 @@ module RewardingSystemHelper
         user: user,
         cta: cta,
         correct_answer: get_correct_answer(user_interaction),
-        counters: get_counters(user),
         uncountable_user_reward_names: uncountable_user_reward_names,
         user_unlocked_names: user_unlocked_names,
         user_rewards: user_rewards,
@@ -301,10 +299,6 @@ module RewardingSystemHelper
   def get_correct_answer(user_interaction)
     user_interaction.is_answer_correct?
   end  
-
-  def get_counters(user)
-    UserCounter.get_by_user(user)
-  end
 
   # Evaluates a rules_buffer in the context of an user interaction.
   # Returns an instance of the class Outcome

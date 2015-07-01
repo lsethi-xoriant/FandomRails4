@@ -17,18 +17,23 @@ User.create(email: "anonymous@shado.tv", first_name: "Anonymous", last_name: "An
             privacy: true, password: "shado00", password_confirmation: "shado00")
 
 
-Tag.create(name: "basic", description: "serve per nascondere i badge e livelli dalla pagina catalogo premi", locked: true)
+Tag.create(name: "basic", description: "serve per nascondere i badge e livelli dalla pagina catalogo premi", locked: true, extra_fields: {})
 
-Tag.create(name: "top", description: "serve per posizionare gli elementi in alto e in evidenza all'interno della pagina catalogo premi", locked: true)
+Tag.create(name: "top", description: "serve per posizionare gli elementi in alto e in evidenza all'interno della pagina catalogo premi", locked: true, extra_fields: {})
 
-Tag.create(name: "level", description: "serve per creare i livelli", locked: true)
+Tag.create(name: "level", description: "serve per creare i livelli", locked: true, extra_fields: {})
 
-Tag.create(name: "template", description: "serve per impostare le cta come template da poter replicare durante il data entry successivo al setup iniziale", locked: true)
+Tag.create(name: "template", description: "serve per impostare le cta come template da poter replicare durante il data entry successivo al setup iniziale", locked: true, extra_fields: {})
 
-Tag.create(name: "miniformat", description: "serve per poter visualizzare l'icona di un tag specifico in una singola cta o nel menu che filtra le cta.", locked: true)
+Tag.create(name: "miniformat", description: "serve per poter visualizzare l'icona di un tag specifico in una singola cta o nel menu che filtra le cta.", locked: true, extra_fields: {})
 
-Tag.create(name: "gallery", description: "serve per poter abilitare la gallery", locked: true)
+Tag.create(name: "gallery", description: "serve per poter abilitare la gallery", locked: true, extra_fields: {})
 
+Tag.create(name: "sidebar-home", description: "", locked: true)
+
+Tag.create(name: "assets", description: "", locked: true)
+
+Tag.create(name: "menu-item", description: "", locked: true)
 
 Setting.create(key: "rewarding.rules", value: <<-EOF
 EOF

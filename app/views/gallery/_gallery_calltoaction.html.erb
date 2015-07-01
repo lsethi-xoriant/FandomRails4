@@ -1,1 +1,150 @@
-<%= render partial: "/gallery/gallery_calltoaction_panel_body", locals: { interaction_id: interaction_id, gallery_tag: gallery_tag, error: error, uploaded: uploaded, extra_fields: extra_fields } %>
+<div ng-if="aux.gallery_tag.type != 'instagram'">
+  <div id="upload-form" class="row gallery-cta__form hidden">
+    <div class="col-xs-12 text-center">
+      <form>
+        <div class="row">
+          <div class="col-sm-12 gallery-cta__steps">
+            <div class="row form-group gallery-cta__first-step">
+              <div class="col-xs-12">
+                <div class="row gallery-cta__form-element">
+                  <div class="col-sm-2 hidden-xs">
+                    <img class="img-responsive gallery-cta__avatar" src="<%= current_avatar %>" />
+                  </div>
+                  <div class="col-sm-10">
+                    <input name="title" ng-model="form_data.title" class="form-control gallery-cta__title" id="title" type="text" placeholder="Dai un titolo*" ng-if="aux.gallery_tag.upload_interaction.interaction.resource.upload_info.title_needed" />
+                  </div>  
+                  <div class="col-sm-12" style="margin-top: 10px;">
+                    <textarea name="description" ng-model="form_data.description" class="form-control gallery-cta__title" id="description" placeholder="Inserisci una descrizione"></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div ng-if="aux.gallery_tag.type != 'youtube'" class="col-sm-6 col-sm-offset-3 gallery-cta__upload-photo">
+                    <input id="upload" name="attachment" ng-file-select="" ng-model="form_data.attachment" class="form-control hidden" type="file"> <!-- onchange="photoSelected()" -->
+                    <a class="btn btn-primary btn-block needsclick" onclick="loadPhoto();"><i class="fa fa-upload"></i> {{aux.gallery_tag.button}}
+                    </a>
+                    <i class="fa fa-check-circle" ng-if="form_data.attachment"></i>
+                  </div>
+                  <div ng-if="aux.gallery_tag.type == 'youtube'" class="col-sm-12 gallery-cta__upload-youtube">
+                    <textarea name="vcode" ng-model="form_data.vcode" class="form-control gallery-cta__title" id="vcode" placeholder="ID del video*"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row form-group gallery-cta__step" ng-if="aux.gallery_tag.upload_interaction.interaction.resource.upload_info.releasing.required">
+              <div class="col-xs-12">
+                <p class="text-left" style="color: #999;" ng-bind-html="aux.gallery_tag.upload_interaction.interaction.resource.upload_info.releasing.description"></p>
+                <p>
+                  <ul class="gallery-cta__releasing-files">
+                    <li ng-if="aux.gallery_tag.extra_fields.release_under18_url">
+                      <a target="_blank" href="{{aux.gallery_tag.extra_fields.release_under18_url.url}}">
+                        <i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria per miniori di 18 anni
+                      </a>
+                    </li>
+                    <li ng-if="aux.gallery_tag.extra_fields.release_url">
+                      <a href="{{aux.gallery_tag.extra_fields.release_url.url}}" target="_blank">
+                        <i class="fa fa-arrow-circle-down"></i> Scarica la liberatoria
+                      </a>
+                    </li>
+                  </ul>
+                </p>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-sm-offset-3 gallery-cta__upload-release">
+                <input id="releasing" name="releasing" ng-file-select="" ng-model="form_data.releasing" class="hidden" type="file"> <!-- onchange="releaseSelected();" -->
+                <a class="btn btn-primary btn-block needsclick" onclick="loadRelease();"><i class="fa fa-pencil"></i> Carica la liberatoria firmata*
+                </a>
+                <i class="fa fa-check-circle" ng-if="form_data.releasing"></i>
+              </div>
+            </div>
+
+            <div class="row form-group gallery-cta__first-step" ng-if="aux.gallery_tag.form_extra_fields">
+              <div class="col-xs-12" ng-repeat="field in aux.gallery_tag.form_extra_fields">
+                <!-- CHECKBOX -->
+                <div class="row text-left gallery__extra-field" ng-if="field.type == 'checkbox'">
+                  <div class="col-sm-12">
+                    <input id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="checkbox" value="1" ng-model="form_data[field.name]">
+                    <label style="color: #555555;">{{field.label}}<span ng-if="field.required">*</span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+                        
+            <div class="row form-group gallery-cta__last-step">
+              <div class="col-sm-8 text-left" ng-if="aux.gallery_tag.upload_interaction.interaction.resource.upload_info.privacy.required">
+                <input id="privacy" class="" name="privacy" type="checkbox" value="1" ng-model="form_data.privacy">
+                <label>Accettazione privacy</label>
+                <p class="small" ng-bind-html="upload_interaction.interaction.resource.upload_info.privacy.description"></p>
+              </div>
+
+              <div class="col-sm-12 text-center" ng-if="!form_data.progress">
+                <button class="btn btn-primary" ng-if="current_user != undefined" ng-click="upload([form_data.attachment[0], form_data.releasing[0]], ('/upload_interaction/create/' + aux.gallery_tag.gallery_calltoaction.id + '/' + aux.gallery_tag.upload_interaction.interaction.id), aux.gallery_tag.form_extra_fields, aux.gallery_tag.upload_interaction)">CARICA</button>
+                
+                <a class="btn btn-primary" data-toggle="modal" data-target="#registrate-modal" ng-if="current_user == undefined">CARICA</a>
+              </div>
+
+              <div class="col-sm-12 text-left" ng-if="!form_data.progress">
+                <p class="gallery__required-info">*campi obbligatori</p>
+              </div>
+
+              <div class="col-sm-12 gallery__progress" ng-if="form_data.progress">
+                <div class="progress">
+                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': form_data.progress + '%'}">
+                    <span class="sr-only">{{form_data.progress}}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-12 text-left gallery__errors" ng-if="form_data.errors">
+                <p>
+                  <ul>Errori nella compilazione:
+                    <li ng-repeat="error in form_data.errors.split(',')">{{error}}</li>
+                  </ul>
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  function partecipa(){
+    $("#upload-form").removeClass("hidden");
+    $("#partecipa").hide();
+  }
+  
+  function loadPhoto(){
+    $("#upload").click();
+  }
+  
+  function loadRelease(){
+    $("#releasing").click();
+  }
+  
+  function photoSelected(){
+    if( $(".gallery-cta__upload-photo").find("i.fa-check-circle").length == 0){
+      $(".gallery-cta__upload-photo").append('<i class="fa fa-check-circle"></i>');
+    }
+  }
+  
+  function releaseSelected(){
+    if( $(".gallery-cta__upload-release").find("i.fa-check-circle").length == 0){
+      $(".gallery-cta__upload-release").append('<i class="fa fa-check-circle"></i>');
+    }
+  }
+  
+  function openLoadiongModal(){
+    $("#ugc-loading").modal('show');
+    $("#form-upload").submit();
+  }
+  
+  <% if @uploaded %>
+  $(document).ready(function(){
+    $("#ugc-feedback").modal('show');
+  });
+  <% end %>
+</script>

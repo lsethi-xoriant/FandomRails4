@@ -98,7 +98,7 @@
   position: relative;
 }
 .progress .progress-bar {
-  position: absolute;
+  /* position: absolute; */
   overflow: hidden;
   line-height: 20px;
 }

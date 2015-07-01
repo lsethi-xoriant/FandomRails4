@@ -41,24 +41,15 @@ class ProfileController < ApplicationController
     end
   end
 
-  def index_mobile
-    @level = get_current_level;
-    @my_position, total = get_my_general_position_in_property
-  end
-
   def index
     if small_mobile_device?
-      if $context_root.present?
-        redirect_to "/#{$context_root}/profile/index"
-      else
-        redirect_to "/profile/index"
-      end
+      @level = get_current_level;
+      @my_position, total = get_my_general_position_in_property
+
+      render template: "/profile/index_mobile"
     else
-      if $context_root.present?
-        redirect_to "/#{$context_root}/users/edit"
-      else
-        redirect_to "/users/edit"
-      end
+      # The destination page is initalized by Devise gem.
+      redirect_to ($context_root.present? ? "/#{$context_root}/users/edit" : "/users/edit")
     end
   end
 

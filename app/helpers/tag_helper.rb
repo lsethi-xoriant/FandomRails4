@@ -1,5 +1,22 @@
 module TagHelper
 
+  def build_gallery_tag_for_view(gallery_tag, gallery_calltoaction, upload_interaction)
+    form_extra_fields = JSON.parse(get_extra_fields!(gallery_calltoaction)['form_extra_fields'].squeeze(" "))['fields'] rescue []
+
+    {
+      "gallery_calltoaction" => gallery_calltoaction,
+      "upload_interaction" => build_interaction_info_list(gallery_calltoaction, "upload").first,
+      "description" => gallery_tag.description,
+      "extra_fields" => gallery_tag.extra_fields,
+      "background_image" => gallery_tag.extra_fields["background_image_upload"]["url"],
+      "thumbnail_medium" => get_upload_extra_field_processor(get_extra_fields!(gallery_tag)['thumbnail_upload'], :medium),
+      "active" => upload_interaction.when_show_interaction != "MAI_VISIBILE",
+      "type" => (upload_interaction.aux["configuration"]["type"] rescue "flowplayer"),
+      "form_extra_fields" => (form_extra_fields || {}),
+      "button" => (get_extra_fields!(gallery_tag)['label_button'].nil? ? "Carica il tuo media*" : "#{get_extra_fields!(gallery_tag)['label_button']}*")
+    }
+  end
+
   def filter_results(results, query)
     regexp = Regexp.new(query.split(/\W+/).map { |term| "(\\W+#{term}\\W+)" }.join("|"), Regexp::IGNORECASE)
     filtered_results = []
@@ -146,7 +163,9 @@ module TagHelper
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     elsif hidden_tags_ids.empty? && !tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
-      tags = tags.where("tags.id in (#{tag_ids_subselect})")
+      tags_where_clause = "tags.id in (#{tag_ids_subselect})"
+      tags_where_clause += " AND tags.id not in (#{exclude_tag_ids.join(",")})" if exclude_tag_ids.any?
+      tags = tags.where(tags_where_clause)
     end
 
     if params[:limit]

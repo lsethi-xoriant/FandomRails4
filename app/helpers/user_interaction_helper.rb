@@ -263,7 +263,7 @@ module UserInteractionHelper
       end
     when "randomresource"
       next_random_cta = aux["next_random_cta"]
-      user_interaction_aux["next_random_cta"] = (user_interaction_aux["next_random_cta"] || []) + next_random_cta        
+      user_interaction_aux["next_random_cta"] = (user_interaction_aux["next_random_cta"] || []) << next_random_cta        
     end
 
     return user_interaction_aux
@@ -381,7 +381,7 @@ module UserInteractionHelper
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
       response["counter_aux"], response["counter"] = get_interaction_counter_from_view_counter(interaction.id)
     when "randomresource"
-      user_interaction, outcome, response = update_cta_and_interaction_status(calltoaction, interaction, response)
+      user_interaction, outcome, response = update_random_interaction(calltoaction, interaction, aux, response)
     when "download"
       response["download_interaction_attachment"] = interaction.resource.attachment.url
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
@@ -406,13 +406,12 @@ module UserInteractionHelper
     end
 
     if current_user && $site.id != "disney"
-      response[:current_user] = JSON.parse(build_current_user())
+      response[:current_user] = build_current_user()
     elsif $site.id == "disney"
       response[:current_user] = build_disney_current_user()
     end
-    
+
     response
-  
   end
 
   #function moved from call_to_action_controller
@@ -522,6 +521,22 @@ module UserInteractionHelper
     response[:share] = Hash.new
     response[:share][:result] = is_share_valid
     response[:share][:exception] = error 
+
+    [user_interaction, outcome, response]
+  end
+
+  def update_random_interaction(cta, interaction, aux, response)
+    # TODO: Optimize next random call to action searching (with cache?)
+    tag = Tag.find_by_name(interaction.resource.tag)
+    ctas_without_me = get_ctas(tag).where("call_to_actions.id <> ?", cta.id)
+    ctas_without_me_count = ctas_without_me.count
+    next_random_cta = ctas_without_me.offset(rand(ctas_without_me_count)).first
+    aux[:next_random_cta] = next_random_cta.id
+
+    user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)    
+
+    response[:next_random_call_to_action_info_list] = build_cta_info_list_and_cache_with_max_updated_at([next_random_cta])
+    response[:ga][:label] = interaction.resource_type
 
     [user_interaction, outcome, response]
   end

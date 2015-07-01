@@ -3,7 +3,8 @@
 	    <img ng-src="<%= @info['header_image'] %>" class="img-responsive category-header__header-image" />
 	  	<h1 class="category-header__title"><%= @gallery_tag.title %></h1>
 	  	<div class="category-header__filter-area">
-	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary"} %>Partecipa<% end %>
+	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary hidden-xs"} %>Partecipa<% end %>
+	  		<%= light_link_to "/gallery/#{@cta_id}", {"class" => "btn btn-primary bnt-sm visible-xs"} %>Partecipa<% end %>
 	    </div>
 	</div>
 	

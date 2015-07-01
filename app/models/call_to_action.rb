@@ -54,6 +54,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_presence_of :title
   validates_presence_of :name
   validates_uniqueness_of :name
+  validates_uniqueness_of :slug
   validate :uniqueness_of_name_field
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
@@ -78,12 +79,12 @@ class CallToAction < ActiveRecordWithJSON
         {
           extra_large: { 
             watermark_path: image.instance.get_watermark,
-            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "1024x768^", "-extent", "1024x768"], 
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "1024x768^"], 
             quality: 90
           },
           large: {
             watermark_path: image.instance.get_watermark,
-            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "600x600^", "-extent", "600x600"]
+            convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "600x600^"]
           },
           extra: {
             convert_options: ["-gravity", gravity_position(image.instance.aux), "-thumbnail", "260x150^", "-extent", "260x150"]

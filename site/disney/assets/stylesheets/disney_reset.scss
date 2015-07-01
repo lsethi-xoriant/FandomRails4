@@ -210,12 +210,6 @@ a{
 
 /********************* ERRORS *********************/
 
-.error__container {
-  background-image: url('bg-modal.png'); 
-  background-size: 100% 100%;
-  background-color: #fff;
-}
-
 .error__image {
   margin-top: 155px;
   max-width: 240px;
@@ -271,11 +265,6 @@ a{
 
 .modal__custom__text--ie8-description {
   margin-bottom: 15px;
-}
-
-.modal--bg {
-  background-image: url('bg-modal.png'); 
-  background-size: 100% 100%;
 }
 
 @media (min-width: $screen-md-min) { 

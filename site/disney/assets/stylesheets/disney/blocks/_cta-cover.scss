@@ -175,11 +175,14 @@
   right: 15px;
 }
 
-.cta-cover__vote-count--header{
+.cta-cover__vote-count--header {
   background-color: transparent;
   border: 1px solid #999;
   color: #999;
   margin-left: 20px;
+  position: relative;
+  bottom: 2px;
+  float: right;
 }
 
 .cta-cover__vote-count--browse{
@@ -206,7 +209,7 @@
   }
 
   .cta-cover__user-avatar {
-    margin: 0 10px 3px 0;
+    margin: -10px 10px 3px 0;
   }
 
   .cta-cover__flag--carousel {
