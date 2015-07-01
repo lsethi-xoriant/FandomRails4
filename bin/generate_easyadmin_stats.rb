@@ -23,10 +23,14 @@ def main
   if config["starting_date"]
     starting_date_string = config["starting_date"]
   else
-    if conn.exec("SELECT COUNT(*) FROM #{tenant}.easyadmin_stats").values[0][0].to_i == 0
+    stats_number = conn.exec("SELECT COUNT(*) FROM #{tenant}.easyadmin_stats").values[0][0].to_i
+    if stats_number == 0
       starting_date_string = conn.exec("SELECT MIN(created_at) FROM #{tenant}.users").values[0][0]
     else
-      starting_date_string = (Date.parse(conn.exec("SELECT MAX(date) FROM #{tenant}.easyadmin_stats").values[0][0]) + 1).to_s
+      days_shifting = [stats_number, 6].min
+      starting_date_string = (Date.parse(conn.exec("SELECT MAX(date) FROM #{tenant}.easyadmin_stats").values[0][0]) - days_shifting).to_s
+      puts "Deleting stats since #{starting_date_string} in order to recreate them..."
+      conn.exec("DELETE FROM #{tenant}.easyadmin_stats where date >= '#{starting_date_string}'")
     end
   end
   starting_date = Date.parse(starting_date_string)
