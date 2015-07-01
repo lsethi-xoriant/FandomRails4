@@ -55,8 +55,8 @@ class Easyadmin::EasyadminController < ApplicationController
                           Time.now.strftime('%m/%d/%Y')
                             : params[:datepicker_to_date]
 
-      @from_date = datetime_parsed_to_utc(DateTime.strptime("#{@from_date_string} 00:00:00 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
-      @to_date = datetime_parsed_to_utc(DateTime.strptime("#{@to_date_string} 23:59:59 #{USER_TIME_ZONE_ABBREVIATION}", '%m/%d/%Y %H:%M:%S %z'))
+      @from_date = DateTime.strptime("#{@from_date_string} 00:00:00", '%m/%d/%Y %H:%M:%S')
+      @to_date = DateTime.strptime("#{@to_date_string} 23:59:59", '%m/%d/%Y %H:%M:%S')
 
       @properties = []
       property_tag = Tag.find_by_name("property")

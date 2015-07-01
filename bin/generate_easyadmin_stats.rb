@@ -239,8 +239,8 @@ end
 
 def count_comments_for_property(conn, tenant, date_condition, violetta_interaction_ids, property)
   conn.exec("SELECT id FROM #{tenant}.user_comment_interactions WHERE #{date_condition} AND comment_id IN (
-      SELECT resource_id FROM #{tenant}.interactions WHERE resource_type = 'Comment' 
-      AND call_to_action_id #{property == 'violetta' ? "" : "NOT "}IN (#{violetta_interaction_ids.join(', ')}))").count
+    SELECT resource_id FROM #{tenant}.interactions WHERE resource_type = 'Comment' 
+    AND id #{property == 'violetta' ? "" : "NOT "}IN (#{violetta_interaction_ids.join(', ')}))").count
 end
 
 def count_trivia(conn, tenant, date_condition, trivia_type_interaction_ids, property_interaction_ids)
@@ -292,7 +292,6 @@ def count_assigned_levels_and_badges(conn, tenant, date_condition, period_ids, p
 end
 
 def create_values_entry(conn, tenant, property_tags, period_ids, values)
-
   property_values_hash = {}
   property_tags.each do |property_tag|
     counter_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "counter"])
