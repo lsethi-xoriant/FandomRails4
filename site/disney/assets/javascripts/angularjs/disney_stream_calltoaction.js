@@ -17,9 +17,7 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
       $("#complete-registration").modal("show");
       $scope.form_data.current_user = new Object();
       $scope.form_data.current_user.username = $scope.current_user.username;
-    }
-
-    if($scope.aux.flash_notice == "privacy-addition") {
+    } else if($scope.aux.flash_notice == "privacy-addition") {
       $("#privacy-modal").modal("show");
     }
 
@@ -66,6 +64,9 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
           $scope.current_user.avatar = data.avatar;
           $scope.current_user.username = data.username;
           $("#complete-registration").modal("hide");
+          if($scope.aux.flash_notice == "privacy-addition") {
+            $("#privacy-modal").modal("show");
+          }
         }
       });
   };

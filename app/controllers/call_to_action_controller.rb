@@ -280,7 +280,7 @@ class CallToActionController < ApplicationController
     response[:ga][:category] = "UserCommentInteraction"
     response[:ga][:action] = "AddComment"
 
-    if current_user && current_user.anonymous_id.nil?
+    if registered_user?(current_user)
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
