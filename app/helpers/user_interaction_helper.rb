@@ -406,13 +406,12 @@ module UserInteractionHelper
     end
 
     if current_user && $site.id != "disney"
-      response[:current_user] = JSON.parse(build_current_user())
+      response[:current_user] = build_current_user()
     elsif $site.id == "disney"
       response[:current_user] = build_disney_current_user()
     end
-    
+
     response
-  
   end
 
   #function moved from call_to_action_controller

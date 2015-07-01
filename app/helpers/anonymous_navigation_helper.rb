@@ -22,7 +22,22 @@ module AnonymousNavigationHelper
   def new_stored_anonymous_user()
     name = "anonymous#{Digest::MD5.hexdigest(rand.to_s)[0..5]}"
     password = Devise.friendly_token.first(6)
-    User.new(anonymous_id: session[:session_id], email: "#{name}@shado.tv", username: name, password: password, password_confirmation: password)
+
+    user_params = {
+      email: "#{name}@shado.tv", 
+      username: name, 
+      password: password, 
+      password_confirmation: password
+    }
+
+    if request_via_api?
+      user_params[:anonymous_id] = Devise.friendly_token
+      user_params[:authentication_token] = Devise.friendly_token
+    else
+      user_params[:anonymous_id] = session[:session_id]
+    end
+
+    User.new(user_params)
   end
 
   def create_and_sign_in_stored_anonymous_user()
@@ -32,6 +47,10 @@ module AnonymousNavigationHelper
     end
     sign_in(user)
     user
+  end
+
+  def request_via_api?
+    session.empty?
   end
 
 end

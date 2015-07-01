@@ -124,7 +124,7 @@ module ApplicationHelper
     else
       current_user_for_view = nil
     end
-    current_user_for_view.to_json
+    current_user_for_view
   end
   
   def get_cta_event_start_end(cta_interactions)
