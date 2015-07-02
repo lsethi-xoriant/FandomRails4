@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+  <% if f.object.id %>
+    <div class="panel-heading-dark">PIN</div>
+  <% else %>
+    <div class="panel-heading-dark">PIN 
+      <p style="float: right"><%= link_to_remove_fields("rimuovi", "pin") %></p>
+    </div>
+  <% end %>
+  <div class="panel-body">
+    <%= f.hidden_field :resource_type, :class => "form-control" %>
+    <%= f.fields_for :resource do |pinform| %>
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="row" style="margin-bottom: 0px;">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Coordinata x</label>
+                <%= pinform.text_field :x_coord, :class => "form-control", :value => (f.object.resource.coordinates["x_coord"] rescue "") %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Coordinata y</label>
+                <%= pinform.text_field :y_coord, :class => "form-control", :value => (f.object.resource.coordinates["y_coord"] rescue "") %>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label class="text-input">Descrizione</label>
+                <%= pinform.cktext_area :description, :class => "form-control", :value => (f.object.resource.coordinates["description"] rescue ""), :ckeditor => { :toolbar => 'Mini' } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
