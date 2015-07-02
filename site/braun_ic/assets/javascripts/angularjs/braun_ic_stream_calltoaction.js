@@ -25,6 +25,11 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     $scope.covers[$scope.getParentCtaId(cta_info)] = true
   };
 
+  $scope.getCtaBadge = function(cta_info) {
+    key = $scope.getParentCtaInfo(calltoaction_info).calltoaction.name;
+    return $scope.aux.badges[key];
+  };
+
   $scope.resetToRedo = function(cta_info) {
     user_interaction_ids = $scope.getUserInteractionsHistory(cta_info);
     parent_cta_id = $scope.getParentCtaId(cta_info);

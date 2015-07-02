@@ -49,6 +49,9 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     
     badge_tag = Tag.find("badge")
     ctas = CallToAction.where(id: cta_ids)
+
+    user_badges = {}
+
     
     # TODO: optimize with one query
     @calltoaction_info_list.each do |cta_info|
@@ -60,20 +63,28 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       rewards = Reward.includes(:user_rewards).where("rewards.id IN (?)", reward_ids)
       if current_user
         reward = rewards.where("user_rewards.user_id = ?", current_user.id).references(:user_rewards).order(cost: :desc).first
-        reward = rewards.order(cost: :asc).first unless reward
+        if reward
+          inactive = false
+        else
+          reward = rewards.order(cost: :asc).first 
+          inactive = true
+        end
       else
         reward = rewards.order(cost: :asc).first
+        inactive = true
       end
 
-      cta_info[:reward] = {
+      badges[cta_info["calltoaction"]["name"]] = {
         name: reward.name,
         image: reward.main_image,
-        cost: reward.cost
+        cost: reward.cost,
+        inactive: inactive
       }
     end
 
     @aux_other_params = { 
-      tag_menu_item: "home"
+      tag_menu_item: "home",
+      badges: badges
     }
   end
 
