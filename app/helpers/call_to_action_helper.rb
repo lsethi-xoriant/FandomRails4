@@ -382,6 +382,7 @@ module CallToActionHelper
               "thumbnail_url" => calltoaction.thumbnail_url,
               "thumbnail_carousel_url" => calltoaction.thumbnail(:carousel),
               "thumbnail_medium_url" => calltoaction.thumbnail(:medium),
+              "thumbnail_wide_url" => calltoaction.thumbnail(:wide),
               "interaction_info_list" => interaction_info_list,
               "extra_fields" => get_extra_fields!(calltoaction),
               "activated_at" => calltoaction.activated_at,

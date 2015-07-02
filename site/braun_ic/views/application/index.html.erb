@@ -1,83 +1,39 @@
-<div class="container-fluid__blue">
-  <%= render partial: "/application/evidence_ctas" %>
-</div>
-<div class="container-fluid__blue stripe-container">
-  <div class="container main-container container">
-    <div class="row">
-      <div class="col-sm-8 col-sm-offset-2 text-center">
-      	<h1 class="category-header__title" ng-if="aux.assets['home_title_' + aux.language]">{{aux.assets['home_title_' + aux.language]}}</h1>
-		<h2 class="category-header__subtitle" ng-if="aux.assets['home_subtitle_' + aux.language]">{{aux.assets['home_subtitle_' + aux.language]}}</h2>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container-fluid__blue stripe-container" ng-if="aux['event_stripe']['contents']">
-  <div class="container main-container container--blue">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux['event_stripe']]">
-          <%= render partial: "/application/stripe" %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<p>PUNTI UTENTE {{current_user.main_reward_counter}}</p>
 
-<div class="stripe-container stripe-white" ng-if="aux['gallery_stripe']['contents']" ng-style="{'background-color': aux.gallery_stripe.extra_fields.background_color}">
-  <%# {'background-color': aux.gallery_stripe.extra_fields.background_color} %>
-  <div class="container main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.gallery_stripe]">
-          <%= render partial: "/application/stripe" %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="container">   
+  <div ng-repeat="calltoaction_info in calltoactions" class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="cta_cover-container panel-body">
+          <img ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" class="cta_cover-img" ng-src="{{getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_wide_url}}">
+          
+          <div ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" style="position: absolute; width: 30%; color: #fff; top: 1px; right: 16px; padding: 15px;">
+            <p>{{getParentCtaInfo(calltoaction_info).calltoaction.title}}</p>
+            <button ng-click="openCover(calltoaction_info)" class="btn btn-success">SCOPRILO E VINCI</button>
+          </div>  
 
-<div class="stripe-container stripe-white" ng-style="{'background-color': aux.story_stripe.extra_fields.background_color}" ng-if="aux['story_stripe']['contents']">
-  <div class="container main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.story_stripe]">
-          <%= render partial: "/application/stripe" %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          <div class="col-sm-12" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterTestInteractions">
+            <%= render partial: "/call_to_action/test_interaction" %>
+          </div>
 
-<div class="stripe-container stripe-white" ng-style="{'background-color': aux.story_innovation_stripe.extra_fields.background_color}" ng-if="aux['story_innovation_stripe']['contents']">
-  <div class="container main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.story_innovation_stripe]">
-          <%= render partial: "/application/stripe" %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          <div class="col-sm-12" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)">
+            <div class="row" >
+              <div class="col-sm-12">
+                <p>{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
+                <p>{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
+                <p>Condividi il risultato:</p>
+                <%= render partial: "/call_to_action/share_interaction" %>
+              </div>
+            </div>
+            <div class="row" ng-click="resetToRedo(calltoaction_info)">
+              <div class="col-xs-12">
+                <span>Rifai il test <span class="fa fa-refresh"></span></span>
+              </div>
+            </div>
+          </div>
 
-<div class="stripe-container stripe-white" ng-style="{'background-color': aux.article_stripe.extra_fields.background_color}" ng-if="aux['article_stripe']['contents']">
-  <div class="container main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.article_stripe]">
-          <%= render partial: "/application/stripe" %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          Reward: {{getCtaBadge(calltoaction_info)}}
 
-<div class="stripe-container stripe-white" ng-style="{'background-color': aux.press_stripe.extra_fields.background_color, 'color': aux.press_stripe.extra_fields.color}" ng-if="aux['press_stripe']['contents']">
-  <div class="container main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="browse-sections" ng-repeat="stripe in [aux.press_stripe]">
-          <%= render partial: "/application/stripe" %>
         </div>
       </div>
     </div>

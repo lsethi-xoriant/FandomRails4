@@ -79,12 +79,6 @@ module TagHelper
       ctas = ctas.order("activated_at DESC")
     end
     ctas = ctas.active.to_a
-    # Move this code after cache block
-    # if params.include?(:conditions) && params[:conditions][:exclude_cta_ids]
-    #   remove_excluded_elements(ctas, params[:conditions][:exclude_cta_ids])
-    # else
-    #   ctas
-    # end
   end
   
   def get_ctas_with_tags_in_or(tag_ids, params = {})
@@ -119,6 +113,11 @@ module TagHelper
       #   ctas
       # end
     end
+  end
+
+  def get_rewards_with_tags_in_and(tags)
+    ids_subselect = tags.map { |tag| "(select reward_id from reward_tags where tag_id = #{tag.id})" }.join(' INTERSECT ')
+    Reward.where("id IN (#{ids_subselect})").order(cost: :asc)
   end
 
   def get_tags_with_tags_in_and(tag_ids, params = {})

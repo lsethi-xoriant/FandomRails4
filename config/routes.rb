@@ -8,6 +8,15 @@ Fandom::Application.routes.draw do
 
   get '/cookies_policy', :to => 'application#cookies_policy'
 
+  constraints(SiteMatcher.new('braun_ic')) do
+    scope module: "sites" do
+      scope module: "braun_ic" do
+        get "/", to: "application#index"
+        post "/reset_redo_user_interactions", to: "application#reset_redo_user_interactions", defaults: { format: 'json' }
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('coin')) do
     get "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
     scope module: "sites" do

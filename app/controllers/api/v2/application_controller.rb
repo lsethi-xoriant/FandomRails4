@@ -17,7 +17,7 @@
       end
       
       params = request.params
-      params["page_elements"] = ["like", "share", "comment", "quiz"]
+      params["page_elements"] = ["like", "share", "comment", "quiz", "check"]
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       ctas_highlighted = map_highlight_ctas_in_content_preview(get_cta_highlighted_carousel())
       result = {
