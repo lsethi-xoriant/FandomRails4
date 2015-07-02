@@ -204,25 +204,25 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }, 500);
   };
 
-  function getUserInteractionsHistory(cta_info) {
+  $scope.getUserInteractionsHistory = function(cta_info) {
     if(cta_info.optional_history) {
       return cta_info.optional_history.user_interactions;
     } else {
       return null;
     }
+  };
+
+  $scope.getParentCtaId = function(cta_info) {
+    return $scope.getParentCtaInfo(cta_info).calltoaction.id;
   }
 
-  function getParentCtaId(cta_info) {
-    return getParentCtaInfo(cta_info).calltoaction.id;
-  }
-
-  function getParentCtaInfo(cta_info) {
+  $scope.getParentCtaInfo = function(cta_info) {
     if(cta_info.optional_history && cta_info.optional_history.parent_cta_info) {
       return cta_info.optional_history.parent_cta_info;
     } else {
       return cta_info;
     }
-  }
+  };
 
   $scope.sanitizeText = function(text) {
     return String(text).replace(/<[^>]+>/gm, '');
@@ -238,7 +238,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.angularReady = function() {
   };
 
-  function replaceCallToActionInCallToActionInfoList(old_calltoaction_info, new_calltoaction_info) {
+  $scope.replaceCallToActionInCallToActionInfoList = function(old_calltoaction_info, new_calltoaction_info) {
     calltoaction_info_list = [];
     angular.forEach($scope.calltoactions, function(cta_info) {
       if(cta_info.calltoaction.id == old_calltoaction_info.calltoaction.id) {
@@ -724,6 +724,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterDownloadInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "download");
+  };
+
+  $scope.filterTestInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "test");
   };
 
   $scope.evaluateVote = function(interaction_info) {
@@ -1478,7 +1482,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
-    calltoaction_info = getParentCtaInfo(calltoaction_info);
+    calltoaction_info = $scope.getParentCtaInfo(calltoaction_info);
     if($scope.aux.free_provider_share && provider != "email") {
       $scope.shareFree(calltoaction_info, interaction_info, provider);
     } else {
@@ -1603,7 +1607,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
-    
     var resource_type = interaction_info.interaction.resource_type;
     if(interactionAllowed(interaction_info)) {
 
@@ -1634,7 +1637,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
 
-    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: getUserInteractionsHistory(calltoaction_info), parent_cta_id: getParentCtaId(calltoaction_info) })
+    $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.getUserInteractionsHistory(calltoaction_info), parent_cta_id: $scope.getParentCtaId(calltoaction_info) })
       .success(function(data) {
         $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
       }).error(function() {
@@ -1787,7 +1790,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $timeout(function() { 
             updateInteractionsHistory(data.user_interaction.id);
 
-            replaceCallToActionInCallToActionInfoList(calltoaction_info, data.next_call_to_action_info);
+            $scope.replaceCallToActionInCallToActionInfoList(calltoaction_info, data.next_call_to_action_info);
             initializeVideoAfterPageRender();
             $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
             $timeout(function() { 
@@ -1831,9 +1834,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.resetToRedo = function(cta_info) {
     cta_info.class = "trivia-interaction__update-answer--fade_out";
     $timeout(function() { 
-      $http.post("/reset_redo_user_interactions", { user_interaction_ids: getUserInteractionsHistory(cta_info), parent_cta_id: getParentCtaId(cta_info) })
+      $http.post("/reset_redo_user_interactions", { user_interaction_ids: $scope.getUserInteractionsHistory(cta_info), parent_cta_id: $scope.getParentCtaId(cta_info) })
       .success(function(data) {   
-        replaceCallToActionInCallToActionInfoList(cta_info, data.calltoaction_info);
+        $scope.replaceCallToActionInCallToActionInfoList(cta_info, data.calltoaction_info);
         cta_info = getCallToActionInfo(data.calltoaction_info.calltoaction.id);
         cta_info.hide_class = "";
         cta_info.class = "trivia-interaction__update-answer--hide"

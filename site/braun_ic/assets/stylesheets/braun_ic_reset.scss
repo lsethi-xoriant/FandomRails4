@@ -118,12 +118,11 @@ p{
 }
 
 * {
-  /*font-family: 'Matterhorn-Regular';*/
-  font-family: "Matterhorn";
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a{
-  color: $blu;
+  color: $blue;
 }
 
 .btn-back{
@@ -131,7 +130,7 @@ a{
 }
 
 .glyphicon-blu{
-  color: $blu;
+  color: $blue;
 }
 
 /********************* COOKIES FOOTER *********************/

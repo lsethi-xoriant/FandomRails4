@@ -1,7 +1,6 @@
-$red: #a35217;
-$blu: #3399ff;
-$grey: #ececec;
-$green: #30bf43;
+$green: #71bb54;
+$blue: blue;
+$grey: grey;
 
 $container-tablet:             100% !default;
 $container-sm:                 $container-tablet !default;
@@ -21,10 +20,10 @@ $navbar-default-bg:                         #000 !default;
 $navbar-default-border:                     darken($navbar-default-bg, 10%) !default;
 
 $navbar-default-link-color:                 #fff !default;
-$navbar-default-link-hover-color:           #fff !default;
-$navbar-default-link-hover-bg:              $blu !default;
+$navbar-default-link-hover-color:           #000 !default;
+$navbar-default-link-hover-bg:              $green !default;
 $navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
-$navbar-default-link-active-bg:             $blu !default;
+$navbar-default-link-active-bg:             $blue !default;
 $navbar-default-link-disabled-color:        #444 !default;
 $navbar-default-link-disabled-bg:           transparent !default;
 
@@ -66,35 +65,6 @@ $navbar-inverse-toggle-border-color:        #999 !default;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
-
-@font-face {
-  font-family: 'Matterhorn';
-  font-style: normal;
-  font-weight: 400;
-  src: url("<%= asset_path('matterhorn-regular.eot') %>") format("eot"), 
-       url("<%= asset_path('matterhorn-regular.woff') %>") format("woff"), 
-       url("<%= asset_path('matterhorn-regular.ttf') %>") format("truetype"), 
-       url("<%= asset_path('matterhorn-regular.svg') %>") format("svg");
-}
-
-@font-face {
-  font-family: 'MatterhornBold';
-  font-style: normal;
-  font-weight: 400;
-  src: url("<%= asset_path('matterhorn-bold.eot') %>") format("eot"), 
-       url("<%= asset_path('matterhorn-bold.woff') %>") format("woff"), 
-       url("<%= asset_path('matterhorn-bold.ttf') %>") format("truetype"), 
-       url("<%= asset_path('matterhorn-bold.svg') %>") format("svg");
-}
-
-.search-bar__input {
-  background-image: url("<%= asset_path('disney/search.png') %>");
-  background-position: right 10px center;
-  background-repeat: no-repeat;
-  background-size: 32px auto;
-  height: 46px !important;
-  font-size: 18px;
-}
 
 //import style folders
 @import "braun_ic/**/*";
