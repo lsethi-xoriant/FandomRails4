@@ -50,7 +50,19 @@ module AnonymousNavigationHelper
   end
 
   def request_via_api?
-    session.empty?
+    self.is_a? Api::V2::BaseController
+  end
+
+  
+  def adjust_anonymous_user(params, perform_sign_out = true)
+    resource = current_user
+    resource.assign_attributes(email: nil, username: nil)
+    resource.assign_attributes(params)
+    if resource.valid? # TODO: comment this
+      resource.assign_attributes(anonymous_id: nil)
+      sign_out(current_user) if perform_sign_out
+    end
+    resource
   end
 
 end
