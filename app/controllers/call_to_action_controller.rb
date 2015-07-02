@@ -370,22 +370,6 @@ class CallToActionController < ApplicationController
     end
   end
 
-  def max_key_in_symbolic_name_to_counter(symbolic_name_to_counter)
-
-    current_key = ""
-    current_value = 0
-
-    symbolic_name_to_counter.each do |key, value|
-      if value > current_value
-        current_key = key
-        current_value = value
-      end
-    end
-
-    current_key
-
-  end
-
   def expire_user_interaction_cache_keys()
   end
   
