@@ -38,6 +38,12 @@
             </div>
           </div>
 
+          <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+            <div class="col-sm-12 text-right">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+          </div>
+
           Reward: {{getCtaBadge(calltoaction_info)}}
 
         </div>
@@ -58,6 +64,13 @@
         <div class="panel-body">
           <p>{{calltoaction_info.calltoaction.name}}</p>
           <img style="width: 150px;" ng-src="{{calltoaction_info.calltoaction.thumbnail_wide_url}}">
+          
+          <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+            <div class="col-sm-12 text-right">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

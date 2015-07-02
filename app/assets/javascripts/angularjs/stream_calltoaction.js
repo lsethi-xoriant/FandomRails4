@@ -1530,11 +1530,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
  
       $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
         .success(function(data) {
-          if(data.current_user) $scope.current_user = data.current_user;
-          if(data.notice_anonymous_user) {
-            showRegistrateView();
-          }
+          $scope.shareFreeAjaxSuccess(data);
         });
+    }
+  };
+
+  $scope.shareFreeAjaxSuccess = function(data) {
+    if(data.current_user) $scope.current_user = data.current_user;
+    if(data.notice_anonymous_user) {
+      showRegistrateView();
     }
   };
 
