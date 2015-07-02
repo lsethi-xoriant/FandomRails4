@@ -14,6 +14,28 @@
           <div class="row" style="margin-bottom: 0px;">
             <div class="col-lg-3">
               <div class="form-group">
+                <label class="text-input">Richiesto per il completamento</label>
+                 <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Visibile</label>
+                 <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["MAI_VISIBILE", "MAI_VISIBILE"]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label class="text-input">Posizione</label>
+                 <%= f.select(:interaction_positioning, [["UNDER_MEDIA", "UNDER_MEDIA"], ["OVER_MEDIA", "OVER_MEDIA"]], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row" style="margin-bottom: 0px;">
+            <div class="col-lg-3">
+              <div class="form-group">
                 <label class="text-input">Coordinata x</label>
                 <%= pinform.text_field :x_coord, :class => "form-control", :value => (f.object.resource.coordinates["x_coord"] rescue "") %>
               </div>
