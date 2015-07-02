@@ -1,4 +1,10 @@
-<p>PUNTI UTENTE {{current_user.main_reward_counter}}</p>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <p>PUNTI UTENTE {{current_user.main_reward_counter}}</p>
+    </div>
+  </div>
+</div>
 
 <div class="container">   
   <div ng-repeat="calltoaction_info in calltoactions" class="row">
@@ -34,6 +40,47 @@
 
           Reward: {{getCtaBadge(calltoaction_info)}}
 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <p>Le regole del benessere</p>
+    </div>
+  </div>
+  <div class="row" ng-repeat="calltoaction_info in aux.tips.tip_info_list">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p>{{calltoaction_info.calltoaction.name}}</p>
+          <img style="width: 150px;" ng-src="{{calltoaction_info.calltoaction.thumbnail_wide_url}}">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="aux.tips.has_more">
+    <div class="col-sm-12 text-center">
+      <button class="btn btn-success" ng-class="{'disabled': append_tips_in_progress}" ng-click="appendTips()">CARICA ALTRI</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <p>Prodotti</p>
+    </div>
+  </div>
+  <div class="row" ng-repeat="calltoaction_info in aux.tips.product_info_list">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p>{{calltoaction_info.calltoaction.name}}</p>
+          <img style="width: 150px;" ng-src="{{calltoaction_info.calltoaction.thumbnail_wide_url}}">
         </div>
       </div>
     </div>

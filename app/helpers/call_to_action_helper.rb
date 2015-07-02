@@ -1,5 +1,13 @@
 module CallToActionHelper
 
+  def get_parent_cta_name(cta_info)
+    if cta_info["optional_history"].present? && cta_info["optional_history"]["parent_cta_info"].present?
+      cta_info["optional_history"]["parent_cta_info"]["calltoaction"]["name"]
+    else
+      cta_info["calltoaction"]["name"]
+    end
+  end
+
   def get_sidebar_info(sidebar_tag_name, property)
     # Property can be the gallery section
 

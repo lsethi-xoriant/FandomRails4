@@ -1805,6 +1805,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(data.next_random_call_to_action_info_list) {
       $scope.initCallToActionInfoList(data.next_random_call_to_action_info_list);
     }
+
+    $scope.updateAnswerAjaxSuccessCallback(calltoaction_info, data);
+  };
+
+  $scope.updateAnswerAjaxSuccessCallback = function(calltoaction_info, data) {
   };
 
   $scope.calculateVoteTotal = function(interaction_info) {

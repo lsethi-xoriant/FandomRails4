@@ -392,6 +392,21 @@ module UserInteractionHelper
     if user_interaction
       response[:user_interaction] = build_user_interaction_for_interaction_info(user_interaction)
       response[:outcome] = outcome
+
+      if $site.id == "braun_ic"
+        reward_names = outcome[:reward_name_to_counter].map { |key, value| key.to_s }
+        badge_tag = Tag.find("badge")
+        reward = Reward.includes(:reward_tags).where(reward_tags: { tag_id: badge_tag.id }, name: reward_names).references(:reward_tags).order(cost: :asc).first
+        if reward
+          response[:badge] = {
+            name: reward.name,
+            image: reward.main_image,
+            cost: reward.cost,
+            inactive: false
+          }
+        end
+      end
+
       if stored_anonymous_user? && $site.interactions_for_anonymous_limit.present?
         user_interactions_count = current_user.user_interactions.count
         response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
