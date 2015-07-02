@@ -36,6 +36,18 @@
             <label class="text-input">Posizione</label>
              <%= f.select(:interaction_positioning, [["UNDER_MEDIA", "UNDER_MEDIA"], ["OVER_MEDIA", "OVER_MEDIA"]], {}, { :class => "form-control" }) %>
           </div>
+          <div class="form-group">
+            <label class="text-input">Testo privacy</label>
+            <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Testo richiesta liberatoria</label>
+            <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Richiesto per il completamento</label>
+            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
+          </div>
         </div>
         <div class="col-lg-6">
           <div class="form-group">
@@ -86,30 +98,23 @@
             <%= f.text_area :aux, :cols => "60", :rows => "5" %>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="form-group">
-            <label class="text-input">Testo privacy</label>
-            <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
-          </div>
-          <div class="form-group">
-            <label class="text-input">Testo richiesta liberatoria</label>
-            <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
-          </div>
-          <div class="form-group">
-            <label class="text-input">Richiesto per il completamento</label>
-            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
-          </div>
-        </div>
       </div>
       <div class="row instagram-gallery <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-12">
-          <div class="form-group col-lg-4">
-            <% if f.object.id %>
+          <% if f.object.id %>
+            <% instagram_tag = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"] %>
+            <div class="form-group col-lg-2">
+              <div class="form-group">
+                <%= uploadform.check_box :registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
+                <label class="text-input">Solo utenti registrati</label>
+              </div>
+            </div>
+            <div class="form-group col-lg-4">
               <label class="text-input">Tag della gallery (senza #)</label>
               <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-              <% tag_name = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["name"] rescue "" %>
-              <% tag_subscription_id = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["subscription_id"] rescue "" %>
+              <% tag_name = instagram_tag["name"] rescue "" %>
+              <% tag_subscription_id = instagram_tag["subscription_id"] rescue "" %>
 
               <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
               <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
@@ -121,10 +126,12 @@
                 <% end %>
               </p>
               <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
-            <% else %>
+            </div>
+          <% else %>
+            <div class="col-lg-6">
               <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>

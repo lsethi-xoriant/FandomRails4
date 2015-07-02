@@ -40,7 +40,7 @@ class Interaction < ActiveRecord::Base
   def set_upload_type
     if self.resource_type == "Upload"
       upload_aux = { "configuration" => { "type" => self.resource.gallery_type } }
-      self.aux.merge!(upload_aux)
+      self.aux = upload_aux.merge(self.aux)
       if self.resource.gallery_type == "instagram"
         self.when_show_interaction = "MAI_VISIBILE"
       end
