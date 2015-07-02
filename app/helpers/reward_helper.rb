@@ -184,7 +184,7 @@ module RewardHelper
 
   end
 
-  def get_current_property_point
+  def get_property_point
     get_counter_about_user_reward(get_current_property_point_reward_name)
   end  
 
@@ -460,7 +460,7 @@ module RewardHelper
     if $context_root.nil?
       get_counter_about_user_reward(MAIN_REWARD_NAME)
     else
-      get_current_property_point
+      get_property_point
     end
   end
 

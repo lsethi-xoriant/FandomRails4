@@ -50,7 +50,7 @@ module UserInteractionHelper
       
       result_cta_info = next_cta_info if next_cta_info.present?
       while next_cta_info
-        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ?", next_cta_info.id).references(:interactions)
+        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ? AND user_interactions.user_id = ?", next_cta_info.id, current_user.id).references(:interactions)
         next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(next_cta_info, user_interactions)
         linked_user_interaction_ids = init_or_update_linked_user_interaction_ids(linked_user_interaction_ids, linked_user_interaction_id)
         result_cta_info = next_cta_info if next_cta_info.present?
