@@ -35,6 +35,8 @@ Tag.create(name: "assets", description: "", locked: true)
 
 Tag.create(name: "menu-item", description: "", locked: true)
 
+Tag.create(name: "assets", description: "", locked: true)
+
 Setting.create(key: "rewarding.rules", value: <<-EOF
 EOF
 )
