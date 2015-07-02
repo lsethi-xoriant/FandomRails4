@@ -41,6 +41,7 @@ function remove_fields(link, resource) {
     case "quiz":
     case "versus":
     case "contest":
+    case "pin":
       $(link).parent().parent().parent().remove();
       break;
     case "answer_quiz":
