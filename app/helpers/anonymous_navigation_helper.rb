@@ -34,7 +34,7 @@ module AnonymousNavigationHelper
       user_params[:anonymous_id] = Devise.friendly_token
       user_params[:authentication_token] = Devise.friendly_token
     else
-      user_params[:anonymous_id] = session[:session_id]
+      user_params[:anonymous_id] = session.id
     end
 
     User.new(user_params)
