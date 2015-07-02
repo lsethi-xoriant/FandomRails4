@@ -426,7 +426,7 @@ module UserInteractionHelper
       if interaction_call_to_action.condition.present?
         # the symbolic_name_to_counter is populated "lazily" only if there is at least one condition present
         if symbolic_name_to_counter.nil?
-          symbolic_name_to_counter = user_history_to_answer_map_fo_condition(current_answer, user_interactions_history)
+          symbolic_name_to_counter = user_history_to_answer_map_to_condition(current_answer, user_interactions_history)
         end
         condition = interaction_call_to_action.condition
         condition_name, condition_params = condition.first
@@ -552,6 +552,28 @@ module UserInteractionHelper
     response[:interaction_status] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
     response[:calltoaction_status] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
     response
+  end
+  
+  def user_history_to_answer_map_to_condition(current_answer, user_interactions_history)
+    if current_user
+      answers_history = UserInteraction.where(id: user_interactions_history).map { |ui| ui.answer_id }
+    else
+      throw Exception.new("for linked interactions the user must be logged or the anonymous navigation must be enabled")
+    end
+
+    answers_history = answers_history + [current_answer]
+
+    answers = Answer.where(id: answers_history)
+    symbolic_name_to_counter = {}
+    answers.each do |answer|
+      value = answer.aux["symbolic_name"]
+      if symbolic_name_to_counter.has_key?(value)
+        symbolic_name_to_counter[value] = symbolic_name_to_counter[value] + 1
+      else
+        symbolic_name_to_counter[value] = 1
+      end
+    end
+    symbolic_name_to_counter
   end
 
 end
