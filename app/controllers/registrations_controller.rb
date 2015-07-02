@@ -9,17 +9,6 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :require_no_authentication, :if => :stored_anonymous_user?
   skip_before_filter :verify_authenticity_token
 
-  def adjust_anonymous_user(params)
-    resource = current_user
-    resource.assign_attributes(email: nil, username: nil)
-    resource.assign_attributes(params)
-    if resource.valid? # TODO: comment this
-      resource.assign_attributes(anonymous_id: nil)
-      sign_out(current_user)
-    end
-    resource
-  end
-
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:account_update) { |u| permit(u) }
     devise_parameter_sanitizer.for(:sign_up) { |u| permit(u) }
