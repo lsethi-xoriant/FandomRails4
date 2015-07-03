@@ -40,6 +40,27 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    $("#pin-" + interaction_info.interaction.id).modal("show");
+    /*
+    if(interaction_info.class == "pin-interaction__pin_stop-animation") {
+      interaction_info.class = "";
+
+      if($scope.aux.mobile) {
+        $("#pin-" + interaction_info.interaction.id).modal("hide");
+      }
+
+    } else {
+      $scope.updateAnswer(calltoaction_info, interaction_info, params, when_show_interaction);
+      interaction_info.class = "pin-interaction__pin_stop-animation";
+
+      if($scope.aux.mobile) {
+        $("#pin-" + interaction_info.interaction.id).modal("show");
+      }
+    }
+    */
+  };
+
   $scope.fromCodeToHtml = function(code) {
     return "&#" + code + ";";
   }
@@ -752,6 +773,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterPlayInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "play");
+  };
+
+  $scope.filterPinInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "pin");
   };
 
   $scope.filterOvervideoDuringInteractions = function(interaction_info) {
