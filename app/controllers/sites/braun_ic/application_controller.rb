@@ -76,6 +76,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         name: reward.name,
         image: reward.main_image,
         cost: reward.cost,
+        extra_fields: reward.extra_fields,
         inactive: inactive
       }
     end

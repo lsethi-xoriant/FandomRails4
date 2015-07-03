@@ -60,6 +60,7 @@ module ConfigUtils
     attribute :assets, :default => { "anon_avatar" => "anon.png", "community_logo" => nil }
     attribute :free_provider_share, :default => false
     attribute :aws_transcoding, :default => false
+    attribute :main_reward_name, :default => "point"
 
     def unbranded?
       self.id == 'fandom'

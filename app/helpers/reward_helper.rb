@@ -189,7 +189,7 @@ module RewardHelper
   end  
 
   def get_current_property_point_reward_name
-    $context_root.nil? ? "point" : "#{$context_root}-point"
+    $context_root.nil? ? $site.main_reward_name : "#{$context_root}-#{$site.main_reward_name}"
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
