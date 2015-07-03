@@ -44,6 +44,10 @@
       </div>
     </div>
 
+    <div ng-class="{'hidden': !play_event_tracked[calltoaction_info.calltoaction.id] }" ng-repeat="chapter in calltoaction_info.chaptering">
+      <div class="chapter" ng-style="{'left': chapter.position + '%'}" ng-click="goToSecond(calltoaction_info, chapter.second)"></div>
+    </div>
+
   </div>
 </div>
 

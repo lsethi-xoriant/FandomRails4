@@ -20,7 +20,7 @@ class Interaction < ActiveRecord::Base
   validate :check_max_one_comment_resource
 
   def when_show_interaction_enum
-    ["SEMPRE_VISIBILE", "OVERVIDEO_DURING", "OVERVIDEO_START", "OVERVIDEO_END", "MAI_VISIBILE"]
+    WHEN_SHOW_USER_INTERACTION
   end
 
   def points_type_enum
