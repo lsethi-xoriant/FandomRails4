@@ -464,7 +464,9 @@ module CallToActionHelper
             interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
           end
 
-          interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
+          if interaction_info_list["interaction"]["resource_type"] != "pin"
+            interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
+          end
         end
       end
     end
@@ -523,6 +525,7 @@ module CallToActionHelper
         resource_one_shot = resource.one_shot rescue false
         resource_providers = resource.providers rescue nil
         resource_url = resource.url rescue "/"
+        resource_coordinates = resource.coordinates rescue nil
 
         if interaction.stored_for_anonymous
           anonymous_user_interaction = interaction.user_interactions.find_by_user_id(anonymous_user.id)
@@ -570,7 +573,8 @@ module CallToActionHelper
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
-              "url" => resource_url
+              "url" => resource_url,
+              "coordinates" => resource_coordinates
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),

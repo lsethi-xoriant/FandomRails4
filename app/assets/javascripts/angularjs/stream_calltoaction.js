@@ -40,6 +40,27 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
+    $("#pin-" + interaction_info.interaction.id).modal("show");
+    /*
+    if(interaction_info.class == "pin-interaction__pin_stop-animation") {
+      interaction_info.class = "";
+
+      if($scope.aux.mobile) {
+        $("#pin-" + interaction_info.interaction.id).modal("hide");
+      }
+
+    } else {
+      $scope.updateAnswer(calltoaction_info, interaction_info, params, when_show_interaction);
+      interaction_info.class = "pin-interaction__pin_stop-animation";
+
+      if($scope.aux.mobile) {
+        $("#pin-" + interaction_info.interaction.id).modal("show");
+      }
+    }
+    */
+  };
+
   $scope.fromCodeToHtml = function(code) {
     return "&#" + code + ";";
   }
@@ -462,11 +483,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
+  function isOvervideoDuring(when_show_interaction) {
+    return (when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_DURING_WITH_CHAPTERING");
+  }
+
   function getOvervideoInteractionAtSeconds(calltoaction_id, seconds) {
     var overvideo_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" && interaction_info.interaction.seconds == seconds) {
+      if(isOvervideoDuring(interaction_info.interaction.when_show_interaction) && interaction_info.interaction.seconds == seconds) {
         overvideo_interaction = interaction_info;
       }
     });
@@ -477,7 +502,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     overvideo_interactions = [];
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+      if(isOvervideoDuring(interaction_info.interaction.when_show_interaction)) {
         overvideo_interactions.push( { time: interaction_info.interaction.seconds, interaction: interaction_info});
       }
     });
@@ -572,7 +597,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     overvideo_interaction_present = false;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
-      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END") {
+      if(isOvervideoDuring(interaction_info.interaction.when_show_interaction) || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END") {
         overvideo_interaction_present = true;
       }
     });
@@ -754,8 +779,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type == "play");
   };
 
+  $scope.filterPinInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type == "pin");
+  };
+
   $scope.filterOvervideoDuringInteractions = function(interaction_info) {
-    return (interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING" || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END");
+    return (isOvervideoDuring(interaction_info.interaction.when_show_interaction) || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END");
   };
 
   $scope.filterVisibleInteractionsUnderMedia = function(interaction_info) {
@@ -904,6 +933,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         }
   };
 
+  function appendChaptering(duration, cta_info) {
+    chaptering = [];
+    angular.forEach(cta_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING_WITH_CHAPTERING") {
+        chaptering.push({
+          position: ((interaction_info.interaction.seconds * 100) / duration),
+          second: interaction_info.interaction.seconds
+        });
+      }
+    });
+    if(chaptering.length > 0) {
+      $scope.$apply(function() {
+        cta_info.chaptering = chaptering;
+      });
+    }
+  }
+
   $window.appendYTIframe = function(calltoaction_info) {
     if(calltoaction_info.calltoaction.media_type == "YOUTUBE" && $scope.youtube_api_ready) {
 
@@ -917,8 +963,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         calltoaction_info.calltoaction.vcode = vcode;
       }
 
-      player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
-      calltoaction_info.calltoaction["player"] = player;
+      yt_player = new youtubePlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.vcode);
+      calltoaction_info.calltoaction["player"] = yt_player;
 
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
       $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
@@ -1131,7 +1177,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     $timeout(function() {
-      if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_DURING") {
+      if(isOvervideoDuring(overvideo_interaction.interaction.when_show_interaction)) {
         player.play();
       }
       overvideo_interaction.interaction.overvideo_active = false;
@@ -1158,7 +1204,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
   	
 	  this.playerManager = new YT.Player( (this.playerId), {
-        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
+        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0, autohide: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
         height: "100%", width: "100%",
         videoId: this.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
@@ -1184,7 +1230,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     });
   };
 
+  $scope.goToSecond = function(cta_info, second) {
+    yt_player = getPlayer(cta_info.calltoaction.id);
+    yt_player.seek(second);
+  };
+
   $window.onYouTubePlayerReady = function(event) {
+    cta_div_id = event.target.getIframe().id;
+    cta_id = $("#" + cta_div_id).attr("calltoaction-id");
+    cta_info = getCallToActionInfo(cta_id);
+    yt_player = getPlayer(cta_id);
+    
+    appendChaptering(yt_player.playerManager.getDuration(), cta_info);
   };
 
   $window.onPlayerStateChange = function(newState) {  
@@ -1699,15 +1756,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
 
-    if(when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_END") {
+    if(isOvervideoDuring(when_show_interaction) || when_show_interaction == "OVERVIDEO_END") {
 
       interaction_info.feedback = true;
 
       if(interaction_info.interaction.resource_type == "trivia") {
         getPlayer(calltoaction_id).play();
-        if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING") {
-        //       
-        }
 
         $timeout(function() { 
           interaction_info.feedback = false;
@@ -1900,7 +1954,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $window.userAnswerWithMedia = function(answer, calltoaction_id, interaction_id, when_show_interaction) {
-    if(when_show_interaction == "OVERVIDEO_DURING") {
+    if(isOvervideoDuring(when_show_interaction)) {
       $("#home-overvideo-" + calltoaction_id).html(""); 
     }
 
@@ -1958,7 +2012,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#main-media-" + calltoaction_id).removeClass("hidden");
       $("#secondary-media-" + calltoaction_id).addClass("hidden");
 
-      if(interaction_shown_in == "OVERVIDEO_DURING") {
+      if(isOvervideoDuring(interaction_shown_in)) {
         getPlayer(calltoaction_id).play();
       }
 
