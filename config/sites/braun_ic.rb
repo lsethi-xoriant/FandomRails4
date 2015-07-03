@@ -7,6 +7,7 @@ module Fandom
       free_provider_share: true,
       interactions_for_anonymous: ["quiz", "share"],
       init_ctas: 3,
+      main_reward_name: "credit",
       periodicity_kinds: [],
       environment: { 'EMAIL_ADDRESS' => 'noreply@shado.tv' }
     )

@@ -43,6 +43,15 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     return $scope.aux.badges[getCtaBadgeKey(cta_info)];
   };
 
+  $scope.getCtaBadgeCost = function(cta_info) {
+    badge = $scope.aux.badges[getCtaBadgeKey(cta_info)];
+    if(badge.inactive) {
+      return 0;
+    } else {
+      return badge.cost;
+    }
+  };
+
   $scope.resetToRedo = function(cta_info) {
     user_interaction_ids = $scope.getUserInteractionsHistory(cta_info);
     parent_cta_id = $scope.getParentCtaId(cta_info);
