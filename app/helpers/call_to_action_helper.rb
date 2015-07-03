@@ -549,6 +549,8 @@ module CallToActionHelper
           vote_info = build_votes_for_resource(interaction)
         when "download"
           ical = resource.ical_fields
+        when "comment"
+          comment_info = build_comments_for_resource(interaction)
         end
 
         interaction_info_list << {
@@ -570,6 +572,7 @@ module CallToActionHelper
               "answers" => answers,
               "providers" => resource_providers,
               "counter" => 0,
+              "comment_info" => comment_info, 
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
