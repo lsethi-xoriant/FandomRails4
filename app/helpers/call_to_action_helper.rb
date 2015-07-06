@@ -1177,7 +1177,7 @@ module CallToActionHelper
         },
       "points_between" =>
         lambda { |points_to_counter, condition_params|
-          sum = points_to_counter.map { |x,y| x*y }.inject(:+)
+          sum = points_to_counter.map { |x,y| x.to_i * y.to_i }.inject(:+)
           lower_bound, upper_bound = condition_params.split(',').map { |x| x.strip.to_i } 
           return sum >= lower_bound && sum <= upper_bound 
         }
