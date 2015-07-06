@@ -362,7 +362,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.animation_in_progress = false;
 
-    $scope.interactions_timeout = new Object();
+    $scope.interactions_timeout = {};
     $scope.overvideo_interaction_locked = {};
     $scope.secondary_video_players = {};
     $scope.play_event_tracked = {};
@@ -480,6 +480,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function isOvervideoDuring(when_show_interaction) {
     return (when_show_interaction == "OVERVIDEO_DURING" || when_show_interaction == "OVERVIDEO_DURING_WITH_CHAPTERING");
+  }
+
+  function setOvervideoInteractionsAsInactive(calltoaction_info) {
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(isOvervideoDuring(interaction_info.interaction.when_show_interaction)) {
+        interaction_info.interaction.overvideo_active = false;
+      }
+    });
+    calltoaction_info.percentage_animation = false;
+    $scope.overvideo_interaction_locked[calltoaction_info.calltoaction.id] = false;
+    if(cta_info.overvideo_interaction_timeout) {
+      $timeout.cancel(cta_info.overvideo_interaction_timeout);
+    }
   }
 
   function getOvervideoInteractionAtSeconds(calltoaction_id, seconds) {
@@ -1155,7 +1168,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     player.pause();
 
     if(overvideo_interaction.user_interaction) {
-      $timeout(function() { 
+      cta_info = getCallToActionInfo(calltoaction_id)
+      cta_info.overvideo_interaction_timeout = $timeout(function() { 
         removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction);
       }, 5000);
     }
@@ -1203,7 +1217,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           getCallToActionInfo(calltoaction_id).active_end_interaction = true;
         }
 
-      }, 1000);
+      }, 1500);
     }, 2000);
 
   }
@@ -1242,6 +1256,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.goToSecond = function(cta_info, second) {
+    setOvervideoInteractionsAsInactive(cta_info)
+    overvideo_interaction = getOvervideoInteractionAtSeconds(cta_info.calltoaction.id, second);
+
+    if(overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
+      executeInteraction(current_video_player, calltoaction_id, overvideo_interaction);
+    }
+
     yt_player = getPlayer(cta_info.calltoaction.id);
     yt_player.seek(second);
   };
@@ -1778,7 +1799,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           interaction_info.feedback = false;
           interaction_info.interaction.overvideo_active = false;
           $scope.answer_in_progress = false;
-        }, 3000);                
+        }, 1500);                
 
         // Answer exit animation
         //angular.forEach(interaction_info.interaction.resource.answers, function(answer) {
