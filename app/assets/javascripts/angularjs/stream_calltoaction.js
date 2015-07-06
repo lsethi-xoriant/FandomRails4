@@ -553,6 +553,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return interaction_present;
   };
 
+  $scope.pinInteractionPresent = function(calltoaction_info) {
+    interaction_present = false;
+    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "pin") {
+        calltoaction_info.share_interaction_info = interaction_info;
+        interaction_present = true;
+      }
+    });
+    return interaction_present;
+  };
+
   $scope.voteInteractionPresent = function(calltoaction_info) {
     interaction_present = false;
     angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
@@ -782,6 +793,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.filterPinInteractions = function(interaction_info) {
     return (interaction_info.interaction.resource_type == "pin");
   };
+
+  $scope.excludePinInteractions = function(interaction_info) {
+    return (interaction_info.interaction.resource_type != "pin");
+  };
+
 
   $scope.filterOvervideoDuringInteractions = function(interaction_info) {
     return (isOvervideoDuring(interaction_info.interaction.when_show_interaction) || interaction_info.interaction.when_show_interaction == "OVERVIDEO_END");
