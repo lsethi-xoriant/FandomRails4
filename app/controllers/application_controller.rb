@@ -324,7 +324,7 @@ class ApplicationController < ActionController::Base
   def modify_instagram_upload_object
     interaction = Interaction.find(params[:interaction_id])
     aux = interaction.aux || {}
-    if (aux["configuration"]["type"] == "instagram" rescue false)
+    if ((aux["configuration"]["type"] == "instagram" && aux["configuration"]["instagram_tag"]) rescue false)
       res, delete_success = delete_instagram_tag_subscription(interaction)
     end
     delete_success ||= true
