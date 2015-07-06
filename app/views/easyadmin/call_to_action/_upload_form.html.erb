@@ -127,6 +127,10 @@
               </p>
               <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
             </div>
+            <div class="form-group col-lg-4">
+              <label class="text-input">Call to action template</label>
+              <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+            </div>
           <% else %>
             <div class="col-lg-6">
               <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
