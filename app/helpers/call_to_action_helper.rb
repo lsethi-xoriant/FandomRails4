@@ -857,8 +857,10 @@ module CallToActionHelper
   def generate_unique_name
     duplicated = true
     i = 0
-    while duplicated && i < 5 do
-      name = Digest::MD5.hexdigest("#{current_user.id}#{Time.now}")[0..8]
+    # TODO: an exception should be raised if tries exceed 5
+    while duplicated && i < 5 do      
+      # TODO: there is a race condition in case 2 anonymous users upload something at the same millisecond
+      name = Digest::MD5.hexdigest("#{current_or_anonymous_user.id}#{Time.now}")[0..8]
       if CallToAction.find_by_name(name).nil?
         duplicated = false
       end
@@ -871,7 +873,7 @@ module CallToActionHelper
     duplicated = true
     i = 0
     while duplicated && i < 5 do
-      name = Digest::MD5.hexdigest("#{current_user.id}#{Time.now}")[0..8]
+      name = Digest::MD5.hexdigest("#{current_or_anonymous_user.id}#{Time.now}")[0..8]
       if Interaction.find_by_name(name).nil?
         duplicated = false
       end
