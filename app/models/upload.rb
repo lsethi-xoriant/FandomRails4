@@ -13,7 +13,6 @@ class Upload < ActiveRecord::Base
   do_not_validate_attachment_file_type :watermark
 
   def set_instagram_tag_in_interaction_aux
-    debugger
     if self.gallery_type == "instagram"
       interaction = self.interaction
       aux = interaction.aux || {}
