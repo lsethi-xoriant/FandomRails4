@@ -1174,8 +1174,15 @@ module CallToActionHelper
         lambda { |symbolic_name_to_counter, condition_params| 
           max_key = max_key_in_symbolic_name_to_counter(symbolic_name_to_counter)
           return max_key == condition_params
+        },
+      "points_between" =>
+        lambda { |points_to_counter, condition_params|
+          sum = points_to_counter.map { |x,y| x*y }.inject(:+)
+          lower_bound, upper_bound = condition_params.split(',').map { |x| x.strip.to_i } 
+          return sum >= lower_bound && sum <= upper_bound 
         }
     }
   end
+
 
 end
