@@ -102,14 +102,14 @@ class CallbackController < ApplicationController
     if auth
       user_id = auth.user_id
       clone_params.merge!({ 
-        "title" => media["caption"]["text"], 
+        "title" => media["caption"]["text"][0..100], 
         "upload" => open(media["images"]["standard_resolution"]["url"]),
         "user_id" => user_id 
       })
     else
       unless registered_users_only
         clone_params.merge!({ 
-          "title" => media["caption"]["text"], 
+          "title" => media["caption"]["text"][0..100], 
           "upload" => open(media["images"]["standard_resolution"]["url"]),
           "user_id" => anonymous_user.id 
         })
