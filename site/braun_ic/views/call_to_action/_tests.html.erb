@@ -10,12 +10,12 @@
 
               <div class="row">
 
-                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || !calltoaction_info.status">
+                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || (!calltoaction_info.status || calltoaction_info.status.win_reward_count > 0)">
                   <span class="label cta_cover-credits_label_green">
                     Fatto <span class="glyphicon glyphicon-ok">
                   </span>  
                 </div> 
-                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && calltoaction_info.status">
+                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && (calltoaction_info.status || calltoaction_info.status.win_reward_count < 1)">
                   <span class="label cta_cover-credits_label_yellow">
                     +1 <span class="fa fa-ticket">
                   </span>  
