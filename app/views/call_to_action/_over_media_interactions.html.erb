@@ -40,7 +40,7 @@
     </div>
     <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-8 col-sm-offset-2 over-media__col">
       <%= render partial: "/call_to_action/trivia_interaction" %>
-      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
           <span class="label label-success cta-cover__winnable-reward__label">
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div ng-if="!interaction_info.user_interaction" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
           <span class="label label-warning cta-cover__winnable-reward__label">
             +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
@@ -58,7 +58,7 @@
     </div>
     <div ng-if="interaction_info.interaction.resource_type == 'versus'" class="col-sm-12 over-media__col">
       <%= render partial: "/call_to_action/versus_interaction" %>
-      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
           <span class="label label-success cta-cover__winnable-reward__label">
             Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div ng-if="!interaction_info.user_interaction && checkUndervideoInteractionTypes(interaction_info) && interaction_info.interaction.resource_type != 'check'" class="row text-center interaction__winnable-reward--undervideo__row">
+      <div ng-if="!interaction_info.user_interaction" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
           <span class="label label-warning cta-cover__winnable-reward__label">
             +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
@@ -74,8 +74,25 @@
         </div>
       </div>
     </div>
-    <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12" style="position: absolute; bottom: 15px;">
-      <%= render partial: "/call_to_action/check_interaction" %>
+    <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12 over-media__col">
+
+      <div class="row">
+
+        <div class="col-sm-12" style="padding: 15px;">
+          <p style="font-size: 16px;">{{interaction_info.interaction.resource.description}}</p>
+        </div>
+
+        <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="interaction_info.user_interaction">
+          <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
+        </div>
+
+        <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="!interaction_info.user_interaction">
+          <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
+        </div>
+
+      </div>
+
+
     </div>  
     <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12" style="position: absolute; bottom: 15px;">
       <%= render partial: "/call_to_action/share_interaction" %>
