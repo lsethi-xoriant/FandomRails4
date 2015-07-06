@@ -4,18 +4,18 @@
       <div class="panel panel-default cta_cover-panel">
         <div class="cta_cover-container panel-body">
           
-          <div class="row cta_cover-img_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_wide_url + ')'}">
+          <div class="row cta_cover-img_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
             
             <div class="col-sm-5 col-sm-offset-7 cta_cover-description_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}">
 
               <div class="row">
 
-                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || !calltoaction_info.status">
+                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || (!calltoaction_info.status || calltoaction_info.status.win_reward_count > 0)">
                   <span class="label cta_cover-credits_label_green">
                     Fatto <span class="glyphicon glyphicon-ok">
                   </span>  
                 </div> 
-                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && calltoaction_info.status">
+                <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && (calltoaction_info.status || calltoaction_info.status.win_reward_count < 1)">
                   <span class="label cta_cover-credits_label_yellow">
                     +1 <span class="fa fa-ticket">
                   </span>  

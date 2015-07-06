@@ -671,7 +671,7 @@ module ApplicationHelper
   end
 
   def get_main_reward_name() 
-    $context_root ? "#{$context_root}-#{MAIN_REWARD_NAME}" : MAIN_REWARD_NAME
+    $context_root ? "#{$context_root}-#{$site.main_reward_name}" : $site.main_reward_name
   end
   
   def get_hidden_tag_ids
