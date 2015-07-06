@@ -22,8 +22,8 @@
     <div style="position: relative; height: 100%; width: 100%;">
 
       <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia | filter:filterPinInteractions">
-        <div ng-style="{'top': interaction_info.interaction.resource.coordinates.y_coord + '%', 'left': interaction_info.interaction.resource.coordinates.x_coord + '%'}" class="pin-interaction__pin {{interaction_info.class}}" ng-click="updatePin(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" ></div>
-        <div class="pin-interaction__description {{interaction_info.class}} hidden" ng-bind-html="interaction_info.interaction.resource.coordinates.description | unsafe"></div>
+        <div id="pin-btn-{{interaction_info.interaction.id}}" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="{{interaction_info.interaction.resource.coordinates.description}}" ng-style="{'top': interaction_info.interaction.resource.coordinates.y_coord + '%', 'left': interaction_info.interaction.resource.coordinates.x_coord + '%'}" class="pin-interaction__pin {{interaction_info.class}}" ng-click="updatePin(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" ></div>
+
       </div>
 
     </div>

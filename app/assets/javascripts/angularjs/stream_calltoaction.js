@@ -41,24 +41,19 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
   $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
-    $("#pin-" + interaction_info.interaction.id).modal("show");
-    /*
-    if(interaction_info.class == "pin-interaction__pin_stop-animation") {
-      interaction_info.class = "";
-
-      if($scope.aux.mobile) {
-        $("#pin-" + interaction_info.interaction.id).modal("hide");
-      }
-
+    //$("#pin-" + interaction_info.interaction.id).modal("show");
+    if($scope.aux.mobile) {
+      $("#pin-" + interaction_info.interaction.id).modal("show");
     } else {
-      $scope.updateAnswer(calltoaction_info, interaction_info, params, when_show_interaction);
-      interaction_info.class = "pin-interaction__pin_stop-animation";
-
-      if($scope.aux.mobile) {
-        $("#pin-" + interaction_info.interaction.id).modal("show");
+      if(interaction_info.active) {
+        interaction_info.active = false;
+      } else {
+        $("#pin-btn-" + interaction_info.interaction.id).popover("show");
+        $scope.updateAnswer(calltoaction_info, interaction_info, params, when_show_interaction);
+        interaction_info.active = true;
       }
     }
-    */
+    
   };
 
   $scope.fromCodeToHtml = function(code) {
