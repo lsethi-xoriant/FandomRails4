@@ -1,7 +1,39 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <p>PUNTI UTENTE {{current_user.main_reward_counter}}</p>
+      <div ng-if="aux.instant_win_info.interaction_id">
+        <div ng-if="current_user.registration_fully_completed">
+          <button type="button" class="btn btn-primary" ng-click="openInstantWinModal()">
+            Gioca
+          </button>
+        </div>
+        <div ng-if="!current_user.registration_fully_completed">
+          <button type="button" class="btn btn-primary" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+            Gioca
+          </button>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12" style="background-color: #000; margin-bottom: 15px; padding-top: 15px;">
+      <p style="color: #fff;">PUNTI UTENTE {{current_user.main_reward_counter}}</p>
+      <div ng-repeat="badge in aux.badges">
+        
+        <div class="percentage_circle p{{getBadgeCost(badge)}}">
+          <div class="percentage_circle_fix_bar"></div>
+          <span class="percentace_circle_value">
+              <img ng-src="{{badge.image}}">
+          </span>
+          <div class="percentage_circle_slice">
+            <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+          </div>
+        </div>
+
+
+      </div>
     </div>
   </div>
 </div>

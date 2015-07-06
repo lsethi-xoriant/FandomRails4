@@ -857,17 +857,20 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
-    instantwin_call_to_action = CallToAction.valid.find_by_name("instantwin-call-to-action")
-    if instantwin_call_to_action
-      instantwin_interaction_id = instantwin_call_to_action.interactions.where(:resource_type => "InstantwinInteraction").first.id
-      user_win_info = user_already_won(instantwin_interaction_id)
+    iw_cta = CallToAction.find_by_name("instantwin-call-to-action")
+    if iw_cta
+      iw_interaction = iw_cta.interactions.where(resource_type: "InstantwinInteraction").first
 
-      instant_win_info = {
-        "interaction_id" => instantwin_interaction_id,
-        "win" => user_win_info[:win],
-        "message" => user_win_info[:message],
-        "in_progress" => false
-      }
+      if iw_interaction
+        iw_user_info = user_already_won(iw_interaction.id)
+
+        iw_info = {
+          "interaction_id" => iw_interaction.id,
+          "win" => iw_user_info[:win],
+          "message" => iw_user_info[:message],
+          "in_progress" => false
+        }
+      end
     end
 
     if property && property.name != $site.default_property
@@ -894,7 +897,7 @@ module ApplicationHelper
       "sidebar_info" => sidebar_info,
       "ugc_cta" => ugc_cta,
       "menu_items" => get_menu_items(property),
-      "instant_win_info" => instant_win_info,
+      "instant_win_info" => iw_info,
       "emoticons" => EMOTICONS,
       "assets" => assets
     }
