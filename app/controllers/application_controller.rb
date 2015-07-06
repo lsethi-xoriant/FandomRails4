@@ -359,7 +359,7 @@ class ApplicationController < ActionController::Base
       "object" => "tag", 
       "aspect" => "media", 
       "object_id" => tag_name, 
-      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}}"
+      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}"
     }
 
     headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
