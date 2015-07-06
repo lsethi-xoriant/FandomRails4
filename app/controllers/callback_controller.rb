@@ -64,7 +64,7 @@ class CallbackController < ApplicationController
           min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] rescue nil
 
           interaction_id = instagram_subscriptions_setting_hash[tag_name]["interaction_id"]
-          upload_interaction = Interaction.find(interaction_id)
+          upload = Interaction.find(interaction_id).resource
 
           request_params = { "client_id" => "#{ig_settings["client_id"]}" }
           request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
@@ -75,12 +75,12 @@ class CallbackController < ApplicationController
           res["data"].each do |media|
             cta_with_media_present = CallToAction.where("aux->>'instagram_media_id' = '#{media["id"]}'").first
             unless cta_with_media_present
-              registered_users_only = upload_interaction.aux["configuration"]["registered_users_only"] rescue false
+              registered_users_only = upload.aux["configuration"]["registered_users_only"] rescue false
               clone_params = get_clone_params(registered_users_only, media)
               if clone_params.any?
                 begin
-                  cloned_cta = clone_and_create_cta(upload_interaction, clone_params, (upload_interaction.watermark rescue nil))
-                  cloned_cta.build_user_upload_interaction(user_id: clone_params["user_id"], upload_id: upload_interaction.id)
+                  cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
+                  cloned_cta.build_user_upload_interaction(user_id: clone_params["user_id"], upload_id: upload.id)
                   cloned_cta.aux = { "instagram_media_id" => media["id"] }.to_json
                   cloned_cta.save
                 end
