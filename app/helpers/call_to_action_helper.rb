@@ -827,6 +827,9 @@ module CallToActionHelper
       media_type = cta_template.media_type
       media_data = cta_template.media_data
     end
+    
+    extra_fields = cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
+    extra_fields.merge!(params.fetch('extra_fields', {}))
 
     user_calltoaction = CallToAction.new(
         title: cta_title,
@@ -838,7 +841,7 @@ module CallToActionHelper
         thumbnail: (params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}) ? params["upload"] : thumbnail,
         media_type: media_type,
         media_data: media_data,
-        extra_fields: cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
+        extra_fields: extra_fields
         )
     if watermark
       if watermark.exists?

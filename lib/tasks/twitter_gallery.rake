@@ -15,9 +15,8 @@ namespace :twitter_gallery do
 
       twitter_settings, twitter_settings_row = get_twitter_settings
 
-      get_upload_interaction_and_tag_list().each do |upload_interaction_and_tag|
-        upload_interaction, tag = upload_interaction_and_tag
-        update_gallery_tag(tag, upload_interaction, twitter_settings, client, logger)
+      get_upload_interaction_info_list().each do |info|
+        update_gallery_tag(info, twitter_settings, client, logger)
       end
 
       twitter_settings_row.update_attributes(value: twitter_settings.to_json)
@@ -25,12 +24,13 @@ namespace :twitter_gallery do
 
   end
 
-  def get_upload_interaction_and_tag_list
+  def get_upload_interaction_info_list
     result = []
     Interaction.where(resource_type: 'Upload').each do |interaction|
       tag = get_from_hash_by_path(interaction.aux, 'configuration/twitter_tag/name', nil)
       unless tag.nil?
-        result << [interaction.resource, tag]
+        registered_users_only = get_from_hash_by_path(interaction.aux, 'configuration/twitter_tag/registered_users_only', true)
+        result << [interaction.resource, tag, registered_users_only]
       end
     end
     result
@@ -63,7 +63,9 @@ namespace :twitter_gallery do
     [twitter_settings, twitter_settings_row]
   end
 
-  def update_gallery_tag(tag, upload_interaction, twitter_settings, client, logger)
+  def update_gallery_tag(upload_interaction_info, twitter_settings, client, logger)
+    upload_interaction, tag, registered_users_only = upload_interaction_info
+
     logger.info("handling tag: #{tag}")
 
     min_tag_id = twitter_settings[tag]["min_tag_id"] rescue nil
@@ -79,31 +81,39 @@ namespace :twitter_gallery do
       if min_tag_id.nil? || tweet.id > min_tag_id
         min_tag_id = tweet.id
       end
-      logger.info("generating UGC for tweet #{tweet.id}")
-      clone_cta(logger, tweet, upload_interaction)
+      clone_params = get_clone_params(registered_users_only, tweet)
+      unless clone_params.nil?
+        logger.info("generating UGC for tweet #{tweet.id}")
+        clone_cta(logger, tweet, upload_interaction, clone_params)
+      end
     end
 
     (twitter_settings[tag] ||= {})["min_tag_id"] = min_tag_id
     logger.info("finished with tag: #{tag}")
   end
 
-  def get_clone_params(tweet)
+  def get_clone_params(registered_users_only, tweet)
     # TODO: twitter oauth has never been tested
     auth = Authentication.find_by_uid_and_provider(tweet.user.id, "twitter_#{$site.id}")
     if auth
       user_id = auth.user_id
+    elsif registered_users_only
+      return nil
     else
       user_id = anonymous_user.id 
     end
     { 
       "description" => tweet.text, 
-      "user_id" => user_id 
+      "user_id" => user_id,
+      "extra_fields" => {
+        "twitter_avatar" => tweet.user.profile_image_url.to_s,
+        "twitter_username" => tweet.user.username
+      }
     }
   end
 
   # TODO: this should be shared with instagram integration
-  def clone_cta(logger, tweet, upload_interaction)
-      clone_params = get_clone_params(tweet)
+  def clone_cta(logger, tweet, upload_interaction, clone_params)
       cloned_cta = clone_and_create_cta(upload_interaction, clone_params, nil)
       cloned_cta.build_user_upload_interaction(user_id: clone_params["user_id"], upload_id: upload_interaction.id)
       cloned_cta.aux = { "twitter_id" => tweet.id }
