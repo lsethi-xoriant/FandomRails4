@@ -1,3 +1,10 @@
-.answer-img {
-  width: 100%;
+.test-interaction__container {
+  height: 100%;
+  position: relative;
+}
+
+.test-answer__container {
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }

@@ -615,6 +615,7 @@ module CallToActionHelper
         "text" => answer.text,
         "aux" => answer.aux,
         "image_medium" => answer.image(:medium),
+        "image" => answer.image,
         "correct" => answer_correct
         #{}"percentage" => percentage
       }
