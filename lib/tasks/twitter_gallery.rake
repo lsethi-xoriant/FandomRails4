@@ -107,7 +107,7 @@ namespace :twitter_gallery do
       "user_id" => user_id,
       "extra_fields" => {
         "twitter_avatar" => tweet.user.profile_image_url.to_s,
-        "twitter_username" => tweet.user.username
+        "twitter_username" => tweet.user.screen_name
       }
     }
   end
