@@ -805,20 +805,27 @@ module CallToActionHelper
   def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
 
-    if params["upload"] && params["upload"].content_type.start_with?("video")
-      media_image = params["upload"]
-      thumbnail = nil
-      media_type = "FLOWPLAYER"
-      media_data = nil
+    if params["upload"]
+      if params["upload"].content_type.start_with?("video")
+        media_image = params["upload"]
+        thumbnail = nil
+        media_type = "FLOWPLAYER"
+        media_data = nil
+      else 
+        media_image = params["upload"] # cta_template.media_image
+        thumbnail = params["upload"] # cta_template.thumbnail
+        media_type = "IMAGE"
+        media_data = nil
+      end
     elsif params["vcode"]
       media_image = thumbnail = open("http://img.youtube.com/vi/#{params["vcode"]}/0.jpg") rescue cta_template.thumbnail
       media_type = "YOUTUBE"
       media_data = params["vcode"]
     else
-      media_image = params["upload"] # cta_template.media_image
-      thumbnail = params["upload"] # cta_template.thumbnail
-      media_type = "IMAGE"
-      media_data = nil
+      media_image = cta_template.media_image
+      thumbnail = cta_template.thumbnail
+      media_type = cta_template.media_type
+      media_data = cta_template.media_data
     end
 
     user_calltoaction = CallToAction.new(
