@@ -29,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="row video-gallery <%= (get_upload_type(f.object.id).in? ['flowplayer', 'youtube']) ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+      <div class="row video-gallery gallery-form <%= f.object.id %> <%= (get_upload_type(f.object.id).in? ['flowplayer', 'youtube']) ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-6">
           <div class="form-group">
             <label class="text-input">Visibile</label>
@@ -102,7 +102,7 @@
           </div>
         </div>
       </div>
-      <div class="row instagram-gallery <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+      <div class="row instagram-gallery gallery-form <%= f.object.id %> <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-12">
           <% if f.object.id %>
             <% instagram_tag = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"] %>
@@ -141,7 +141,7 @@
           <% end %>
         </div>
       </div>
-      <div class="row twitter-gallery <%= get_upload_type(f.object.id) == 'twitter' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+      <div class="row twitter-gallery gallery-form <%= f.object.id %> <%= get_upload_type(f.object.id) == 'twitter' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-12">
           <% twitter_tag = Interaction.find(f.object.id).aux["configuration"]["twitter_tag"] rescue "" %>
           <div class="form-group col-lg-2">
@@ -171,7 +171,7 @@
     elementClass = "<%= get_upload_type(f.object.id) %>";
     if(elementClass == "")
       elementClass = "flowplayer";
-    updateInputsForGalleryType($("." + elementClass));
+    updateInputsForGalleryType($("." + elementClass + " <%= f.object.id %>"));
   });
 
   function updateInputsForGalleryType(el) {
@@ -179,20 +179,17 @@
     switch(el.attr("class")) {
       case "flowplayer":
       case "youtube":
+        parentDiv.siblings(".gallery-form").addClass("hidden");
         parentDiv.siblings(".video-gallery").removeClass("hidden");
-        parentDiv.siblings(".instagram-gallery").addClass("hidden");
-        parentDiv.siblings(".twitter-gallery").addClass("hidden");
         break;
       case "instagram":
+        parentDiv.siblings(".gallery-form").addClass("hidden");
         parentDiv.siblings(".instagram-gallery").removeClass("hidden");
-        parentDiv.siblings(".twitter").addClass("hidden");
-        parentDiv.siblings(".video-gallery").addClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
       case "twitter":
+        parentDiv.siblings(".gallery-form").addClass("hidden");
         parentDiv.siblings(".twitter-gallery").removeClass("hidden");
-        parentDiv.siblings(".instagram-gallery").addClass("hidden");
-        parentDiv.siblings(".video-gallery").addClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
     }
