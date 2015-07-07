@@ -281,6 +281,10 @@ module CacheKeysHelper
   # Rankings
   # ~~~~~~~~
 
+  def get_ranking_cache_key(page, timestamp)
+    "ranking_#{page}_#{timestamp}"
+  end
+
   def get_general_position_key(user_id)
     "user_#{user_id}_general_position"
   end

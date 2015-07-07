@@ -1,0 +1,33 @@
+<div class="container">
+  <div ng-repeat="user in aux.ranking_info.ranking" class="row" style="background: #000; color: #fff;">
+    <div class="col-sm-12">
+      <p>{{user.username}}</p>
+      <div ng-repeat="badge in user.badges">   
+        <div class="percentage_circle p{{getBadgeCost(badge)}}">
+          <div class="percentage_circle_fix_bar"></div>
+          <span class="percentace_circle_value">
+              <img ng-src="{{badge.image}}">
+          </span>
+          <div class="percentage_circle_slice">
+            <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 text-center" ng-if="aux.ranking_info.num_pages > 1">     
+      <ul class="pagination">
+        <li ng-repeat="page in getPaginationPagesBefore(aux.ranking_info.page, aux.ranking_info.num_pages)">
+          <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
+        </li>
+        <li class="active"><a href="javascript:void(0);">{{aux.ranking_info.page}}</a></li>
+        <li ng-repeat="page in getPaginationPagesAfter(aux.ranking_info.page, aux.ranking_info.num_pages)">
+          <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

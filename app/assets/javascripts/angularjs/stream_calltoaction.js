@@ -647,6 +647,42 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
     }
   };
+
+  $scope.goToRankingPage = function(page) {
+    if(page != "...") {
+      $http.get("/update_ranking_pagination", { params: { "page": page }})
+        .success(function(data) { 
+          $scope.aux.ranking_info = data.ranking_info;
+        }).error(function() {
+        });
+    }
+  };
+
+  $scope.getPaginationPagesBefore = function(page, num_pages){
+    console.log(page);
+    if(page == 1) {
+      return [];
+    } else if(page == 2) {
+      return [1];
+    } else if (page > 3) {
+      console.log([1, "...", page - 2, page - 1]);
+      return [1, "...", page - 2, page - 1];
+    } else {
+      return [page - 2, page - 1];
+    }
+  };
+
+  $scope.getPaginationPagesAfter = function(page, num_pages){
+    if(page == num_pages) {
+      return [];
+    } else if(page == num_pages - 1) {
+      return [num_pages];
+    } else if (page < num_pages - 2) {
+      return [page + 1, page + 2, "...", num_pages];
+    } else {
+      return [page + 1, page + 2];
+    }
+  };
   
   $scope.getNumber = function(num) {
     return new Array(num);   
@@ -1049,7 +1085,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.ordering_in_progress = true;
 
-    $http.get(ordering_ctas, { params: { "ordering": ordering, "other_params": other_params } })
+    $http.get(ordering_ctas, { params: { "ordering": ordering, "other_params": other_params }})
       .success(function(data) { 
         $scope.calltoaction_ordering = ordering;
         $scope.initCallToActionInfoList(data.calltoaction_info_list);

@@ -13,7 +13,9 @@ Fandom::Application.routes.draw do
       scope module: "braun_ic" do
         get "/", to: "application#index"
         post "/reset_redo_user_interactions", to: "application#reset_redo_user_interactions", defaults: { format: 'json' }
-        post "/append_tips", :to => "application#append_tips", defaults: { format: 'json' }
+        post "/append_tips", to: "application#append_tips", defaults: { format: 'json' }
+        get "/ranking", to: "ranking#show"
+        get "/update_ranking_pagination", to: "ranking#update_ranking_pagination", defaults: { format: 'json' }
       end
     end
   end

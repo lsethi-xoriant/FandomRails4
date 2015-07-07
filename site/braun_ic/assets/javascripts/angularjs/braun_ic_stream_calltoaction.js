@@ -45,7 +45,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
 
   $scope.getCtaBadgeCost = function(cta_info) {
     badge = $scope.aux.badges[getCtaBadgeKey(cta_info)];
-    $scope.getBadgeCost(badge);
+    return $scope.getBadgeCost(badge);
   };
 
   $scope.getBadgeCost = function(badge) {
