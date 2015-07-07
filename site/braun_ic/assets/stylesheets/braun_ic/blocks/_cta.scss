@@ -81,11 +81,13 @@
   display: inline-block; 
   padding: 5px 15px; 
   font-size: 22px;
+  color: #fff;
 }
 
 .cta_tip-title {
   padding-top: 15px;
-  font-size: 36px;
+  font-size: 42px;
+  line-height: 46px;
   color: #fff;
 }
 
@@ -93,28 +95,32 @@
   color: #fff;
   margin-top: 25px;
   font-size: 18px;
+  line-height: 22px;
 }
 
-.cta_tip-container__row {
-  padding: 0;
+.cta_tip-container {
   background-color: #000;
-  margin-bottom: 30px;
 }
 
 .cta_tip-img_container {
-  padding-right: 0;
 }
 
 .cta_tip-section_2_description {
   border-left: 3px solid; 
-  padding-left: 10px; 
+  padding-left: 15px; 
   padding-bottom: 15px;
+}
+
+.product-container {
+  border: 1px solid #ccc; 
+  margin-bottom: 15px;
+  padding: 30px;
 }
 
 .product-title {
   font-size: 22px;
   color: $green;
-  padding-top: 5px;
+  padding-top: 15px;
   padding-bottom: 5px;
 }
 
@@ -123,4 +129,14 @@
   color: #000;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.product-btn {
+  margin-top: 15px;
+  padding-left: 45px;
+  padding-right: 45px;
+}
+
+.product-img {
+  width: 100%;
 }

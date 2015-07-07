@@ -1,14 +1,15 @@
 .btn-green { 
   color: #FFFFFF; 
-  background: #30BF43; 
-  background: -webkit-linear-gradient(#44C956, #30BF43);
-  background: -o-linear-gradient(#44C956, #30BF43);
-  background: -moz-linear-gradient(#44C956, #30BF43);
-  background: linear-gradient(#44C956, #30BF43);
-  border-color: #1DB331; 
-  -webkit-box-shadow: 0px 4px 0px 0px #1DB331;
-  -moz-box-shadow: 0px 4px 0px 0px #1DB331;
-  box-shadow: 0px 4px 0px 0px #1DB331;
+  border-color: $green; 
+  border-radius: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+
+  background: $green;
+  background: -webkit-linear-gradient($green, $darkgreen);
+  background: -o-linear-gradient($green, $darkgreen);
+  background: -moz-linear-gradient($green, $darkgreen);
+  background: linear-gradient($green, $darkgreen);
 } 
  
 .btn-green:hover, 
@@ -17,16 +18,13 @@
 .btn-green.active, 
 .open .dropdown-toggle.btn-green { 
   color: #FFFFFF; 
-  background: #4CC95D; 
-  border-color: #1DB331; 
+  background: #85C75F; 
+  border-color: $green; 
 } 
  
 .btn-green:active, 
 .btn-green.active, 
 .open .dropdown-toggle.btn-green { 
-  box-shadow: outset none;
-  position: relative;
-  top: 3px;
   background-image: none; 
 } 
  
@@ -45,11 +43,11 @@ fieldset[disabled] .btn-green:active,
 .btn-green.disabled.active, 
 .btn-green[disabled].active, 
 fieldset[disabled] .btn-green.active { 
-  background: #30BF43; 
-  border-color: #1DB331; 
+  background: $green; 
+  border-color: $green; 
 } 
  
 .btn-green .badge { 
-  color: #30BF43; 
-  background: #FFFFFF; 
+  color: $green; 
+  background-color: #FFFFFF; 
 }
