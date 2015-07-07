@@ -1,8 +1,8 @@
 <div class="container">   
   <div ng-repeat="calltoaction_info in calltoactions" class="row">
     <div class="col-sm-12">
-      <div class="panel panel-default cta_cover-panel">
-        <div class="cta_cover-container panel-body">
+      <div class="row cta_cover-container__row">
+        <div class="col-xs-12 cta_cover-container__col">
           
           <div class="row cta_cover-img_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
             <div class="col-sm-5 col-sm-offset-7 cta_cover-description_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}">

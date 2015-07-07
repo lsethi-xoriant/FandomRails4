@@ -46,31 +46,25 @@
       <p>Le regole del benessere</p>
     </div>
   </div>
-  <div class="row" ng-repeat="calltoaction_info in aux.tips.tip_info_list">
-    <div class="col-sm-12">
-      <div class="panel panel-default cta_tip-panel">
-        <div class="panel-body cta_tip-container">
+  <div class="row cta_tip-container__row" ng-repeat="calltoaction_info in aux.tips.tip_info_list">
+    <div class="col-sm-12 cta_tip-container__col">
+      <div class="row">
+        <div class="col-sm-7 cta_tip-section_1_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_1 | unsafe"></div>
+        <div class="col-sm-5 cta_tip-img_container">
+          <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_1.url}}">
+        </div>
+      </div>
 
-          <div class="row">
-            <div class="col-sm-7 cta_tip-section_1_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_1 | unsafe"></div>
-            <div class="col-sm-5 cta_tip-img_container">
-              <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_1.url}}">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-5">
-              <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_2.url}}">
-            </div>
-            <div class="col-sm-7 cta_tip-section_2_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_2 | unsafe"></div>
-          </div>
-             
-          <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-            <div class="col-sm-12 text-right">
-              <%= render partial: "/call_to_action/share_interaction" %>
-            </div>
-          </div>
-
+      <div class="row">
+        <div class="col-sm-5">
+          <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_2.url}}">
+        </div>
+        <div class="col-sm-7 cta_tip-section_2_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_2 | unsafe"></div>
+      </div>
+         
+      <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+        <div class="col-sm-12 text-right">
+          <%= render partial: "/call_to_action/share_interaction" %>
         </div>
       </div>
     </div>
@@ -88,14 +82,12 @@
       <p>Prodotti</p>
     </div>
   </div>
-  <div class="row" ng-repeat="calltoaction_info in aux.tips.product_info_list">
-    <div class="col-sm-12">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <p>{{calltoaction_info.calltoaction.name}}</p>
-          <img style="width: 150px;" ng-src="{{calltoaction_info.calltoaction.thumbnail_wide_url}}">
-        </div>
-      </div>
+  <div class="row" ng-repeat="calltoaction_info_list in aux.products.product_info_list | groupBy:2">
+    <div class="col-sm-6" style="border: 1px solid #ccc; margin-bottom: 15px;" ng-repeat="calltoaction_info in calltoaction_info_list">
+      <img style="width: 100%;" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
+      <p class="product-title">{{calltoaction_info.calltoaction.title}}</p>
+      <p class="product-description">{{calltoaction_info.calltoaction.description}}</p>
+      <a class="btn btn-success" target="_blank" href="{{calltoaction_info.calltoaction.extra_fields.url}}">SCOPRI</a>
     </div>
   </div>
 </div>

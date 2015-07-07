@@ -1,12 +1,11 @@
-.cta_cover-panel {
+.cta_cover-container__row {
   border: none;
   margin-bottom: 30px;
-  box-shadow: none;
-  -webkit-box-shadow: none;
+  height: 530px;
 }
 
-.cta_cover-container {
-  height: 530px;
+.cta_cover-container__col {
+  height: 100%;
 }
 
 .cta_cover-img_container {
@@ -96,20 +95,32 @@
   font-size: 18px;
 }
 
-.cta_tip-panel {
+.cta_tip-container__row {
   padding: 0;
   background-color: #000;
-  border: none;
   margin-bottom: 30px;
 }
 
 .cta_tip-img_container {
   padding-right: 0;
-  margin-top: -15px;
 }
 
 .cta_tip-section_2_description {
   border-left: 3px solid; 
   padding-left: 10px; 
   padding-bottom: 15px;
+}
+
+.product-title {
+  font-size: 22px;
+  color: $green;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.product-description {
+  font-size: 16px;
+  color: #000;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
