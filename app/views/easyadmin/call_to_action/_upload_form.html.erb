@@ -21,6 +21,9 @@
               <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
             </div>
             <div class="radio">
+              <%= uploadform.radio_button :gallery_type, "twitter", :class => "twitter", :checked => (get_upload_type(f.object.id) == "twitter"), :onchange => "updateInputsForGalleryType($(this))" %> Twitter
+            </div>
+            <div class="radio">
               <%= uploadform.radio_button :gallery_type, "youtube", :class => "youtube", :checked => (get_upload_type(f.object.id) == "youtube"), :onchange => "updateInputsForGalleryType($(this))" %> YouTube
             </div>
           </div>
@@ -138,6 +141,26 @@
           <% end %>
         </div>
       </div>
+      <div class="row twitter-gallery <%= get_upload_type(f.object.id) == 'twitter' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+        <div class="col-lg-12">
+          <% twitter_tag = Interaction.find(f.object.id).aux["configuration"]["twitter_tag"] rescue "" %>
+          <div class="form-group col-lg-2">
+            <div class="form-group">
+              <%= uploadform.check_box :registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
+              <label class="text-input">Solo utenti registrati</label>
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label class="text-input">Tag della gallery (senza #)</label>
+            <% tag_name = twitter_tag["name"] rescue "" %>
+            <%= uploadform.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => tag_name %>
+          </div>
+          <div class="form-group col-lg-4">
+            <label class="text-input">Call to action template</label>
+            <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
@@ -156,18 +179,23 @@
     switch(el.attr("class")) {
       case "flowplayer":
       case "youtube":
-        selected = parentDiv.siblings(".video-gallery");
-        unselected = parentDiv.siblings(".instagram-gallery");
+        parentDiv.siblings(".video-gallery").removeClass("hidden");
+        parentDiv.siblings(".instagram-gallery").addClass("hidden");
+        parentDiv.siblings(".twitter-gallery").addClass("hidden");
         break;
       case "instagram":
-        selected = parentDiv.siblings(".instagram-gallery");
-        unselected = parentDiv.siblings(".video-gallery");
+        parentDiv.siblings(".instagram-gallery").removeClass("hidden");
+        parentDiv.siblings(".twitter").addClass("hidden");
+        parentDiv.siblings(".video-gallery").addClass("hidden");
+        parentDiv.siblings(".video-gallery").children().children("input").val("");
+        break;
+      case "twitter":
+        parentDiv.siblings(".twitter-gallery").removeClass("hidden");
+        parentDiv.siblings(".instagram-gallery").addClass("hidden");
+        parentDiv.siblings(".video-gallery").addClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
     }
-
-    selected.removeClass("hidden");
-    unselected.addClass("hidden");
   };
 
   $(".instagram-tag").on("keyup", function() {
