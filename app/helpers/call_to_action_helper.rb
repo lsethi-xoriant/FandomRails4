@@ -538,6 +538,7 @@ module CallToActionHelper
           anonymous_user_interaction_info = nil
         end
 
+        extra_fields = {}
         case resource_type
         when "quiz"
           resource_type = resource.quiz_type.downcase
@@ -547,6 +548,8 @@ module CallToActionHelper
           upload_info = build_uploads_for_resource(interaction)
         when "vote"
           vote_info = build_votes_for_resource(interaction)
+          # TODO: its actually a mistake to have extra fields in the interaction; the aux field should have been used instead
+          extra_fields = get_extra_fields!(interaction.resource)
         when "download"
           ical = resource.ical_fields
         when "comment"
@@ -564,7 +567,7 @@ module CallToActionHelper
             "resource_type" => resource_type,
             "resource" => {
               "id" => resource.id,
-              "extra_fields" => get_extra_fields!(interaction.resource),
+              "extra_fields" => extra_fields,
               "question" => resource_question,
               "title" => resource_title,
               "description" => resource_description,
