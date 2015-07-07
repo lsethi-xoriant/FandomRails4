@@ -70,7 +70,7 @@ class CallbackController < ApplicationController
           request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
-          headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+          headers = { "Content-Type" => "application/json", "Accept" => "application/json"}
 
           res["data"].each do |media|
             cta_with_media_present = CallToAction.where("aux->>'instagram_media_id' = '#{media["id"]}'").first
@@ -81,7 +81,7 @@ class CallbackController < ApplicationController
                 begin
                   cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
                   cloned_cta.build_user_upload_interaction(user_id: clone_params["user_id"], upload_id: upload.id)
-                  cloned_cta.aux = { "instagram_media_id" => media["id"] }.to_json
+                  cloned_cta.aux = { "instagram_media_id" => media["id"] }
                   cloned_cta.save
                 end
               end
@@ -89,7 +89,7 @@ class CallbackController < ApplicationController
           end
           new_min_tag_id = res["pagination"]["min_tag_id"]
           instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = new_min_tag_id
-          instagram_subscriptions_setting.update_column(:value, instagram_subscriptions_setting_hash.to_json)
+          instagram_subscriptions_setting.update_column(:value, instagram_subscriptions_setting_hash)
         end
       end
       render json: "OK"
@@ -97,25 +97,18 @@ class CallbackController < ApplicationController
   end
 
   def get_clone_params(registered_users_only, media)
-    clone_params = {}
     auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
-    if auth
-      user_id = auth.user_id
-      clone_params.merge!({ 
+    if !auth && registered_users_only
+      return {}
+    else
+      user_id = auth ? auth.user_id : anonymous_user.id
+      return { 
         "title" => media["caption"]["text"][0..100], 
         "upload" => open(media["images"]["standard_resolution"]["url"]),
-        "user_id" => user_id 
-      })
-    else
-      unless registered_users_only
-        clone_params.merge!({ 
-          "title" => media["caption"]["text"][0..100], 
-          "upload" => open(media["images"]["standard_resolution"]["url"]),
-          "user_id" => anonymous_user.id 
-        })
-      end
+        "user_id" => user_id, 
+        "extra_fields" => { "layout" => "instagram", "avatar" => media["user"]["profile_picture"], "nickname" => media["user"]["username"] }
+      }
     end
-    clone_params
   end
 
 end
