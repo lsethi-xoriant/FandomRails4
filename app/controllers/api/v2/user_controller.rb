@@ -16,14 +16,24 @@
     end
 
     def user_sign_up
-      authentication_token = Devise.friendly_token
-      user = User.create(
-        email: params["email"], 
-        first_name: params["first_name"], 
-        last_name: params["last_name"], 
-        password: params["password"], 
-        password_confirmation: params["password_confirmation"], 
-        authentication_token: authentication_token)
+      user_params = {
+          email: params["email"], 
+          first_name: params["first_name"], 
+          last_name: params["last_name"], 
+          password: params["password"], 
+          password_confirmation: params["password_confirmation"]
+      }
+
+      if current_user
+        user = adjust_anonymous_user(user_params)
+        if user.errors.empty?
+          user.save()
+        end
+      else
+        authentication_token = Devise.friendly_token
+        user_parmas[:authentication_token] = authentication_token
+        user = User.create(user_parmas)
+      end
 
       if user.errors.blank?
         respond_with_json user

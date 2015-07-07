@@ -1,5 +1,13 @@
 module CallToActionHelper
 
+  def get_parent_cta_name(cta_info)
+    if cta_info["optional_history"].present? && cta_info["optional_history"]["parent_cta_info"].present?
+      cta_info["optional_history"]["parent_cta_info"]["calltoaction"]["name"]
+    else
+      cta_info["calltoaction"]["name"]
+    end
+  end
+
   def get_sidebar_info(sidebar_tag_name, property)
     # Property can be the gallery section
 
@@ -456,7 +464,9 @@ module CallToActionHelper
             interaction_info_list["interaction"]["when_show_interaction"] = "SEMPRE_VISIBILE"
           end
 
-          interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
+          if interaction_info_list["interaction"]["resource_type"] != "pin"
+            interaction_info_list["interaction"]["interaction_positioning"] = "UNDER_MEDIA"
+          end
         end
       end
     end
@@ -515,6 +525,7 @@ module CallToActionHelper
         resource_one_shot = resource.one_shot rescue false
         resource_providers = resource.providers rescue nil
         resource_url = resource.url rescue "/"
+        resource_coordinates = resource.coordinates rescue nil
 
         if interaction.stored_for_anonymous
           anonymous_user_interaction = interaction.user_interactions.find_by_user_id(anonymous_user.id)
@@ -538,6 +549,8 @@ module CallToActionHelper
           vote_info = build_votes_for_resource(interaction)
         when "download"
           ical = resource.ical_fields
+        when "comment"
+          comment_info = build_comments_for_resource(interaction)
         end
 
         interaction_info_list << {
@@ -559,10 +572,12 @@ module CallToActionHelper
               "answers" => answers,
               "providers" => resource_providers,
               "counter" => 0,
+              "comment_info" => comment_info, 
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,
-              "url" => resource_url
+              "url" => resource_url,
+              "coordinates" => resource_coordinates
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
@@ -600,6 +615,7 @@ module CallToActionHelper
         "text" => answer.text,
         "aux" => answer.aux,
         "image_medium" => answer.image(:medium),
+        "image" => answer.image,
         "correct" => answer_correct
         #{}"percentage" => percentage
       }
@@ -790,21 +806,31 @@ module CallToActionHelper
   def duplicate_user_generated_cta(params, watermark, cta_title, description, cta_template)
     unique_name = generate_unique_name()
 
-    if params["upload"] && params["upload"].content_type.start_with?("video")
-      media_image = params["upload"]
-      thumbnail = nil
-      media_type = "FLOWPLAYER"
-      media_data = nil
+    if params["upload"]
+      if params["upload"].content_type.start_with?("video")
+        media_image = params["upload"]
+        thumbnail = nil
+        media_type = "FLOWPLAYER"
+        media_data = nil
+      else 
+        media_image = params["upload"] # cta_template.media_image
+        thumbnail = params["upload"] # cta_template.thumbnail
+        media_type = "IMAGE"
+        media_data = nil
+      end
     elsif params["vcode"]
       media_image = thumbnail = open("http://img.youtube.com/vi/#{params["vcode"]}/0.jpg") rescue cta_template.thumbnail
       media_type = "YOUTUBE"
       media_data = params["vcode"]
     else
-      media_image = params["upload"] # cta_template.media_image
-      thumbnail = params["upload"] # cta_template.thumbnail
-      media_type = "IMAGE"
-      media_data = nil
+      media_image = cta_template.media_image
+      thumbnail = cta_template.thumbnail
+      media_type = cta_template.media_type
+      media_data = cta_template.media_data
     end
+    
+    extra_fields = cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
+    extra_fields.merge!(params.fetch('extra_fields', {}))
 
     user_calltoaction = CallToAction.new(
         title: cta_title,
@@ -816,7 +842,7 @@ module CallToActionHelper
         thumbnail: (params["upload"] && params["upload"].content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$}) ? params["upload"] : thumbnail,
         media_type: media_type,
         media_data: media_data,
-        extra_fields: cta_template.extra_fields.nil? ? "{}" : cta_template.extra_fields 
+        extra_fields: extra_fields
         )
     if watermark
       if watermark.exists?
@@ -842,8 +868,10 @@ module CallToActionHelper
   def generate_unique_name
     duplicated = true
     i = 0
-    while duplicated && i < 5 do
-      name = Digest::MD5.hexdigest("#{current_user.id}#{Time.now}")[0..8]
+    # TODO: an exception should be raised if tries exceed 5
+    while duplicated && i < 5 do      
+      # TODO: there is a race condition in case 2 anonymous users upload something at the same millisecond
+      name = Digest::MD5.hexdigest("#{current_or_anonymous_user.id}#{Time.now}")[0..8]
       if CallToAction.find_by_name(name).nil?
         duplicated = false
       end
@@ -856,7 +884,7 @@ module CallToActionHelper
     duplicated = true
     i = 0
     while duplicated && i < 5 do
-      name = Digest::MD5.hexdigest("#{current_user.id}#{Time.now}")[0..8]
+      name = Digest::MD5.hexdigest("#{current_or_anonymous_user.id}#{Time.now}")[0..8]
       if Interaction.find_by_name(name).nil?
         duplicated = false
       end
@@ -1159,8 +1187,15 @@ module CallToActionHelper
         lambda { |symbolic_name_to_counter, condition_params| 
           max_key = max_key_in_symbolic_name_to_counter(symbolic_name_to_counter)
           return max_key == condition_params
+        },
+      "points_between" =>
+        lambda { |points_to_counter, condition_params|
+          sum = points_to_counter.map { |x,y| x.to_i * y.to_i }.inject(:+)
+          lower_bound, upper_bound = condition_params.split(',').map { |x| x.strip.to_i } 
+          return sum >= lower_bound && sum <= upper_bound 
         }
     }
   end
+
 
 end

@@ -62,41 +62,52 @@ class CallbackController < ApplicationController
           instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
           instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
           min_tag_id = instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] rescue nil
-          interaction_id = instagram_subscriptions_setting_hash[tag_name]["interaction_id"]
 
-          request_params = {
-            "client_id" => "#{ig_settings["client_id"]}"
-          }
+          interaction_id = instagram_subscriptions_setting_hash[tag_name]["interaction_id"]
+          upload = Interaction.find(interaction_id).resource
+
+          request_params = { "client_id" => "#{ig_settings["client_id"]}" }
           request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
-          headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+          headers = { "Content-Type" => "application/json", "Accept" => "application/json"}
 
           res["data"].each do |media|
-            auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
             cta_with_media_present = CallToAction.where("aux->>'instagram_media_id' = '#{media["id"]}'").first
-            if auth && !cta_with_media_present
-              begin
-                user_id = auth.user_id
-                clone_params = { 
-                  "title" => media["caption"]["text"], 
-                  "upload" => open(media["images"]["standard_resolution"]["url"]),
-                  "user_id" => user_id 
-                }
-                upload_interaction = Interaction.find(interaction_id)
-                cloned_cta = clone_and_create_cta(upload_interaction, clone_params, (upload_interaction.watermark rescue nil))
-                cloned_cta.build_user_upload_interaction(user_id: user_id, upload_id: upload_interaction.id)
-                cloned_cta.aux = { "instagram_media_id" => media["id"] }.to_json
-                cloned_cta.save
+            unless cta_with_media_present
+              registered_users_only = upload.aux["configuration"]["registered_users_only"] rescue false
+              clone_params = get_clone_params(registered_users_only, media)
+              if clone_params.any?
+                begin
+                  cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
+                  cloned_cta.build_user_upload_interaction(user_id: clone_params["user_id"], upload_id: upload.id)
+                  cloned_cta.aux = { "instagram_media_id" => media["id"] }
+                  cloned_cta.save
+                end
               end
             end
           end
-          min_tag_id = res["pagination"]["min_tag_id"]
-          instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = res["pagination"]["min_tag_id"]
-          instagram_subscriptions_setting.update_attribute(:value, instagram_subscriptions_setting_hash.to_json)
+          new_min_tag_id = res["pagination"]["min_tag_id"]
+          instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = new_min_tag_id
+          instagram_subscriptions_setting.update_column(:value, instagram_subscriptions_setting_hash)
         end
       end
       render json: "OK"
+    end
+  end
+
+  def get_clone_params(registered_users_only, media)
+    auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
+    if !auth && registered_users_only
+      return {}
+    else
+      user_id = auth ? auth.user_id : anonymous_user.id
+      return { 
+        "title" => media["caption"]["text"][0..100], 
+        "upload" => open(media["images"]["standard_resolution"]["url"]),
+        "user_id" => user_id, 
+        "extra_fields" => { "layout" => "instagram", "avatar" => media["user"]["profile_picture"], "nickname" => media["user"]["username"] }
+      }
     end
   end
 

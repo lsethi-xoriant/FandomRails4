@@ -324,7 +324,7 @@ class ApplicationController < ActionController::Base
   def modify_instagram_upload_object
     interaction = Interaction.find(params[:interaction_id])
     aux = interaction.aux || {}
-    if (aux["configuration"]["type"] == "instagram" rescue false)
+    if ((aux["configuration"]["type"] == "instagram" && aux["configuration"]["instagram_tag"]) rescue false)
       res, delete_success = delete_instagram_tag_subscription(interaction)
     end
     delete_success ||= true
@@ -359,7 +359,7 @@ class ApplicationController < ActionController::Base
       "object" => "tag", 
       "aspect" => "media", 
       "object_id" => tag_name, 
-      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}}"
+      "callback_url" => "http://dev.fandomlab.com#{Setting.find_by_key(INSTAGRAM_CALLBACK_URL).value}"
     }
 
     headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}

@@ -1,5 +1,13 @@
 /* CTA */
 
+.twitter-description {
+  position: absolute; 
+  top: 45px; 
+  color: #fff; 
+  font-size: 28px; 
+  padding-left: 30px;
+}
+
 .cta__media-container {
   padding: 0;
 }
@@ -205,6 +213,10 @@
 
 
 @media (max-width: $screen-sm-min) { 
+  .twitter-description {
+    font-size: 16px;
+  }
+
   .cta__media-footer {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;

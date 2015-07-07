@@ -9,7 +9,7 @@
         <p>&nbsp;</p>
         <div class="row">
           <div class="col-xs-12 text-left">
-            <a ng-if="aux.gallery_tag.url_gallery_rules" href="/gallery/{{aux.gallery_tag.url_gallery_rules}}/{{aux.gallery_calltoaction.id}}" class="btn btn-default gallery-cta__rule-button">{{aux.gallery_tag.label_gallery_rules}}</a>
+            <a ng-if="aux.gallery_tag.extra_fields.url_gallery_rules" href="/gallery/{{aux.gallery_tag.extra_fields.url_gallery_rules}}/{{aux.gallery_tag.gallery_calltoaction.id}}" class="btn btn-default gallery-cta__rule-button">{{aux.gallery_tag.extra_fields.label_gallery_rules}}</a>
             <button ng-if="aux.gallery_tag.active" id="partecipa" class="btn btn-primary" href="javascript:void(0)" onclick="partecipa();"><span>Partecipa</span></button>
           </div>
         </div>

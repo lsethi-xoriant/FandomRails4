@@ -7,7 +7,26 @@
       <%= render partial: "/call_to_action/versus_interaction_overvideo" %>
     </div>
     <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-md-12 hidden-xs">
-      <%= render partial: "/call_to_action/check_interaction" %>
+     
+
+      <div class="row">
+
+        <div class="col-sm-12 text-center">
+          <div style="color: #fff; margin-bottom: 15px; margin-top: 30px;" ng-bind-html="interaction_info.interaction.resource.description"></div>
+        </div>
+
+        <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="interaction_info.user_interaction">
+          <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
+        </div>
+
+        <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="!interaction_info.user_interaction">
+          <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
+        </div>
+
+      </div>
+
+
+
     </div>  
     <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-md-12 hidden-xs">
       <%= render partial: "/call_to_action/share_interaction" %>

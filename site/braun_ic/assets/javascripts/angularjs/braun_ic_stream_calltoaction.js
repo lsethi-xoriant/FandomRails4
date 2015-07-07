@@ -25,9 +25,35 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     $scope.covers[$scope.getParentCtaId(cta_info)] = true
   };
 
+  $scope.updateAnswerAjaxSuccessCallback = function(cta_info, data) {
+    if(data.badge) {
+      $scope.setCtaBadge(cta_info, data.badge);
+    }
+  };
+
+  function getCtaBadgeKey(cta_info) {
+    return $scope.getParentCtaInfo(cta_info).calltoaction.name;
+  }
+
+  $scope.setCtaBadge = function(cta_info, badge) {
+    $scope.aux.badges[getCtaBadgeKey(cta_info)] = badge;
+  };
+
   $scope.getCtaBadge = function(cta_info) {
-    key = $scope.getParentCtaInfo(calltoaction_info).calltoaction.name;
-    return $scope.aux.badges[key];
+    return $scope.aux.badges[getCtaBadgeKey(cta_info)];
+  };
+
+  $scope.getCtaBadgeCost = function(cta_info) {
+    badge = $scope.aux.badges[getCtaBadgeKey(cta_info)];
+    return $scope.getBadgeCost(badge);
+  };
+
+  $scope.getBadgeCost = function(badge) {
+    if(badge.inactive) {
+      return 0;
+    } else {
+      return badge.cost;
+    }
   };
 
   $scope.resetToRedo = function(cta_info) {
@@ -39,5 +65,36 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     }).error(function() {
     });
   };
+
+  $scope.appendTips = function() {
+
+    $scope.append_tips_in_progress = true;
+
+    tip_ids_shown = [];
+    angular.forEach($scope.aux.tips.tip_info_list, function(_info) {
+      tip_ids_shown.push(_info.calltoaction.id);
+    });
+
+    $http.post("/append_tips", { calltoaction_ids_shown: tip_ids_shown, tag_name: "tip" })
+    .success(function(data) {
+
+      angular.forEach(data.calltoaction_info_list, function(cta_info) {
+        $scope.aux.tips.tip_info_list.push(cta_info);
+      });
+
+      $scope.aux.tips.has_more = data.has_more;
+      $scope.append_tips_in_progress = false;
+
+    });
+    
+  };
+
+  $scope.shareFreeAjaxSuccess = function(data) {
+    if(data.current_user) $scope.current_user = data.current_user;
+    if(data.notice_anonymous_user) {
+      showRegistrateView();
+    }
+  };
+
 
 }

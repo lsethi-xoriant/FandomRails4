@@ -20,7 +20,7 @@ class Interaction < ActiveRecord::Base
   validate :check_max_one_comment_resource
 
   def when_show_interaction_enum
-    ["SEMPRE_VISIBILE", "OVERVIDEO_DURING", "OVERVIDEO_START", "OVERVIDEO_END", "MAI_VISIBILE"]
+    WHEN_SHOW_USER_INTERACTION
   end
 
   def points_type_enum
@@ -40,7 +40,7 @@ class Interaction < ActiveRecord::Base
   def set_upload_type
     if self.resource_type == "Upload"
       upload_aux = { "configuration" => { "type" => self.resource.gallery_type } }
-      self.aux.merge!(upload_aux)
+      self.aux = upload_aux.merge(self.aux)
       if self.resource.gallery_type == "instagram"
         self.when_show_interaction = "MAI_VISIBILE"
       end

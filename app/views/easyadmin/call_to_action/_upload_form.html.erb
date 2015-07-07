@@ -21,6 +21,9 @@
               <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
             </div>
             <div class="radio">
+              <%= uploadform.radio_button :gallery_type, "twitter", :class => "twitter", :checked => (get_upload_type(f.object.id) == "twitter"), :onchange => "updateInputsForGalleryType($(this))" %> Twitter
+            </div>
+            <div class="radio">
               <%= uploadform.radio_button :gallery_type, "youtube", :class => "youtube", :checked => (get_upload_type(f.object.id) == "youtube"), :onchange => "updateInputsForGalleryType($(this))" %> YouTube
             </div>
           </div>
@@ -30,11 +33,23 @@
         <div class="col-lg-6">
           <div class="form-group">
             <label class="text-input">Visibile</label>
-             <%= f.select(:when_show_interaction, [["SEMPRE_VISIBILE", "SEMPRE_VISIBILE"], ["OVERVIDEO_DURING", "OVERVIDEO_DURING"], ["MAI_VISIBILE", "MAI_VISIBILE"], ["OVERVIDEO_END", "OVERVIDEO_END"]], {}, { :class => "form-control" }) %>
+             <%= f.select(:when_show_interaction, adjust_when_show_interactions_for_form(), {}, { :class => "form-control" }) %>
           </div>
           <div class="form-group">
             <label class="text-input">Posizione</label>
              <%= f.select(:interaction_positioning, [["UNDER_MEDIA", "UNDER_MEDIA"], ["OVER_MEDIA", "OVER_MEDIA"]], {}, { :class => "form-control" }) %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Testo privacy</label>
+            <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Testo richiesta liberatoria</label>
+            <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
+          </div>
+          <div class="form-group">
+            <label class="text-input">Richiesto per il completamento</label>
+            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
           </div>
         </div>
         <div class="col-lg-6">
@@ -86,30 +101,23 @@
             <%= f.text_area :aux, :cols => "60", :rows => "5" %>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="form-group">
-            <label class="text-input">Testo privacy</label>
-            <%= uploadform.text_area :privacy_description, :class => "form-control", rows: 6 %>
-          </div>
-          <div class="form-group">
-            <label class="text-input">Testo richiesta liberatoria</label>
-            <%= uploadform.text_area :releasing_description, :class => "form-control", rows: 6 %>
-          </div>
-          <div class="form-group">
-            <label class="text-input">Richiesto per il completamento</label>
-            <%= f.select(:required_to_complete, [["SI", true], ["NO", false]], {}, { :class => "form-control" }) %>
-          </div>
-        </div>
       </div>
       <div class="row instagram-gallery <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
         <div class="col-lg-12">
-          <div class="form-group col-lg-4">
-            <% if f.object.id %>
+          <% if f.object.id %>
+            <% instagram_tag = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"] %>
+            <div class="form-group col-lg-2">
+              <div class="form-group">
+                <%= uploadform.check_box :registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
+                <label class="text-input">Solo utenti registrati</label>
+              </div>
+            </div>
+            <div class="form-group col-lg-4">
               <label class="text-input">Tag della gallery (senza #)</label>
               <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-              <% tag_name = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["name"] rescue "" %>
-              <% tag_subscription_id = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"]["subscription_id"] rescue "" %>
+              <% tag_name = instagram_tag["name"] rescue "" %>
+              <% tag_subscription_id = instagram_tag["subscription_id"] rescue "" %>
 
               <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
               <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
@@ -121,9 +129,35 @@
                 <% end %>
               </p>
               <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
-            <% else %>
+            </div>
+            <div class="form-group col-lg-4">
+              <label class="text-input">Call to action template</label>
+              <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+            </div>
+          <% else %>
+            <div class="col-lg-6">
               <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
-            <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="row twitter-gallery <%= get_upload_type(f.object.id) == 'twitter' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+        <div class="col-lg-12">
+          <% twitter_tag = Interaction.find(f.object.id).aux["configuration"]["twitter_tag"] rescue "" %>
+          <div class="form-group col-lg-2">
+            <div class="form-group">
+              <%= uploadform.check_box :registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
+              <label class="text-input">Solo utenti registrati</label>
+            </div>
+          </div>
+          <div class="form-group col-lg-4">
+            <label class="text-input">Tag della gallery (senza #)</label>
+            <% tag_name = twitter_tag["name"] rescue "" %>
+            <%= uploadform.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => tag_name %>
+          </div>
+          <div class="form-group col-lg-4">
+            <label class="text-input">Call to action template</label>
+            <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
           </div>
         </div>
       </div>
@@ -145,18 +179,23 @@
     switch(el.attr("class")) {
       case "flowplayer":
       case "youtube":
-        selected = parentDiv.siblings(".video-gallery");
-        unselected = parentDiv.siblings(".instagram-gallery");
+        parentDiv.siblings(".video-gallery").removeClass("hidden");
+        parentDiv.siblings(".instagram-gallery").addClass("hidden");
+        parentDiv.siblings(".twitter-gallery").addClass("hidden");
         break;
       case "instagram":
-        selected = parentDiv.siblings(".instagram-gallery");
-        unselected = parentDiv.siblings(".video-gallery");
+        parentDiv.siblings(".instagram-gallery").removeClass("hidden");
+        parentDiv.siblings(".twitter").addClass("hidden");
+        parentDiv.siblings(".video-gallery").addClass("hidden");
+        parentDiv.siblings(".video-gallery").children().children("input").val("");
+        break;
+      case "twitter":
+        parentDiv.siblings(".twitter-gallery").removeClass("hidden");
+        parentDiv.siblings(".instagram-gallery").addClass("hidden");
+        parentDiv.siblings(".video-gallery").addClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
     }
-
-    selected.removeClass("hidden");
-    unselected.addClass("hidden");
   };
 
   $(".instagram-tag").on("keyup", function() {

@@ -1,18 +1,15 @@
-<div class="row">
-  <div class="col-sm-12 text-center">
-    <p class="trivia-interaction__question">{{interaction_info.interaction.resource.question}}</p>
-  </div>
-  <div class="col-xs-6" style="padding: 0;" ng-repeat="answer in interaction_info.interaction.resource.answers">
-    <%= render partial: "/call_to_action/test_answer" %>
-  </div>
+<div class="col-xs-6 text-center test-answer__container" ng-style="{'background-image': 'url(' + answer.image + ')'}" ng-repeat="answer in interaction_info.interaction.resource.answers">
+  <%= render partial: "/call_to_action/test_answer" %>
 </div>
 
-<div class="row">
-  <div class="col-xs-4 col-xs-offset-4 text-center">
-    <p>{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
-    <div class="progress">
-      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (calltoaction_info.optional_history.optional_index_count/(calltoaction_info.optional_history.optional_total_count - 1)*100) + '%' }">
-      </div>
+<div class="col-sm-12 text-center" style="position: absolute; top: 15px; color: #fff;">
+  <p class="trivia-interaction__question">{{interaction_info.interaction.resource.question}}</p>
+</div>
+
+<div style="position: absolute; bottom: 15px; left: 0; right: 0; width: 150px; margin-left: auto; margin-right: auto;">
+  <p>{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (calltoaction_info.optional_history.optional_index_count/(calltoaction_info.optional_history.optional_total_count - 1)*100) + '%' }">
     </div>
   </div>
 </div>

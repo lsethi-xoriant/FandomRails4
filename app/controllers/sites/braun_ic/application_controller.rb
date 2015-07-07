@@ -41,19 +41,17 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     end
 
     return if cookie_based_redirect?
-    
+
     params = { "page_elements" => ["quiz", "share"] }
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+    @calltoaction_info_list, @has_more = get_ctas_for_stream("test", params, 15)
 
     cta_ids = @calltoaction_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
     
     badge_tag = Tag.find("badge")
     ctas = CallToAction.where(id: cta_ids)
 
-    user_badges = {}
-
-    
-    # TODO: optimize with one query
+    badges = {}
+ 
     @calltoaction_info_list.each do |cta_info|
       cta = find_in_calltoactions(ctas, cta_info["calltoaction"]["id"])
       
@@ -74,18 +72,45 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         inactive = true
       end
 
-      badges[cta_info["calltoaction"]["name"]] = {
+      badges[get_parent_cta_name(cta_info)] = {
         name: reward.name,
         image: reward.main_image,
         cost: reward.cost,
+        extra_fields: reward.extra_fields,
         inactive: inactive
       }
     end
 
+    params = { "page_elements" => ["share"] }
+    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
+    product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
+
     @aux_other_params = { 
       tag_menu_item: "home",
-      badges: badges
+      badges: badges,
+      tips: {
+        tip_info_list: tip_info_list,
+        has_more: has_more_tips
+      },
+      products: {
+        product_info_list: product_info_list,
+        has_more: has_more_products
+      }
     }
+  end
+
+  def append_tips
+    params[:page_elements] = ["share"]
+    calltoaction_info_list, has_more = get_ctas_for_stream(params[:tag_name], params, 3)
+
+    response = {
+      calltoaction_info_list: calltoaction_info_list,
+      has_more: has_more
+    }
+    
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end 
   end
 
 end

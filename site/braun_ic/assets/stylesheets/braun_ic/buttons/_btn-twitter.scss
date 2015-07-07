@@ -1,6 +1,11 @@
 /********************* BTN TWITTER *********************/
 
 .btn-twitter { 
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  font-size: 22px;
+  padding: 0;
   color: #ffffff; 
   border-color: #218BDB; 
   background: #55ACEE;
@@ -8,9 +13,6 @@
   background: -o-linear-gradient(#7ABAEB, #55ACEE);
   background: -moz-linear-gradient(#7ABAEB, #55ACEE);
   background: linear-gradient(#7ABAEB, #55ACEE);
-  -webkit-box-shadow: 0px 3px 0px 0px #218BDB;
-  -moz-box-shadow: 0px 3px 0px 0px #218BDB;
-  box-shadow: 0px 3px 0px 0px #218BDB;
 } 
  
 .btn-twitter:hover, 
@@ -54,7 +56,5 @@ fieldset[disabled] .btn-twitter.active {
 .btn-twitter:active, 
 .btn-twitter.active, 
 .open .dropdown-toggle.btn-twitter { 
-  position: relative;
-  top: 4px;
   box-shadow: outer none;
 } 

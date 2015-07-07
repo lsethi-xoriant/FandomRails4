@@ -13,6 +13,9 @@ Fandom::Application.routes.draw do
       scope module: "braun_ic" do
         get "/", to: "application#index"
         post "/reset_redo_user_interactions", to: "application#reset_redo_user_interactions", defaults: { format: 'json' }
+        post "/append_tips", to: "application#append_tips", defaults: { format: 'json' }
+        get "/ranking", to: "ranking#show"
+        get "/update_ranking_pagination", to: "ranking#update_ranking_pagination", defaults: { format: 'json' }
       end
     end
   end
@@ -490,7 +493,7 @@ Fandom::Application.routes.draw do
   # Instagram subscribe.
   post "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
   post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
-  get "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }
+  match "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", via: [:get, :post], defaults: { format: 'json' }
 
   get "/how_to", :to => "application#how_to"
   get "/landing", :to => "landing#index"

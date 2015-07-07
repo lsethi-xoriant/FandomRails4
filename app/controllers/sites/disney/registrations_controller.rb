@@ -3,7 +3,8 @@
 
 class Sites::Disney::RegistrationsController < RegistrationsController
 
-  def setUpAccount()
+  def set_account_up()
+    create_user_interaction_for_registration()
   end
 
   def update
@@ -72,6 +73,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
         user.update_attributes(swid: cookies[:SWID], aux: aux)
       else
         user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
+        set_account_up()
       end
       flash["notice"] = "privacy-addition"
     else

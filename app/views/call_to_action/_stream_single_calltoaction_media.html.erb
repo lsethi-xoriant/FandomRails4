@@ -44,6 +44,10 @@
       </div>
     </div>
 
+    <div ng-class="{'hidden': !play_event_tracked[calltoaction_info.calltoaction.id] }" ng-repeat="chapter in calltoaction_info.chaptering">
+      <div class="chapter" ng-style="{'left': chapter.position + '%'}" ng-click="goToSecond(calltoaction_info, chapter.second)"></div>
+    </div>
+
   </div>
 </div>
 
@@ -55,9 +59,12 @@
 <!-- MAIN MEDIA IMAGE -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE' && calltoaction_info.calltoaction.media_image_from_answer_type != 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
   <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  
+  <div class="col-sm-12 text-center twitter-description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
+    <p>{{calltoaction_info.calltoaction.description}}</p>
+  </div>
 
   <%= render partial: "/call_to_action/over_media_interactions" %>
-
 </div>
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >

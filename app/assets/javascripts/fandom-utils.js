@@ -1,18 +1,26 @@
 // Easyadmin call to action forms methods //
 
 function add_fields(link, association, content, resource) {
-  if(resource == "play" || resource == "share" || resource == "comment" || resource == "like" || resource == "upload" || resource == "vote" || resource == "random" || resource == "instantwin") {
-    if(!window[resource + "_counter"]) {
-      window[resource + "_counter"] = true;
+  switch(resource) {
+    case "play":
+    case "share":
+    case "comment":
+    case "like":
+    case "upload":
+    case "vote":
+    case "random":
+    case "instantwin":
+      if(!window[resource + "_counter"]) {
+        window[resource + "_counter"] = true;
+        var new_id = new Date().getTime();
+        var regexp = new RegExp("new_" + association, "g");
+        $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
+      }
+      break;
+    default:
       var new_id = new Date().getTime();
       var regexp = new RegExp("new_" + association, "g");
       $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
-    }
-  }
-  else {
-    var new_id = new Date().getTime();
-    var regexp = new RegExp("new_" + association, "g");
-    $("#tmp-" + resource + "-add").prepend(content.replace(regexp, new_id));
   }
 }
 
@@ -33,6 +41,7 @@ function remove_fields(link, resource) {
     case "quiz":
     case "versus":
     case "contest":
+    case "pin":
       $(link).parent().parent().parent().remove();
       break;
     case "answer_quiz":

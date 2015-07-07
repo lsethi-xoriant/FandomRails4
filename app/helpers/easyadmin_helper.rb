@@ -1,6 +1,14 @@
 # encoding: utf-8
 module EasyadminHelper
 
+  def adjust_when_show_interactions_for_form()
+    when_types = []
+    WHEN_SHOW_USER_INTERACTION.each do |when_type|
+      when_types << [when_type, when_type]
+    end
+    when_types
+  end
+
   def link_to_add_fields(name, f, association, resource, template = resource)
     new_object = Interaction.new
 

@@ -19,6 +19,11 @@
         <div class="col-xs-12 cta-cover__thumbnail-column">
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
+
+        <div class="col-xs-12" style="position: absolute; color: #fff; margin-top: 55px;" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
+          <p>{{calltoaction_info.calltoaction.description}}</p>
+        </div>
+
         <!-- CALLTOACTION WINNABLE REWARD COUNT -->
         <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="col-xs-12 cta-cover__winnable-reward text-right">
           <span class="label label-warning cta-cover__winnable-reward__label">
@@ -41,9 +46,13 @@
 
         <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id">
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-xs-10" ng-if="!calltoaction_info.calltoaction.extra_fields || !calltoaction_info.calltoaction.extra_fields.layout">
               <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>
               <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user_name}}</p>
+            </div>
+            <div class="col-xs-10" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
+              <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields.twitter_avatar}}" class="img-responsive"/>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.extra_fields.twitter_username}}</p>
             </div>
             <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
               <span class="label label-default cta-cover__vote-count">{{calculateVoteTotal(interaction_info)}} <span class="hidden-xs">Voti</span></span>

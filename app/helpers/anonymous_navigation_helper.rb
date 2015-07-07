@@ -34,7 +34,7 @@ module AnonymousNavigationHelper
       user_params[:anonymous_id] = Devise.friendly_token
       user_params[:authentication_token] = Devise.friendly_token
     else
-      user_params[:anonymous_id] = session[:session_id]
+      user_params[:anonymous_id] = session.id
     end
 
     User.new(user_params)
@@ -50,7 +50,19 @@ module AnonymousNavigationHelper
   end
 
   def request_via_api?
-    session.empty?
+    self.is_a? Api::V2::BaseController
+  end
+
+  
+  def adjust_anonymous_user(params)
+    resource = current_user
+    resource.assign_attributes(email: nil, username: nil)
+    resource.assign_attributes(params)
+    if resource.valid? # TODO: comment this
+      resource.assign_attributes(anonymous_id: nil)
+      sign_out(current_user) if request_via_api?
+    end
+    resource
   end
 
 end

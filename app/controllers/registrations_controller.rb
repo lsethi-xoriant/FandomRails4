@@ -9,17 +9,6 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :require_no_authentication, :if => :stored_anonymous_user?
   skip_before_filter :verify_authenticity_token
 
-  def adjust_anonymous_user(params)
-    resource = current_user
-    resource.assign_attributes(email: nil, username: nil)
-    resource.assign_attributes(params)
-    if resource.valid? # TODO: comment this
-      resource.assign_attributes(anonymous_id: nil)
-      sign_out(current_user)
-    end
-    resource
-  end
-
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:account_update) { |u| permit(u) }
     devise_parameter_sanitizer.for(:sign_up) { |u| permit(u) }
@@ -41,7 +30,7 @@ class RegistrationsController < Devise::RegistrationsController
       build_resource(sign_up_params)
     end
 
-    # Aggancio i dati del provider se arrivo da un oauth non andato a buon fine.
+    # Hooks provider data if the method has been invoked after an unsuccessful oauth
     append_provider(resource) if session["oauth"] && session["oauth"]["params"]
 
     if resource.save
@@ -50,7 +39,8 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
 
-        setUpAccount()
+        set_account_up()
+
         log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })
 
         respond_with resource, :location => after_sign_up_path_for(resource)
@@ -63,10 +53,17 @@ class RegistrationsController < Devise::RegistrationsController
       clean_up_passwords resource
       respond_with resource
     end
-  end	
+  end
 
-  def setUpAccount()
+  def set_account_up
+    create_user_interaction_for_registration()
     SystemMailer.welcome_mail(current_user).deliver
+  end
+
+  def create_user_interaction_for_registration
+    basic_interaction = Basic.where({ :basic_type => "Registration" }).first
+    interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
+    create_or_update_interaction(current_user, interaction, nil, nil)
   end
 
   protected
@@ -75,7 +72,7 @@ class RegistrationsController < Devise::RegistrationsController
     "/profile/edit"
   end
 
-  def append_provider resource
+  def append_provider(resource)
     omniauth = session["oauth"]["params"]
     provider = session["oauth"]["params"]["provider"]
 
@@ -111,7 +108,7 @@ class RegistrationsController < Devise::RegistrationsController
       cookies.delete(:connect_from_page)
       connect_from_page
     end
-  end 
+  end
 
 end
 

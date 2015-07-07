@@ -17,7 +17,7 @@ class Sites::Coin::RegistrationsController < RegistrationsController
     super
   end
 
-  def setUpAccount()
+  def set_account_up()
     assignRegistrationReward()
     #SystemMailer.welcome_mail(current_user).deliver
   end
