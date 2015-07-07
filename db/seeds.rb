@@ -6,7 +6,7 @@ User.create(email: "sbartolucci@shado.tv", first_name: "Renzo", last_name: "Tren
 
 User.create(email: "ddainese@shado.tv", first_name: "Costantino", last_name: "Cocci", username: "ddainese@shado.tv",
             privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
-            
+
 User.create(email: "mpozzana@shado.tv", first_name: "Gualtiero", last_name: "Fallaci", username: "mpozzana@shado.tv",
             privacy: true, password: "shado00", password_confirmation: "shado00", role: "admin")
 
@@ -43,3 +43,7 @@ EOF
 
 Reward.create(name: "point", title: "point", countable: true, numeric_display: true)
 
+
+call_to_action_for_registration = CallToAction.create(:name => "call-to-action-for-registration", :title => "Call to Action for registration")
+basic_interaction_resource_for_registration = Basic.create({ :basic_type => "Registration" })
+basic_interaction_for_registration = Interaction.create({ :resource_id => basic_interaction_resource_for_registration.id, :resource_type => "Basic", :call_to_action_id => call_to_action_for_registration.id })

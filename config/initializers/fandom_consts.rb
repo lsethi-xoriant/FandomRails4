@@ -18,8 +18,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
 
   EMOTICONS = [0x1f601, 0x1f602, 0x1f603, 0x1f604, 0x1f605, 0x1f606, 0x1f609, 0x1f60a, 0x1f60b, 0x1f60c, 0x1f60d, 0x1f60f, 0x1f612, 0x1f613, 0x1f614, 0x1f616, 0x1f618, 0x1f61a, 0x1f61c, 0x1f61d, 0x1f61e, 0x1f620, 0x1f621, 0x1f622, 0x1f623, 0x1f624, 0x1f625, 0x1f628, 0x1f629, 0x1f62a, 0x1f62b, 0x1f62d, 0x1f630, 0x1f631, 0x1f632, 0x1f633, 0x1f635, 0x1f637, 0x1f638, 0x1f639, 0x1f63a, 0x1f63b, 0x1f63c, 0x1f63d, 0x1f63e, 0x1f63f, 0x1f640, 0x1f645, 0x1f646, 0x1f647, 0x1f648, 0x1f649, 0x1f64a, 0x1f64b, 0x1f64c, 0x1f64d, 0x1f64e, 0x1f64f]
 
-  # Trivia and Versus are just subtypes of Quiz
-  INTERACTION_TYPES = Set.new(['Link', 'Quiz', 'Trivia', 'Versus', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload', 'Vote', 'Test'])
+  # Trivia and Versus are just subtypes of Quiz; Registration is a subtype of Basic as well
+  INTERACTION_TYPES = Set.new(['Link', 'Quiz', 'Trivia', 'Versus', 'Check', 'Comment', 'Like', 'Play', 'Share', 'Download', 'Upload', 'Vote', 'Test', 'Basic', 'Registration'])
   
   COUNTER_NAMES = INTERACTION_TYPES.map { |x| "ALL_#{x.upcase}" } + INTERACTION_TYPES.map { |x| "UNIQUE_#{x.upcase}" } + ['UNIQUE_TRIVIA_CORRECT_ANSWER', 'ALL_TRIVIA_CORRECT_ANSWER']
   

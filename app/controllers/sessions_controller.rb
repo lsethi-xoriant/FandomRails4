@@ -91,7 +91,7 @@ class SessionsController < Devise::SessionsController
       log_audit("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
 
       if from_registration
-        setUpAccount()
+        set_account_up()
         cookies[:from_registration] = true 
       end
     
@@ -103,7 +103,7 @@ class SessionsController < Devise::SessionsController
     end
   end
 
-  def setUpAccount()
+  def set_account_up()
     SystemMailer.welcome_mail(current_user).deliver
   end
 

@@ -73,7 +73,7 @@ module RewardingRulesCollectorHelper
       )
     )
   end
-  
+
   def interaction_is_included_in_options?(options, label, element)
     !options[:interactions].key?(label) || (!element.nil? && options[:interactions][label].include?(element)) 
   end
@@ -81,9 +81,10 @@ module RewardingRulesCollectorHelper
   # Checks if the interaction type matches with what has been specified in the options parameter.
   # It handles a kind of subtype relation between Quiz and Trivia or Versus 
   def interaction_type_is_included_in_options?(options, interaction)
-    (interaction_is_included_in_options?(options, :types, interaction.resource_type) || 
-     (interaction.resource_type == 'Quiz' &&
-      interaction_is_included_in_options?(options, :types, interaction.resource.quiz_type.capitalize))
+    (
+      interaction_is_included_in_options?(options, :types, interaction.resource_type) || 
+      (interaction.resource_type == "Quiz" && interaction_is_included_in_options?(options, :types, interaction.resource.quiz_type.capitalize)) || 
+      (interaction.resource_type == "Basic" && interaction_is_included_in_options?(options, :types, interaction.resource.basic_type.capitalize))
     )      
   end
 
