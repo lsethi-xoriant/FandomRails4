@@ -25,7 +25,11 @@
     def get_single_cta
       cta = CallToAction.find(params["cta_id"])
       cta_info = build_cta_info_list_and_cache_with_max_updated_at([cta]).first
-      
+      respond_with cta_info.to_json
+    end
+    
+    def redo_test
+      cta_info = reset_redo_user_interactions
       respond_with cta_info.to_json
     end
 end
