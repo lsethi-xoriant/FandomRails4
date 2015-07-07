@@ -79,7 +79,7 @@
   <div class="col-md-7 cta_left-col">
     <div class="row">
 
-      <div class="col-sm-12 cta__description-small-col">
+      <div class="col-sm-12 cta__description-small-col" ng-if="!calltoaction_info.calltoaction.extra_fields || !calltoaction_info.calltoaction.extra_fields.layout">
         <p class="cta__description-small" ng-bind-html="calltoaction_info.calltoaction.description | unsafe"></p>
       </div>
 
