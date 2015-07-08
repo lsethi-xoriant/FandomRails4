@@ -4,7 +4,8 @@
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
     :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed,
-    :interaction_positioning
+    :interaction_positioning, :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, :registered_users_only
+  attr_accessor :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, :registered_users_only
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -18,6 +19,32 @@ class Interaction < ActiveRecord::Base
   validate :resource_errors
   validate :check_max_one_play_resource
   validate :check_max_one_comment_resource
+
+  before_update :set_social_tag_in_interaction_aux
+
+  def set_social_tag_in_interaction_aux
+    if self.gallery_type == "instagram" || self.gallery_type == "twitter"
+      aux = self.aux || {}
+      aux["configuration"] = { "type" => self.gallery_type }
+      if self.gallery_type == "instagram"
+        tag_info = {
+          "instagram_tag" => {
+            "name" => self.instagram_tag_name, 
+            "subscription_id" => self.instagram_tag_subscription_id,
+            "registered_users_only" => (self.registered_users_only == "1" )
+          }
+        }
+      elsif self.gallery_type == "twitter"
+        tag_info = {
+          "twitter_tag" => {
+            "name" => self.twitter_tag_name,
+            "registered_users_only" => (self.registered_users_only == "1")
+          }
+        }
+      end
+      aux["configuration"].merge!(tag_info)
+    end
+  end
 
   def when_show_interaction_enum
     WHEN_SHOW_USER_INTERACTION
@@ -39,9 +66,9 @@ class Interaction < ActiveRecord::Base
 
   def set_upload_type
     if self.resource_type == "Upload"
-      upload_aux = { "configuration" => { "type" => self.resource.gallery_type } }
+      upload_aux = { "configuration" => { "type" => self.gallery_type } }
       self.aux = upload_aux.merge(self.aux)
-      if self.resource.gallery_type == "instagram"
+      if self.gallery_type == "instagram"
         self.when_show_interaction = "MAI_VISIBILE"
       end
     end

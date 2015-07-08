@@ -106,7 +106,7 @@ class CallbackController < ApplicationController
         "title" => media["caption"]["text"][0..100], 
         "upload" => open(media["images"]["standard_resolution"]["url"]),
         "user_id" => user_id, 
-        "extra_fields" => { "layout" => "instagram", "avatar" => media["user"]["profile_picture"], "nickname" => media["user"]["username"] }
+        "extra_fields" => { "layout" => "instagram", "instagram_avatar" => media["user"]["profile_picture"], "instagram_username" => media["user"]["username"] }
       }
     end
   end

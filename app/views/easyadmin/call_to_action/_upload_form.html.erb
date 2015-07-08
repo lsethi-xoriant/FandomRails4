@@ -15,16 +15,16 @@
           <div class="form-group">
             <label class="text-input">Seleziona il metodo di upload</label>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "flowplayer", :class => "flowplayer", :checked => (get_upload_type(f.object.id) == "flowplayer" || get_upload_type(f.object.id) == nil), :onchange => "updateInputsForGalleryType($(this))" %> Upload + Flowplayer
+              <%= f.radio_button :gallery_type, "flowplayer", :class => "flowplayer", :checked => (get_upload_type(f.object.id) == "flowplayer" || get_upload_type(f.object.id) == nil), :onchange => "updateInputsForGalleryType($(this))" %> Upload + Flowplayer
             </div>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
+              <%= f.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
             </div>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "twitter", :class => "twitter", :checked => (get_upload_type(f.object.id) == "twitter"), :onchange => "updateInputsForGalleryType($(this))" %> Twitter
+              <%= f.radio_button :gallery_type, "twitter", :class => "twitter", :checked => (get_upload_type(f.object.id) == "twitter"), :onchange => "updateInputsForGalleryType($(this))" %> Twitter
             </div>
             <div class="radio">
-              <%= uploadform.radio_button :gallery_type, "youtube", :class => "youtube", :checked => (get_upload_type(f.object.id) == "youtube"), :onchange => "updateInputsForGalleryType($(this))" %> YouTube
+              <%= f.radio_button :gallery_type, "youtube", :class => "youtube", :checked => (get_upload_type(f.object.id) == "youtube"), :onchange => "updateInputsForGalleryType($(this))" %> YouTube
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
             <label class="text-input">Campi aggiuntivi</label>
           </div>
           <div class="form-group">
-            <%= f.text_area :aux, :cols => "60", :rows => "5" %>
+            <%# = f.text_area :aux, :cols => "60", :rows => "5" %>
           </div>
         </div>
       </div>
@@ -108,7 +108,7 @@
             <% instagram_tag = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"] %>
             <div class="form-group col-lg-2">
               <div class="form-group">
-                <%= uploadform.check_box :registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
+                <%= f.check_box :registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
                 <label class="text-input">Solo utenti registrati</label>
               </div>
             </div>
@@ -119,8 +119,8 @@
               <% instagram_tag_name = instagram_tag["name"] rescue "" %>
               <% tag_subscription_id = instagram_tag["subscription_id"] rescue "" %>
 
-              <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => instagram_tag_name %>
-              <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
+              <%= f.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => instagram_tag_name %>
+              <%= f.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
               <a class="btn btn-primary btn-block clickable" onclick="sendInstagramTagSubscription(<%= f.object.id %>, $(this));"> Registra / aggiorna tag </a>
 
               <p>
@@ -146,14 +146,14 @@
           <% twitter_tag = Interaction.find(f.object.id).aux["configuration"]["twitter_tag"] rescue "" %>
           <div class="form-group col-lg-2">
             <div class="form-group">
-              <%= uploadform.check_box :registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
+              <%= f.check_box :registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
               <label class="text-input">Solo utenti registrati</label>
             </div>
           </div>
           <div class="form-group col-lg-4">
             <label class="text-input">Tag della gallery (senza #)</label>
             <% twitter_tag_name = twitter_tag["name"] rescue "" %>
-            <%= uploadform.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => twitter_tag_name %>
+            <%= f.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => twitter_tag_name %>
           </div>
           <div class="form-group col-lg-4">
             <label class="text-input">Call to action template</label>
