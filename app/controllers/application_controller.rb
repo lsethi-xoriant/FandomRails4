@@ -390,8 +390,8 @@ class ApplicationController < ActionController::Base
       interaction_updated = interaction.update_attribute(:aux, aux.to_json)
 
       if interaction_updated
-        instagram_subscriptions_setting = Setting.find_by_key(INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY)
-        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value)
+        instagram_subscriptions_setting = Setting.where(:key => INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY).first_or_create
+        instagram_subscriptions_setting_hash = JSON.parse(instagram_subscriptions_setting.value) rescue {}
         instagram_subscriptions_setting_hash[new_tag["object_id"]] = { "subscription_id" => new_tag["id"], "interaction_id" => interaction.id }
         instagram_subscriptions_setting.value = instagram_subscriptions_setting_hash.to_json
         instagram_subscriptions_setting.save
