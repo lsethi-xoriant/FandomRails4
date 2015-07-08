@@ -1,12 +1,13 @@
 .percentage_circle_fix_bar {
   background: transparent;
   position: absolute;
-  border: 4px solid #fff;
+  border: 3px solid #fff;
   border-radius: 100%;
   right: 2px;
   left: 2px;
   bottom: 2px;
   top: 2px;
+  z-index: 10;
 }
 
 .rect-auto, .percentage_circle.p51 .percentage_circle_slice, .percentage_circle.p52 .percentage_circle_slice, .percentage_circle.p53 .percentage_circle_slice, .percentage_circle.p54 .percentage_circle_slice, .percentage_circle.p55 .percentage_circle_slice, .percentage_circle.p56 .percentage_circle_slice, .percentage_circle.p57 .percentage_circle_slice, .percentage_circle.p58 .percentage_circle_slice, .percentage_circle.p59 .percentage_circle_slice, .percentage_circle.p60 .percentage_circle_slice, .percentage_circle.p61 .percentage_circle_slice, .percentage_circle.p62 .percentage_circle_slice, .percentage_circle.p63 .percentage_circle_slice, .percentage_circle.p64 .percentage_circle_slice, .percentage_circle.p65 .percentage_circle_slice, .percentage_circle.p66 .percentage_circle_slice, .percentage_circle.p67 .percentage_circle_slice, .percentage_circle.p68 .percentage_circle_slice, .percentage_circle.p69 .percentage_circle_slice, .percentage_circle.p70 .percentage_circle_slice, .percentage_circle.p71 .percentage_circle_slice, .percentage_circle.p72 .percentage_circle_slice, .percentage_circle.p73 .percentage_circle_slice, .percentage_circle.p74 .percentage_circle_slice, .percentage_circle.p75 .percentage_circle_slice, .percentage_circle.p76 .percentage_circle_slice, .percentage_circle.p77 .percentage_circle_slice, .percentage_circle.p78 .percentage_circle_slice, .percentage_circle.p79 .percentage_circle_slice, .percentage_circle.p80 .percentage_circle_slice, .percentage_circle.p81 .percentage_circle_slice, .percentage_circle.p82 .percentage_circle_slice, .percentage_circle.p83 .percentage_circle_slice, .percentage_circle.p84 .percentage_circle_slice, .percentage_circle.p85 .percentage_circle_slice, .percentage_circle.p86 .percentage_circle_slice, .percentage_circle.p87 .percentage_circle_slice, .percentage_circle.p88 .percentage_circle_slice, .percentage_circle.p89 .percentage_circle_slice, .percentage_circle.p90 .percentage_circle_slice, .percentage_circle.p91 .percentage_circle_slice, .percentage_circle.p92 .percentage_circle_slice, .percentage_circle.p93 .percentage_circle_slice, .percentage_circle.p94 .percentage_circle_slice, .percentage_circle.p95 .percentage_circle_slice, .percentage_circle.p96 .percentage_circle_slice, .percentage_circle.p97 .percentage_circle_slice, .percentage_circle.p98 .percentage_circle_slice, .percentage_circle.p99 .percentage_circle_slice, .percentage_circle.p100 .percentage_circle_slice {
@@ -15,7 +16,7 @@
 
 .pie, .percentage_circle .percentage_circle_bar, .percentage_circle.p51 .percentage_circle_fill, .percentage_circle.p52 .percentage_circle_fill, .percentage_circle.p53 .percentage_circle_fill, .percentage_circle.p54 .percentage_circle_fill, .percentage_circle.p55 .percentage_circle_fill, .percentage_circle.p56 .percentage_circle_fill, .percentage_circle.p57 .percentage_circle_fill, .percentage_circle.p58 .percentage_circle_fill, .percentage_circle.p59 .percentage_circle_fill, .percentage_circle.p60 .percentage_circle_fill, .percentage_circle.p61 .percentage_circle_fill, .percentage_circle.p62 .percentage_circle_fill, .percentage_circle.p63 .percentage_circle_fill, .percentage_circle.p64 .percentage_circle_fill, .percentage_circle.p65 .percentage_circle_fill, .percentage_circle.p66 .percentage_circle_fill, .percentage_circle.p67 .percentage_circle_fill, .percentage_circle.p68 .percentage_circle_fill, .percentage_circle.p69 .percentage_circle_fill, .percentage_circle.p70 .percentage_circle_fill, .percentage_circle.p71 .percentage_circle_fill, .percentage_circle.p72 .percentage_circle_fill, .percentage_circle.p73 .percentage_circle_fill, .percentage_circle.p74 .percentage_circle_fill, .percentage_circle.p75 .percentage_circle_fill, .percentage_circle.p76 .percentage_circle_fill, .percentage_circle.p77 .percentage_circle_fill, .percentage_circle.p78 .percentage_circle_fill, .percentage_circle.p79 .percentage_circle_fill, .percentage_circle.p80 .percentage_circle_fill, .percentage_circle.p81 .percentage_circle_fill, .percentage_circle.p82 .percentage_circle_fill, .percentage_circle.p83 .percentage_circle_fill, .percentage_circle.p84 .percentage_circle_fill, .percentage_circle.p85 .percentage_circle_fill, .percentage_circle.p86 .percentage_circle_fill, .percentage_circle.p87 .percentage_circle_fill, .percentage_circle.p88 .percentage_circle_fill, .percentage_circle.p89 .percentage_circle_fill, .percentage_circle.p90 .percentage_circle_fill, .percentage_circle.p91 .percentage_circle_fill, .percentage_circle.p92 .percentage_circle_fill, .percentage_circle.p93 .percentage_circle_fill, .percentage_circle.p94 .percentage_circle_fill, .percentage_circle.p95 .percentage_circle_fill, .percentage_circle.p96 .percentage_circle_fill, .percentage_circle.p97 .percentage_circle_fill, .percentage_circle.p98 .percentage_circle_fill, .percentage_circle.p99 .percentage_circle_fill, .percentage_circle.p100 .percentage_circle_fill {
   position: absolute;
-  border: 0.08em solid #307bbb;
+  border: 0.08em solid $green;
   width: 0.84em;
   height: 0.84em;
   clip: rect(0em, 0.5em, 1em, 0em);
@@ -52,7 +53,13 @@
   float: left;
   margin: 15px 0.1em 0.1em 0;
   background-color: transparent;
+  z-index: 10;
 }
+
+.percentage_circle_profile {
+  margin: 25px 15px;
+}
+
 .percentage_circle *, .percentage_circle *:before, .percentage_circle *:after {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
@@ -66,7 +73,7 @@
   font-size: 240px;
 }
 .percentage_circle.small {
-  font-size: 80px;
+  font-size: 86px;
 }
 .percentage_circle > span {
   position: absolute;
@@ -126,6 +133,7 @@
   width: 1em;
   height: 1em;
   clip: rect(0em, 1em, 1em, 0.5em);
+  z-index: 10;
 }
 .percentage_circle.p1 .percentage_circle_bar {
   -webkit-transform: rotate(3.6deg);
@@ -806,9 +814,34 @@
   -o-transform: rotate(349.2deg);
   transform: rotate(349.2deg);
 }
-.percentace_circle_value {
+
+.percentage_circle_value {
   img {
     width: 60px;
+  }
+}
+
+.percentage_circle_value_profile {
+  img {
+    width: 90px;
+    border-radius: 50%;
+    top: -2px;
+    position: relative;
+  }
+}
+
+.percentage_circle.small {
+  margin: 12px 0 8px 0;
+  img {
+    width: 45px;
+    margin-left: -2px;
+  }
+  .percentage_circle_fix_bar {
+    border: 2px solid #ccc;
+    right: 4px;
+    left: 2px;
+    bottom: 4px;
+    top: 2px;
   }
 }
 

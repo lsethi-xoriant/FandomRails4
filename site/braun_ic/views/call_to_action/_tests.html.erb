@@ -2,24 +2,24 @@
   <div class="row cta_cover-container__row" ng-repeat="calltoaction_info in calltoactions" >
     <div class="col-sm-12 cta_cover-container__col">    
       <div class="cta_cover-img_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
-        <div class="col-sm-5 col-sm-offset-7 cta_cover-description_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}">
+       
+        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || (!calltoaction_info.status || calltoaction_info.status.win_reward_count > 0)">
+          <span class="label cta_cover-credits_label_green">
+            Fatto <span class="glyphicon glyphicon-ok">
+          </span>  
+        </div> 
+        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && (calltoaction_info.status || calltoaction_info.status.win_reward_count < 1)">
+          <span class="label cta_cover-credits_label_yellow">
+            +1 <span class="fa fa-ticket">
+          </span>  
+        </div> 
+
+        <div class="col-sm-5 cta_cover-description_container">
           <div class="row">
-
-            <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || (!calltoaction_info.status || calltoaction_info.status.win_reward_count > 0)">
-              <span class="label cta_cover-credits_label_green">
-                Fatto <span class="glyphicon glyphicon-ok">
-              </span>  
-            </div> 
-            <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && (calltoaction_info.status || calltoaction_info.status.win_reward_count < 1)">
-              <span class="label cta_cover-credits_label_yellow">
-                +1 <span class="fa fa-ticket">
-              </span>  
-            </div> 
-
-            <div class="col-sm-12">
+            <div class="col-sm-12 cta_cover-description_padding">
               <div class="percentage_circle p{{getCtaBadgeCost(calltoaction_info)}}">
                 <div class="percentage_circle_fix_bar"></div>
-                <span class="percentace_circle_value">
+                <span class="percentage_circle_value">
                     <img ng-src="{{getCtaBadge(calltoaction_info).image}}">
                 </span>
                 <div class="percentage_circle_slice">
@@ -29,12 +29,12 @@
               </div>
             </div>  
 
-            <div class="col-sm-12">
+            <div class="col-sm-12 cta_cover-description_padding">
               <p class="cta_cover-miniformat" ng-style="{'color': getParentCtaInfo(calltoaction_info).miniformat.extra_fields.color}">{{getParentCtaInfo(calltoaction_info).miniformat.title}}</p>
               <p class="cta_cover-title">{{getParentCtaInfo(calltoaction_info).calltoaction.title}}</p>
             </div>
 
-            <div class="col-sm-12 cta_cover-btn_container text-center">
+            <div class="col-sm-12 cta_cover-btn_container cta_cover-description_padding">
               <button ng-click="openCover(calltoaction_info)" class="btn btn-green btn-lg cta_cover-btn">SCOPRILO E VINCI</button>
             </div>
           </div>

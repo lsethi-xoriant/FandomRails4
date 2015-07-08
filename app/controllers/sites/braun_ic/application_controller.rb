@@ -72,9 +72,17 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         inactive = true
       end
 
+      if inactive
+        image = reward.not_awarded_image
+      else
+        image = reward.main_image
+      end
+
       badges[get_parent_cta_name(cta_info)] = {
         name: reward.name,
-        image: reward.main_image,
+        title: reward.title,
+        description: reward.short_description,
+        image: image,
         cost: reward.cost,
         extra_fields: reward.extra_fields,
         inactive: inactive
