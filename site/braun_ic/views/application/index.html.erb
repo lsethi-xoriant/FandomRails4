@@ -19,6 +19,18 @@
   <div class="row">
     <div class="col-sm-12" style="background-color: #000; margin-bottom: 15px; padding-top: 15px;">
       <p style="color: #fff;">PUNTI UTENTE {{current_user.main_reward_counter}}</p>
+
+      <div class="percentage_circle p{{getUserBadgesPercent()}}">
+        <div class="percentage_circle_fix_bar"></div>
+        <span class="percentace_circle_value">
+            <img ng-src="{{current_user.avatar}}">
+        </span>
+        <div class="percentage_circle_slice">
+          <div class="percentage_circle_bar"></div>
+          <div class="percentage_circle_fill"></div>
+        </div>
+      </div>
+
       <div ng-repeat="badge in aux.badges">     
         <div class="percentage_circle p{{getBadgeCost(badge)}}">
           <div class="percentage_circle_fix_bar"></div>
@@ -31,6 +43,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
