@@ -69,5 +69,5 @@
 <!-- IFRAME -->
 <div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
   <!-- IFRAME -->
-  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" ng-bind-html="{{calltoaction_info.calltoaction.media_data | unsafe}}"></div>
+  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" ng-bind-html="calltoaction_info.calltoaction.media_data | unsafe"></div>
 </div>
