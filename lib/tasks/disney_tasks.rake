@@ -35,13 +35,14 @@ namespace :disney_tasks do
     aruba_bucket = aruba_s3.buckets[aruba_settings[:bucket]]
     bucket = s3.buckets[aws_settings[:bucket]]
 
-    gallery_tags = Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", "gallery-with-contest")
+    gallery_tags = Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ?", "gallery-with-contest").references(:other_tags_tags_tags)
 
     gallery_tags.each do |gallery_tag|
       gallery_ctas = CallToAction.includes(:call_to_action_tags)
         .where("call_to_action_tags.tag_id = ? AND user_id IS NOT NULL", gallery_tag.id)
         .where("activated_at IS NOT NULL")
         .where("(aux->>'aws_transcoding_media_status') IS NULL OR (aux->>'aws_transcoding_media_status') = 'done'")
+        .references(:call_to_action_tags)
         .order("call_to_actions.created_at DESC")
 
       logger.info "#{log_head(gallery_tag.name)} backup start"
