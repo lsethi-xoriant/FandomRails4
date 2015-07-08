@@ -1,12 +1,11 @@
-.cta_cover-panel {
+.cta_cover-container__row {
   border: none;
   margin-bottom: 30px;
-  box-shadow: none;
-  -webkit-box-shadow: none;
+  height: 530px;
 }
 
-.cta_cover-container {
-  height: 530px;
+.cta_cover-container__col {
+  height: 100%;
 }
 
 .cta_cover-img_container {
@@ -61,9 +60,6 @@
 }
 
 .cta_cover-btn {
-  border-radius: 25px;
-  padding-left: 25px;
-  padding-right: 25px;
 }
 
 .cta_tip-img {
@@ -82,11 +78,13 @@
   display: inline-block; 
   padding: 5px 15px; 
   font-size: 22px;
+  color: #fff;
 }
 
 .cta_tip-title {
   padding-top: 15px;
-  font-size: 36px;
+  font-size: 42px;
+  line-height: 46px;
   color: #fff;
 }
 
@@ -94,22 +92,49 @@
   color: #fff;
   margin-top: 25px;
   font-size: 18px;
+  line-height: 22px;
 }
 
-.cta_tip-panel {
-  padding: 0;
+.cta_tip-container {
   background-color: #000;
-  border: none;
   margin-bottom: 30px;
 }
 
 .cta_tip-img_container {
-  padding-right: 0;
-  margin-top: -15px;
 }
 
 .cta_tip-section_2_description {
   border-left: 3px solid; 
-  padding-left: 10px; 
+  padding-left: 15px; 
   padding-bottom: 15px;
+}
+
+.product-container {
+  border: 1px solid #ccc; 
+  margin-bottom: 15px;
+  padding: 30px;
+}
+
+.product-title {
+  font-size: 22px;
+  color: $green;
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+
+.product-description {
+  font-size: 16px;
+  color: #000;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.product-btn {
+  margin-top: 15px;
+  padding-left: 45px;
+  padding-right: 45px;
+}
+
+.product-img {
+  width: 100%;
 }

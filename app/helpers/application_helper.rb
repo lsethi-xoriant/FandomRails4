@@ -610,6 +610,16 @@ module ApplicationHelper
       $site.required_attrs.each do |attribute|
         return false unless current_user[attribute].present?
       end
+
+      instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
+      if instantwin_cta
+        instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
+        if instantwin_form_attributes
+          JSON.parse(instantwin_form_attributes).each do |form_attr|
+            return false unless current_user[form_attr["name"]].present?
+          end
+        end
+      end
       true
     end
   end

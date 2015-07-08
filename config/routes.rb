@@ -495,7 +495,7 @@ Fandom::Application.routes.draw do
   # Instagram subscribe.
   post "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
   post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
-  match "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", via: [:get, :post], defaults: { format: 'json' }
+  match "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }, via: [:get, :post]
 
   get "/how_to", :to => "application#how_to"
   get "/landing", :to => "landing#index"
