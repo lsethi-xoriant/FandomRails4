@@ -89,7 +89,7 @@ class CallbackController < ApplicationController
           end
           new_min_tag_id = res["pagination"]["min_tag_id"]
           instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = new_min_tag_id
-          instagram_subscriptions_setting.update_column(:value, instagram_subscriptions_setting_hash)
+          instagram_subscriptions_setting.update_attribute(:value, instagram_subscriptions_setting_hash.to_json)
         end
       end
       render json: "OK"
