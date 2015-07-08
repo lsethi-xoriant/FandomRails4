@@ -7,24 +7,33 @@ class Upload < ActiveRecord::Base
   belongs_to :call_to_action
   has_many :user_upload_interactions
 
-  after_update :set_instagram_tag_in_interaction_aux
+  after_update :set_social_tag_in_interaction_aux
 
   has_attached_file :watermark, :styles => { :normalized => "200x112#" }
   do_not_validate_attachment_file_type :watermark
 
-  def set_instagram_tag_in_interaction_aux
-    if self.gallery_type == "instagram"
+  def set_social_tag_in_interaction_aux
+    if self.gallery_type == "instagram" || self.gallery_type == "twitter"
       interaction = self.interaction
       aux = interaction.aux || {}
-      aux["configuration"] = { 
-        "type" => "instagram", 
-        "instagram_tag" => { 
-          "name" => self.instagram_tag_name, 
-          "subscription_id" => self.instagram_tag_subscription_id,
-          "registered_users_only" => self.registered_users_only == "1"
-          } 
+      aux["configuration"] = { "type" => self.gallery_type }
+      if self.gallery_type == "instagram"
+        tag_info = {
+          "instagram_tag" => {
+            "name" => self.instagram_tag_name, 
+            "subscription_id" => self.instagram_tag_subscription_id,
+            "registered_users_only" => self.registered_users_only == "1" 
+          }
         }
-      interaction.update_attribute(:aux, aux)
+      elsif self.gallery_type == "twitter"
+        tag_info = {
+          "twitter_tag" => {
+            "name" => self.twitter_tag_name,
+            "registered_users_only" => self.registered_users_only == "1" 
+          }
+        }
+      aux["configuration"].merge!(tag_info)
+      interaction.update_column(:aux, aux)
     end
   end
 
