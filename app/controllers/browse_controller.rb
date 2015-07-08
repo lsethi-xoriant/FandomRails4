@@ -23,25 +23,6 @@ class BrowseController < ApplicationController
     end
     
   end
-
-  # Get an array of tags to filter contents. 
-  # Filter contents according to current property
-  def get_search_tags_for_tenant
-    property = get_property()
-    if property
-      property.name == $site.default_property ? [] : [property]
-    else
-      []
-    end
-  end
-  
-  def get_tag_browse(tag_name)
-    if tag_name.nil?
-      nil
-    else
-      Tag.find_by_name(tag_name)
-    end
-  end
   
   # hook to redirect to browse in multitentant
   def go_to_browse
