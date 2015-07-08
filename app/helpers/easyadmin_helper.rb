@@ -144,7 +144,7 @@ module EasyadminHelper
       original_media_path = "#{transcoding_settings[:s3_output_folder]}/original/"
     end
 
-    csv = "ID cta;Slug;Media;Liberatoria"
+    csv = "Cta ID;Slug;Media;Liberatoria"
     csv += ";" + aux_columns.map{ |col| col.capitalize.gsub("_", " ") }.join(";") if aux_columns.any?
     csv += "\n"
 
