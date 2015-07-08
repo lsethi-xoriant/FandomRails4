@@ -1200,5 +1200,14 @@ module CallToActionHelper
     }
   end
 
+  # This helper returns the url of the video in the original file folder if the folder is set 
+  # (that means that AWS transcoding has been activated) or else it returns the normal path
+  def get_cta_media_url_or_original_url(cta, original_media_path)
+    if original_media_path.nil? || cta.aux.nil? || cta.aux["aws_transcoding_media_status"] != "done"
+      cta.media_image.url
+    else
+      "#{@original_media_path}#{cta.user_id}-#{cta.id}-media.mp4"
+    end
+  end
 
 end

@@ -47,7 +47,7 @@
                 <% end %>
               </td>
               <td class="col-md-1">
-                <a href="<%= @original_media_path ? "#{@original_media_path}#{c.user_id}-#{c.id}-media.mp4" : c.media_image.url %>" download="<%= c.media_image_file_name %>">
+                <a href="<%= get_cta_media_url_or_original_url(c, @original_media_path) %>" download="<%= c.media_image_file_name %>">
                   <i class="fa fa-arrow-circle-o-down fa-2x" style="color:red"></i>
                 </a>
               </td>

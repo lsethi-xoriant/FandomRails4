@@ -277,12 +277,20 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
 
     transcoding_settings = get_deploy_setting("sites/#{$site.id}/transcoding", false)
+    
     if transcoding_settings
-      @original_media_path = "#{transcoding_settings[:s3_output_folder]}/original/"
+      @original_media_path = get_original_media_path(transcoding_settings)
     end
     @page_size = @ctas.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
+  end
+
+  def get_original_media_path(transcoding_settings)
+      region = transcoding_settings[:region]
+      bucket = transcoding_settings[:bucket]
+      output_folder = transcoding_settings[:s3_output_folder]
+      "https://s3-#{region}.amazonaws.com/#{bucket}/#{output_folder}/original/"
   end
 
   def filter
