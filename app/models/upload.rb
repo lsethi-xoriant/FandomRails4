@@ -32,6 +32,7 @@ class Upload < ActiveRecord::Base
             "registered_users_only" => self.registered_users_only == "1" 
           }
         }
+      end
       aux["configuration"].merge!(tag_info)
       interaction.update_column(:aux, aux)
     end
@@ -42,4 +43,3 @@ class Upload < ActiveRecord::Base
   end
 
 end
-

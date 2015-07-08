@@ -116,16 +116,16 @@
               <label class="text-input">Tag della gallery (senza #)</label>
               <br/> Dopo la registrazione / modifica, attendere la spunta verde sotto al tag registrato prima di salvare la call to action.
 
-              <% tag_name = instagram_tag["name"] rescue "" %>
+              <% instagram_tag_name = instagram_tag["name"] rescue "" %>
               <% tag_subscription_id = instagram_tag["subscription_id"] rescue "" %>
 
-              <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => tag_name %>
+              <%= uploadform.text_field :instagram_tag_name, :class => "form-control instagram-tag", :value => instagram_tag_name %>
               <%= uploadform.hidden_field :instagram_tag_subscription_id, :class => "subscription-id", :value => tag_subscription_id %>
               <a class="btn btn-primary btn-block clickable" onclick="sendInstagramTagSubscription(<%= f.object.id %>, $(this));"> Registra / aggiorna tag </a>
 
               <p>
                 <% if get_upload_type(f.object.id) == "instagram" %>
-                  Tag registrato: <%= tag_name %> - ID registrazione: <%= tag_subscription_id %> 
+                  Tag registrato: <%= instagram_tag_name %> - ID registrazione: <%= tag_subscription_id %> 
                 <% end %>
               </p>
               <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
@@ -152,8 +152,8 @@
           </div>
           <div class="form-group col-lg-4">
             <label class="text-input">Tag della gallery (senza #)</label>
-            <% tag_name = twitter_tag["name"] rescue "" %>
-            <%= uploadform.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => tag_name %>
+            <% twitter_tag_name = twitter_tag["name"] rescue "" %>
+            <%= uploadform.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => twitter_tag_name %>
           </div>
           <div class="form-group col-lg-4">
             <label class="text-input">Call to action template</label>
