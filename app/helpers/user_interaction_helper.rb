@@ -225,6 +225,7 @@ module UserInteractionHelper
   def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
     user_interaction_aux["to_redo"] = aux["to_redo"]
+    user_interaction_aux["next_cta_id"] = aux["next_cta_id"]
 
     case resource_type
     when "share"
@@ -396,7 +397,7 @@ module UserInteractionHelper
       if $site.id == "braun_ic"
         reward_names = outcome[:reward_name_to_counter].map { |key, value| key.to_s }
         badge_tag = Tag.find("badge")
-        reward = Reward.includes(:reward_tags).where(reward_tags: { tag_id: badge_tag.id }, name: reward_names).references(:reward_tags).order(cost: :asc).first
+        reward = Reward.includes(:reward_tags).where("reward_tags.id = ?", badge_tag.id).where(name: reward_names).references(:reward_tags).order(cost: :desc).first
         if reward
           response[:badge] = {
             name: reward.name,
@@ -428,8 +429,6 @@ module UserInteractionHelper
 
     response
   end
-
-  #function moved from call_to_action_controller
   
   def compute_linked_cta(interaction, user_interactions_history, current_answer)
     interaction_call_to_actions = interaction.interaction_call_to_actions.order(:ordering, :created_at)
@@ -447,13 +446,13 @@ module UserInteractionHelper
         condition_name, condition_params = condition.first
         if get_linked_call_to_action_conditions[condition_name].call(symbolic_name_to_counter, condition_params)
           linked_cta = interaction_call_to_action.call_to_action
+          break
         end
       else
         linked_cta = interaction_call_to_action.call_to_action
         break
       end
     end
-
     linked_cta
   end
   

@@ -54,6 +54,10 @@
               <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields.twitter_avatar}}" class="img-responsive"/>
               <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.extra_fields.twitter_username}}</p>
             </div>
+            <div class="col-xs-10" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'instagram'">
+              <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields.instagram_avatar}}" class="img-responsive"/>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.extra_fields.instagram_username}}</p>
+            </div>
             <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">
               <span class="label label-default cta-cover__vote-count">{{calculateVoteTotal(interaction_info)}} <span class="hidden-xs">Voti</span></span>
             </div>

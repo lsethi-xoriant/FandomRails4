@@ -9,7 +9,6 @@ class CallToActionController < ApplicationController
   include CaptchaHelper
   include CommentHelper
 
-  # For logged user, last_linked_calltoaction for anonymous user
   def reset_redo_user_interactions
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
     cta = CallToAction.find(params[:parent_cta_id])
