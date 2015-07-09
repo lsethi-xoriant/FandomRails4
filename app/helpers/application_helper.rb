@@ -628,6 +628,7 @@ module ApplicationHelper
 
     ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", 
       locals: { 
+        title: field["title"],
         label: field["label"], 
         name: field["name"], 
         required: field["required"], 
