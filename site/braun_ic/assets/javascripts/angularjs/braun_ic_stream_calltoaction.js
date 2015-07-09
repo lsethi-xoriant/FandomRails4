@@ -14,11 +14,23 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
 
   $scope.extraInit = function() {
     $scope.covers = {};
+    $scope.buildbadgeArray();
   };
+
+  $scope.buildbadgeArray = function() {
+    $scope.aux.badge_array = [];
+    angular.forEach($scope.aux.badges, function(badge) {
+      $scope.aux.badge_array.push(badge);
+    });
+  }
 
   $scope.isCoverHidden = function(cta_info) {
     cover = $scope.covers[$scope.getParentCtaId(cta_info)];
     return (cover == false || angular.isUndefined(cover));
+  };
+
+  $scope.orderBadgesByCtas = function(badge) {
+    return badge.activated_at;
   };
 
   $scope.openCover = function(cta_info) {
@@ -26,8 +38,6 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   };
 
   $scope.updateAnswerAjaxSuccessCallback = function(cta_info, data) {
-    console.log(data.badge);
-    console.log($scope.aux.badges);
     if(data.badge) {
       $scope.setCtaBadge($scope.getParentCtaInfo(cta_info), data.badge);
     }
@@ -43,6 +53,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
 
   $scope.setCtaBadge = function(cta_info, badge) {
     $scope.aux.badges[getCtaBadgeKey(cta_info)] = badge;
+    $scope.buildbadgeArray();
   };
 
   $scope.getCtaBadge = function(cta_info) {

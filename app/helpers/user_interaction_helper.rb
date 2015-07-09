@@ -407,7 +407,8 @@ module UserInteractionHelper
             extra_fields: reward.extra_fields,
             description: reward.short_description,
             cost: reward.cost,
-            inactive: false
+            inactive: false,
+            activated_at: cta_info["calltoaction"]["activated_at"]
           }
         end
       end

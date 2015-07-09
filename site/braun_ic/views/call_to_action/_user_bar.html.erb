@@ -17,7 +17,7 @@
         <p>Ecco i tuoi risultati:</p>
       </div>
 
-      <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in aux.badges | limitTo:3">
+      <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
         <div class="profile-container__badge-block">
           <div class="percentage_circle small p{{getBadgeCost(badge)}}">
             <div class="percentage_circle_fix_bar"></div>

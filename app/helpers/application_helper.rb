@@ -935,7 +935,8 @@ module ApplicationHelper
       "menu_items" => get_menu_items(property),
       "instant_win_info" => iw_info,
       "emoticons" => EMOTICONS,
-      "assets" => assets
+      "assets" => assets,
+      "root_url" => root_url
     }
 
     if other

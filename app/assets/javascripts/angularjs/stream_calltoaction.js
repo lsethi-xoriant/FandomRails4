@@ -214,9 +214,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
   }
 
-  $scope.scrollTo = function(el_id) {
+  $scope.isAnchor = function(url) {
+    return (url.charAt(0) == "#");
+  };
+
+  $scope.scrollTo = function(id) {
+    if(id.charAt(0) == "#") {
+      id = id.substring(1);
+    }
+
     $('html, body').animate({
-        scrollTop: $("#"+ el_id).offset().top
+        scrollTop: $("#"+ id).offset().top
+    }, 500);
+  };
+
+  $scope.scrollToFromAnchor = function(id) {
+    $('html, body').animate({
+        scrollTop: $("#"+ id).offset().top
     }, 500);
   };
 
@@ -1619,15 +1633,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return String(text).replace(/<[^>]+>/gm, '');
   }
 
+  function openDirectUrlModal(interaction_id) {
+    $("#modal-interaction-" + interaction_id + "-direct_url").modal("show");
+  }
+
   $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
     if(!interactionAllowed(interaction_info)) {
       showRegistrateView();
     } else {
       if(provider == "direct_url") {
-        $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+        openDirectUrlModal(interaction_info.interaction.id);
       } else {
-        console.log(calltoaction_info);
+        
         message = calltoaction_info.calltoaction.title;
+        if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
+          message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+        }
+
         url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
 
         cta_url = encodeURI(url_to_share);
@@ -1668,12 +1690,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
-    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
+    url = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
     if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
-      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
-      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+      url = url + "/" + $scope.calltoaction_info.calltoaction.id;
     }
-    return url_to_share;
+    return url;
   };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {

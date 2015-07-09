@@ -1007,6 +1007,37 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -1940,21 +1971,21 @@ SET search_path = braun_ic, pg_catalog;
 CREATE TABLE answers (
     id integer NOT NULL,
     quiz_id integer NOT NULL,
-    text character varying NOT NULL,
+    text character varying(255) NOT NULL,
     correct boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    image_file_name character varying,
-    image_content_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
     image_file_size integer,
     image_updated_at timestamp without time zone,
     call_to_action_id integer,
-    media_image_file_name character varying,
-    media_image_content_type character varying,
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
-    media_type character varying,
+    media_type character varying(255),
     blocking boolean DEFAULT false,
     aux json
 );
@@ -1985,10 +2016,10 @@ ALTER SEQUENCE answers_id_seq OWNED BY answers.id;
 
 CREATE TABLE attachments (
     id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    data_file_name character varying,
-    data_content_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    data_file_name character varying(255),
+    data_content_type character varying(255),
     data_file_size integer,
     data_updated_at timestamp without time zone
 );
@@ -2019,16 +2050,16 @@ ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
 
 CREATE TABLE authentications (
     id integer NOT NULL,
-    uid character varying,
-    name character varying,
-    oauth_token character varying,
-    oauth_secret character varying,
-    provider character varying,
-    avatar character varying,
+    uid character varying(255),
+    name character varying(255),
+    oauth_token character varying(255),
+    oauth_secret character varying(255),
+    provider character varying(255),
+    avatar character varying(255),
     oauth_expires_at timestamp without time zone,
     user_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     new boolean,
     aux json
 );
@@ -2054,17 +2085,48 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: basics; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+CREATE TABLE basics (
+    id integer NOT NULL,
+    basic_type text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: basics_id_seq; Type: SEQUENCE; Schema: braun_ic; Owner: -
+--
+
+CREATE SEQUENCE basics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: basics_id_seq; Type: SEQUENCE OWNED BY; Schema: braun_ic; Owner: -
+--
+
+ALTER SEQUENCE basics_id_seq OWNED BY basics.id;
+
+
+--
 -- Name: cache_rankings; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
 CREATE TABLE cache_rankings (
     id integer NOT NULL,
-    name character varying,
+    name character varying(255),
     version integer,
     user_id integer,
     "position" integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     data json
 );
 
@@ -2094,10 +2156,10 @@ ALTER SEQUENCE cache_rankings_id_seq OWNED BY cache_rankings.id;
 
 CREATE TABLE cache_versions (
     id integer NOT NULL,
-    name character varying,
+    name character varying(255),
     version integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     data json
 );
 
@@ -2131,8 +2193,8 @@ CREATE TABLE cache_votes (
     call_to_action_id integer,
     vote_count integer,
     vote_sum integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     data json DEFAULT '{}'::json,
     gallery_name text
 );
@@ -2165,8 +2227,8 @@ CREATE TABLE call_to_action_tags (
     id integer NOT NULL,
     call_to_action_id integer,
     tag_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2195,25 +2257,25 @@ ALTER SEQUENCE call_to_action_tags_id_seq OWNED BY call_to_action_tags.id;
 
 CREATE TABLE call_to_actions (
     id integer NOT NULL,
-    name character varying,
-    title character varying,
+    name character varying(255),
+    title character varying(255),
     description text,
-    media_type character varying,
+    media_type character varying(255),
     enable_disqus boolean DEFAULT false,
     activated_at timestamp without time zone,
-    secondary_id character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    slug character varying,
-    media_image_file_name character varying,
-    media_image_content_type character varying,
+    secondary_id character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    slug character varying(255),
+    media_image_file_name character varying(255),
+    media_image_content_type character varying(255),
     media_image_file_size integer,
     media_image_updated_at timestamp without time zone,
     media_data text,
     releasing_file_id integer,
     approved boolean,
-    thumbnail_file_name character varying,
-    thumbnail_content_type character varying,
+    thumbnail_file_name character varying(255),
+    thumbnail_content_type character varying(255),
     thumbnail_file_size integer,
     thumbnail_updated_at timestamp without time zone,
     user_id integer,
@@ -2249,10 +2311,10 @@ ALTER SEQUENCE call_to_actions_id_seq OWNED BY call_to_actions.id;
 
 CREATE TABLE checks (
     id integer NOT NULL,
-    title character varying,
+    title character varying(255),
     description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2282,9 +2344,9 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 CREATE TABLE comments (
     id integer NOT NULL,
     must_be_approved boolean DEFAULT false,
-    title character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2313,11 +2375,11 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 CREATE TABLE downloads (
     id integer NOT NULL,
-    title character varying NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    attachment_file_name character varying,
-    attachment_content_type character varying,
+    title character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    attachment_file_name character varying(255),
+    attachment_content_type character varying(255),
     attachment_file_size integer,
     attachment_updated_at timestamp without time zone,
     ical_fields json
@@ -2350,8 +2412,8 @@ ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
 CREATE TABLE easyadmin_stats (
     id integer NOT NULL,
     date date,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     "values" json DEFAULT '{}'::json
 );
 
@@ -2381,13 +2443,13 @@ ALTER SEQUENCE easyadmin_stats_id_seq OWNED BY easyadmin_stats.id;
 
 CREATE TABLE events (
     id integer NOT NULL,
-    session_id character varying,
+    session_id character varying(255),
     pid integer,
-    message character varying,
-    request_uri character varying,
+    message character varying(255),
+    request_uri character varying(255),
     "timestamp" timestamp without time zone,
-    level character varying,
-    tenant character varying,
+    level character varying(255),
+    tenant character varying(255),
     user_id integer,
     data json
 );
@@ -2419,13 +2481,13 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 CREATE TABLE home_launchers (
     id integer NOT NULL,
     description text,
-    button character varying,
-    url character varying,
+    button character varying(255),
+    url character varying(255),
     enable boolean DEFAULT true,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    image_file_name character varying,
-    image_content_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_file_name character varying(255),
+    image_content_type character varying(255),
     image_file_size integer,
     image_updated_at timestamp without time zone,
     anchor boolean
@@ -2458,8 +2520,8 @@ ALTER SEQUENCE home_launchers_id_seq OWNED BY home_launchers.id;
 CREATE TABLE instantwin_interactions (
     id integer NOT NULL,
     currency_id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2489,8 +2551,8 @@ ALTER SEQUENCE instantwin_interactions_id_seq OWNED BY instantwin_interactions.i
 CREATE TABLE instantwins (
     id integer NOT NULL,
     valid_from timestamp without time zone NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     valid_to timestamp without time zone,
     reward_info json,
     won boolean,
@@ -2526,8 +2588,8 @@ CREATE TABLE interaction_call_to_actions (
     interaction_id integer,
     call_to_action_id integer,
     condition json,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     ordering integer
 );
 
@@ -2557,12 +2619,12 @@ ALTER SEQUENCE interaction_call_to_actions_id_seq OWNED BY interaction_call_to_a
 
 CREATE TABLE interactions (
     id integer NOT NULL,
-    name character varying,
+    name character varying(255),
     seconds integer DEFAULT 0,
-    when_show_interaction character varying,
+    when_show_interaction character varying(255),
     required_to_complete boolean,
     resource_id integer,
-    resource_type character varying,
+    resource_type character varying(255),
     call_to_action_id integer,
     aux json,
     stored_for_anonymous boolean,
@@ -2596,9 +2658,9 @@ ALTER SEQUENCE interactions_id_seq OWNED BY interactions.id;
 
 CREATE TABLE likes (
     id integer NOT NULL,
-    title character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2627,10 +2689,10 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 CREATE TABLE links (
     id integer NOT NULL,
-    url character varying,
-    title character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    url character varying(255),
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2664,8 +2726,8 @@ CREATE TABLE notices (
     last_sent timestamp without time zone,
     viewed boolean DEFAULT false,
     read boolean DEFAULT false,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     aux json
 );
 
@@ -2697,12 +2759,12 @@ CREATE TABLE oauth_access_grants (
     id integer NOT NULL,
     resource_owner_id integer NOT NULL,
     application_id integer NOT NULL,
-    token character varying NOT NULL,
+    token character varying(255) NOT NULL,
     expires_in integer NOT NULL,
     redirect_uri text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     revoked_at timestamp without time zone,
-    scopes character varying
+    scopes character varying(255)
 );
 
 
@@ -2733,12 +2795,12 @@ CREATE TABLE oauth_access_tokens (
     id integer NOT NULL,
     resource_owner_id integer,
     application_id integer,
-    token character varying NOT NULL,
-    refresh_token character varying,
+    token character varying(255) NOT NULL,
+    refresh_token character varying(255),
     expires_in integer,
     revoked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    scopes character varying
+    scopes character varying(255)
 );
 
 
@@ -2767,12 +2829,12 @@ ALTER SEQUENCE oauth_access_tokens_id_seq OWNED BY oauth_access_tokens.id;
 
 CREATE TABLE oauth_applications (
     id integer NOT NULL,
-    name character varying NOT NULL,
-    uid character varying NOT NULL,
-    secret character varying NOT NULL,
+    name character varying(255) NOT NULL,
+    uid character varying(255) NOT NULL,
+    secret character varying(255) NOT NULL,
     redirect_uri text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2801,11 +2863,11 @@ ALTER SEQUENCE oauth_applications_id_seq OWNED BY oauth_applications.id;
 
 CREATE TABLE periods (
     id integer NOT NULL,
-    kind character varying,
+    kind character varying(255),
     start_datetime timestamp without time zone,
     end_datetime timestamp without time zone,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2829,14 +2891,45 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: braun_ic; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: braun_ic; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
 CREATE TABLE plays (
     id integer NOT NULL,
-    title character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    title character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2865,10 +2958,10 @@ ALTER SEQUENCE plays_id_seq OWNED BY plays.id;
 
 CREATE TABLE promocodes (
     id integer NOT NULL,
-    title character varying,
-    code character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    title character varying(255),
+    code character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2897,12 +2990,12 @@ ALTER SEQUENCE promocodes_id_seq OWNED BY promocodes.id;
 
 CREATE TABLE quizzes (
     id integer NOT NULL,
-    question character varying NOT NULL,
+    question character varying(255) NOT NULL,
     cache_correct_answer integer DEFAULT 0,
     cache_wrong_answer integer DEFAULT 0,
-    quiz_type character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    quiz_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     one_shot boolean DEFAULT true
 );
 
@@ -2964,13 +3057,13 @@ ALTER SEQUENCE random_resources_id_seq OWNED BY random_resources.id;
 CREATE TABLE rankings (
     id integer NOT NULL,
     reward_id integer NOT NULL,
-    name character varying,
-    title character varying,
-    period character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    rank_type character varying,
-    people_filter character varying
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    rank_type character varying(255),
+    people_filter character varying(255)
 );
 
 
@@ -2994,46 +3087,15 @@ ALTER SEQUENCE rankings_id_seq OWNED BY rankings.id;
 
 
 --
--- Name: registrations; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
---
-
-CREATE TABLE registrations (
-    id integer NOT NULL,
-    title character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: registrations_id_seq; Type: SEQUENCE; Schema: braun_ic; Owner: -
---
-
-CREATE SEQUENCE registrations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: braun_ic; Owner: -
---
-
-ALTER SEQUENCE registrations_id_seq OWNED BY registrations.id;
-
-
---
 -- Name: releasing_files; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
 CREATE TABLE releasing_files (
     id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    file_file_name character varying,
-    file_content_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    file_file_name character varying(255),
+    file_content_type character varying(255),
     file_file_size integer,
     file_updated_at timestamp without time zone
 );
@@ -3066,8 +3128,8 @@ CREATE TABLE reward_tags (
     id integer NOT NULL,
     tag_id integer,
     reward_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3096,40 +3158,40 @@ ALTER SEQUENCE reward_tags_id_seq OWNED BY reward_tags.id;
 
 CREATE TABLE rewards (
     id integer NOT NULL,
-    title character varying,
+    title character varying(255),
     short_description text,
     long_description text,
-    button_label character varying,
+    button_label character varying(255),
     cost integer,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    video_url character varying,
-    media_type character varying,
+    video_url character varying(255),
+    media_type character varying(255),
     currency_id integer,
     spendable boolean,
     countable boolean,
     numeric_display boolean,
-    name character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    preview_image_file_name character varying,
-    preview_image_content_type character varying,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    preview_image_file_name character varying(255),
+    preview_image_content_type character varying(255),
     preview_image_file_size integer,
     preview_image_updated_at timestamp without time zone,
-    main_image_file_name character varying,
-    main_image_content_type character varying,
+    main_image_file_name character varying(255),
+    main_image_content_type character varying(255),
     main_image_file_size integer,
     main_image_updated_at timestamp without time zone,
-    media_file_file_name character varying,
-    media_file_content_type character varying,
+    media_file_file_name character varying(255),
+    media_file_content_type character varying(255),
     media_file_file_size integer,
     media_file_updated_at timestamp without time zone,
-    not_awarded_image_file_name character varying,
-    not_awarded_image_content_type character varying,
+    not_awarded_image_file_name character varying(255),
+    not_awarded_image_content_type character varying(255),
     not_awarded_image_file_size integer,
     not_awarded_image_updated_at timestamp without time zone,
-    not_winnable_image_file_name character varying,
-    not_winnable_image_content_type character varying,
+    not_winnable_image_file_name character varying(255),
+    not_winnable_image_content_type character varying(255),
     not_winnable_image_file_size integer,
     not_winnable_image_updated_at timestamp without time zone,
     call_to_action_id integer,
@@ -3162,7 +3224,7 @@ ALTER SEQUENCE rewards_id_seq OWNED BY rewards.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying NOT NULL
+    version character varying(255) NOT NULL
 );
 
 
@@ -3172,10 +3234,10 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE settings (
     id integer NOT NULL,
-    key character varying,
+    key character varying(255),
     value text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3204,10 +3266,10 @@ ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
 
 CREATE TABLE shares (
     id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    picture_file_name character varying,
-    picture_content_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    picture_file_name character varying(255),
+    picture_content_type character varying(255),
     picture_file_size integer,
     picture_updated_at timestamp without time zone,
     providers json
@@ -3239,8 +3301,8 @@ ALTER SEQUENCE shares_id_seq OWNED BY shares.id;
 
 CREATE TABLE synced_log_files (
     id integer NOT NULL,
-    pid character varying,
-    server_hostname character varying,
+    pid character varying(255),
+    server_hostname character varying(255),
     "timestamp" timestamp without time zone
 );
 
@@ -3270,16 +3332,16 @@ ALTER SEQUENCE synced_log_files_id_seq OWNED BY synced_log_files.id;
 
 CREATE TABLE tags (
     id integer NOT NULL,
-    name character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     description text,
     locked boolean,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     extra_fields json DEFAULT '{}'::json,
-    title character varying,
-    slug character varying
+    title character varying(255),
+    slug character varying(255)
 );
 
 
@@ -3310,8 +3372,8 @@ CREATE TABLE tags_tags (
     id integer NOT NULL,
     tag_id integer,
     other_tag_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3345,11 +3407,11 @@ CREATE TABLE uploads (
     releasing_description text,
     privacy boolean,
     privacy_description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     upload_number integer,
-    watermark_file_name character varying,
-    watermark_content_type character varying,
+    watermark_file_name character varying(255),
+    watermark_content_type character varying(255),
     watermark_file_size integer,
     watermark_updated_at timestamp without time zone,
     title_needed boolean DEFAULT false
@@ -3384,8 +3446,8 @@ CREATE TABLE user_comment_interactions (
     user_id integer,
     comment_id integer,
     text text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     approved boolean,
     aux json
 );
@@ -3416,10 +3478,10 @@ ALTER SEQUENCE user_comment_interactions_id_seq OWNED BY user_comment_interactio
 
 CREATE TABLE user_counters (
     id integer NOT NULL,
-    name character varying,
+    name character varying(255),
     user_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     counters json
 );
 
@@ -3453,8 +3515,8 @@ CREATE TABLE user_interactions (
     interaction_id integer NOT NULL,
     answer_id integer,
     counter integer DEFAULT 1,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     "like" boolean,
     outcome text,
     aux json
@@ -3490,8 +3552,8 @@ CREATE TABLE user_rewards (
     reward_id integer,
     available boolean,
     counter integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     period_id integer
 );
 
@@ -3524,8 +3586,8 @@ CREATE TABLE user_upload_interactions (
     user_id integer NOT NULL,
     call_to_action_id integer NOT NULL,
     upload_id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     aux json
 );
 
@@ -3555,46 +3617,46 @@ ALTER SEQUENCE user_upload_interactions_id_seq OWNED BY user_upload_interactions
 
 CREATE TABLE users (
     id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying,
-    reset_password_token character varying,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying(255) DEFAULT ''::character varying,
+    reset_password_token character varying(255),
     reset_password_sent_at timestamp without time zone,
     remember_created_at timestamp without time zone,
     sign_in_count integer DEFAULT 0,
     current_sign_in_at timestamp without time zone,
     last_sign_in_at timestamp without time zone,
-    current_sign_in_ip character varying,
-    last_sign_in_ip character varying,
-    first_name character varying,
-    last_name character varying,
-    avatar_selected character varying DEFAULT 'upload'::character varying,
-    swid character varying,
+    current_sign_in_ip character varying(255),
+    last_sign_in_ip character varying(255),
+    first_name character varying(255),
+    last_name character varying(255),
+    avatar_selected character varying(255) DEFAULT 'upload'::character varying,
+    swid character varying(255),
     privacy boolean,
-    confirmation_token character varying,
+    confirmation_token character varying(255),
     confirmed_at timestamp without time zone,
     confirmation_sent_at timestamp without time zone,
-    unconfirmed_email character varying,
-    role character varying,
-    authentication_token character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    avatar_file_name character varying,
-    avatar_content_type character varying,
+    unconfirmed_email character varying(255),
+    role character varying(255),
+    authentication_token character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    avatar_file_name character varying(255),
+    avatar_content_type character varying(255),
     avatar_file_size integer,
     avatar_updated_at timestamp without time zone,
-    cap character varying,
-    location character varying,
-    province character varying,
-    address character varying,
-    phone character varying,
-    number character varying,
+    cap character varying(255),
+    location character varying(255),
+    province character varying(255),
+    address character varying(255),
+    phone character varying(255),
+    number character varying(255),
     rule boolean,
     birth_date date,
-    username character varying,
+    username character varying(255),
     newsletter boolean,
-    avatar_selected_url character varying,
+    avatar_selected_url character varying(255),
     aux json,
-    gender character varying,
+    gender character varying(255),
     anonymous_id character varying
 );
 
@@ -3624,9 +3686,9 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 CREATE TABLE view_counters (
     id integer NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    ref_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    ref_type character varying(255),
     ref_id integer,
     counter integer,
     aux json
@@ -3660,8 +3722,8 @@ CREATE TABLE vote_ranking_tags (
     id integer NOT NULL,
     tag_id integer,
     vote_ranking_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3690,12 +3752,12 @@ ALTER SEQUENCE vote_ranking_tags_id_seq OWNED BY vote_ranking_tags.id;
 
 CREATE TABLE vote_rankings (
     id integer NOT NULL,
-    name character varying,
-    title character varying,
-    period character varying,
-    rank_type character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    name character varying(255),
+    title character varying(255),
+    period character varying(255),
+    rank_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3724,12 +3786,12 @@ ALTER SEQUENCE vote_rankings_id_seq OWNED BY vote_rankings.id;
 
 CREATE TABLE votes (
     id integer NOT NULL,
-    title character varying,
+    title character varying(255),
     vote_min integer DEFAULT 1,
     vote_max integer DEFAULT 10,
     one_shot boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     extra_fields json
 );
 
@@ -4648,6 +4710,37 @@ CREATE SEQUENCE periods_id_seq
 --
 
 ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
+
+
+--
+-- Name: pins; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
 
 
 --
@@ -6473,6 +6566,37 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -8292,6 +8416,37 @@ CREATE SEQUENCE periods_id_seq
 --
 
 ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
+
+
+--
+-- Name: pins; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
 
 
 --
@@ -10117,6 +10272,37 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -11936,6 +12122,37 @@ CREATE SEQUENCE periods_id_seq
 --
 
 ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
+
+
+--
+-- Name: pins; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
 
 
 --
@@ -13761,6 +13978,37 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -15583,6 +15831,37 @@ ALTER SEQUENCE periods_id_seq OWNED BY periods.id;
 
 
 --
+-- Name: pins; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pins (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    coordinates json
+);
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE pins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pins_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE pins_id_seq OWNED BY pins.id;
+
+
+--
 -- Name: plays; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -16630,6 +16909,37 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
+-- Name: basics; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE basics (
+    id integer NOT NULL,
+    basic_type text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: basics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE basics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: basics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE basics_id_seq OWNED BY basics.id;
+
+
+--
 -- Name: cache_rankings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -17601,37 +17911,6 @@ ALTER SEQUENCE rankings_id_seq OWNED BY rankings.id;
 
 
 --
--- Name: registrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE registrations (
-    id integer NOT NULL,
-    title character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: registrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE registrations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE registrations_id_seq OWNED BY registrations.id;
-
-
---
 -- Name: releasing_files; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -18541,6 +18820,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -18739,6 +19025,13 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
 --
 
+ALTER TABLE ONLY basics ALTER COLUMN id SET DEFAULT nextval('basics_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
+--
+
 ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
 
 
@@ -18893,6 +19186,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -18922,13 +19222,6 @@ ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_re
 --
 
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
---
-
-ALTER TABLE ONLY registrations ALTER COLUMN id SET DEFAULT nextval('registrations_id_seq'::regclass);
 
 
 --
@@ -19239,6 +19532,13 @@ ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_a
 --
 
 ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
 
 
 --
@@ -19597,6 +19897,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: disney; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -19943,6 +20250,13 @@ ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_a
 --
 
 ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
 
 
 --
@@ -20301,6 +20615,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: forte; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -20647,6 +20968,13 @@ ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_a
 --
 
 ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
 
 
 --
@@ -21005,6 +21333,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -21357,6 +21692,13 @@ ALTER TABLE ONLY periods ALTER COLUMN id SET DEFAULT nextval('periods_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
 --
 
+ALTER TABLE ONLY pins ALTER COLUMN id SET DEFAULT nextval('pins_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
 ALTER TABLE ONLY plays ALTER COLUMN id SET DEFAULT nextval('plays_id_seq'::regclass);
 
 
@@ -21555,6 +21897,13 @@ ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentica
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY basics ALTER COLUMN id SET DEFAULT nextval('basics_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY cache_rankings ALTER COLUMN id SET DEFAULT nextval('cache_rankings_id_seq'::regclass);
 
 
@@ -21745,13 +22094,6 @@ ALTER TABLE ONLY random_resources ALTER COLUMN id SET DEFAULT nextval('random_re
 --
 
 ALTER TABLE ONLY rankings ALTER COLUMN id SET DEFAULT nextval('rankings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registrations ALTER COLUMN id SET DEFAULT nextval('registrations_id_seq'::regclass);
 
 
 --
@@ -22090,6 +22432,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -22316,6 +22666,14 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: basics_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY basics
+    ADD CONSTRAINT basics_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
@@ -22492,6 +22850,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
@@ -22529,14 +22895,6 @@ ALTER TABLE ONLY random_resources
 
 ALTER TABLE ONLY rankings
     ADD CONSTRAINT rankings_pkey PRIMARY KEY (id);
-
-
---
--- Name: registrations_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY registrations
-    ADD CONSTRAINT registrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -22612,11 +22970,11 @@ ALTER TABLE ONLY uploads
 
 
 --
--- Name: user_comment_interactions_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
+-- Name: user_comments_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY user_comment_interactions
-    ADD CONSTRAINT user_comment_interactions_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT user_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -22891,6 +23249,14 @@ ALTER TABLE ONLY oauth_applications
 
 ALTER TABLE ONLY periods
     ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
 
 
 --
@@ -23296,6 +23662,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -23695,6 +24069,14 @@ ALTER TABLE ONLY oauth_applications
 
 ALTER TABLE ONLY periods
     ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
 
 
 --
@@ -24100,6 +24482,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -24499,6 +24889,14 @@ ALTER TABLE ONLY oauth_applications
 
 ALTER TABLE ONLY periods
     ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
 
 
 --
@@ -24904,6 +25302,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -25306,6 +25712,14 @@ ALTER TABLE ONLY periods
 
 
 --
+-- Name: pins_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pins
+    ADD CONSTRAINT pins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: plays_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -25532,6 +25946,14 @@ ALTER TABLE ONLY authentications
 
 
 --
+-- Name: basics_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY basics
+    ADD CONSTRAINT basics_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: cache_rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -25753,14 +26175,6 @@ ALTER TABLE ONLY random_resources
 
 ALTER TABLE ONLY rankings
     ADD CONSTRAINT rankings_pkey PRIMARY KEY (id);
-
-
---
--- Name: registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY registrations
-    ADD CONSTRAINT registrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -26718,10 +27132,10 @@ CREATE INDEX index_view_counters_on_ref_id ON view_counters USING btree (ref_id)
 
 
 --
--- Name: index_view_counters_on_ref_type; Type: INDEX; Schema: braun_ic; Owner: -; Tablespace: 
+-- Name: index_view_counters_on_type; Type: INDEX; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_view_counters_on_ref_type ON view_counters USING btree (ref_type);
+CREATE INDEX index_view_counters_on_type ON view_counters USING btree (ref_type);
 
 
 --
@@ -30394,4 +30808,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150622132011');
 INSERT INTO schema_migrations (version) VALUES ('20150623074631');
 
 INSERT INTO schema_migrations (version) VALUES ('20150702082610');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707073343');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707080811');
 

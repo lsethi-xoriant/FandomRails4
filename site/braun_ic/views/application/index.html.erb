@@ -11,29 +11,26 @@
     <div class="col-sm-12">
       
       <div class="cta_tip-container">
+        <div class="row">
+          <div class="col-sm-6 cta_tip-section_1_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_1 | unsafe"></div>
+          <div class="col-sm-6 text-right cta_tip-img_container hidden-xs">
+            <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_1.url}}">
+          </div>
+        </div>
 
-      <div class="row">
-        <div class="col-sm-6 cta_tip-section_1_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_1 | unsafe"></div>
-        <div class="col-sm-6 text-right cta_tip-img_container hidden-xs">
-          <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_1.url}}">
+        <div class="row">
+          <div class="col-sm-4">
+            <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_2.url}}">
+          </div>
+          <div class="col-sm-8 cta_tip-section_2_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_2 | unsafe"></div>
+        </div>
+           
+        <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+          <div class="col-sm-12 text-right">
+            <%= render partial: "/call_to_action/share_interaction" %>
+          </div>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-sm-4">
-          <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_2.url}}">
-        </div>
-        <div class="col-sm-8 cta_tip-section_2_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_2 | unsafe"></div>
-      </div>
-         
-      <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-        <div class="col-sm-12 text-right">
-          <%= render partial: "/call_to_action/share_interaction" %>
-        </div>
-      </div>
-
-      </div>
-
 
 
     </div>

@@ -85,7 +85,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         image: image,
         cost: reward.cost,
         extra_fields: reward.extra_fields,
-        inactive: inactive
+        inactive: inactive,
+        activated_at: get_parent_cta(cta_info)["calltoaction"]["activated_at"]
       }
     end
 
