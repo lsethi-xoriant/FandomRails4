@@ -5,8 +5,8 @@
         <p class="cta_product-container__title">Prodotti</p>
       </div>
     </div>
-    <div class="row" id="{{getParentCtaInfo(calltoaction_info).calltoaction.slug}}" ng-repeat="calltoaction_info_list in aux.products.product_info_list | groupBy:2">
-      <div class="col-sm-6" ng-repeat="calltoaction_info in calltoaction_info_list">
+    <div class="row" ng-repeat="calltoaction_info_list in aux.products.product_info_list | groupBy:2">
+      <div class="col-sm-6" id="{{getParentCtaInfo(calltoaction_info).calltoaction.slug}}" ng-repeat="calltoaction_info in calltoaction_info_list">
         <div class="product-sub-container">
           <img class="product-img" ng-src="{{calltoaction_info.calltoaction.thumbnail_url}}">
           <p class="product-title">{{calltoaction_info.calltoaction.title}}</p>
