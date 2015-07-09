@@ -107,7 +107,7 @@ module ApplicationHelper
     result
   end
 
-  def build_current_user() 
+  def build_current_user()
     if current_user
       anonymous_id = current_user.anonymous_id.blank? ? nil : current_user.anonymous_id
       current_user_for_view = {

@@ -77,7 +77,7 @@ module ViewHelper
         element.extra_fields || {}
       end
     rescue Exception => exception
-      log_error("exception while trying to access 'extra_fields'", { backtrace: exception.backtrace[0, 5], element: element.inspect })
+      log_error("exception while trying to access 'extra_fields'", { backtrace: exception.backtrace[0, 5] })
       {}
     end
   end
