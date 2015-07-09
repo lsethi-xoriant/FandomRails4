@@ -1622,6 +1622,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
     calltoaction_info = $scope.getParentCtaInfo(calltoaction_info);
+    alert($scope.getParentCtaInfo(calltoaction_info).calltoaction.name);
     if($scope.aux.free_provider_share && provider != "email") {
       $scope.shareFree(calltoaction_info, interaction_info, provider);
     } else {

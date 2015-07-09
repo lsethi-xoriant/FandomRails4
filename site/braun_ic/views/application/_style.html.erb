@@ -2,55 +2,57 @@
   <% if cta_info_list.present? %>
     <% cta_info_list.each do |cta_info| %>
       <%= cta_info = get_parent_cta(cta_info) %>
+      <% if cta_info["miniformat"].present? %>
 
-      .btn-<%= cta_info["calltoaction"]["name"] %>  { 
-        color: #FFFFFF; 
-        border-color: <%= cta_info["miniformat"]["extra_fields"]["color"] %>;
-        border-radius: 5px;
-        padding-left: 30px;
-        padding-right: 30px;
-        background: <%= cta_info["miniformat"]["extra_fields"]["color"] %>;
-      } 
-       
-      .btn-<%= cta_info["calltoaction"]["name"] %>:hover, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>:focus, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.active, 
-      .open .dropdown-toggle.btn-<%= cta_info["calltoaction"]["name"] %>   { 
-        color: #FFFFFF; 
-        background: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
-        border-color: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
-      } 
-       
-      .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.active, 
-      .open .dropdown-toggle.btn-<%= cta_info["calltoaction"]["name"] %>   { 
-        background-image: none; 
-      } 
-       
-      .btn-<%= cta_info["calltoaction"]["name"] %>.disabled, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>[disabled], 
-      fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>  , 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:hover, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:hover, 
-      fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:hover, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:focus, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:focus, 
-      fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:focus, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:active, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:active, 
-      fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>.disabled.active, 
-      .btn-<%= cta_info["calltoaction"]["name"] %>[disabled].active, 
-      fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>.active { 
-        background: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
-        border-color: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
-      } 
-       
-      .btn-<%= cta_info["calltoaction"]["name"] %> .badge { 
-        color: <%= cta_info["miniformat"]["extra_fields"]["color"] %>; 
-        background-color: #FFFFFF; 
-      }
+        .btn-<%= cta_info["calltoaction"]["name"] %>  { 
+          color: #FFFFFF; 
+          border-color: <%= cta_info["miniformat"]["extra_fields"]["color"] %>;
+          border-radius: 5px;
+          padding-left: 30px;
+          padding-right: 30px;
+          background: <%= cta_info["miniformat"]["extra_fields"]["color"] %>;
+        } 
+         
+        .btn-<%= cta_info["calltoaction"]["name"] %>:hover, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>:focus, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.active, 
+        .open .dropdown-toggle.btn-<%= cta_info["calltoaction"]["name"] %>   { 
+          color: #FFFFFF; 
+          background: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
+          border-color: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
+        } 
+         
+        .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.active, 
+        .open .dropdown-toggle.btn-<%= cta_info["calltoaction"]["name"] %>   { 
+          background-image: none; 
+        } 
+         
+        .btn-<%= cta_info["calltoaction"]["name"] %>.disabled, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>[disabled], 
+        fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>  , 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:hover, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:hover, 
+        fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:hover, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:focus, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:focus, 
+        fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:focus, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.disabled:active, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>[disabled]:active, 
+        fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>:active, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>.disabled.active, 
+        .btn-<%= cta_info["calltoaction"]["name"] %>[disabled].active, 
+        fieldset[disabled] .btn-<%= cta_info["calltoaction"]["name"] %>.active { 
+          background: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
+          border-color: <%= lighten_color(cta_info["miniformat"]["extra_fields"]["color"], 0.5) %>; 
+        } 
+         
+        .btn-<%= cta_info["calltoaction"]["name"] %> .badge { 
+          color: <%= cta_info["miniformat"]["extra_fields"]["color"] %>; 
+          background-color: #FFFFFF; 
+        }
+      <% end %>
     <% end %>
   <% end %>
 </style>

@@ -15,6 +15,11 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   $scope.extraInit = function() {
     $scope.covers = {};
     $scope.buildbadgeArray();
+
+    if($scope.aux.redirect) {
+      cta_info = $scope.getParentCtaInfo($scope.calltoaction_info);
+      window.location = "/#" + cta_info.calltoaction.slug;
+    }
   };
 
   $scope.buildbadgeArray = function() {

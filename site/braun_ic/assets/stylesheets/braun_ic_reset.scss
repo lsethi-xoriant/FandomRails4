@@ -5,11 +5,19 @@ body {
   background-color: whitesmoke;
 }
 
-.cta_cover-container__row {
+.cta_cover-container__col {
   padding-top: 15px;
 }
 
-.container {
+.test-container {
+  padding-top: 25px;
+  padding-bottom: 15px;
+  background: #fff;
+}
+
+.tip-container, .product-container {
+  border-top: 1px solid #ccc;
+  padding-bottom: 30px;
 }
 
 p {
@@ -20,7 +28,6 @@ p {
   background-color: #e0e1e2; 
   border-top: 1px solid #ccc; 
   border-bottom: 1px solid #ccc;
-  margin-bottom: 30px;
 }
 
 .profile-container__row {

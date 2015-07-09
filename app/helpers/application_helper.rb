@@ -871,7 +871,10 @@ module ApplicationHelper
 
     if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
       cta = other[:calltoaction] || other["calltoaction"]
-      related_ctas, related_tag = init_related_ctas(cta, property)
+
+      if property.present?
+        related_ctas, related_tag = init_related_ctas(cta, property)
+      end
 
       if is_ugc?(cta)        
         ugc_cta = get_ugc_cta(related_tag)

@@ -106,6 +106,12 @@ $cover-height: 530px;
   color: #fff;
 }
 
+.cta_tip-container__title, .cta_product-container__title {
+  font-size: 32px;
+  padding-top: 45px;
+  padding-bottom: 25px; 
+}
+
 .cta_tip-title {
   padding-top: 15px;
   font-size: 42px;
@@ -122,7 +128,7 @@ $cover-height: 530px;
 
 .cta_tip-container {
   background-color: #000;
-  margin-bottom: 30px;
+  margin-top: 15px;
 }
 
 .cta_tip-img_container {
@@ -134,10 +140,10 @@ $cover-height: 530px;
   padding-bottom: 15px;
 }
 
-.product-container {
+.product-sub-container {
   background-color: #fff;
   border: 1px solid #ccc; 
-  margin-bottom: 15px;
+  margin-bottom: 25px;
   padding: 30px;
 }
 
