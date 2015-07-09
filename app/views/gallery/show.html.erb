@@ -1,7 +1,7 @@
 <% if get_extra_fields!(@gallery_tag)['background_image'] %>
   <style type="text/css">
     body {
-      background-image: url("<%= get_extra_fields!(@gallery_tag)['background_image'] %>");
+      background-image: url(<%= get_extra_fields!(@gallery_tag)['background_image']['url'] %>);
       background-position: top center;
       background-repeat: no-repeat;
     }

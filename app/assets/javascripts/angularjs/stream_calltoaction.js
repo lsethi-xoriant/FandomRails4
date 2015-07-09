@@ -1590,28 +1590,29 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       play_interaction_info.hide = true; 
       
-      update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
+      if(interactionAllowed(play_interaction_info)) {
+        update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
+        $http.post(update_interaction_path, { interaction_id: interaction_id })
+          .success(function(data) {
 
-      $http.post(update_interaction_path, { interaction_id: interaction_id })
-        .success(function(data) {
+            if(data.current_user) $scope.current_user = data.current_user;
+      
+            // GOOGLE ANALYTICS
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
 
-          if(data.current_user) $scope.current_user = data.current_user;
-    
-          // GOOGLE ANALYTICS
-          if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-            });
-          }
-
-          calltoaction_info = getCallToActionInfo(calltoaction_id);
-          adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-          calltoaction_info.status = data.calltoaction_status;
-          
-        }).error(function() {
-          // ERROR.
-        });
+            calltoaction_info = getCallToActionInfo(calltoaction_id);
+            adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            calltoaction_info.status = data.calltoaction_status;
+            
+          }).error(function() {
+            // ERROR.
+          });
+        }
 
     } else {
       // Button play already selected.
