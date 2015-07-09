@@ -1,10 +1,14 @@
 module CallToActionHelper
 
   def get_parent_cta_name(cta_info)
+    get_parent_cta(cta_info)["calltoaction"]["name"]
+  end
+
+  def get_parent_cta(cta_info)
     if cta_info["optional_history"].present? && cta_info["optional_history"]["parent_cta_info"].present?
-      cta_info["optional_history"]["parent_cta_info"]["calltoaction"]["name"]
+      cta_info["optional_history"]["parent_cta_info"]
     else
-      cta_info["calltoaction"]["name"]
+      cta_info
     end
   end
 

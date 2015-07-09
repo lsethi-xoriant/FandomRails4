@@ -2,16 +2,47 @@
 
 body {
   padding-top: 0;
-  background-color: #fff;
   background-color: whitesmoke;
 }
 
 .container {
-  background-color: #fff;
 }
 
 p {
   margin: 0;
+}
+
+.profile-container {
+  background-color: #e0e1e2; 
+  border-top: 1px solid #ccc; 
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 30px;
+}
+
+.profile-container__row {
+  height: 150px;
+}
+
+.profile-container__user {
+  border-right: 1px solid #ccc;
+}
+
+.profile-container__badge {
+  border-right: 1px solid #ccc; 
+  background-color: #f1f2f3; 
+  height: 100%;
+}
+
+.profile-container__badge-block {
+  display: inline-block;
+}
+
+.profile-container__badge-text {
+  font-size: 12px;
+}
+
+.profile-container__badge-text.inactive {
+  color: #aaa
 }
 
 * {
@@ -38,7 +69,14 @@ p {
 }
 
 @media (min-width: $screen-md-min) { 
-
+  .navbar-default {
+    margin-top: 15px;
+    margin-bottom: 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    background-color: transparent;
+  }
 }
 
 @media (max-width: $screen-sm-min) { 

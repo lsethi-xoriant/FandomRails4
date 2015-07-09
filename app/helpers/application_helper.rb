@@ -113,6 +113,7 @@ module ApplicationHelper
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
+        "first_name" => current_user.first_name,
         "main_reward_counter" => get_property_point(),
         "instantwin_tickets_counter" => get_counter_about_user_reward(INSTANTWIN_TICKET_NAME),
         "username" => current_user.username,

@@ -1918,10 +1918,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
             $scope.replaceCallToActionInCallToActionInfoList(calltoaction_info, data.next_call_to_action_info);
             initializeVideoAfterPageRender();
-            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
-            $timeout(function() { 
-              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-            }, 200);
+            if($scope.calltoaction_info) {
+              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+              $timeout(function() { 
+                $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+              }, 200);
+            }
           }, timeout_time);
         }
       }
@@ -1947,19 +1949,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function initializeVideoAfterPageRender() {
-    $timeout(function() { 
+    if($scope.calltoaction_info) {
+      $timeout(function() { 
 
-      if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
-        $(".media-youtube iframe").remove();
-        iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
-        $(".media-youtube").html(iframe);
-      }
+        if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
+          $(".media-youtube iframe").remove();
+          iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
+          $(".media-youtube").html(iframe);
+        }
 
-      angular.forEach($scope.calltoactions, function(sc) {
-        appendYTIframe(sc);
-      });
+        angular.forEach($scope.calltoactions, function(sc) {
+          appendYTIframe(sc);
+        });
 
-    }, 0); // Code to be executed after page render
+      }, 0); // Code to be executed after page render
+    } 
   }
   
   $scope.resetToRedo = function(cta_info) {
