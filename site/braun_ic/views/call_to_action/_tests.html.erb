@@ -1,19 +1,23 @@
 <div class="container">   
   <div class="row cta_cover-container__row" ng-repeat="calltoaction_info in calltoactions" >
+    
+    <!-- COVER -->
     <div class="col-sm-12 cta_cover-container__col">    
       <div class="cta_cover-img_container" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
        
-        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="isLastStepInLinkedCallToAction(calltoaction_info) || (!calltoaction_info.status || calltoaction_info.status.win_reward_count > 0)">
+        <!-- STATUS -->
+        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="hasBadge(calltoaction_info)">
           <span class="label cta_cover-credits_label_green">
             Fatto <span class="glyphicon glyphicon-ok">
           </span>  
         </div> 
-        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!isLastStepInLinkedCallToAction(calltoaction_info) && (calltoaction_info.status || calltoaction_info.status.win_reward_count < 1)">
+        <div class="col-xs-12 text-right cta_cover-credits_container" ng-if="!hasBadge(calltoaction_info)">
           <span class="label cta_cover-credits_label_yellow">
             +1 <span class="fa fa-ticket">
           </span>  
         </div> 
 
+        <!-- COVER IMAGE AND DESCRIPTION -->
         <div class="col-sm-5 cta_cover-description_container">
           <div class="row">
             <div class="col-sm-12 cta_cover-description_padding">
@@ -41,10 +45,12 @@
         </div>  
       </div>
       
+      <!-- COVER TEST -->
       <div class="test-interaction__container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterTestInteractions">
         <%= render partial: "/call_to_action/test_interaction" %>
       </div>
 
+      <!-- COVER SHARE -->
       <div class="col-sm-12" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)">
         <div class="row" >
           <div class="col-sm-12">
@@ -59,16 +65,14 @@
             <span>Rifai il test <span class="fa fa-refresh"></span></span>
           </div>
         </div>
-      </div>
+      </div>   
 
-      <!--
-      <div class="row" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-        <div class="col-sm-12 text-right">
-          <%#= render partial: "/call_to_action/share_interaction" %>
-        </div>
-      </div>
-      -->
-      
     </div>
+
+    <!-- SHARE -->
+    <div class="col-sm-12 text-right share-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+      <%= render partial: "/call_to_action/share_interaction" %>
+    </div>
+
   </div>
 </div>

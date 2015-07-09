@@ -397,13 +397,14 @@ module UserInteractionHelper
       if $site.id == "braun_ic"
         reward_names = outcome[:reward_name_to_counter].map { |key, value| key.to_s }
         badge_tag = Tag.find("badge")
-        reward = Reward.includes(:reward_tags).where("reward_tags.id = ?", badge_tag.id).where(name: reward_names).references(:reward_tags).order(cost: :desc).first
+        reward = Reward.includes(:reward_tags).where("reward_tags.tag_id = ?", badge_tag.id).where(name: reward_names).references(:reward_tags).order(cost: :desc).first
         
         if reward
           response[:badge] = {
             name: reward.name,
             image: reward.main_image,
             title: reward.title,
+            extra_fields: reward.extra_fields,
             description: reward.short_description,
             cost: reward.cost,
             inactive: false

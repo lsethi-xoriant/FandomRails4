@@ -26,10 +26,16 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   };
 
   $scope.updateAnswerAjaxSuccessCallback = function(cta_info, data) {
+    console.log(data.badge);
+    console.log($scope.aux.badges);
     if(data.badge) {
-      $scope.setCtaBadge(cta_info, data.badge);
+      $scope.setCtaBadge($scope.getParentCtaInfo(cta_info), data.badge);
     }
   };
+
+  $scope.hasBadge = function(cta_info) {
+    return !$scope.getCtaBadge(cta_info).inactive;
+  }
 
   function getCtaBadgeKey(cta_info) {
     return $scope.getParentCtaInfo(cta_info).calltoaction.name;

@@ -69,7 +69,14 @@ p {
 }
 
 @media (min-width: $screen-md-min) { 
-
+  .navbar-default {
+    margin-top: 15px;
+    margin-bottom: 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    background-color: transparent;
+  }
 }
 
 @media (max-width: $screen-sm-min) { 
