@@ -464,7 +464,7 @@ class CallToActionController < ApplicationController
     params_obj["releasing"] = params["releasing"]
     params_obj["upload"] = params["attachment"]
 
-    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fileds(params_obj, extra_fields)
+    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fields(params_obj, extra_fields)
 
     if !extra_fields_valid
       response = { "errors" => extra_field_errors.join(", ") }
@@ -481,27 +481,6 @@ class CallToActionController < ApplicationController
     respond_to do |format|
       format.json { render json: response.to_json }
     end     
-  end
-
-  def validate_upload_extra_fileds(params, extra_fields)
-    if extra_fields.nil?
-      [true, [], {}]
-    else
-      errors = []
-      cloned_cta_extra_fields = {}
-      extra_fields.each do |ef|
-        if ef['required'] && params["#{ef['name']}"].blank?
-          if ef['type'] == "textfield"
-            errors << "#{ef['label']} non puo' essere lasciato in bianco"
-          elsif
-            errors << "#{ef['label']} deve essere accettato"
-          end
-        else
-          cloned_cta_extra_fields["#{ef['name']}"] = params["#{ef['name']}"]
-        end
-      end
-      [errors.empty?, errors, cloned_cta_extra_fields]
-    end
   end
 
   def create_user_calltoactions(upload_interaction, params)

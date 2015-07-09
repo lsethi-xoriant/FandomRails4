@@ -97,16 +97,6 @@ class Sites::Coin::ApplicationController < ApplicationController
   def show_stores
   end
 
-  def registration_fully_completed?
-    if current_user.aux.present?
-      aux = JSON.parse(current_user.aux)
-      aux_validate = aux["contest"] == "true" && aux["terms"] == "true"
-      current_user.province.present? && current_user.birth_date.present? && aux_validate
-    else
-      false
-    end
-  end
-
   def show_cookies_policy
   end
 

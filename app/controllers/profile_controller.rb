@@ -26,11 +26,12 @@ class ProfileController < ApplicationController
   def complete_for_contest
     user_params = params[:user]
 
-    required_attrs = get_site_from_request(request)["required_attrs"] # array
-    user_params = user_params.merge(required_attrs: required_attrs)
+    form_attributes_valid, errors, user_extra_fields = validate_upload_extra_fields(user_params, get_form_attributes(params["interaction_id"]))
 
     response = {}
-    if !current_user.update_attributes(user_params)
+    if !form_attributes_valid
+      response[:errors] = errors
+    elsif !update_current_user_info_with_contest_registration_params(user_extra_fields)
       response[:errors] = current_user.errors.full_messages
     else
       log_audit("registration completion", { 'form_data' => params[:user], 'user_id' => current_user.id })
@@ -39,6 +40,24 @@ class ProfileController < ApplicationController
     respond_to do |format|
       format.json { render json: response.to_json }
     end
+  end
+
+  def update_current_user_info_with_contest_registration_params(user_extra_fields)
+    model_fields = {}
+    aux = {}
+    model_attributes = User.accessible_attributes.to_a
+    user_extra_fields.each do |extra_field, value|
+      entry = { extra_field => value }
+      if model_attributes.include?(extra_field)
+        model_fields.merge!(entry)
+      else
+        aux.merge!(entry)
+      end
+    end
+    if current_user.aux
+      aux = current_user.aux.merge(aux)
+    end
+    current_user.update_attributes(model_fields.merge({ "aux" => aux }))
   end
 
   def index

@@ -607,16 +607,12 @@ module ApplicationHelper
 
   def registration_fully_completed?
     if current_user
-      $site.required_attrs.each do |attribute|
-        return false unless current_user[attribute].present?
-      end
-
       instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
       if instantwin_cta
         instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
         if instantwin_form_attributes
           JSON.parse(instantwin_form_attributes).each do |form_attr|
-            return false unless current_user[form_attr["name"]].present?
+            return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present?)
           end
         end
       end
@@ -639,6 +635,35 @@ module ApplicationHelper
       }, 
       layout: false, 
       formats: :html
+  end
+
+  def validate_upload_extra_fields(params, extra_fields)
+    if extra_fields.nil?
+      [true, [], {}]
+    else
+      errors = []
+      cloned_cta_extra_fields = {}
+      extra_fields.each do |extra_field|
+        if extra_field['required'] && params["#{extra_field['name']}"].blank?
+          case extra_field['type']
+          when "textfield"
+            errors << "#{extra_field['label']} non puo' essere lasciato in bianco"
+          when "checkbox"
+            errors << "#{extra_field['label']} deve essere accettato"
+          else
+            errors << "#{extra_field['label']} deve essere selezionato"
+          end
+        else
+          cloned_cta_extra_fields["#{extra_field['name']}"] = params["#{extra_field['name']}"]
+        end
+      end
+      [errors.empty?, errors, cloned_cta_extra_fields]
+    end
+  end
+
+  def get_form_attributes(instantwin_interaction_id)
+    interaction = Interaction.find(instantwin_interaction_id)
+    instantwin_form_attributes = JSON.parse(CallToAction.find(interaction.call_to_action_id).extra_fields["instantwin_form_attributes"])
   end
 
   def get_enum_values(field_selection)
