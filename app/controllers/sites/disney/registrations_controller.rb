@@ -4,7 +4,7 @@
 class Sites::Disney::RegistrationsController < RegistrationsController
 
   def set_account_up()
-    create_user_interaction_for_registration()
+    #create_user_interaction_for_registration()
   end
 
   def update

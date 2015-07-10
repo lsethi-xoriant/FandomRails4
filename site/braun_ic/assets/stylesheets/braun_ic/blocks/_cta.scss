@@ -170,3 +170,34 @@ $cover-height: 530px;
 .product-img {
   width: 100%;
 }
+
+@media (max-width: $screen-sm-min) { 
+  .cta_cover-container__row {
+    height: auto;
+    margin-bottom: 0;
+  }
+
+  .cta_cover-credits_container {
+    padding-top: 15px;
+    padding-right: 25px;
+  }
+
+  .cta_cover-title {
+    font-size: 18px;
+    color: #000;
+    padding: 15px;
+  }
+
+  .cta_cover-miniformat {
+    padding: 15px 15px 0 15px;
+  }
+
+  .cta_cover-container__col {
+    height: auto;
+  }
+
+  .cta_cover-btn__container {
+    padding: 15px 30px;
+  }
+
+}

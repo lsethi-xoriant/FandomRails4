@@ -32,3 +32,9 @@
   font-size: 36px;
   margin-top: 15px;
 }
+
+@media (max-width: $screen-sm-min) { 
+  .test-container {
+    padding-top: 0 !important;
+  }
+}

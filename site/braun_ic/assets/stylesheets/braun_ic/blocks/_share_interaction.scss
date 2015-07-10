@@ -2,3 +2,9 @@
   padding-top: 25px;
   padding-bottom: 10px;
 }
+
+@media (max-width: $screen-sm-min) { 
+  .share-interaction__container {
+    padding-top: 15px;
+  }
+}

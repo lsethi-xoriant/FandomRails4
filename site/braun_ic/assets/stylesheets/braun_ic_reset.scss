@@ -91,4 +91,8 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  .profile-container__badge {
+    padding: 0;
+    border: none;
+  }
 }

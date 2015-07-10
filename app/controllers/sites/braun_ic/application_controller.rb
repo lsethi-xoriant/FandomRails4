@@ -97,6 +97,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       cta = CallToAction.find(cta_id)
       set_seo_info_for_cta(cta)
       anchor_to = cta.slug
+      compute_seo()
       if descendent_id
         calltoaction_to_share = CallToAction.find(descendent_id)
         extra_fields = calltoaction_to_share.extra_fields
@@ -108,6 +109,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
           "keywords" => get_default_keywords()
         }
       end
+    else 
+      compute_seo()
     end
 
     params = { "page_elements" => ["share"] }

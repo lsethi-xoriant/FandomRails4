@@ -1,4 +1,4 @@
-<div class="profile-container">
+<div class="profile-container hidden-xs">
   <div class="container">
 
     <div class="row profile-container__row">
@@ -51,6 +51,44 @@
             <button type="button" class="btn btn-green btn-lg" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
               SCOPRI SE HAI VINTO
             </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="profile-container visible-xs">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-xs-3 profile-container__badge text-center">  
+        <div class="profile-container__badge-block">  
+          <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value percentage_circle_value_profile">
+                <img ng-src="{{current_user.avatar}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar"></div>
+              <div class="percentage_circle_fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-3 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+        <div class="profile-container__badge-block">
+          <div class="percentage_circle small p{{getBadgeCost(badge)}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value">
+                <img ng-src="{{badge.image}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+              <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            </div>
           </div>
         </div>
       </div>

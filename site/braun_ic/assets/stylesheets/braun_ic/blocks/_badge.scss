@@ -75,6 +75,7 @@
 .percentage_circle.small {
   font-size: 86px;
 }
+
 .percentage_circle > span {
   position: absolute;
   width: 100%;
@@ -890,4 +891,13 @@
 }
 .percentage_circle.orange.dark .percentage_circle_bar, .percentage_circle.orange.dark .percentage_circle_fill {
   border-color: #e08833 !important;
+}
+
+@media (max-width: $screen-sm-min) { 
+  .percentage_circle.small {
+    font-size: 72px;
+  }
+  .percentage_circle_value.percentage_circle_value_profile img {
+    width: 64px;
+  }
 }
