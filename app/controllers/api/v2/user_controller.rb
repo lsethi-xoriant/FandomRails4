@@ -5,7 +5,12 @@
       username = params[:username]
       password = params[:password]
 
-      user = User.where(username: username).first
+      if username.include?('@')
+        user = User.where(email: username).first
+      else
+        user = User.where(username: username).first
+      end
+
       if !user.nil? && user.valid_password?(password)
         user.authentication_token = Devise.friendly_token
         user.save()

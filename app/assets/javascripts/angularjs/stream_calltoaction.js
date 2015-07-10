@@ -1621,11 +1621,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
-    calltoaction_info = $scope.getParentCtaInfo(calltoaction_info);
-    alert($scope.getParentCtaInfo(calltoaction_info).calltoaction.name);
+  $scope.shareWith = function(cta_info, interaction_info, provider) {
     if($scope.aux.free_provider_share && provider != "email") {
-      $scope.shareFree(calltoaction_info, interaction_info, provider);
+      $scope.shareFree(cta_info, interaction_info, provider);
     } else {
       shareWithApp(calltoaction_info, interaction_info, provider);
     }
@@ -1639,7 +1637,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $("#modal-interaction-" + interaction_id + "-direct_url").modal("show");
   }
 
-  $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
+  $scope.shareFree = function(cta_info, interaction_info, provider) {
     if(!interactionAllowed(interaction_info)) {
       showRegistrateView();
     } else {
@@ -1647,12 +1645,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         openDirectUrlModal(interaction_info.interaction.id);
       } else {
         
-        message = calltoaction_info.calltoaction.title;
-        if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
-          message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+        parent_cta_info = $scope.getParentCtaInfo(cta_info);
+
+        message = parent_cta_info.calltoaction.title;
+        if(cta_info.calltoaction.extra_fields.linked_result_title) {
+          message = $scope.cta_info.calltoaction.extra_fields.linked_result_title;
         }
 
-        url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
+        url_to_share = $scope.computeShareFreeCallToActionUrl(parent_cta_info, cta_info);
 
         cta_url = encodeURI(url_to_share);
 
@@ -1691,8 +1691,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
-    url = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
+  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, calltoaction_info) {
+    url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;
     if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
       url = url + "/" + $scope.calltoaction_info.calltoaction.id;
     }

@@ -42,6 +42,9 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
     return if cookie_based_redirect?
 
+    cta_id = params[:id]
+    descendent_id = params[:descendent_id]
+
     params = { "page_elements" => ["quiz", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream("test", params, 15)
 
@@ -90,11 +93,29 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       }
     end
 
+    if cta_id
+      cta = CallToAction.find(cta_id)
+      set_seo_info_for_cta(cta)
+      anchor_to = cta.slug
+      if descendent_id
+        calltoaction_to_share = CallToAction.find(descendent_id)
+        extra_fields = calltoaction_to_share.extra_fields
+
+        @seo_info = {
+          "title" => strip_tags(extra_fields["linked_result_title"]),
+          "meta_description" => strip_tags(extra_fields["linked_result_description"]),
+          "meta_image" => strip_tags(extra_fields["linked_result_image"]["url"]),
+          "keywords" => get_default_keywords()
+        }
+      end
+    end
+
     params = { "page_elements" => ["share"] }
     tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
     product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
 
     @aux_other_params = { 
+      anchor_to: anchor_to,
       tag_menu_item: "home",
       badges: badges,
       tips: {
