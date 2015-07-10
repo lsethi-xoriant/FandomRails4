@@ -284,7 +284,8 @@ module CallToActionHelper
   end
 
   def get_cta_max_updated_at()
-    from_updated_at_to_timestamp(CallToAction.maximum(:updated_at))
+    maximum = CallToAction.active_no_order_by.where(user_id: nil).maximum(:updated_at)
+    from_updated_at_to_timestamp(maximum)
   end
 
   def get_max_updated_at(models)
