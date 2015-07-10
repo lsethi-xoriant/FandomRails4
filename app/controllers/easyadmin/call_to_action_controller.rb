@@ -66,7 +66,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction generata correttamente"
-      cookies[:updated_at] = Time.now
+      set_content_updated_at_cookie(@cta.updated_at)
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
@@ -109,7 +109,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction aggiornata correttamente"
-      cookies[:updated_at] = Time.now
+      set_content_updated_at_cookie(@cta.updated_at)
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
@@ -464,6 +464,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     cta.activation_date_time = activated_at
     cta.approved = params[:approved]
     cta.save
+    set_user_call_to_action_moderation_cookie()
     log_synced("moderated UGC content", approved: params[:approved], cta_id: cta.id, moderator_id: current_user.id)
     user_upload_interaction = cta.user_upload_interaction
 
@@ -478,7 +479,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       userinteraction, outcome = create_or_update_interaction(User.find(user_upload_interaction.user_id), Interaction.where(:resource_type => 'Upload', :resource_id => user_upload_interaction.upload_id).first, nil, nil)
     elsif cta.approved == false
       gallery_tag = get_cta_tag_tagged_with(cta, "gallery")
-      extra_fields = gallery_tag.extra_fields
+      extra_fields = gallery_tag.extra_fields rescue {}
       not_approved_text = extra_fields["not_approved_text"]
       if not_approved_text && notifications_enable != false
         notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => not_approved_text, :viewed => false, :read => false)

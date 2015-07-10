@@ -56,7 +56,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
         else
           add_tags_tags_and_check_cycle()
           flash[:notice] = "Tag generato correttamente"
-          cookies[:updated_at] = Time.now
+          set_content_updated_at_cookie(@tag.updated_at)
           redirect_to "/easyadmin/tag/#{ @tag.id }"
         end
 
@@ -143,12 +143,6 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
     params[:extra_fields] = @tag.extra_fields
     create_and_link_attachment(params, @tag)
     render "new"
-  end
-
-  def clone_tags_tags(new_tag, old_tag)
-    old_tag.tags_tags.each do |t|
-      new_tag.tags_tags.build(tag_id: new_tag.id, other_tag_id: t.other_tag_id)
-    end
   end
 
   def retag_tag
@@ -257,12 +251,37 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
   end
 
   def update_updated_at
-    if params[:tag_ids] and params[:updated_at]
-      params[:tag_ids].split(",").each do |tag_id|
-        update_updated_at_recursive(tag_id, params[:updated_at])
+    content_updated_at = get_content_updated_at_cookie()
+    if content_updated_at
+      tag_ids = []
+
+      tag_ids += ActiveRecord::Base.connection.execute(
+        "SELECT DISTINCT tag_id FROM call_to_action_tags WHERE call_to_action_id IN (
+          SELECT id FROM call_to_actions WHERE updated_at >= '#{content_updated_at}'
+        );").to_a.map{ |v| v["tag_id"].to_i }
+
+      tag_ids += ActiveRecord::Base.connection.execute(
+        "SELECT DISTINCT tag_id FROM reward_tags WHERE reward_id IN (
+          SELECT id FROM rewards WHERE updated_at >= '#{content_updated_at}'
+        );").to_a.map{ |v| v["tag_id"].to_i }
+
+      tag_ids += ActiveRecord::Base.connection.execute(
+        "SELECT DISTINCT other_tag_id FROM tags_tags WHERE tag_id IN (
+          SELECT id FROM tags WHERE updated_at >= '#{content_updated_at}'
+        );").to_a.map{ |v| v["other_tag_id"].to_i }
+
+      tag_ids.each do |tag_id|
+        update_updated_at_recursive(tag_id, content_updated_at)
       end
     end
-    cookies.delete :updated_at
+    if get_user_call_to_action_moderation_cookie()
+      cta = CallToAction.active_no_order_by.where("user_id IS NULL").order("updated_at DESC").first
+      new_updated_at = cta.updated_at + 1.second
+      cta.update_attribute(:updated_at, new_updated_at)
+    end
+
+    delete_updating_content_cookies()
+
     respond_to do |format|
       format.json { render :json => params[:updated_at].to_json }
     end
@@ -297,7 +316,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
     end
     flash[:notice] = "CallToAction taggata"
-    cookies[:updated_at] = Time.now
+    set_content_updated_at_cookie(cta.call_to_action_tags.order("updated_at").first.updated_at)
     unless params[:page].blank?
       redirect_to params[:page]
     else

@@ -98,6 +98,9 @@
       },
       success: function(data) {
         $("#cta-" + cta_id).remove();
+        $("#update-cache-banner-message-with-button").removeClass("hidden");
+        $("#update-cache-banner-message-success").addClass("hidden");
+        $("#update-cache-banner").removeClass("hidden");
       }
     });
   }

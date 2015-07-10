@@ -175,51 +175,28 @@ module EasyadminHelper
     columns
   end
 
-  def render_update_banner(updated_at, instance)
+  def get_content_updated_at_cookie()
+    cookies[:content_updated_at]
+  end
 
-    if instance.class == CallToAction
-      tag_ids = CallToActionTag.where(:call_to_action_id => instance.id).pluck(:tag_id)
-    elsif instance.class == Reward
-      tag_ids = RewardTag.where(:reward_id => instance.id).pluck(:tag_id)
-    elsif instance.class == Tag
-      tag_ids = TagsTag.where(:tag_id => instance.id).pluck(:other_tag_id)
-    else
-      tag_ids = []
+  def set_content_updated_at_cookie(updated_at = nil)
+    if cookies[:content_updated_at].nil?
+      updated_at_datetime = updated_at || DateTime.now
+      cookies[:content_updated_at] = updated_at_datetime.utc.strftime("%Y-%m-%d %H:%M:%S.%L")
     end
+  end
 
-    banner = <<EOF 
-      <div class="row">
-        <div class="col-lg-12">
-          <div id="update-banner-message" class="alert alert-warning">
-            <p class="col-lg-10"> Alcuni contenuti sono stati modificati, per completare l'aggiornamento del sistema 
-             è necessario aggiornare la cache premendo il seguente pulsante </p>
-            <button type="button" class="btn btn-primary btn-xs" onclick="updateTagsUpdatedAt(
-EOF
-    banner += "'#{ updated_at }', '#{ tag_ids.join(",") }'"
+  def get_user_call_to_action_moderation_cookie()
+    cookies[:user_call_to_action_moderation]
+  end
 
-    banner += <<EOF
-            )">Aggiorna cache</button>
-          </div>
-        </div>
-      </div>
+  def set_user_call_to_action_moderation_cookie()
+    cookies[:user_call_to_action_moderation] = true
+  end
 
-
-      <script type="text/javascript">
-        function updateTagsUpdatedAt(updatedAt, tagIds) {
-          url = "/easyadmin/tag/update_updated_at/" + updatedAt
-          if(tagIds != "")
-            url += "/" + tagIds
-          $.ajax({
-            type: "POST",
-            url: url,
-            success: function(data) {
-              document.getElementById("update-banner-message").innerHTML = "Contenuti aggiornati con successo";
-            }
-          });
-        }
-      </script>
-EOF
-    banner.html_safe
+  def delete_updating_content_cookies()
+    cookies.delete(:content_updated_at)
+    cookies.delete(:user_call_to_action_moderation)
   end
 
 end

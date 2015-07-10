@@ -407,9 +407,9 @@ module BrowseHelper
     content_previews
   end
   
-  # This methods is used to obtain a list of content previews starting from a tag name and a list of tags derived from the context (i.e: current property or language)
-  #   main_tag_name - the name of the tag that rappresent the content previews container
-  #   other_tags    - list of context tag such as current property tag or language tag, these tags will be used to filter contents. It could be empty.
+  # This method is used to obtain a list of content previews starting from a tag name and a list of tags related to the context (i.e: current property or language)
+  #   main_tag_name - the name of the tag that represents the content previews container
+  #   other_tags    - list of context tag such as current property tag or language tag; these tags will be used to filter contents. It could be empty.
   #   params        - a dictionary containing further conditions to retrieve content from DB (see get_cta_where_clause_from_params for detail)
   def get_content_previews(main_tag_name, other_tags = [], params = {}, number_of_elements = nil)
     # Carousel elements if setted in content tag, if in section tag needs to be passed as function params

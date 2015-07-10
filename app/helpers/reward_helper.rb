@@ -440,6 +440,7 @@ module RewardHelper
   def duplicate_reward(old_reward_id)
     reward = Reward.find(old_reward_id)
     reward.title = "Copy of " + reward.title
+    reward.name = "copy-of-" + reward.name
     reward.created_at = DateTime.now
     reward_attributes = reward.attributes
     reward_attributes.delete("id")

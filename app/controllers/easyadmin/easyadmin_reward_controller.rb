@@ -88,9 +88,9 @@ class Easyadmin::EasyadminRewardController < Easyadmin::EasyadminController
   end
 
   def update_and_redirect(tag_list, flash_message, reward)
-    update_reward_tag(tag_list,reward)
+    update_reward_tag(tag_list, reward)
     flash[:notice] = flash_message
-    cookies[:updated_at] = Time.now
+    set_content_updated_at_cookie(reward.updated_at)
     redirect_to "/easyadmin/reward/show/#{ reward.id }"
   end
 

@@ -361,7 +361,7 @@ Fandom::Application.routes.draw do
     get "tag/clone/:id", :to => "tag#clone"
     match "tag/ordering", :to => "tag#ordering", via: [:get, :post]
     match "tag/retag", :to => "tag#retag_tag", via: [:get, :post]
-    post "tag/update_updated_at/:updated_at(/:tag_ids)", :to => "tag#update_updated_at"
+    post "tag/update_updated_at", :to => "tag#update_updated_at"
     get "cta/tag/:id", :to => "tag#tag_cta"
     post "cta/tag/:id/update", :to => "tag#tag_cta_update"
 

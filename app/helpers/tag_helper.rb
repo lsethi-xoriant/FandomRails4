@@ -292,4 +292,10 @@ module TagHelper
     end
   end
 
+  def clone_tags_tags(new_tag, old_tag)
+    old_tag.tags_tags.each do |t|
+      new_tag.tags_tags.build(tag_id: new_tag.id, other_tag_id: t.other_tag_id)
+    end
+  end
+
 end
