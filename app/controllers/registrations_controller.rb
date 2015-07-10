@@ -56,14 +56,16 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def set_account_up
-    # create_user_interaction_for_registration()
+    create_user_interaction_for_registration()
     SystemMailer.welcome_mail(current_user).deliver
   end
 
   def create_user_interaction_for_registration
     basic_interaction = Basic.where({ :basic_type => "Registration" }).first
-    interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
-    create_or_update_interaction(current_user, interaction, nil, nil)
+    if basic_interaction
+      interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
+      create_or_update_interaction(current_user, interaction, nil, nil)
+    end
   end
 
   protected
