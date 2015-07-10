@@ -63,7 +63,9 @@ class RegistrationsController < Devise::RegistrationsController
   def create_user_interaction_for_registration
     basic_interaction = Basic.where({ :basic_type => "Registration" }).first
     interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
-    create_or_update_interaction(current_user, interaction, nil, nil)
+
+    user_interaction = UserInteraction.create(user_id: current_user.id, interaction_id: interaction.id, aux: {})
+    compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, current_user)
   end
 
   protected
