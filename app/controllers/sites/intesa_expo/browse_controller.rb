@@ -54,6 +54,20 @@ class Sites::IntesaExpo::BrowseController < BrowseController
     
     @use_filter = extra_fields['use_filter'].nil? ? false : extra_fields['use_filter']['value']
     
+    if @use_filter
+      @tags = get_tags_from_settings
+    end
+    
+  end
+  
+  def get_tags_from_settings
+    filter_tag = Setting.find_by_key(INTESA_FILTER_TAG_KEY).value.split(",")
+    tags = {}
+    filter_tag.each do |tag_name|
+      tag = Tag.find_by_name(tag_name)
+      tags[tag.id] = tag_to_content_preview(tag)
+    end
+    tags
   end
   
   # Get an array of tags to use to filter contents. 

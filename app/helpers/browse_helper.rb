@@ -358,7 +358,7 @@ module BrowseHelper
     hidden_tags_ids = get_hidden_tag_ids
     element.tags.each do |k, t|
       if !tags.has_key?(t) && !hidden_tags_ids.include?(t)
-        tags[t] = Tag.find(t).title
+        tags[t] = Tag.find(t)
       end
     end
     tags

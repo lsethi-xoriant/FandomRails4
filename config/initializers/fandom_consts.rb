@@ -40,6 +40,8 @@ unless defined? FILTER_OPERATOR_CONTAINS
   NOTIFICATIONS_LIMIT_KEY = 'notifications.limit'
   PROPERTIES_LIST_KEY = 'properties.list'
 
+  INTESA_FILTER_TAG_KEY = 'intesa.filter'
+
   UPLOAD_APPROVED_LABEL = "Upload approvato"
   COMMENT_APPROVED_LABEL = "Commento approvato"
   USER_CTA_INTERACTIONS_LABEL = "Interazioni su cta utente"

@@ -18,23 +18,29 @@
 			  		</div>
 			  	<% end %>
 			</div>
-		  	<div class="category-header__filter-area">
-		      <button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen">
-		        <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
-		          Filtra
-		      </button>
+			<div class="category-header__filter-area">
+		      <a href="javascript:void(0);" ng-click="resetFilter()">Vedi tutti</a>
 		    </div>
 		  </div>
 		  <div class="row text-center">
+		  	<div class="col-xs-12">
+				<div ng-repeat="(tag_id, tag) in tags" class="filter-tag" ng-class="{ 'filter-tag--active': activeTags[tag_id] != undefined }">
+					<img class="filter-tag__icon" ng-src="{{tag.aux.miniformat.icon.url}}" />
+					<div class="filter-tag__title">{{tag.title}}</div>
+					<a class="filter-tag__link" href="javascript:void(0);" ng-click="tagSelected(tag_id)"></a>
+				</div> 
+			</div>
+		  	<!--
 		    <div class="col-xs-12">
-					<div collapse="!isTagFilterOpen" class="row category-filter main-row">
-						<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
-							<button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
-		            {{tag_name}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
-		          </button>
-						</div> 
-					</div>
+				<div collapse="!isTagFilterOpen" class="row category-filter main-row">
+					<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
+						<button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
+	            {{tag_name.title}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
+	          </button>
+					</div> 
 				</div>
+			</div>
+			-->
 		  </div>
 	<% else %>
 	  	<div class="row text-center">
@@ -74,8 +80,8 @@
 			  </div>
 		   </div>
 		   <div class="row">
-				<div class="col-xs-12 text-center" ng-if="total > elements_in_page">
-					<a class="btn btn-about-v2" ng-click="load_more(elements_in_page)">Carica Altri</a>
+				<div class="col-xs-12 text-center" ng-if="has_more">
+					<a id="load_more_button" class="btn btn-about-v2" ng-click="load_more(elements_in_page)">Carica Altri</a>
 				</div>
 		   </div>
 	  <% else %>
@@ -86,7 +92,7 @@
 						<%= render partial: "/application/content_preview" %>
 					</div>
 					<div class="col-xs-12 text-center" ng-if="has_more">
-						<a class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altro <i class="fa fa-chevron-down"></i></a>
+						<a id="load_more_button" class="btn btn-primary btn-load-more" ng-click="load_more(elements_in_page)">Carica Altro <i class="fa fa-chevron-down"></i></a>
 					</div>
 			      </div>
 			  </div>
