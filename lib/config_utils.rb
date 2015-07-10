@@ -61,6 +61,7 @@ module ConfigUtils
     attribute :free_provider_share, :default => false
     attribute :aws_transcoding, :default => false
     attribute :main_reward_name, :default => "point"
+    attribute :instantwin_ticket_name, :default => nil
 
     def unbranded?
       self.id == 'fandom'
