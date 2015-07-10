@@ -435,7 +435,7 @@ module ApplicationHelper
   end
 
   def current_avatar size = "normal"
-    if current_user
+    if registered_user?(current_user)
       return user_avatar current_user
     else
       return anon_avatar()

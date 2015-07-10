@@ -54,3 +54,49 @@ fieldset[disabled] .btn-facebook.active {
   color: #364E89; 
   background: #ffffff; 
 }
+
+.btn-facebook-default { 
+  color: #ffffff; 
+  background-color: #364E89; 
+  border-color: #1C3C8C; 
+} 
+ 
+.btn-facebook-default:hover, 
+.btn-facebook-default:focus, 
+.btn-facebook-default:active, 
+.btn-facebook-default.active, 
+.open .dropdown-toggle.btn-facebook-default { 
+  color: #ffffff; 
+  background-color: #5E73A6; 
+  border-color: #1C3C8C; 
+} 
+ 
+.btn-facebook-default:active, 
+.btn-facebook-default.active, 
+.open .dropdown-toggle.btn-facebook-default { 
+  background-image: none; 
+} 
+ 
+.btn-facebook-default.disabled, 
+.btn-facebook-default[disabled], 
+fieldset[disabled] .btn-facebook-default, 
+.btn-facebook-default.disabled:hover, 
+.btn-facebook-default[disabled]:hover, 
+fieldset[disabled] .btn-facebook-default:hover, 
+.btn-facebook-default.disabled:focus, 
+.btn-facebook-default[disabled]:focus, 
+fieldset[disabled] .btn-facebook-default:focus, 
+.btn-facebook-default.disabled:active, 
+.btn-facebook-default[disabled]:active, 
+fieldset[disabled] .btn-facebook-default:active, 
+.btn-facebook-default.disabled.active, 
+.btn-facebook-default[disabled].active, 
+fieldset[disabled] .btn-facebook-default.active { 
+  background-color: #364E89; 
+  border-color: #1C3C8C; 
+} 
+ 
+.btn-facebook-default .badge { 
+  color: #364E89; 
+  background-color: #ffffff; 
+}
