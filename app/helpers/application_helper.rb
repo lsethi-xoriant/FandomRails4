@@ -613,7 +613,7 @@ module ApplicationHelper
         instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
         if instantwin_form_attributes
           JSON.parse(instantwin_form_attributes).each do |form_attr|
-            return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present?)
+            return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present? rescue false)
           end
         end
       end
