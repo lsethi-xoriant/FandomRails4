@@ -1,0 +1,35 @@
+<div class="tip-container">
+  <div id="tips" class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="cta_tip-container__title">Le regole del benessere</p>
+      </div>
+    </div>
+    <div class="row" id="{{getParentCtaInfo(calltoaction_info).calltoaction.slug}}" ng-repeat="calltoaction_info in aux.tips.tip_info_list">
+      <div class="col-sm-12">      
+        <div class="cta_tip-container">
+          <div class="row">
+            <div class="col-sm-6 cta_tip-section_1_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_1 | unsafe"></div>
+            <div class="col-sm-6 text-right cta_tip-img_container hidden-xs">
+              <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_1.url}}">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <img class="cta_tip-img" ng-src="{{calltoaction_info.calltoaction.extra_fields.img_2.url}}">
+            </div>
+            <div class="col-sm-8 cta_tip-section_2_container" ng-bind-html="calltoaction_info.calltoaction.extra_fields.section_2 | unsafe"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 text-right share-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+        <%= render partial: "/call_to_action/share_interaction" %>
+      </div>
+    </div>
+    <div class="row" ng-if="aux.tips.has_more">
+      <div class="col-sm-12 text-center">
+        <button class="btn btn-green" ng-class="{'disabled': append_tips_in_progress}" ng-click="appendTips()">CARICA ALTRI</button>
+      </div>
+    </div>
+  </div>
+</div>

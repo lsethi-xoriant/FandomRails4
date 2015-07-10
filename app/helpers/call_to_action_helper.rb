@@ -1,10 +1,14 @@
 module CallToActionHelper
 
   def get_parent_cta_name(cta_info)
+    get_parent_cta(cta_info)["calltoaction"]["name"]
+  end
+
+  def get_parent_cta(cta_info)
     if cta_info["optional_history"].present? && cta_info["optional_history"]["parent_cta_info"].present?
-      cta_info["optional_history"]["parent_cta_info"]["calltoaction"]["name"]
+      cta_info["optional_history"]["parent_cta_info"]
     else
-      cta_info["calltoaction"]["name"]
+      cta_info
     end
   end
 
@@ -412,7 +416,7 @@ module CallToActionHelper
       end
 
       calltoaction_info_list
-    end    
+    end
 
     interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
 
@@ -427,6 +431,8 @@ module CallToActionHelper
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
     user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+
+    adjust_counters(interaction_ids, calltoaction_info_list, comments)
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
@@ -476,7 +482,6 @@ module CallToActionHelper
       calltoaction_info_list[0]["calltoaction"]["disqus"]["sso"] = disqus_sso
     end
 
-    adjust_counters(interaction_ids, calltoaction_info_list, comments)
     calltoaction_info_list
 
   end
@@ -553,8 +558,6 @@ module CallToActionHelper
           extra_fields = get_extra_fields!(interaction.resource)
         when "download"
           ical = resource.ical_fields
-        when "comment"
-          comment_info = build_comments_for_resource(interaction)
         end
 
         interaction_info_list << {
@@ -576,7 +579,6 @@ module CallToActionHelper
               "answers" => answers,
               "providers" => resource_providers,
               "counter" => 0,
-              "comment_info" => comment_info, 
               "upload_info" => upload_info,
               "ical" => ical,
               "vote_info" => vote_info,

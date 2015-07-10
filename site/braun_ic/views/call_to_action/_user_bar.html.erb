@@ -1,0 +1,60 @@
+<div class="profile-container">
+  <div class="container">
+
+    <div class="row profile-container__row">
+      <div class="col-sm-3 profile-container__user">    
+        <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
+          <div class="percentage_circle_fix_bar"></div>
+          <span class="percentage_circle_value percentage_circle_value_profile">
+              <img ng-src="{{current_user.avatar}}">
+          </span>
+          <div class="percentage_circle_slice">
+            <div class="percentage_circle_bar"></div>
+            <div class="percentage_circle_fill"></div>
+          </div>
+        </div>
+        <p style="margin-top: 52px; font-weight: bold;">Ciao {{current_user.first_name}}</p>
+        <p>Ecco i tuoi risultati:</p>
+      </div>
+
+      <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+        <div class="profile-container__badge-block">
+          <div class="percentage_circle small p{{getBadgeCost(badge)}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value">
+                <img ng-src="{{badge.image}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+              <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            </div>
+          </div>
+        </div>
+        <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.title}}</p>
+        <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.description}}</p>
+      </div>
+
+      <div class="col-sm-3 text-center profile-container__iw">
+        <p class="profile-container__iw-text">Hai
+          <span class="label cta_cover-credits_label_yellow">
+            +{{current_user.main_reward_counter}} <span class="fa fa-ticket"></span>
+          </span> 
+          biglietti
+        </p> 
+        <div ng-if="aux.instant_win_info.interaction_id" class="profile-container__iw-btn__container">
+          <div ng-if="current_user.registration_fully_completed">
+            <button type="button" class="btn btn-green btn-lg" ng-click="openInstantWinModal()">
+              SCOPRI SE HAI VINTO
+            </button>
+          </div>
+          <div ng-if="!current_user.registration_fully_completed">
+            <button type="button" class="btn btn-green btn-lg" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+              SCOPRI SE HAI VINTO
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

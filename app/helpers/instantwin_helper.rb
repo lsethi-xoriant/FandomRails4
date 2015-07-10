@@ -65,9 +65,25 @@ module InstantwinHelper
 	end
 
   def deduct_ticket(reward_name)
-    get_reward_with_periods(reward_name).each do |reward|
-      reward.update_attribute(:counter, reward.counter - 1)
+    get_reward_with_periods(reward_name).each do |user_reward|
+      user_reward.update_attribute(:counter, user_reward.counter - 1)
     end
+  end
+
+  def check_win(interaction, time)
+    instantwin = interaction.resource.instantwins.where("valid_from <= ? AND (valid_to IS NULL or valid_to >= ?) AND won = false", time, time).first
+    if instantwin.nil?
+      [nil, nil]
+    else
+      reward = Reward.find(instantwin.reward_info['reward_id'])
+      instantwin.update_attribute(:won, true)
+      [instantwin, reward]
+    end
+  end
+
+  def send_winner_email(ticket_id, prize)
+    SystemMailer.win_mail(current_user, prize, ticket_id, request).deliver_now
+    SystemMailer.win_admin_notice_mail(current_user, prize, ticket_id, request).deliver_now
   end
 
 end

@@ -71,10 +71,12 @@ class CallbackController < ApplicationController
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
           headers = { "Content-Type" => "application/json", "Accept" => "application/json"}
+          media_already_processed = []
 
           res["data"].each do |media|
             cta_with_media_present = CallToAction.where("aux->>'instagram_media_id' = '#{media["id"]}'").first
-            unless cta_with_media_present
+            if !cta_with_media_present && !media_already_processed.include?(media["id"])
+              media_already_processed << media["id"]
               registered_users_only = upload.aux["configuration"]["registered_users_only"] rescue false
               clone_params = get_clone_params(registered_users_only, media)
               if clone_params.any?
@@ -89,7 +91,7 @@ class CallbackController < ApplicationController
           end
           new_min_tag_id = res["pagination"]["min_tag_id"]
           instagram_subscriptions_setting_hash[tag_name]["min_tag_id"] = new_min_tag_id
-          instagram_subscriptions_setting.update_column(:value, instagram_subscriptions_setting_hash)
+          instagram_subscriptions_setting.update_attribute(:value, instagram_subscriptions_setting_hash.to_json)
         end
       end
       render json: "OK"

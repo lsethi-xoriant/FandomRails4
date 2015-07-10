@@ -12,13 +12,37 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info) {
+    url = $scope.aux.root_url + "/?id=" + parent_cta_info.calltoaction.slug;
+    if(cta_info.calltoaction.extra_fields.linked_result_title) {
+      url = url + "&descendent_id=" + cta_info.calltoaction.slug;
+    }
+    return url;
+  };
+
   $scope.extraInit = function() {
     $scope.covers = {};
+    $scope.buildbadgeArray();
+    
+    if($scope.aux.anchor_to) {
+      window.location.href = "#" + $scope.aux.anchor_to;
+    }
   };
+
+  $scope.buildbadgeArray = function() {
+    $scope.aux.badge_array = [];
+    angular.forEach($scope.aux.badges, function(badge) {
+      $scope.aux.badge_array.push(badge);
+    });
+  }
 
   $scope.isCoverHidden = function(cta_info) {
     cover = $scope.covers[$scope.getParentCtaId(cta_info)];
     return (cover == false || angular.isUndefined(cover));
+  };
+
+  $scope.orderBadgesByCtas = function(badge) {
+    return badge.activated_at;
   };
 
   $scope.openCover = function(cta_info) {
@@ -27,9 +51,13 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
 
   $scope.updateAnswerAjaxSuccessCallback = function(cta_info, data) {
     if(data.badge) {
-      $scope.setCtaBadge(cta_info, data.badge);
+      $scope.setCtaBadge($scope.getParentCtaInfo(cta_info), data.badge);
     }
   };
+
+  $scope.hasBadge = function(cta_info) {
+    return !$scope.getCtaBadge(cta_info).inactive;
+  }
 
   function getCtaBadgeKey(cta_info) {
     return $scope.getParentCtaInfo(cta_info).calltoaction.name;
@@ -37,6 +65,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
 
   $scope.setCtaBadge = function(cta_info, badge) {
     $scope.aux.badges[getCtaBadgeKey(cta_info)] = badge;
+    $scope.buildbadgeArray();
   };
 
   $scope.getCtaBadge = function(cta_info) {
@@ -56,8 +85,15 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     }
   };
 
-  $scope.getUserPercentage = function() {
-
+  $scope.getUserBadgesPercent = function() {
+    badge_value = Math.ceil(100 / Object.keys($scope.aux.badges).length);
+    badge_percent = 0;
+    angular.forEach($scope.aux.badges, function(badge) {
+      if(!badge.inactive) {
+        badge_percent += badge_value;
+      }
+    });
+    return Math.min(badge_percent, 100);
   };
 
   $scope.resetToRedo = function(cta_info) {

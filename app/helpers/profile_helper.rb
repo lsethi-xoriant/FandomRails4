@@ -145,23 +145,8 @@ module ProfileHelper
 
   def user_for_registation_form()
     if current_user
-      if current_user.aux
-        aux = current_user.aux
-        contest = aux[:contest]
-        role = aux[:role]
-      end
-
-      {
-        "day_of_birth" => current_user.day_of_birth,
-        "month_of_birth" => current_user.month_of_birth,
-        "year_of_birth" => current_user.year_of_birth,
-        "gender" => current_user.gender,
-        "location" => current_user.location, 
-        "aux" => { 
-          "contest" => contest,
-          "terms" => role
-        }
-      }
+      aux = current_user.aux || {}
+      current_user.attributes.merge(aux)
     end
   end
 

@@ -88,7 +88,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-1 text-left instant-win__ticket-post hidden-xs"><p class="instant-win__ticket-post-text">biglietti</p></div>       
+          <div class="col-md-1 text-left instant-win__ticket-post hidden-xs"><p class="instant-win__ticket-post-text">biglietti</p></div>
           <div ng-if="!aux.instant_win_info.won && aux.instant_win_info.interaction_id" class="col-md-12 text-center">
             <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
           </div>

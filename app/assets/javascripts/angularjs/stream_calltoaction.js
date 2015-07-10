@@ -214,9 +214,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
   }
 
-  $scope.scrollTo = function(el_id) {
+  $scope.isAnchor = function(url) {
+    return (url.charAt(0) == "#");
+  };
+
+  $scope.scrollTo = function(id) {
+    if(id.charAt(0) == "#") {
+      id = id.substring(1);
+    }
+
     $('html, body').animate({
-        scrollTop: $("#"+ el_id).offset().top
+        scrollTop: $("#"+ id).offset().top
+    }, 500);
+  };
+
+  $scope.scrollToFromAnchor = function(id) {
+    $('html, body').animate({
+        scrollTop: $("#"+ id).offset().top
     }, 500);
   };
 
@@ -463,7 +477,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.processRegistrationForm = function() {
     delete $scope.form_data.current_user.errors;
-    data = { user: $scope.form_data.current_user };
+    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction_id };
     $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
       .success(function(data) {
         if(data.errors) {
@@ -1576,28 +1590,29 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       play_interaction_info.hide = true; 
       
-      update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
+      if(interactionAllowed(play_interaction_info)) {
+        update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
+        $http.post(update_interaction_path, { interaction_id: interaction_id })
+          .success(function(data) {
 
-      $http.post(update_interaction_path, { interaction_id: interaction_id })
-        .success(function(data) {
+            if(data.current_user) $scope.current_user = data.current_user;
+      
+            // GOOGLE ANALYTICS
+            if(data.ga) {
+              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
 
-          if(data.current_user) $scope.current_user = data.current_user;
-    
-          // GOOGLE ANALYTICS
-          if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-            });
-          }
-
-          calltoaction_info = getCallToActionInfo(calltoaction_id);
-          adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-          calltoaction_info.status = data.calltoaction_status;
-          
-        }).error(function() {
-          // ERROR.
-        });
+            calltoaction_info = getCallToActionInfo(calltoaction_id);
+            adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+            calltoaction_info.status = data.calltoaction_status;
+            
+          }).error(function() {
+            // ERROR.
+          });
+        }
 
     } else {
       // Button play already selected.
@@ -1606,10 +1621,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  $scope.shareWith = function(calltoaction_info, interaction_info, provider) {
-    calltoaction_info = $scope.getParentCtaInfo(calltoaction_info);
+  $scope.shareWith = function(cta_info, interaction_info, provider) {
     if($scope.aux.free_provider_share && provider != "email") {
-      $scope.shareFree(calltoaction_info, interaction_info, provider);
+      $scope.shareFree(cta_info, interaction_info, provider);
     } else {
       shareWithApp(calltoaction_info, interaction_info, provider);
     }
@@ -1619,16 +1633,26 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return String(text).replace(/<[^>]+>/gm, '');
   }
 
-  $scope.shareFree = function(calltoaction_info, interaction_info, provider) {
+  function openDirectUrlModal(interaction_id) {
+    $("#modal-interaction-" + interaction_id + "-direct_url").modal("show");
+  }
+
+  $scope.shareFree = function(cta_info, interaction_info, provider) {
     if(!interactionAllowed(interaction_info)) {
       showRegistrateView();
     } else {
       if(provider == "direct_url") {
-        $("#modal-interaction-" + interaction_info.interaction.id + "-direct_url").modal("show");
+        openDirectUrlModal(interaction_info.interaction.id);
       } else {
-        console.log(calltoaction_info);
-        message = calltoaction_info.calltoaction.title;
-        url_to_share = $scope.computeShareFreeCallToActionUrl(calltoaction_info);
+        
+        parent_cta_info = $scope.getParentCtaInfo(cta_info);
+
+        message = parent_cta_info.calltoaction.title;
+        if(cta_info.calltoaction.extra_fields.linked_result_title) {
+          message = $scope.cta_info.calltoaction.extra_fields.linked_result_title;
+        }
+
+        url_to_share = $scope.computeShareFreeCallToActionUrl(parent_cta_info, cta_info);
 
         cta_url = encodeURI(url_to_share);
 
@@ -1667,13 +1691,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $scope.computeShareFreeCallToActionUrl = function(calltoaction_info) {
-    url_to_share = $scope.aux.root_url + "call_to_action/" + calltoaction_info.calltoaction.slug;
+  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, calltoaction_info) {
+    url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;
     if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
-      url_to_share = url_to_share + "/" + $scope.calltoaction_info.calltoaction.id;
-      message = $scope.calltoaction_info.calltoaction.extra_fields.linked_result_title;
+      url = url + "/" + $scope.calltoaction_info.calltoaction.id;
     }
-    return url_to_share;
+    return url;
   };
 
   function shareWithApp(calltoaction_info, interaction_info, provider) {
@@ -1918,10 +1941,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
             $scope.replaceCallToActionInCallToActionInfoList(calltoaction_info, data.next_call_to_action_info);
             initializeVideoAfterPageRender();
-            $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
-            $timeout(function() { 
-              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
-            }, 200);
+            if($scope.calltoaction_info) {
+              $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
+              $timeout(function() { 
+                $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide trivia-interaction__update-answer--fade_in";
+              }, 200);
+            }
           }, timeout_time);
         }
       }
@@ -1947,19 +1972,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function initializeVideoAfterPageRender() {
-    $timeout(function() { 
+    if($scope.calltoaction_info) {
+      $timeout(function() { 
 
-      if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
-        $(".media-youtube iframe").remove();
-        iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
-        $(".media-youtube").html(iframe);
-      }
+        if($scope.calltoaction_info.calltoaction.media_type == 'YOUTUBE') {
+          $(".media-youtube iframe").remove();
+          iframe = "<div id=\"main-media-iframe-" + $scope.calltoaction_info.calltoaction.id + "\" main-media=\"main\" calltoaction-id=\"" + $scope.calltoaction_info.calltoaction.id + "\" class=\"embed-responsive-item\"></div>";
+          $(".media-youtube").html(iframe);
+        }
 
-      angular.forEach($scope.calltoactions, function(sc) {
-        appendYTIframe(sc);
-      });
+        angular.forEach($scope.calltoactions, function(sc) {
+          appendYTIframe(sc);
+        });
 
-    }, 0); // Code to be executed after page render
+      }, 0); // Code to be executed after page render
+    } 
   }
   
   $scope.resetToRedo = function(cta_info) {

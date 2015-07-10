@@ -107,12 +107,13 @@ module ApplicationHelper
     result
   end
 
-  def build_current_user() 
+  def build_current_user()
     if current_user
       anonymous_id = current_user.anonymous_id.blank? ? nil : current_user.anonymous_id
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
         "twitter" => current_user.twitter($site.id),
+        "first_name" => current_user.first_name,
         "main_reward_counter" => get_property_point(),
         "instantwin_tickets_counter" => get_counter_about_user_reward(INSTANTWIN_TICKET_NAME),
         "username" => current_user.username,
@@ -607,16 +608,12 @@ module ApplicationHelper
 
   def registration_fully_completed?
     if current_user
-      $site.required_attrs.each do |attribute|
-        return false unless current_user[attribute].present?
-      end
-
       instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
       if instantwin_cta
         instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
         if instantwin_form_attributes
           JSON.parse(instantwin_form_attributes).each do |form_attr|
-            return false unless current_user[form_attr["name"]].present?
+            return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present?)
           end
         end
       end
@@ -631,6 +628,7 @@ module ApplicationHelper
 
     ac.render_to_string "/extra_fields/_extra_field_#{field['type']}", 
       locals: { 
+        title: field["title"],
         label: field["label"], 
         name: field["name"], 
         required: field["required"], 
@@ -639,6 +637,35 @@ module ApplicationHelper
       }, 
       layout: false, 
       formats: :html
+  end
+
+  def validate_upload_extra_fields(params, extra_fields)
+    if extra_fields.nil?
+      [true, [], {}]
+    else
+      errors = []
+      cloned_cta_extra_fields = {}
+      extra_fields.each do |extra_field|
+        if extra_field['required'] && params["#{extra_field['name']}"].blank?
+          case extra_field['type']
+          when "textfield"
+            errors << "#{extra_field['label']} non puo' essere lasciato in bianco"
+          when "checkbox"
+            errors << "#{extra_field['label']} deve essere accettato"
+          else
+            errors << "#{extra_field['label']} deve essere selezionato"
+          end
+        else
+          cloned_cta_extra_fields["#{extra_field['name']}"] = params["#{extra_field['name']}"]
+        end
+      end
+      [errors.empty?, errors, cloned_cta_extra_fields]
+    end
+  end
+
+  def get_form_attributes(instantwin_interaction_id)
+    interaction = Interaction.find(instantwin_interaction_id)
+    instantwin_form_attributes = JSON.parse(CallToAction.find(interaction.call_to_action_id).extra_fields["instantwin_form_attributes"])
   end
 
   def get_enum_values(field_selection)
@@ -844,7 +871,10 @@ module ApplicationHelper
 
     if other && (other.has_key?(:calltoaction) || other.has_key?("calltoaction"))
       cta = other[:calltoaction] || other["calltoaction"]
-      related_ctas, related_tag = init_related_ctas(cta, property)
+
+      if property.present?
+        related_ctas, related_tag = init_related_ctas(cta, property)
+      end
 
       if is_ugc?(cta)        
         ugc_cta = get_ugc_cta(related_tag)
@@ -909,7 +939,8 @@ module ApplicationHelper
       "menu_items" => get_menu_items(property),
       "instant_win_info" => iw_info,
       "emoticons" => EMOTICONS,
-      "assets" => assets
+      "assets" => assets,
+      "root_url" => root_url
     }
 
     if other
