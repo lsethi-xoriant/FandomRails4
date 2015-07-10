@@ -6,7 +6,7 @@
       <div id="{{getParentCtaInfo(calltoaction_info).calltoaction.slug}}" class="col-sm-12 cta_cover-container__col">    
         <div class="cta_cover-img_container hidden-xs" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
          
-          <%= render partial: "/call_to_action/cta_status" %>
+          <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-credits_container" } %>
 
           <!-- COVER IMAGE AND DESCRIPTION -->
           <div class="col-sm-5 cta_cover-description_container">
@@ -38,22 +38,23 @@
 
         <div class="row hidden-sm hidden-md hidden-lg" ng-class="{'hidden': !isCoverHidden(calltoaction_info)}">
           <div class="col-xs-12">
-            <div style="display: inline-block; border: 1px solid #ccc;">  
+            <div class="cta_cover-container__mobile">  
               <div class="row">
                 <div class="col-xs-12">
-                  <img style="width: 100%;" ng-src="{{getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url}}">
-                  <div style="position: absolute; left: 25px; bottom: 5px;" class="percentage_circle small p{{getCtaBadgeCost(calltoaction_info)}}">
-                    <div class="percentage_circle_fix_bar"></div>
-                    <span class="percentage_circle_value">
-                        <img ng-src="{{getCtaBadge(calltoaction_info).image}}">
-                    </span>
-                    <div class="percentage_circle_slice">
-                      <div class="percentage_circle_bar" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
-                      <div class="percentage_circle_fill" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                  <div class="cta_cover-img__container" ng-style="{'background-image': 'url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
+                    <div style="position: absolute; left: 25px; bottom: 5px;" class="percentage_circle small p{{getCtaBadgeCost(calltoaction_info)}}">
+                      <div class="percentage_circle_fix_bar"></div>
+                      <span class="percentage_circle_value">
+                          <img ng-src="{{getCtaBadge(calltoaction_info).image}}">
+                      </span>
+                      <div class="percentage_circle_slice">
+                        <div class="percentage_circle_bar" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                        <div class="percentage_circle_fill" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <%= render partial: "/call_to_action/cta_status" %>
+                <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-credits_container" } %>
                 
                 <!-- COVER IMAGE AND DESCRIPTION -->
                 <div class="col-xs-12">
