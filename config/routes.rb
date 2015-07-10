@@ -16,8 +16,6 @@ Fandom::Application.routes.draw do
         post "/append_tips", to: "application#append_tips", defaults: { format: 'json' }
         get "/ranking", to: "ranking#show"
         get "/update_ranking_pagination", to: "ranking#update_ranking_pagination", defaults: { format: 'json' }
-        get "/call_to_action/:id", to: "call_to_action#show"
-        get "/call_to_action/:id/:descendent_id", to: "call_to_action#show"
       end
     end
   end

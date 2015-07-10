@@ -12,13 +12,20 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info) {
+    url = $scope.aux.root_url + "/?id=" + parent_cta_info.calltoaction.slug;
+    if(cta_info.calltoaction.extra_fields.linked_result_title) {
+      url = url + "&descendent_id=" + cta_info.calltoaction.slug;
+    }
+    return url;
+  };
+
   $scope.extraInit = function() {
     $scope.covers = {};
     $scope.buildbadgeArray();
-
-    if($scope.aux.redirect) {
-      cta_info = $scope.getParentCtaInfo($scope.calltoaction_info);
-      window.location = "/#" + cta_info.calltoaction.slug;
+    
+    if($scope.aux.anchor_to) {
+      window.location.href = "#" + $scope.aux.anchor_to;
     }
   };
 

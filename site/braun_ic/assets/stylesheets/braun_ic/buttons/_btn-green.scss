@@ -1,15 +1,11 @@
 .btn-green { 
   color: #FFFFFF; 
   border-color: $green; 
-  border-radius: 30px;
+  border-radius: 5px;
   padding-left: 30px;
   padding-right: 30px;
 
   background: $green;
-  background: -webkit-linear-gradient($green, $darkgreen);
-  background: -o-linear-gradient($green, $darkgreen);
-  background: -moz-linear-gradient($green, $darkgreen);
-  background: linear-gradient($green, $darkgreen);
 } 
  
 .btn-green:hover, 

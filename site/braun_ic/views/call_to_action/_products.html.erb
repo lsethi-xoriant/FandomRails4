@@ -13,6 +13,9 @@
           <p class="product-description">{{calltoaction_info.calltoaction.description}}</p>
           <a class="btn btn-green btn-lg product-btn" target="_blank" href="{{calltoaction_info.calltoaction.extra_fields.url}}">SCOPRI</a>
         </div>
+        <div class="col-sm-12 text-right share-interaction__container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+          <%= render partial: "/call_to_action/share_interaction" %>
+        </div>
       </div>
     </div>
   </div>
