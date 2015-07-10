@@ -33,8 +33,64 @@
   margin-top: 15px;
 }
 
+.test_progress-bar {
+  position: absolute; 
+  bottom: 20px; 
+  left: 0; 
+  right: 0; 
+  width: 150px; 
+  margin-left: auto; 
+  margin-right: auto;
+  color: #fff;
+}
+
 @media (max-width: $screen-sm-min) { 
+
+  .test-answer__btn {
+    left: 0;
+    right: 0;
+    bottom: 15px;
+  }
+
+  .test-answer__btn .btn {
+    white-space: normal;
+    padding: 15px 10px !important;
+    font-size: 12px !important;
+    width: 100% !important;
+  }
+
+  .test-answer__container {
+    height: 210px;
+    background-size: auto 100%;
+    background-position: center;
+  }
+
+  .test_progress-bar {
+    bottom: 0; 
+    color: #000;
+    .progress {
+      margin-bottom: 15px;
+    }
+  }
+
+  //265
+
   .test-container {
     padding-top: 0 !important;
   }
+
+  .test-interaction-credits_container {
+    padding-top: 15px;
+    padding-bottom: 0;
+    height: 35px;
+  }
+
+  .test-question__col {
+    height: 80px;
+  }
+
+  .test-question {
+    font-size: 18px;
+  }
+
 }

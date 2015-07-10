@@ -1,17 +1,10 @@
-<div class="col-sm-6 col-sm-offset-3 text-center test-question__col">
+<%= render partial: "/call_to_action/cta_status", locals: { container_class: "visible-xs test-interaction-credits_container" } %>
+
+<div class="col-sm-6 col-sm-offset-3 col-xs-12 text-center test-question__col">
   <p class="test-question">{{interaction_info.interaction.resource.question}}</p>
 </div>
 
-<div class="col-sm-3 text-right test-interaction-credits_container" ng-if="hasBadge(calltoaction_info)">
-  <span class="label cta_cover-credits_label_green">
-    Fatto <span class="glyphicon glyphicon-ok">
-  </span>  
-</div> 
-<div class="col-sm-3 text-right test-interaction-credits_container" ng-if="!hasBadge(calltoaction_info)">
-  <span class="label cta_cover-credits_label_yellow">
-    +1 <span class="fa fa-ticket">
-  </span>  
-</div> 
+<%= render partial: "/call_to_action/cta_status", locals: { container_class: "hidden-xs test-interaction-credits_container" } %>
 
 <div class="col-xs-6 text-center test-answer__container" ng-style="{'background-image': 'url(' + answer.image + ')'}" ng-repeat="answer in interaction_info.interaction.resource.answers" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">
   <div class="row">
@@ -21,8 +14,8 @@
   </div>
 </div>
 
-<div class="text-center" style="position: absolute; bottom: 20px; left: 0; right: 0; width: 150px; margin-left: auto; margin-right: auto;">
-  <p style="color: #fff;">{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
+<div class="text-center test_progress-bar">
+  <p>{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
   <div class="progress" style="height: 8px;">
     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (calltoaction_info.optional_history.optional_index_count/(calltoaction_info.optional_history.optional_total_count - 1)*100) + '%' }">
     </div>
