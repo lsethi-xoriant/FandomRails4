@@ -34,7 +34,6 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.tagsEnabled = tags;
 		$scope.activeTags = {};
 		$scope.has_more = has_more;
-		console.log(has_more);
 	};
 
 	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number) {
@@ -52,7 +51,6 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
 		$scope.$watch('elements_in_page', function(){
 			$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
-			console.log($scope.elements_per_column);
 		});
 	};
 
@@ -80,7 +78,6 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 				visibleContents.push(elem);
 			}
 		});
-		console.log($scope.visibleElements);
 		$scope.visibleElements = visibleContents;
 	}
 
@@ -109,7 +106,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
   };
 
   $scope.load_more = function(offset) {
-    loadMoreUrl = $scope.updatePathWithProperty("/browse/index_category_load_more.json")
+    loadMoreUrl = $scope.updatePathWithProperty("/browse/index_category_load_more.json");
 
 		$http.get(loadMoreUrl, {
       params: {
@@ -122,8 +119,14 @@ function BrowseCtrl($scope, $window, $filter, $http) {
       updateContents();
       if(response.data.length == 0) {
       	$("a.btn-load-more").hide();
+      	$("a#load_more_button").hide();
       }
     });
+	};
+	
+	$scope.resetFilter = function() {
+		$scope.activeTags = {};
+		updateContents();
 	};
 
 }
