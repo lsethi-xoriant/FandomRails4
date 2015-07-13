@@ -3,6 +3,10 @@
   padding-bottom: 10px;
 }
 
+.product_share-interaction__container {
+  padding-right: 0;
+}
+
 @media (max-width: $screen-sm-min) { 
   .share-interaction__container {
     padding-top: 15px;

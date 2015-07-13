@@ -37,6 +37,7 @@ class Sites::BraunIc::RankingController < RankingController
       }
       user_rewards.each_with_index do |user_reward, index|
         ranking_info[:ranking] << {
+          avatar: user_avatar(user_reward.user),
           position: ((index + 1) + (per_page * page)),
           badges: users_badge[user_reward.user_id],
           username: "#{user_reward.user.first_name} #{user_reward.user.last_name}",
@@ -59,6 +60,7 @@ class Sites::BraunIc::RankingController < RankingController
     users_badge = {}
 
     user_ids.each do |user_id|
+      debugger
       reward = rewards.where("user_rewards.user_id = ?", user_id).references(:user_rewards).order(cost: :desc).first
       if reward
         inactive = false

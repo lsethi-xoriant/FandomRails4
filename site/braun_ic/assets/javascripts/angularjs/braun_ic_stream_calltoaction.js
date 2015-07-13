@@ -96,6 +96,17 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     return Math.min(badge_percent, 100);
   };
 
+  $scope.getUserBadgesPercentForRanking = function(badges) {
+    badge_value = Math.ceil(100 / badges.length);
+    badge_percent = 0;
+    angular.forEach(badges, function(badge) {
+      if(!badge.inactive) {
+        badge_percent += badge_value;
+      }
+    });
+    return Math.min(badge_percent, 100);
+  };
+
   $scope.resetToRedo = function(cta_info) {
     user_interaction_ids = $scope.getUserInteractionsHistory(cta_info);
     parent_cta_id = $scope.getParentCtaId(cta_info);
