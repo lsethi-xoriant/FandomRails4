@@ -324,6 +324,18 @@
   }
 }
 
+.content-preview__miniformat {
+  position: absolute;
+  bottom: 4px;
+  left: 15px;
+}
+
+.content-preview__miniformat__title{
+  text-transform: uppercase;
+  font-family: 'Gnuolane';
+  font-size: 16px;
+}
+
 @media (min-width: $screen-sm-min) { 
   .content-preview__item-panel:hover {
     -webkit-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);

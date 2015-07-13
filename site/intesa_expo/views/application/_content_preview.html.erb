@@ -22,7 +22,10 @@
       <p class="cta__author-title--stripe">{{content.extra_fields.author_name}}</p>
       <p class="cta__author-address--stripe">{{content.extra_fields.author_newspaper}}</p>
     </div>
-
+	
+	<div class="content-preview__miniformat" ng-if="content.extra_fields.media_type_icon && !getFirstIcalInteractionForContent(content) && (content.media_type != 'VOID' || hasPhotoGallery(content)) && content.aux.miniformat['title'] != null">
+		<p class="content-preview__miniformat__title" ng-style="{'color': content.aux.miniformat['label_background']}">{{content.aux.miniformat['title']}}</p>
+	</div>
   </div>
 </a>
 
