@@ -9,7 +9,8 @@ module Fandom
       allowed_context_roots: ["it", "en", "imprese"],
       default_property: "it",
       free_provider_share: true,
-      init_ctas: 3
+      init_ctas: 3,
+      is_tag_filter_exclusive: true
     )      
   end
 end

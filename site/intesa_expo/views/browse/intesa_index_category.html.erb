@@ -1,8 +1,8 @@
 <div class="content-browse" <% if get_extra_fields!(@category)['background_image'] %> style="background-size: 100% 100%; background-attachment: fixed; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@category)['background_image'], :original) %>);" <% end %>>
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
-		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
+		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= get_section_column_number(get_extra_fields!(@category)) %>, <%= $site.is_tag_filter_exclusive %>)">
 	<% else %>
-		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>)">
+		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= $site.is_tag_filter_exclusive %>)">
 	<% end %>
 	<% if @use_filter %>
 		  <div class="row category-header text-center">

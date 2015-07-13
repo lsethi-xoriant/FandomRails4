@@ -62,6 +62,7 @@ module ConfigUtils
     attribute :aws_transcoding, :default => false
     attribute :main_reward_name, :default => "point"
     attribute :instantwin_ticket_name, :default => nil
+    attribute :is_tag_filter_exclusive, :default => false
 
     def unbranded?
       self.id == 'fandom'

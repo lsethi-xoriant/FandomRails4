@@ -24,7 +24,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
      	});
     });
 
-	$scope.init = function(category_id, elements, tags, has_more) {
+	$scope.init = function(category_id, elements, tags, has_more, is_exclusive_tag_filter) {
 		$scope.isTagFilterOpen = false;
 		$scope.category_id = category_id;
 		$scope.elements = elements;
@@ -35,9 +35,10 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.activeTags = {};
 		$scope.has_more = has_more;
 		$scope.number_of_tags = Object.keys(tags).length;
+		$scope.is_exclusive_tag_filter = is_exclusive_tag_filter;
 	};
 
-	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number) {
+	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number, is_exclusive_tag_filter) {
 		$scope.isTagFilterOpen = false;
 		$scope.category_id = category_id;
 		$scope.elements = elements;
@@ -53,7 +54,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.$watch('elements_in_page', function(){
 			$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
 		});
-		
+		$scope.is_exclusive_tag_filter = is_exclusive_tag_filter;
 	};
 
 	$scope.init_light = function(elements) {
@@ -61,6 +62,9 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	};
 
 	$scope.tagSelected = function(tag) {
+		if($scope.is_exclusive_tag_filter){
+			$scope.resetFilter();
+		}
 		if(tag in $scope.activeTags){
 			delete $scope.activeTags[tag];
 		}else{
