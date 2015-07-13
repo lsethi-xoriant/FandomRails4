@@ -71,6 +71,14 @@
     	</div>
     </div>
   </div>
+  
+  <div class="row main-row__evidence" ng-if="aux.assets.home_horizontal_banner" style="position: relative;">
+  	<div class="col-xs-12">
+  		<img ng-src="{{aux.assets.home_horizontal_banner.url}}" style="max-width: 100%;">
+  		<a ng-href="{{aux.assets.home_horizontal_banner_url}}" ng-if="aux.assets.home_horizontal_banner_url" style="position: absolute; top:0; left: 0; width: 100%; height: 100%;"></a>
+  	</div>
+  </div>
+  
 </div>
 
 <script type="text/javascript">
