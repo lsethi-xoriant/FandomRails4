@@ -7,6 +7,7 @@ module ApplicationHelper
 
   include ActionView::Helpers::SanitizeHelper
   include AnonymousNavigationHelper
+  include BraunIcHelper
   include CacheExpireHelper
   include CacheHelper
   include CalendarHelper

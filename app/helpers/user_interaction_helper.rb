@@ -400,16 +400,8 @@ module UserInteractionHelper
         reward = Reward.includes(:reward_tags).where("reward_tags.tag_id = ?", badge_tag.id).where(name: reward_names).references(:reward_tags).order(cost: :desc).first
         
         if reward
-          response[:badge] = {
-            name: reward.name,
-            image: reward.main_image,
-            title: reward.title,
-            extra_fields: reward.extra_fields,
-            description: reward.short_description,
-            cost: reward.cost,
-            inactive: false,
-            activated_at: cta_info["calltoaction"]["activated_at"]
-          }
+          parent_cta = CallToAction.find(params[:parent_cta_id])
+          response[:badge] = adjust_braun_ic_reward(reward, false, parent_cta.activated_at)
         end
       end
 

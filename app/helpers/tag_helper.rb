@@ -120,6 +120,18 @@ module TagHelper
     Reward.where("id IN (#{ids_subselect})").order(cost: :asc)
   end
 
+  def get_user_to_rewards_with_tags_in_and(tags, user_ids)
+    ids_subselect = tags.map { |tag| "(select reward_id from reward_tags where tag_id = #{tag.id})" }.join(' INTERSECT ')
+    user_rewards_grouped = UserReward.includes(:reward).where("reward_id IN (#{ids_subselect})").where("user_rewards.user_id IN (?)", user_ids).group("user_rewards.user_id, user_rewards.id, rewards.id").references(:rewards).order("rewards.cost desc").collect { |x| [x.user_id, x.reward] }
+    user_to_rewards = {}
+    user_rewards_grouped.each do |user_id, reward|
+      unless user_to_rewards.has_key?(user_id)
+        user_to_rewards[user_id] = reward
+      end
+    end
+    user_to_rewards
+  end
+
   def get_tags_with_tags_in_and(tag_ids, params = {})
     extra_key = get_extra_key_from_params(params)
     where_clause = get_tag_where_clause_from_params(params)

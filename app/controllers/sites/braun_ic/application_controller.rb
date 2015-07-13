@@ -75,22 +75,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         inactive = true
       end
 
-      if inactive
-        image = reward.not_awarded_image
-      else
-        image = reward.main_image
-      end
-
-      badges[get_parent_cta_name(cta_info)] = {
-        name: reward.name,
-        title: reward.title,
-        description: reward.short_description,
-        image: image,
-        cost: reward.cost,
-        extra_fields: reward.extra_fields,
-        inactive: inactive,
-        activated_at: get_parent_cta(cta_info)["calltoaction"]["activated_at"]
-      }
+      badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, get_parent_cta(cta_info)["calltoaction"]["activated_at"])
     end
 
     if cta_id
