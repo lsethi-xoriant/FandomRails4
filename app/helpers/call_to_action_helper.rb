@@ -199,9 +199,9 @@ module CallToActionHelper
       end
       ugc_tag = get_tag_from_params("ugc")
       if ugc_tag
-        ugc_calltoactions = CallToAction.active.includes(:call_to_action_tags, :interactions).where("call_to_action_tags.tag_id = ?", ugc_tag.id).references(:call_to_action_tags, :interactions)
+        ugc_calltoactions = CallToActionTag.select(:call_to_action_id).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
         if ugc_calltoactions.any?
-          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions.map { |calltoaction| calltoaction.id })
+          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions)
         end
       end
     end
