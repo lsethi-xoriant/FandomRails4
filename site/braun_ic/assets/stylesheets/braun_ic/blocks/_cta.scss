@@ -2,12 +2,10 @@ $cover-height: 530px;
 
 .cta_cover-container__row {
   border: none;
-  margin-bottom: 30px;
-  height: $cover-height;
 }
 
 .cta_cover-container__col {
-  height: $cover-height;
+  padding-top: 15px;
 }
 
 .test-interaction__container {
@@ -16,7 +14,7 @@ $cover-height: 530px;
 }
 
 .cta_cover-img_container {
-  height: 100%;
+  height: 530px;
   background-size: 100% auto;
   background-repeat: no-repeat;
   position: relative;
