@@ -26,7 +26,12 @@
 		  </div>
 		  <div class="row text-center main-row">
 		  	<div class="col-xs-12">
-				<div ng-repeat="(tag_id, tag) in tags" class="filter-tag" ng-class="{ 'filter-tag--active': activeTags[tag_id] != undefined }">
+		  		<div class="filter-tag" ng-style="{'width': 100/(number_of_tags+1) + '%'}">
+					<img class="filter-tag__icon" ng-src="{{aux.assets.view_all_icon.url}}" />
+					<div class="filter-tag__title">{{aux.assets['all_tag_title_' + aux.language]}}</div>
+					<a class="filter-tag__link" href="javascript:void(0);" ng-click="resetFilter()"></a>
+				</div>
+				<div ng-repeat="(tag_id, tag) in tags" class="filter-tag" ng-class="{ 'filter-tag--active': activeTags[tag_id] != undefined }" ng-style="{'width': 100/(number_of_tags+1) + '%'}">
 					<img class="filter-tag__icon" ng-src="{{tag.aux.miniformat.icon.url}}" />
 					<div class="filter-tag__title">{{tag.title}}</div>
 					<a class="filter-tag__link" href="javascript:void(0);" ng-click="tagSelected(tag_id)"></a>

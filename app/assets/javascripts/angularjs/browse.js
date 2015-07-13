@@ -34,6 +34,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.tagsEnabled = tags;
 		$scope.activeTags = {};
 		$scope.has_more = has_more;
+		$scope.number_of_tags = Object.keys(tags).length;
 	};
 
 	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number) {
@@ -52,6 +53,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.$watch('elements_in_page', function(){
 			$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
 		});
+		
 	};
 
 	$scope.init_light = function(elements) {

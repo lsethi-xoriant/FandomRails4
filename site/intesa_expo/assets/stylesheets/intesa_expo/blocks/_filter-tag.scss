@@ -3,8 +3,10 @@
 .filter-tag{
   float: left;
   position: relative;
+  /*
   padding: 10px 0px;
   margin: 0 10px 0px 10px;
+  */
   border-bottom: 2px solid transparent;
 }
 
@@ -49,7 +51,7 @@
   }
   
   .filter-tag{
-    margin: 0 6px 0px 6px;
+    //margin: 0 6px 0px 6px;
   }
   
   .filter-tag__reset-link{
