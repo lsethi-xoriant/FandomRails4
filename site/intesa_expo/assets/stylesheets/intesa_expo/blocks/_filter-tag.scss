@@ -14,10 +14,11 @@
 }
 
 .filter-tag__title{
+  font-family: 'Gnuolane';
   text-align: center;
   color: #9a9a9a;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .filter-tag--active{
@@ -30,4 +31,33 @@
   height: 100%;
   top: 0;
   left: 0;
+}
+
+.filter-tag__reset-link{
+  text-decoration: none;
+  color: #999;
+  font-size: 16px;
+}
+
+.filter-tag__reset-link:hover {
+  color: #152b3f;
+}
+
+@media (max-width: $screen-sm-min) {
+  .filter-tag__title{
+    display: none;
+  }
+  
+  .filter-tag{
+    margin: 0 6px 0px 6px;
+  }
+  
+  .filter-tag__reset-link{
+    font-size: 14px;
+  }
+  
+  .filter-tag__icon {
+    margin: 5px auto;
+    max-width: 35px;
+  }
 }

@@ -1,4 +1,4 @@
-<div class="content-browse">
+<div class="content-browse" <% if get_extra_fields!(@category)['background_image'] %> style="background-size: 100% 100%; background-attachment: fixed; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@category)['background_image'], :original) %>);" <% end %>>
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
 		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= get_section_column_number(get_extra_fields!(@category)) %>)">
 	<% else %>
@@ -18,11 +18,13 @@
 			  		</div>
 			  	<% end %>
 			</div>
+			<!--
 			<div class="category-header__filter-area">
-		      <a href="javascript:void(0);" ng-click="resetFilter()">Vedi tutti</a>
+		      <a href="javascript:void(0);" ng-click="resetFilter()" class="filter-tag__reset-link">Vedi tutti</a>
 		    </div>
+		   -->
 		  </div>
-		  <div class="row text-center">
+		  <div class="row text-center main-row">
 		  	<div class="col-xs-12">
 				<div ng-repeat="(tag_id, tag) in tags" class="filter-tag" ng-class="{ 'filter-tag--active': activeTags[tag_id] != undefined }">
 					<img class="filter-tag__icon" ng-src="{{tag.aux.miniformat.icon.url}}" />
@@ -30,17 +32,6 @@
 					<a class="filter-tag__link" href="javascript:void(0);" ng-click="tagSelected(tag_id)"></a>
 				</div> 
 			</div>
-		  	<!--
-		    <div class="col-xs-12">
-				<div collapse="!isTagFilterOpen" class="row category-filter main-row">
-					<div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
-						<button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
-	            {{tag_name.title}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
-	          </button>
-					</div> 
-				</div>
-			</div>
-			-->
 		  </div>
 	<% else %>
 	  	<div class="row text-center">
