@@ -37,6 +37,7 @@ module ContentHelper
     attr_accessor :title
     # html id of this field
     attr_accessor :id
+    attr_accessor :name
     attr_accessor :type
     attr_accessor :media_type
     attr_accessor :has_thumb
@@ -71,6 +72,7 @@ module ContentHelper
     
     def initialize(params)
       @id = params[:id]
+      @name = params[:name]
       @title = params[:title]
       @type = params[:type]
       @media_type = params[:media_type]
@@ -177,6 +179,7 @@ module ContentHelper
     ContentPreview.new(
       type: "tag",
       id: tag.id,
+      name: tag.name,
       slug: tag.slug,
       has_thumb: has_thumb, 
       thumb_thumb_url: thumb_thumb_url,
@@ -227,6 +230,7 @@ module ContentHelper
       type: "cta",
       media_type: cta.media_type,
       id: cta.id, 
+      name: cta.name,
       has_thumb: cta.thumbnail.present?, 
       thumb_url: cta.thumbnail(:thumb), 
       title: cta.title, 
