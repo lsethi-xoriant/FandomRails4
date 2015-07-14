@@ -925,12 +925,14 @@ module ApplicationHelper
     end
 
     iw_cta = CallToAction.find("instantwin-call-to-action") rescue nil
-    if iw_cta
+    if iw_cta.present?
       iw_interaction = iw_cta.interactions.where(resource_type: "InstantwinInteraction").first
 
-      if iw_interaction
+      if iw_interaction.present?
         iw_user_info = user_already_won(iw_interaction.id)
-        form_extra_fields = JSON.parse(iw_cta.extra_fields["instantwin_form_attributes"])
+        if iw_cta.extra_fields && iw_cta.extra_fields["instantwin_form_attributes"]
+          form_extra_fields = JSON.parse(iw_cta.extra_fields["instantwin_form_attributes"])
+        end
         iw_info = {
           "interaction" => { id: iw_interaction.id },
           "form_extra_fields" => form_extra_fields,
