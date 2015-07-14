@@ -38,6 +38,14 @@ p {
   border-right: 1px solid #ccc;
 }
 
+.ranking-container .profile-container__row {
+  height: 151px;
+}
+
+.ranking-container .profile-container__user, .ranking-container .profile-container__badge {
+  border-bottom: 1px solid #ccc;
+}
+
 .profile-container__user_unlogged {
   border: none;
 }

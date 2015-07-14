@@ -22,12 +22,13 @@ class Sites::BraunIc::RankingController < RankingController
   end
 
   def compute_ranking(page, per_page)
-    user_rewards = UserReward.includes(:reward).where("user_rewards.period_id IS NULL AND rewards.name = 'point'").order("user_rewards.counter DESC, user_rewards.updated_at asc").references(:rewards).page(page).per(per_page)
+    user_rewards = UserReward.includes(:reward, :user).where("user_rewards.period_id IS NULL AND rewards.name = 'point' AND (users.anonymous_id IS NULL OR users.anonymous_id = '')").order("user_rewards.counter DESC, user_rewards.updated_at asc").references(:rewards, :users).page(page).per(per_page)
     user_ids = user_rewards.map { |user_reward| user_reward.user_id }
     users = User.where(id: user_ids)
 
-    # TODO: ADD MIN UPDATED AT
-    timestamp = "#{from_updated_at_to_timestamp(user_rewards.maximum(:updated_at))}_#{from_updated_at_to_timestamp(users.maximum(:updated_at))}"
+    user_rewards_updated_at = "#{from_updated_at_to_timestamp(user_rewards.minimum(:updated_at))}_#{from_updated_at_to_timestamp(user_rewards.maximum(:updated_at))}"
+    users_updated_at = "#{from_updated_at_to_timestamp(users.minimum(:updated_at))}_#{from_updated_at_to_timestamp(users.maximum(:updated_at))}"
+    timestamp = "#{user_rewards_updated_at}_#{users_updated_at}"
     ranking = cache_forever(get_ranking_cache_key(page, timestamp)) do   
       users_badge = compute_badges(user_ids)
 

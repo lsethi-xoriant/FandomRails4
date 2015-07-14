@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container ranking-container">
 
   <div class="row profile-container__row" ng-repeat="user in aux.ranking_info.ranking" >
-    <div class="col-sm-3 profile-container__user">    
+    <div class="col-sm-4 col-sm-offset-1 profile-container__user">    
       <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercentForRanking(user.badges)}}">
         <div class="percentage_circle_fix_bar"></div>
         <span class="percentage_circle_value percentage_circle_value_profile">
@@ -14,7 +14,7 @@
       </div>
       <p style="margin-top: 52px; font-weight: bold;">{{user.username}}</p>
     </div>
-    <div class="col-sm-3 profile-container__badge text-center" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+    <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
       <div class="profile-container__badge-block">
         <div class="percentage_circle small p{{getBadgeCost(badge)}}">
           <div class="percentage_circle_fix_bar"></div>

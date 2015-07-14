@@ -59,7 +59,7 @@ module InstantwinHelper
   def deduct_ticket()
     instantwin_ticket_name = get_instantwin_ticket_name()
     get_reward_with_periods(instantwin_ticket_name).each do |user_reward|
-      user_reward.update_attribute(:counter, user_reward.counter - 1)
+      user_reward.update_attribute(:counter, (user_reward.counter - 1))
     end
   end
 

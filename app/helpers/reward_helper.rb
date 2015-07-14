@@ -194,25 +194,20 @@ module RewardHelper
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
     if current_user
-      reward_points = cache_short(get_reward_points_for_user_key(reward_name, current_user.id)) do
-        
-        reward_points = { general: 0 }
-        $site.periodicity_kinds.each do |periodicity_kind|
-          reward_points[:periodicity_kind] = 0
-        end
-
-        get_reward_with_periods(reward_name).each do |user_reward|
-          if user_reward.period.blank?
-            reward_points[:general] = user_reward.counter
-          else
-            reward_points[user_reward.period.kind] = user_reward.counter
-          end
-        end 
-
-        reward_points     
+      reward_points = { general: 0 }
+      periodicity_kinds = $site.periodicity_kinds
+      periodicity_kinds.each do |periodicity_kind|
+        reward_points[:periodicity_kind] = 0
       end
 
-      all_periods ? reward_points : reward_points[:general]  
+      get_reward_with_periods(reward_name).each do |user_reward|
+        if user_reward.period.blank?
+          reward_points[:general] = user_reward.counter
+        else
+          reward_points[user_reward.period.kind] = user_reward.counter
+        end
+      end 
+      reward_points = all_periods ? reward_points : reward_points[:general]  
     else
       nil
     end
@@ -245,15 +240,11 @@ module RewardHelper
   end
 
   def get_main_reward
-    cache_short("main_reward") do
-      Reward.find_by_name(MAIN_REWARD_NAME);
-    end
+    Reward.find_by_name(MAIN_REWARD_NAME);
   end
 
   def get_reward_by_name(reward_name)
-    cache_short("reward_#{reward_name}") do
-      Reward.find_by_name(reward_name)
-    end
+    Reward.find_by_name(reward_name)
   end
   
   def get_main_reward_image_url

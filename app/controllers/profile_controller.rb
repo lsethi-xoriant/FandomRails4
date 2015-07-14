@@ -26,12 +26,12 @@ class ProfileController < ApplicationController
   def complete_for_contest
     user_params = params[:user]
 
-    user_params.delete :email
-    user_params.delete :id
-
     extra_fields = get_form_attributes(params["interaction_id"])
 
     form_attributes_valid, errors, user_extra_fields = validate_upload_extra_fields(user_params, extra_fields)
+
+    user_params.delete :email
+    user_params.delete :id
 
     response = {}
     if !form_attributes_valid

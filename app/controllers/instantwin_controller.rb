@@ -1,10 +1,6 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-include InstantwinHelper
-include ApplicationHelper
-include CacheHelper
-
 class InstantwinController < ApplicationController
 
   def show_winners

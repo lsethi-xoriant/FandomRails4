@@ -90,6 +90,7 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
         <div class="row" ng-if="aux.instant_win_info.active" >
+          <p ng-if="aux.instant_win_info.message">{{aux.instant_win_info.message}}</p>
           <div ng-if="(aux.instant_win_info.win == false || aux.instant_win_info.win == null) && current_user.instantwin_tickets_counter < 1" class="col-md-12 text-center">
             <p>PECCATO<br>Hai esaurito i biglietti</p>
           </div>
