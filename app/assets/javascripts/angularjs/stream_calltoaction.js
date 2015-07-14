@@ -445,10 +445,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
     $scope.aux.instant_win_info.in_progress = true;
     delete $scope.aux.instant_win_info.win;
-    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
+    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction.id })
       .success(function(data) { 
         $timeout(function() { 
-          updateUserRewardInView(data.main_reward_counter.general);
           $scope.aux.instant_win_info.in_progress = false;
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
@@ -464,20 +463,23 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.openInstantWinModal = function() {
-    delete $scope.aux.instant_win_info.win;
-  	$(".click-sound").trigger("play");
+    if($scope.aux.instant_win_info.win == false) {
+      delete $scope.aux.instant_win_info.win;
+    }
+  	//$(".click-sound").trigger("play");
     $("#modal-interaction-instant-win").modal("show");
   };
 
   $scope.openRegistrationModalForInstantWin = function(user) {
-  	$(".click-sound").trigger("play");
+  	//$(".click-sound").trigger("play");
     $scope.form_data.current_user = user;
+    console.log(user);
     $("#modal-interaction-instant-win-registration").modal("show");
   };
 
   $scope.processRegistrationForm = function() {
     delete $scope.form_data.current_user.errors;
-    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction_id };
+    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction.id };
     $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
       .success(function(data) {
         if(data.errors) {

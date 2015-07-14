@@ -144,10 +144,12 @@ module ProfileHelper
   end
 
   def user_for_registation_form()
-    if current_user
-      aux = current_user.aux || {}
-      current_user.attributes.merge(aux)
+    user = current_user
+    if user
+      aux = user.aux || {}
+      user.attributes.merge(aux)
     end
+    user
   end
 
 end

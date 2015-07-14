@@ -26,12 +26,17 @@ class ProfileController < ApplicationController
   def complete_for_contest
     user_params = params[:user]
 
-    form_attributes_valid, errors, user_extra_fields = validate_upload_extra_fields(user_params, get_form_attributes(params["interaction_id"]))
+    user_params.delete :email
+    user_params.delete :id
+
+    extra_fields = get_form_attributes(params["interaction_id"])
+
+    form_attributes_valid, errors, user_extra_fields = validate_upload_extra_fields(user_params, extra_fields)
 
     response = {}
     if !form_attributes_valid
       response[:errors] = errors
-    elsif !update_current_user_info_with_contest_registration_params(user_extra_fields)
+    elsif !update_current_user_info_with_contest_registration_params(user_params)
       response[:errors] = current_user.errors.full_messages
     else
       log_audit("registration completion", { 'form_data' => params[:user], 'user_id' => current_user.id })
@@ -43,13 +48,13 @@ class ProfileController < ApplicationController
   end
 
   def update_current_user_info_with_contest_registration_params(user_extra_fields)
-    model_fields = {}
+    user_model_fields = {}
     aux = {}
-    model_attributes = User.accessible_attributes.to_a
+    user_model_attributes = User.accessible_attributes.to_a
     user_extra_fields.each do |extra_field, value|
       entry = { extra_field => value }
-      if model_attributes.include?(extra_field)
-        model_fields.merge!(entry)
+      if user_model_attributes.include?(extra_field)
+        user_model_fields.merge!(entry)
       else
         aux.merge!(entry)
       end
@@ -57,7 +62,7 @@ class ProfileController < ApplicationController
     if current_user.aux
       aux = current_user.aux.merge(aux)
     end
-    current_user.update_attributes(model_fields.merge({ "aux" => aux }))
+    current_user.update_attributes(user_model_fields.merge({ "aux" => aux }))
   end
 
   def index

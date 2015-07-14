@@ -26,17 +26,15 @@ module InstantwinHelper
 	# user_id - id of current user
 	# interaction_id - id of instantwin interaction 
 	#
-	def has_tickets(interaction_id)
-	  reward_name = get_reward_name_for_contest(interaction_id)
+	def has_tickets()
+	  reward_name = get_instantwin_ticket_name()
 	  tickets = get_counter_about_user_reward(reward_name) || 0
 	  tickets > 0
 	end
 
-	def get_reward_name_for_contest(interaction_id)
-	  cache_short(get_reward_name_for_contest_key(interaction_id)) do
-	    Interaction.find(interaction_id).resource.reward.name
-	  end
-	end
+  def get_instantwin_ticket_name()
+    $site.instantwin_ticket_name
+  end
 
 	# Check if a user has already won a prize in the active contest
 	#
@@ -45,27 +43,22 @@ module InstantwinHelper
 	#
 	def user_already_won(interaction_id)
     if current_user
-  	  user_interactions = cache_short(get_user_already_won_contest(current_user.id, interaction_id)) do
-  	    UserInteraction.where("interaction_id = ? AND user_id = ? AND (aux->>'instant_win_id') IS NOT NULL", interaction_id, current_user.id).to_a
-  	  end
-    end
-
-    if user_interactions
+  	  user_interactions = UserInteraction.where("interaction_id = ? AND user_id = ? AND (aux->>'instant_win_id') IS NOT NULL", interaction_id, current_user.id).to_a
       if user_interactions.any?
         reward_id = user_interactions.first.aux["reward_id"]
-        reward_title = Reward.find_by_id(reward_id).title
+        reward_title = Reward.find(reward_id).title
       end
     end
-
-	 {
-      win: user_interactions ? user_interactions.any? : false,
+    
+    {
+      win: (user_interactions.present? && user_interactions.any?),
       message: reward_title
     }
-
 	end
 
-  def deduct_ticket(reward_name)
-    get_reward_with_periods(reward_name).each do |user_reward|
+  def deduct_ticket()
+    instantwin_ticket_name = get_instantwin_ticket_name()
+    get_reward_with_periods(instantwin_ticket_name).each do |user_reward|
       user_reward.update_attribute(:counter, user_reward.counter - 1)
     end
   end

@@ -24,11 +24,10 @@ class InstantwinController < ApplicationController
 
   def play_ticket
     response = {}
-
     if current_user
 
       interaction = Interaction.find(params[:interaction_id])
-      if has_tickets(interaction.id) && !user_already_won(interaction.id)[:win]
+      if has_tickets() && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
         instantwin, prize = check_win(interaction, time)
         if instantwin.nil?
@@ -41,25 +40,22 @@ class InstantwinController < ApplicationController
           aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
           assign_reward(current_user, prize.name, 1, request.site)
           send_winner_email(instantwin.reward_info["prize_code"], prize)
-          expire_cache_key(get_user_already_won_contest(current_user.id, interaction.id))
+
           log_synced("assigning instant win to user", { "instantwin_id" => instantwin.id })
         end
-        deduct_ticket(interaction.resource.reward.name)
+        deduct_ticket()
         create_or_update_interaction(current_user, interaction, nil, nil, aux.to_json)
-        expire_cache_key(get_reward_points_for_user_key(interaction.resource.reward.name, current_user.id))
         response["prize"] = prize
-      elsif !has_tickets(interaction.id)
+      elsif !has_tickets()
         response["message"] = "Hai esaurito i biglietti"
         response[:win] = false
       else
         response["message"] = "Hai già vinto un premio"
         response[:win] = false
       end
-      response["instantwin_tickets_counter"] = get_counter_about_user_reward(interaction.resource.reward.name)
+      response["instantwin_tickets_counter"] = get_counter_about_user_reward(get_instantwin_ticket_name())
 
     end
-
-    response["main_reward_counter"] = get_counter_about_user_reward(MAIN_REWARD_NAME, true)
 
     respond_to do |format|
       format.json { render :json => response.to_json }

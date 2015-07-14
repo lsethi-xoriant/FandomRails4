@@ -608,19 +608,40 @@ module ApplicationHelper
   end
 
   def registration_fully_completed?
+    result = true
     if current_user
-      instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
+      instantwin_cta = CallToAction.includes(:interactions).where("interactions.resource_type = 'InstantwinInteraction'").references(:interactions).first
       if instantwin_cta
-        instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
-        if instantwin_form_attributes
-          JSON.parse(instantwin_form_attributes).each do |form_attr|
-            return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present? rescue false)
+        instantwin_form_attributes = JSON.parse(instantwin_cta.extra_fields["instantwin_form_attributes"])
+        instantwin_form_attributes.each do |form_attr|
+          name = form_attr["name"]
+          if form_attr["name"] == "date"
+           name = "birth_date"
+          end
+          unless current_user[name].present? || (current_user.aux.present? && current_user.aux[name].present?)
+            result = false
+            break
           end
         end
       end
-      true
     end
+    result
   end
+
+  # def registration_fully_completed?
+  #   if current_user
+  #     #instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
+  #     if instantwin_cta
+  #       instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
+  #       if instantwin_form_attributes
+  #         JSON.parse(instantwin_form_attributes).each do |form_attr|
+  #           return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present? rescue false)
+  #         end
+  #       end
+  #     end
+  #     true
+  #   end
+  # end
 
   def extra_field_to_html(field, ng_model_name = nil)
     ac = ActionController::Base.new()
@@ -645,22 +666,27 @@ module ApplicationHelper
       [true, [], {}]
     else
       errors = []
-      cloned_cta_extra_fields = {}
       extra_fields.each do |extra_field|
-        if extra_field['required'] && params["#{extra_field['name']}"].blank?
+        if extra_field['required']
           case extra_field['type']
           when "textfield"
-            errors << "#{extra_field['label']} non puo' essere lasciato in bianco"
+            if params["#{extra_field['name']}"].blank?
+              errors << "#{extra_field['label']} non puo' essere lasciato in bianco"
+            end
           when "checkbox"
-            errors << "#{extra_field['label']} deve essere accettato"
+            if params["#{extra_field['name']}"].blank?
+              errors << "#{extra_field['label']} deve essere accettato"
+            end
+          when "date"
+            if params["day_of_birth"].blank? || params["month_of_birth"].blank? || params["year_of_birth"].blank?
+              errors << "#{extra_field['label']} deve essere compilata"
+            end
           else
             errors << "#{extra_field['label']} deve essere selezionato"
           end
-        else
-          cloned_cta_extra_fields["#{extra_field['name']}"] = params["#{extra_field['name']}"]
         end
       end
-      [errors.empty?, errors, cloned_cta_extra_fields]
+      [errors.empty?, errors]
     end
   end
 
@@ -898,15 +924,17 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
-    iw_cta = CallToAction.find_by_name("instantwin-call-to-action")
+    iw_cta = CallToAction.find("instantwin-call-to-action")
     if iw_cta
       iw_interaction = iw_cta.interactions.where(resource_type: "InstantwinInteraction").first
 
       if iw_interaction
         iw_user_info = user_already_won(iw_interaction.id)
-
+        form_extra_fields = JSON.parse(iw_cta.extra_fields["instantwin_form_attributes"])
         iw_info = {
-          "interaction_id" => iw_interaction.id,
+          "interaction" => { id: iw_interaction.id },
+          "form_extra_fields" => form_extra_fields,
+          "active" => true,
           "win" => iw_user_info[:win],
           "message" => iw_user_info[:message],
           "in_progress" => false
@@ -921,7 +949,7 @@ module ApplicationHelper
     end
 
     assets = Tag.find("assets")
-
+    
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
