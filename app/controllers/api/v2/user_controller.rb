@@ -36,8 +36,8 @@
         end
       else
         authentication_token = Devise.friendly_token
-        user_parmas[:authentication_token] = authentication_token
-        user = User.create(user_parmas)
+        user_params[:authentication_token] = authentication_token
+        user = User.create(user_params)
       end
 
       if user.errors.blank?
