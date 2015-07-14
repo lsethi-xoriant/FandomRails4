@@ -1,0 +1,42 @@
+<div class="footer-container-socials">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <a href="" class="btn btn-white"><span class="fa fa-youtube"></span></a>
+        <a href="" class="btn btn-facebook"><span class="fa fa-facebook"></span></a>
+        <a href="" class="btn btn-twitter"><span class="fa fa-twitter"></span></a>
+        <a href="" class="btn btn-pinterest"><span class="fa fa-pinterest"></span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-container-others">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 footer-container-others__menu">
+        <p class="footer-container-others__menu-item" ng-repeat="item in aux.menu_items">
+          <a ng-if="isAnchor(item.extra_fields.url)" href="javascript: void(0)" ng-click="scrollTo(item.extra_fields.url)">{{item.title}}</a>
+          <a ng-if="!isAnchor(item.extra_fields.url)" href="{{item.extra_fields.url}}">{{item.title}}</a>
+        </p>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1 footer-container-others__address">
+        <span>DE'LONGHI APPLINACES S.r.l</span><br>
+        Via L. Seitz, 47<br>
+        31100 Treviso, ITALIA
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="footer-container-braun">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <img class="footer-container-braun__logo" ng-src="{{aux.assets.extra_fields.logo.url}}">
+        <p class="footer-container-braun__text">Braun è un marchio registrato da Braun GmbH, Germania usato in licenza da De'Longhi Appliances S.r.l.</p>
+      </div>
+    </div>
+  </div>
+</div>

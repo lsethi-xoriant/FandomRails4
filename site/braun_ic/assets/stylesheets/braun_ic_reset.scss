@@ -9,6 +9,30 @@ body {
   margin: 0;
 }
 
+.devise-container {
+  background-color: #000;
+  padding-bottom: 30px;
+  .form-container {
+    background-color: #fff;
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+}
+
+.devise-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.devise-errors {
+  margin-bottom: 15px;
+  color: red;
+}
+
+.devise-title-hr {
+  margin-bottom: 45px;
+}
+
 .test-container {
   padding-top: 25px;
   padding-bottom: 15px;
