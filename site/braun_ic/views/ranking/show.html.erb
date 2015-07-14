@@ -1,50 +1,56 @@
-<div class="container ranking-container">
+<% content_for :body_class, "small-body" %>
 
-  <div class="row profile-container__row" ng-repeat="user in aux.ranking_info.ranking" >
-    <div class="col-sm-4 col-sm-offset-1 profile-container__user">    
-      <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercentForRanking(user.badges)}}">
-        <div class="percentage_circle_fix_bar"></div>
-        <span class="percentage_circle_value percentage_circle_value_profile">
-          <img ng-src="{{user.avatar}}">
-        </span>
-        <div class="percentage_circle_slice">
-          <div class="percentage_circle_bar"></div>
-          <div class="percentage_circle_fill"></div>
-        </div>
-      </div>
-      <p style="margin-top: 52px; font-weight: bold;">{{user.username}}</p>
-    </div>
-    <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
-      <div class="profile-container__badge-block">
-        <div class="percentage_circle small p{{getBadgeCost(badge)}}">
+<div class="small-container">
+
+  <%= render partial: "/application/navbar" %>
+
+  <div class="container ranking-container">
+
+    <div class="row profile-container__row" ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="user in aux.ranking_info.ranking" >
+      <div class="col-sm-3 col-sm-offset-1 profile-container__user">    
+        <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercentForRanking(user.badges)}}">
           <div class="percentage_circle_fix_bar"></div>
-          <span class="percentage_circle_value">
-              <img ng-src="{{badge.image}}">
+          <span class="percentage_circle_value percentage_circle_value_profile">
+            <img ng-src="{{user.avatar}}">
           </span>
           <div class="percentage_circle_slice">
-            <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
-            <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            <div class="percentage_circle_bar"></div>
+            <div class="percentage_circle_fill"></div>
           </div>
         </div>
+        <p style="margin-top: 52px; font-weight: bold;">{{user.username}}</p>
       </div>
-      <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.title}}</p>
-      <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.description}}</p>
+      <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+        <div class="profile-container__badge-block">
+          <div class="percentage_circle small p{{getBadgeCost(badge)}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value">
+                <img ng-src="{{badge.image}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+              <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            </div>
+          </div>
+        </div>
+        <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.title}}</p>
+        <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.description}}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 text-center" ng-if="aux.ranking_info.num_pages > 1">     
+        <ul class="pagination">
+          <li ng-repeat="page in getPaginationPagesBefore(aux.ranking_info.page, aux.ranking_info.num_pages)">
+            <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
+          </li>
+          <li class="active"><a href="javascript:void(0);">{{aux.ranking_info.page}}</a></li>
+          <li ng-repeat="page in getPaginationPagesAfter(aux.ranking_info.page, aux.ranking_info.num_pages)">
+            <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-12 text-center" ng-if="aux.ranking_info.num_pages > 1">     
-      <ul class="pagination">
-        <li ng-repeat="page in getPaginationPagesBefore(aux.ranking_info.page, aux.ranking_info.num_pages)">
-          <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
-        </li>
-        <li class="active"><a href="javascript:void(0);">{{aux.ranking_info.page}}</a></li>
-        <li ng-repeat="page in getPaginationPagesAfter(aux.ranking_info.page, aux.ranking_info.num_pages)">
-          <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
-        </li>
-      </ul>
-    </div>
-  </div>
 </div>
-
-

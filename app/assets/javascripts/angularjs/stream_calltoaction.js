@@ -224,13 +224,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
 
     $('html, body').animate({
-        scrollTop: $("#"+ id).offset().top
-    }, 500);
-  };
-
-  $scope.scrollToFromAnchor = function(id) {
-    $('html, body').animate({
-        scrollTop: $("#"+ id).offset().top
+      scrollTop: $("#" + id).offset().top
     }, 500);
   };
 

@@ -177,6 +177,11 @@ $cover-height: 530px;
   width: 100%;
 }
 
+.test-interaction__container {
+  position: relative;
+  height: $cover-height;
+}
+
 @media (max-width: $screen-lg-min) {
   .cta_cover-img_container {
     background-size: auto 100%;

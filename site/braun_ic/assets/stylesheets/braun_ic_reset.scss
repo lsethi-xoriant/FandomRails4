@@ -9,7 +9,7 @@ body {
   margin: 0;
 }
 
-.devise-container {
+.small-container {
   background-color: #000;
   padding-bottom: 30px;
   .form-container {
@@ -17,6 +17,13 @@ body {
     padding-top: 25px;
     padding-bottom: 25px;
   }
+}
+
+.devise-next-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+  margin-top: 20px;
+  a { color: $green; }
 }
 
 .devise-title {
@@ -68,12 +75,19 @@ p {
   border-right: 1px solid #ccc;
 }
 
-.ranking-container .profile-container__row {
-  height: 151px;
+.ranking-container .profile-container__user, .ranking-container .profile-container__badge {
+  border: none;
+  background-color: transparent;
 }
 
-.ranking-container .profile-container__user, .ranking-container .profile-container__badge {
-  border-bottom: 1px solid #ccc;
+.ranking-container .profile-container__row {
+  height: 170px;
+  background-color: whitesmoke;
+  padding-top: 15px;
+}
+
+.ranking-container .profile-container__row.even {
+  background-color: #fff;
 }
 
 .profile-container__user_unlogged {

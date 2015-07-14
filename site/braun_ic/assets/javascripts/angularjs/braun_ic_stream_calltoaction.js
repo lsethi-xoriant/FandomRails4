@@ -20,6 +20,20 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     return url;
   };
 
+  $scope.scrollTo = function(id) {
+    if(id.charAt(0) == "#") {
+      id = id.substring(1);
+    }
+
+    if($scope.aux.tag_menu_item != "home") {
+      window.location.href = $scope.aux.root_url + "#" + id;
+    } else {
+      $('html, body').animate({
+        scrollTop: $("#" + id).offset().top
+      }, 500);
+    }
+  };
+
   $scope.extraInit = function() {
     $scope.covers = {};
     $scope.buildbadgeArray();

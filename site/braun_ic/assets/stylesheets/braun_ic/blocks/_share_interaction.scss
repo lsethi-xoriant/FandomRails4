@@ -2,6 +2,11 @@
   padding-bottom: 10px;
 }
 
+.share-title {
+  margin-right: 10px;
+  line-height: 40px;
+}
+
 @media (max-width: $screen-sm-min) { 
   .share-interaction__container {
     padding-bottom: 5px;
