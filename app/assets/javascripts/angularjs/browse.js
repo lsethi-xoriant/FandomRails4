@@ -36,6 +36,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$scope.has_more = has_more;
 		$scope.number_of_tags = Object.keys(tags).length;
 		$scope.is_exclusive_tag_filter = is_exclusive_tag_filter;
+		$scope.filter_in_progress = false;
 	};
 
 	$scope.init_intesa_browse = function(category_id, elements, tags, has_more, column_number, is_exclusive_tag_filter) {
@@ -55,6 +56,7 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 			$scope.elements_per_column = $scope.elements_in_page / $scope.column_number;
 		});
 		$scope.is_exclusive_tag_filter = is_exclusive_tag_filter;
+		$scope.filter_in_progress = false;
 	};
 
 	$scope.init_light = function(elements) {
@@ -63,14 +65,14 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 
 	$scope.tagSelected = function(tag) {
 		if($scope.is_exclusive_tag_filter){
-			$scope.resetFilter();
+			clearFilter();
 		}
 		if(tag in $scope.activeTags){
 			delete $scope.activeTags[tag];
 		}else{
 			$scope.activeTags[tag] = tag;
 		}
-		updateContents();
+		reload_content();
 	};
 
 	$scope.getColumnIndexElement = function(col, elem) {
@@ -110,6 +112,27 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 	$scope.order = function(predicate, reverse) {
     $scope.visibleElements = orderBy($scope.visibleElements, predicate, reverse);
   };
+  
+  function reload_content() {
+    loadMoreUrl = $scope.updatePathWithProperty("/browse/index_category_load_more.json");
+	$scope.filter_in_progress = true;
+	$http.get(loadMoreUrl, {
+      params: {
+        offset: 0,
+        tag_id: $scope.category_id,
+        selected_tags: $scope.activeTags
+      }
+    }).then(function(response) {
+      $scope.elements = response.data;
+      $scope.elements_in_page = 12;
+      updateContents();
+      if(response.data.length == 0) {
+      	$("a.btn-load-more").hide();
+      	$("a#load_more_button").hide();
+      }
+      $scope.filter_in_progress = false;
+    });
+  }
 
   $scope.load_more = function(offset) {
     loadMoreUrl = $scope.updatePathWithProperty("/browse/index_category_load_more.json");
@@ -117,7 +140,8 @@ function BrowseCtrl($scope, $window, $filter, $http) {
 		$http.get(loadMoreUrl, {
       params: {
         offset: offset,
-        tag_id: $scope.category_id
+        tag_id: $scope.category_id,
+        selected_tags: $scope.activeTags
       }
     }).then(function(response) {
       $scope.elements = $scope.elements.concat(response.data);
@@ -130,8 +154,13 @@ function BrowseCtrl($scope, $window, $filter, $http) {
     });
 	};
 	
-	$scope.resetFilter = function() {
+	function clearFilter() {
 		$scope.activeTags = {};
+	}
+	
+	$scope.resetFilter = function() {
+		clearFilter();
+		reload_content();
 		updateContents();
 	};
 

@@ -36,8 +36,14 @@
       </div>
     </div>
   </div>
-
-  <div class="row main-row brws-item">
+  
+  <div class="row text-center" ng-if="filter_in_progress">
+    <div class="col-sm-12">
+      <img style="margin-top: 45px; margin-bottom: 45px;" src="<%= asset_path("horizontal_loader.gif") %>"> 
+    </div>
+  </div>
+  
+  <div class="row main-row brws-item" ng-if="!filter_in_progress">
     <div class="col-md-12">
      
         <div class="row">

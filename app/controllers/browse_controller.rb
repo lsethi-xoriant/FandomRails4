@@ -139,14 +139,25 @@ class BrowseController < ApplicationController
       [tag, property]
     end
   end
+  
+  def get_index_category_load_more_tags(tag, selected_tags)
+    tags = get_tags_for_category(tag) + selected_tags
+  end
+  
+  def get_selected_tags(selected_tags)
+    Tag.where("id IN (?)", JSON.parse(selected_tags).map{ |k,v| k }).to_a
+  end
 
   def index_category_load_more
     category = Tag.find(params[:tag_id])
+    
+    selected_tags = get_selected_tags(params[:selected_tags])
+    
     params[:limit] = {
       offset: params[:offset].to_i,
       perpage: DEFAULT_VIEW_ALL_ELEMENTS
     }
-    content_preview_list = get_content_previews(category.name, get_tags_for_category(category), params, DEFAULT_VIEW_ALL_ELEMENTS)
+    content_preview_list = get_content_previews(category.name, get_index_category_load_more_tags(category, selected_tags), params, DEFAULT_VIEW_ALL_ELEMENTS)
     contents = content_preview_list.contents
     
     respond_to do |format|

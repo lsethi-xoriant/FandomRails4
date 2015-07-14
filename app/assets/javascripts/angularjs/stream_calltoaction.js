@@ -58,7 +58,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.fromCodeToHtml = function(code) {
     return "&#" + code + ";";
-  }
+  };
 
   $scope.addEmoticonToComment = function(emoticon, comment_info) {
     if(angular.isUndefined(comment_info.user_text)) {
@@ -66,7 +66,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       comment_info.user_text = comment_info.user_text + "" + String.fromCodePoint(emoticon);
     }
-  }
+  };
 
   function adjustPercentageAnimation(times, percentage, cta_info) {
     $("#percentage_circle_value_" + cta_info.calltoaction.id).html(times);
@@ -82,7 +82,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else if(times > 1) {
       preinteractionAnimationSound();
       $(percentage_circle_name).removeClass("p" + percentage);
-      adjustPercentageAnimation((times - 1), 0, cta_info)
+      adjustPercentageAnimation((times - 1), 0, cta_info);
     } else {
       preinteractionAnimationSound();
       cta_info.percentage_animation = false;
@@ -118,10 +118,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
       if(!upload_interaction.interaction.resource.upload_info.releasing.required) {
         file_param = files[0];
-        file_form_data_params = ["attachment"]
+        file_form_data_params = ["attachment"];
       } else {
         file_param = files;
-        file_form_data_params = ["attachment", "releasing"]
+        file_form_data_params = ["attachment", "releasing"];
       }
 
       $upload.upload({
@@ -244,7 +244,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.getParentCtaId = function(cta_info) {
     return $scope.getParentCtaInfo(cta_info).calltoaction.id;
-  }
+  };
 
   $scope.getParentCtaInfo = function(cta_info) {
     if(cta_info.optional_history && cta_info.optional_history.parent_cta_info) {
@@ -426,7 +426,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     default_property = $scope.aux.site.attributes.default_property;
 
     if(url == "/" + default_property) {
-      return "/"
+      return "/";
     } else if($scope.aux.context_root && url.indexOf("/" + $scope.aux.context_root + "/") < 0) {
       url = "/" + $scope.aux.context_root + "" + url;
     }
@@ -438,8 +438,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if($scope.aux.property_path_name) {
       path = "/" + $scope.aux.property_path_name + "" + path;
     }
-    return path
-  }
+    return path;
+  };
 
   $scope.playInstantWin = function() {
     update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
@@ -534,7 +534,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.isRegistratedUser = function() {
-    return ($scope.current_user && $scope.current_user.anonymous_id == null)
+    return ($scope.current_user && $scope.current_user.anonymous_id == null);
   };
 
   $scope.computeAvgForVote = function(interaction_info) {
@@ -865,7 +865,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.filterVisibleInteractionsUnderMedia = function(interaction_info) {
     return filterVisibleInteractionsByPositioning(interaction_info, "UNDER_MEDIA");
-  }
+  };
 
   $scope.filterVisibleInteractionsOverMedia = function(interaction_info) {
     return filterVisibleInteractionsByPositioning(interaction_info, "OVER_MEDIA"); 
@@ -1220,7 +1220,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     player.pause();
 
     if(overvideo_interaction.user_interaction) {
-      cta_info = getCallToActionInfo(calltoaction_id)
+      cta_info = getCallToActionInfo(calltoaction_id);
       cta_info.overvideo_interaction_timeout = $timeout(function() { 
         removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction);
       }, 5000);
@@ -1308,7 +1308,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.goToSecond = function(cta_info, second) {
-    setOvervideoInteractionsAsInactive(cta_info)
+    setOvervideoInteractionsAsInactive(cta_info);
     overvideo_interaction = getOvervideoInteractionAtSeconds(cta_info.calltoaction.id, second);
 
     if(overvideo_interaction != null && !$scope.overvideo_interaction_locked[calltoaction_id]) {
@@ -1579,7 +1579,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       "user_interaction": user_interaction,
       "calltoaction_id": parseInt(calltoaction_id),
       "interaction_id": parseInt(interaction_id)
-    }
+    };
   }
 
   $window.updateStartVideoInteraction = function(calltoaction_id) {
@@ -1768,7 +1768,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         
         enableWaitingAudio("stop");
         if(!angular.isUndefined(before_callback)) before_callback();
-        openWindowForDownloadInteraction(resource_type)
+        openWindowForDownloadInteraction(resource_type);
 
         if (!angular.isUndefined(before_callback_timeout)) {
           $timeout(function() {
@@ -2010,7 +2010,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computePercentageForVersus = function(interaction_info, answer_id) {
     if(interaction_info.user_interaction) {
-      answer_counter = interaction_info.interaction.resource.counter_aux[answer_id]
+      answer_counter = interaction_info.interaction.resource.counter_aux[answer_id];
       if(answer_counter) {
         return $scope.computePercentage(interaction_info.interaction.resource.counter, answer_counter);
       } else {
@@ -2023,9 +2023,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.computePercentage = function(total, partial) {
     if(total == 0) {
-      return 0
+      return 0;
     } else {
-      return Math.round(partial / total * 100)
+      return Math.round(partial / total * 100);
     }
   };
 

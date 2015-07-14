@@ -1,4 +1,5 @@
 <div class="content-browse" <% if get_extra_fields!(@category)['background_image'] %> style="background-size: 100% 100%; background-attachment: fixed; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@category)['background_image'], :original) %>);" <% end %>>
+	
 	<% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
 		<div class="container main-container" ng-controller="BrowseCtrl" ng-init="init_intesa_browse(<%= @category.id %>, <%= @contents.to_json %>, <%= @tags.to_json %>, <%= @has_more %>, <%= get_section_column_number(get_extra_fields!(@category)) %>, <%= $site.is_tag_filter_exclusive %>)">
 	<% else %>
@@ -63,8 +64,14 @@
 	    </div>
 	  </div>
 	  
+	  <div class="row text-center" ng-if="filter_in_progress">
+        <div class="col-sm-12">
+          <img style="margin-top: 45px; margin-bottom: 45px;" src="<%= asset_path("horizontal_loader.gif") %>"> 
+        </div>
+      </div>
+	  
 	  <% if get_extra_fields!(@category)['column_view'] && get_extra_fields!(@category)['column_view']['value'] %>
-		  <div class="row main-row">
+		  <div class="row main-row" ng-if="!filter_in_progress">
 		    <div class="col-sm-<%= 12/(get_extra_fields!(@category)['column_number'].to_i) %>" ng-repeat="column in getNumber(column_number)">
 			      <div class="row">
 		      		<div class="col-xs-12" ng-repeat="column_element in getNumber(elements_per_column)">
@@ -81,7 +88,7 @@
 				</div>
 		   </div>
 	  <% else %>
-		   <div class="row main-row">
+		   <div class="row main-row" ng-if="!filter_in_progress">
 		      <div class="col-md-12">
 			      <div class="row">
 		      		<div class="col-xs-12 col-sm-4 col-md-<%= 12/get_section_column_number(get_extra_fields!(@category)) %>" ng-repeat="content in visibleElements">
