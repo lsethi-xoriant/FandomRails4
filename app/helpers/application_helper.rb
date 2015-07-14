@@ -924,7 +924,7 @@ module ApplicationHelper
       sidebar_info = get_sidebar_info(other[:sidebar_tag], _env)
     end
 
-    iw_cta = CallToAction.find("instantwin-call-to-action")
+    iw_cta = CallToAction.find("instantwin-call-to-action") rescue nil
     if iw_cta
       iw_interaction = iw_cta.interactions.where(resource_type: "InstantwinInteraction").first
 
