@@ -611,7 +611,7 @@ module ApplicationHelper
     result = true
     if current_user
       instantwin_cta = CallToAction.includes(:interactions).where("interactions.resource_type = 'InstantwinInteraction'").references(:interactions).first
-      if instantwin_cta
+      if instantwin_cta && instantwin_cta.extra_fields && instantwin_cta.extra_fields["instantwin_form_attributes"]
         instantwin_form_attributes = JSON.parse(instantwin_cta.extra_fields["instantwin_form_attributes"])
         instantwin_form_attributes.each do |form_attr|
           name = form_attr["name"]
