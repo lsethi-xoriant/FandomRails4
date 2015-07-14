@@ -15,9 +15,15 @@ body {
   background: #fff;
 }
 
-.tip-container, .product-container {
+.tip-container {
   border-top: 1px solid #ccc;
   padding-bottom: 15px;
+}
+
+.product-container {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  padding-bottom: 30px;
 }
 
 p {
@@ -99,6 +105,21 @@ p {
     right: 0;
     left: 0;
     background-color: transparent;
+  }
+}
+
+@media (max-width: $screen-md-min) {
+  .profile-container__badge-text {
+    font-size: 10px;
+  }
+  .btn-green-iw {
+    font-size: 12px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .profile-container__iw-text {
+    margin-top: 45px;
+    font-size: 14px;
   }
 }
 

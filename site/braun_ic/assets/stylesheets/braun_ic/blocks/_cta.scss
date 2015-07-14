@@ -1,16 +1,32 @@
 $cover-height: 530px;
 
-.cta_cover-container__row {
-  border: none;
+.cta-panel {
+  margin: 0 0 25px 0; 
+  box-shadow: none;
+  height: $cover-height;
 }
 
-.cta_cover-container__col {
+.tip-panel {
+  margin: 0 0 25px 0; 
+  box-shadow: none;
+}
+
+.tip-container__row {
   padding-top: 15px;
 }
 
-.test-interaction__container {
-  height: $cover-height;
-  border: 1px solid #ccc;
+.cta-panel-body {
+  padding: 0; 
+}
+
+.tip-panel-body {
+  background-color: #000;
+  padding: 0; 
+}
+
+.cta_cover-container__row {
+  border: none;
+  padding-top: 15px;
 }
 
 .cta_cover-img_container {
@@ -104,7 +120,7 @@ $cover-height: 530px;
   color: #fff;
 }
 
-.cta_tip-container__title, .cta_product-container__title {
+.cta_tip-container__title, .cta_product-container__title, .footer-title {
   font-size: 32px;
   padding-top: 45px;
   padding-bottom: 25px; 
@@ -124,14 +140,6 @@ $cover-height: 530px;
   line-height: 22px;
 }
 
-.cta_tip-container {
-  background-color: #000;
-  margin-top: 15px;
-}
-
-.cta_tip-img_container {
-}
-
 .cta_tip-section_2_description {
   border-left: 3px solid; 
   padding-left: 15px; 
@@ -140,9 +148,9 @@ $cover-height: 530px;
 
 .product-sub-container {
   background-color: #fff;
-  border: 1px solid #ccc; 
   padding: 30px;
   margin-top: 15px;
+  box-shadow: none;
 }
 
 .product-title {
@@ -169,25 +177,42 @@ $cover-height: 530px;
   width: 100%;
 }
 
+@media (max-width: $screen-lg-min) {
+  .cta_cover-img_container {
+    background-size: auto 100%;
+  }
+}
+
+@media (max-width: $screen-md-min) {
+  .cta_cover-title {
+    font-size: 26px;
+    color: #fff;
+  }
+  .cta_cover-img_container {
+    background-size: auto 100%;
+  }
+}
+
 @media (max-width: $screen-sm-min) {
   .cta_cover-img__container {
     height: 190px;
-    background-size: 100% auto;
+    background-size: auto 100%;
   }
 
   .test-interaction__container {
     height: 380px;
   }
 
-  .cta_cover-container__mobile {
-    display: inline-block; 
-    border: 1px solid #ccc;
+  .cta_cover-img_container {
     height: 380px;
-    overflow: hidden;
-    width: 100%;
+    background-size: auto 100%;
   }
 
-  .cta_tip-container__title, .cta_product-container__title {
+  .cta-panel {
+    height: 380px;
+  }
+
+  .cta_tip-container__title, .cta_product-container__title, .footer-title {
     font-size: 22px;
     padding-top: 25px;
     padding-bottom: 15px;

@@ -1,0 +1,51 @@
+.btn-white { 
+  color: #000000; 
+  background-color: #FFFFFF; 
+  border-color: #FFFFFF; 
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  font-size: 22px;
+  line-height: 40px;
+  padding: 0;
+} 
+ 
+.btn-white:hover, 
+.btn-white:focus, 
+.btn-white:active, 
+.btn-white.active, 
+.open .dropdown-toggle.btn-white { 
+  color: #000000; 
+  background-color: #FFFFFF; 
+  border-color: #FFFFFF; 
+} 
+ 
+.btn-white:active, 
+.btn-white.active, 
+.open .dropdown-toggle.btn-white { 
+  background-image: none; 
+} 
+ 
+.btn-white.disabled, 
+.btn-white[disabled], 
+fieldset[disabled] .btn-white, 
+.btn-white.disabled:hover, 
+.btn-white[disabled]:hover, 
+fieldset[disabled] .btn-white:hover, 
+.btn-white.disabled:focus, 
+.btn-white[disabled]:focus, 
+fieldset[disabled] .btn-white:focus, 
+.btn-white.disabled:active, 
+.btn-white[disabled]:active, 
+fieldset[disabled] .btn-white:active, 
+.btn-white.disabled.active, 
+.btn-white[disabled].active, 
+fieldset[disabled] .btn-white.active { 
+  background-color: #FFFFFF; 
+  border-color: #FFFFFF; 
+} 
+ 
+.btn-white .badge { 
+  color: #FFFFFF; 
+  background-color: #000000; 
+}

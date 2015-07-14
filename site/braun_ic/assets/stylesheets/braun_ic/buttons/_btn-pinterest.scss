@@ -1,0 +1,51 @@
+.btn-pinterest { 
+  color: #FFFFFF; 
+  background-color: #CD1D1F; 
+  border-color: #CD1D1F; 
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  font-size: 26px;
+  line-height: 40px;
+  padding: 0;
+} 
+ 
+.btn-pinterest:hover, 
+.btn-pinterest:focus, 
+.btn-pinterest:active, 
+.btn-pinterest.active, 
+.open .dropdown-toggle.btn-pinterest { 
+  color: #FFFFFF; 
+  background-color: #D64042; 
+  border-color: #CD1D1F; 
+} 
+ 
+.btn-pinterest:active, 
+.btn-pinterest.active, 
+.open .dropdown-toggle.btn-pinterest { 
+  background-image: none; 
+} 
+ 
+.btn-pinterest.disabled, 
+.btn-pinterest[disabled], 
+fieldset[disabled] .btn-pinterest, 
+.btn-pinterest.disabled:hover, 
+.btn-pinterest[disabled]:hover, 
+fieldset[disabled] .btn-pinterest:hover, 
+.btn-pinterest.disabled:focus, 
+.btn-pinterest[disabled]:focus, 
+fieldset[disabled] .btn-pinterest:focus, 
+.btn-pinterest.disabled:active, 
+.btn-pinterest[disabled]:active, 
+fieldset[disabled] .btn-pinterest:active, 
+.btn-pinterest.disabled.active, 
+.btn-pinterest[disabled].active, 
+fieldset[disabled] .btn-pinterest.active { 
+  background-color: #CD1D1F; 
+  border-color: #CD1D1F; 
+} 
+ 
+.btn-pinterest .badge { 
+  color: #CD1D1F; 
+  background-color: #FFFFFF; 
+}

@@ -3,7 +3,8 @@
   <div class="container">
     <!-- USER LOGGED -->
     <div class="row profile-container__row" ng-if="isRegistratedUser()">
-      <div class="col-sm-3 profile-container__user">    
+      
+      <div class="col-sm-3 hidden-sm profile-container__user">    
         <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
           <div class="percentage_circle_fix_bar"></div>
           <span class="percentage_circle_value percentage_circle_value_profile">
@@ -16,6 +17,21 @@
         </div>
         <p style="margin-top: 52px; font-weight: bold;">Ciao {{current_user.first_name}}</p>
         <p>Ecco i tuoi risultati:</p>
+      </div>
+
+      <div class="col-sm-3 visible-sm profile-container__badge text-center">  
+        <div class="profile-container__badge-block">  
+          <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value percentage_circle_value_profile">
+                <img ng-src="{{current_user.avatar}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar"></div>
+              <div class="percentage_circle_fill"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
@@ -44,12 +60,12 @@
         </p> 
         <div ng-if="aux.instant_win_info.active" class="profile-container__iw-btn__container">
           <div ng-if="current_user.registration_fully_completed">
-            <button type="button" class="btn btn-green btn-lg" ng-click="openInstantWinModal()">
+            <button type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openInstantWinModal()">
               SCOPRI SE HAI VINTO
             </button>
           </div>
           <div ng-if="!current_user.registration_fully_completed">
-            <button type="button" class="btn btn-green btn-lg" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+            <button type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
               SCOPRI SE HAI VINTO
             </button>
           </div>
