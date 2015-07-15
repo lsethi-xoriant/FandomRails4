@@ -289,6 +289,8 @@ Fandom::Application.routes.draw do
     end
   end
 
+  post "/profile/update_user", to: "profile#update_user", defaults: { format: 'json' }
+
   post "/update_basic_share", :to => "application#update_basic_share_interaction", defaults: { format: 'json' }
 
   post "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }

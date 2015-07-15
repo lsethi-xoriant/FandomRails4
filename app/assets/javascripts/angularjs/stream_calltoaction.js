@@ -96,6 +96,55 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return number.slice(-(zero_length + 1));
   };
 
+  $scope.updateUserWithAvatar = function () {
+    delete $scope.form_data.current_user.errors;
+
+    ajax_url = "/profile/update_user";
+
+    if($scope.form_data.current_user._avatar) {
+      $upload.upload({
+          url: ajax_url,
+          fields: { obj: $scope.form_data.current_user },
+          file: $scope.form_data.current_user._avatar[0],
+          fileFormDataName: ["avatar"]
+        }).progress(function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            if(!$scope.form_data['vcode'])
+              $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
+        }).success(function (data, status, headers, config) {
+            if(data.errors) {
+              $scope.form_data.current_user.errors = data.errors;
+            } else {
+              updateUserWithAvatarSuccess(data);
+            }
+            delete $scope.form_data.progress;
+        }).error(function (data, status, headers, config) {
+          if(status == "413") { //413 (Request Entity Too Large)
+            $scope.form_data.current_user.errors = "Ricorda che il tuo file non deve pesare più di 100MB";
+          } else {
+            $scope.form_data.current_user.errors = status;
+          }
+          delete $scope.form_data.progress;
+        });
+    } else {
+      $http({ method: 'POST', url: ajax_url, data: { obj: $scope.form_data.current_user } })
+        .success(function(data) {
+          alert(data.errors);
+          if(data.errors) {
+            $scope.form_data.current_user.errors = data.errors;
+          } else {
+            updateUserWithAvatarSuccess(data);
+          }
+        });
+    }
+  };
+
+  function updateUserWithAvatarSuccess(data) {
+    $scope.current_user = data.current_user;
+    $("#modal-update-user").modal("hide");
+    $("#modal-update-user-pt2").modal("show");
+  }
+
   /*
   <form>
     <fieldset><legend>Upload on form submit</legend>
@@ -196,7 +245,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // ng-file-change="generateThumb(picFile[0], $files)"
     // <img ng-if="picFile[0].dataUrl != null" ng-src="{{picFile[0].dataUrl}}" class="thumb">
     if (file != null) {
-      if (fileReaderSupported() && file.type.indexOf('image') > -1) {
+      if(fileReaderSupported() && file.type.indexOf('image') > -1) {
+        console.log(file);
         $timeout(function() {
           var fileReader = new FileReader();
           fileReader.readAsDataURL(file);
@@ -464,10 +514,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $("#modal-interaction-instant-win").modal("show");
   };
 
+  $scope.propagateClickOnFileUploadInput = function() {
+    $("#upload-input").click();
+  }
+
   $scope.openRegistrationModalForInstantWin = function(user) {
   	//$(".click-sound").trigger("play");
     $scope.form_data.current_user = user;
-    console.log(user);
     $("#modal-interaction-instant-win-registration").modal("show");
   };
 

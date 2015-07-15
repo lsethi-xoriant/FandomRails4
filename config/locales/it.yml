@@ -273,7 +273,7 @@ it:
         login: "Email"
         privacy: "I termini d'uso"
         terms: "Il consenso alla comunicazione dei dati personali"
-        newsletter: "Trattamento dei dati"
+        newsletter: "Newsletter"
         day_of_birth: "Giorno di nascita"
         month_of_birth: "Mese di nascita"
         year_of_birth: "Anno di nascita"

@@ -9,6 +9,8 @@
 //= require angular-animate
 //= require angularjs/ng-table
 //= require angularjs/angular-filter
+//= require angularjs/angular-file-upload-shim
+//= require angularjs/angular-file-upload
 //= require angularjs/fandom
 //= require angularjs/notice
 //= require angularjs/comment
@@ -17,10 +19,8 @@
 //= require angularjs/reward_catalogue
 //= require angularjs/eventfilter
 //= require angularjs/browse
-//= require angularjs/ordering
-//= require angularjs/angular-file-upload
 //= require ui-bootstrap-0.12.min
-//= require bootstrap
+//= require bootstrap-sprockets
 //= require bootstrap-notify
 //= require bootstrap-fileupload
 //= require jquery.jplayer
@@ -31,5 +31,3 @@
 //= require angularjs/stream_calltoaction
 //= require angularjs/braun_ic_stream_calltoaction
 //= require fastclick
-//= require underscore-min
-//= require moment.min

@@ -1,6 +1,6 @@
 var braunIcStreamCalltoactionModule = angular.module('IntesaExpoStreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
 
-BraunIcStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce'];
+BraunIcStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce', '$upload'];
 braunIcStreamCalltoactionModule.controller('BraunIcStreamCalltoactionCtrl', BraunIcStreamCalltoactionCtrl);
 
 // csrf-token handling in ajax calls
@@ -8,9 +8,8 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-
-function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
-  angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
+function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
+  angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
   $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info) {
     url = $scope.aux.root_url + "/?id=" + parent_cta_info.calltoaction.slug;
@@ -37,6 +36,14 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   $scope.extraInit = function() {
     $scope.covers = {};
     $scope.buildbadgeArray();
+
+    if($scope.current_user) {
+      $scope.form_data.current_user = {
+        first_name: $scope.current_user.first_name,
+        last_name: $scope.current_user.last_name,
+        avatar: $scope.current_user.avatar
+      }
+    }
     
     if($scope.aux.anchor_to) {
       window.location.href = "#" + $scope.aux.anchor_to;

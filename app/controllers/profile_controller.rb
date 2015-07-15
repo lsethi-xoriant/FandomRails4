@@ -9,6 +9,29 @@ class ProfileController < ApplicationController
 
   before_filter :check_user_logged
 
+  def update_user
+    user_params = JSON.parse(params["obj"]) rescue params["obj"]
+    user_params.delete "avatar"
+    user_params.delete "_avatar"
+
+    if params["avatar"]
+      user_params["avatar"] = params["avatar"]
+    end
+
+    response = {}
+
+    result = current_user.update_attributes(user_params)
+    if result
+      response[:current_user] = build_current_user()
+    else
+      response[:errors] = current_user.errors.full_messages
+    end
+
+    respond_to do |format|
+      format.json { render json: response.to_json }
+    end
+  end
+
   def check_user_logged
     if current_user.nil? || stored_anonymous_user?
       if cookies[:connect_from_page].blank?
