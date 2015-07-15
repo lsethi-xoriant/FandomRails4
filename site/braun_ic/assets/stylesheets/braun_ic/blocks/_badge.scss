@@ -893,6 +893,21 @@
   border-color: #e08833 !important;
 }
 
+.percentage_circle.big {
+  .percentage_circle_fix_bar {
+    border: 8px solid #fff;
+    right: 5px;
+    left: 5px;
+    bottom: 5px;
+    top: 5px;
+  }
+  .percentage_circle_value {
+    img {
+      width: 120px;
+    }
+  }
+}
+
 @media (max-width: $screen-sm-min) { 
   .percentage_circle.small {
     font-size: 72px;

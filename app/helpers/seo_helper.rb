@@ -65,6 +65,14 @@ module SeoHelper
     instance_variable_set("@seo_#{value}", seo_value)
   end
 
+  def update_seo_value(seo_value, seo_key, title_separator = "|")
+    seo_value_from_settings = get_seo_value_from_settings(seo_key)
+    if seo_key == "title"
+      seo_value = "#{seo_value} #{title_separator} #{seo_value_from_settings}"
+    end
+    instance_variable_set("@seo_#{seo_key}", seo_value)
+  end
+
   def get_seo_value_from_settings(value)
     Setting.find_by_key(value).value rescue ""
   end

@@ -66,37 +66,69 @@
                   </div>
                 </div>
               </div>
-              <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-credits_container" } %>
-              
+              <!-- STATUS -->
+              <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-credits_container" } %>           
               <!-- COVER IMAGE AND DESCRIPTION -->
               <div class="col-xs-12">
                 <p class="cta_cover-miniformat" ng-style="{'color': getParentCtaInfo(calltoaction_info).miniformat.extra_fields.color}">{{getParentCtaInfo(calltoaction_info).miniformat.title}}</p>
                 <p class="cta_cover-title">{{getParentCtaInfo(calltoaction_info).calltoaction.title}}</p>
               </div>
-
               <div class="col-xs-12 cta_cover-btn__container">
                 <button ng-click="openCover(calltoaction_info)" class="btn btn-{{getParentCtaInfo(calltoaction_info).calltoaction.name}} btn-lg btn-block cta_cover-btn">SCOPRILO E VINCI</button>
-              </div>
+              </div>            
             </div>        
             <!-- COVER TEST -->
             <div class="test-interaction__container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterTestInteractions">
               <%= render partial: "/call_to_action/test_interaction" %>
             </div>
             <!-- COVER SHARE -->
-            <div class="col-sm-12" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)">
-              <div class="row" >
-                <div class="col-sm-12">
-                  <p>{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
-                  <p>{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
-                  <p>Condividi il risultato:</p>
-                  <%= render partial: "/call_to_action/share_interaction" %>
+            <div class="col-sm-12 cta_cover-end_container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)">
+              <div class="row">
+                <!-- STATUS -->
+                <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-end_container-credits_container hidden-xs" } %> 
+                <div class="col-sm-4 col-xs-12 text-center">  
+                  <div class="cta_cover-end_container-percentage_container hidden-xs">          
+                    <div class="percentage_circle big p{{getCtaBadgeCost(calltoaction_info)}}">
+                      <div class="percentage_circle_fix_bar"></div>
+                      <span class="percentage_circle_value">
+                          <img ng-src="{{getCtaBadge(calltoaction_info).image}}">
+                      </span>
+                      <div class="percentage_circle_slice">
+                        <div class="percentage_circle_bar" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                        <div class="percentage_circle_fill" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cta_cover-end_container-percentage_container hidden-sm hidden-md hidden-lg">          
+                    <div class="percentage_circle p{{getCtaBadgeCost(calltoaction_info)}}">
+                      <div class="percentage_circle_fix_bar"></div>
+                      <span class="percentage_circle_value">
+                          <img ng-src="{{getCtaBadge(calltoaction_info).image}}">
+                      </span>
+                      <div class="percentage_circle_slice">
+                        <div class="percentage_circle_bar" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                        <div class="percentage_circle_fill" ng-style="{'border-color': getCtaBadge(calltoaction_info).extra_fields.color }"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <p class="cta_cover-end_container-pre-title hidden-xs">Il tuo livello è:</p>
+                      <p class="cta_cover-end_container-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
+                      <p class="cta_cover-end_container-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
+                    </div>
+                    <div class="col-sm-12 cta_cover-end_container-share_container " ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+                        <%= render partial: "/call_to_action/share_interaction" %>
+                    </div>
+                    <div class="col-sm-12 text-right">
+                      <span class="cta_cover-end_container-redo hidden-xs" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="row" ng-click="resetToRedo(calltoaction_info)">
-                <div class="col-xs-12">
-                  <span>Rifai il test <span class="fa fa-refresh"></span></span>
-                </div>
-              </div>
+              <span class="cta_cover-end_container-redo visible-xs" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
             </div>   
           </div>
         </div>

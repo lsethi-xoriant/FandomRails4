@@ -87,12 +87,11 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         calltoaction_to_share = CallToAction.find(descendent_id)
         extra_fields = calltoaction_to_share.extra_fields
 
-        @seo_info = {
-          "title" => strip_tags(extra_fields["linked_result_title"]),
-          "meta_description" => strip_tags(extra_fields["linked_result_description"]),
-          "meta_image" => strip_tags(extra_fields["linked_result_image"]["url"]),
-          "keywords" => get_default_keywords()
-        }
+        image = strip_tags(extra_fields["linked_result_image"]["url"]) rescue nil
+
+        update_seo_value(strip_tags(extra_fields["linked_result_title"]), "title")
+        update_seo_value(strip_tags(extra_fields["linked_result_description"]), "meta_description")
+        update_seo_value(image, "meta_image")
       end
     else 
       compute_seo()

@@ -1698,7 +1698,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         message = parent_cta_info.calltoaction.title;
         if(cta_info.calltoaction.extra_fields.linked_result_title) {
-          message = $scope.cta_info.calltoaction.extra_fields.linked_result_title;
+          message = cta_info.calltoaction.extra_fields.linked_result_title;
         }
 
         url_to_share = $scope.computeShareFreeCallToActionUrl(parent_cta_info, cta_info);
