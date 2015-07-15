@@ -106,16 +106,18 @@
     <div class="row">
       <div class="col-xs-3 profile-container__badge text-center">  
         <div class="profile-container__badge-block">  
-          <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
-            <div class="percentage_circle_fix_bar"></div>
-            <span class="percentage_circle_value percentage_circle_value_profile">
-                <img ng-src="{{current_user.avatar}}">
-            </span>
-            <div class="percentage_circle_slice">
-              <div class="percentage_circle_bar"></div>
-              <div class="percentage_circle_fill"></div>
+          <a data-toggle="modal" data-target="#modal-update-user">
+            <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
+              <div class="percentage_circle_fix_bar"></div>
+              <span class="percentage_circle_value percentage_circle_value_profile">
+                  <img ng-src="{{current_user.avatar}}">
+              </span>
+              <div class="percentage_circle_slice">
+                <div class="percentage_circle_bar"></div>
+                <div class="percentage_circle_fill"></div>
+              </div>            
             </div>
-          </div>
+          </a>
         </div>
       </div>
       <div class="col-xs-3 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">

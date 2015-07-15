@@ -7,8 +7,8 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-sm-3">
-            <a class="needsclick" ng-click="propagateClickOnFileUploadInput()">
+          <div class="col-sm-3 text-center">
+            <a class="needsclick" ng-click="propagateClickOnFileUploadInput()" style="position: relative; display: inline-block;">
               <img class="modal-update-user__avatar" ng-if="form_data.current_user._avatar[0].dataUrl != null" ng-src="{{form_data.current_user._avatar[0].dataUrl}}">
               <img class="modal-update-user__avatar modal-update-user__avatar--rounded" ng-if="form_data.current_user._avatar[0].dataUrl == null" ng-src="{{form_data.current_user.avatar}}">
               <span class="modal-update-user__pencil fa fa-pencil"></span>
@@ -31,7 +31,7 @@
             <div class="form-group hidden">
               <input id="upload-input" name="form_data.current_user._avatar" ng-file-select="" ng-model="form_data.current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.current_user._avatar[0])">
             </div>
-            <button class="btn btn-green" ng-click="updateUserWithAvatar()">AGGIORNA</button>
+            <button class="btn btn-green modal-update-user__btn" ng-click="updateUserWithAvatar()">AGGIORNA</button>
           </div>    
         </div>
       </div>

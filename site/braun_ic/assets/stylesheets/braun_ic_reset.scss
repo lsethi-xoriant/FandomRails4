@@ -114,6 +114,8 @@ p {
 
 .modal-update-user__avatar {
   width: 100%;
+  max-width: 120px;
+  margin-bottom: 15px;
 }
 
 .modal-update-user__avatar--rounded {
@@ -122,9 +124,9 @@ p {
 
 .modal-update-user__pencil {
   position: absolute;
-  left: 30px;
+  left: 5px;
   font-size: 28px !important;
-  bottom: 10px;
+  bottom: 25px;
   color: $green;
 }
 
@@ -178,6 +180,10 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  .modal-update-user__btn {
+    width: 100%;
+  }
+
   .profile-container__badge {
     padding: 0;
     border: none;
