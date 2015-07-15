@@ -27,7 +27,8 @@ module AnonymousNavigationHelper
       email: "#{name}@shado.tv", 
       username: name, 
       password: password, 
-      password_confirmation: password
+      password_confirmation: password,
+      privacy: true
     }
 
     if request_via_api?
