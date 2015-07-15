@@ -1,20 +1,18 @@
 <div class="modal fade" id="modal-interaction-instant-win-registration" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Gioca e vinci</h4>
+      </div>
       <div class="modal-body">
-
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
         <div class="row">
-          <div class="col-md-12 text-center"> 
-            <p class="instant-win__modal-title">Gioca e vinci!</p><br/>
-          </div>
           <div class="col-md-10 col-md-offset-1">
             <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
               <div ng-if="form_data.current_user.errors" class="row">
                 <div class="col-md-12">
-                  <ul class="list-unstyled form-error">
-                    <p>Errori nell'inserimento dei dati:</p>
+                  <p>Errori nell'inserimento dei dati:</p>
+                  <ul>
                     <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
                   </ul>
                 </div>
@@ -70,8 +68,8 @@
 
 
               <div class="row">
-                <div class="col-sm-4 col-sm-offset-8">
-                  <button type="submit" class="btn btn-primary instant-win__button btn-block">COMPLETA</button>
+                <div class="col-sm-4 col-sm-offset-8" style="margin-top: 15px;">
+                  <button type="submit" class="btn btn-green btn-block">COMPLETA</button>
                 </div>
               </div>
             </form>
@@ -83,26 +81,13 @@
 </div>
 
 <div class="modal fade" id="modal-interaction-instant-win" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-
+    <div class="modal-header text-center modal-interaction-instant-win__header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Gioca e vinci</h4>
+      </div>
       <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-        <div class="row" ng-if="aux.instant_win_info.active" >
-          <p ng-if="aux.instant_win_info.message">{{aux.instant_win_info.message}}</p>
-          <div ng-if="(aux.instant_win_info.win == false || aux.instant_win_info.win == null) && current_user.instantwin_tickets_counter < 1" class="col-md-12 text-center">
-            <p>PECCATO<br>Hai esaurito i biglietti</p>
-          </div>
-          <div ng-if="aux.instant_win_info.win" class="col-md-12 text-center">
-            <p>Hai già vinto un premio</p>
-          </div>
-          <div class="col-md-12"><p>Hai {{current_user.instantwin_tickets_counter}} biglietti</p></div>
-          <div ng-if="!aux.instant_win_info.win && aux.instant_win_info.active" class="col-md-12 text-center">
-            <a class="btn btn-primary instant-win__button btn-lg" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" href="javascript:void(0)" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</a>
-          </div>
-        </div>
-
         <div ng-if="!aux.instant_win_info.active" class="modal-body">
           <div class="row">
             <div class="col-md-12 text-center">
@@ -110,6 +95,61 @@
             </div>
           </div>
         </div>
+
+        <div class="row" ng-if="aux.instant_win_info.active" >
+
+          <div class="col-sm-12">
+            <div class="panel panel-default iw_panel">
+              <div class="panel-body">
+                <div class="col-sm-3 text-center">
+                  <p class="iw_t1">Hai</p>
+                  <p class="iw-credits_label_yellow__container"><span class="label iw-credits_label_yellow">
+                    +{{current_user.instantwin_tickets_counter}} <span class="fa fa-ticket"></span>
+                  </span></p>
+                  <p class="iw_t2">biglietti</p> 
+                </div>
+                <div class="col-sm-6">
+                  <img class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=slot&w=350&h=150">
+                </div>
+                <div class="col-sm-3">
+                  <button class="btn btn-green btn-block iw_btn" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3">
+                  <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin()}">
+                    <div class="arrow" style="left: 50%;"></div>
+                    <div class="popover-content">
+                      <p class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto. Gioca ancora</p>
+                    </div>
+                  </div>
+                  <div class="iw_popover iw_popover-green popover bottom in" ng-class="{'show': iwWin()}">
+                    <div class="arrow" style="left: 50%;"></div>
+                    <div class="popover-content text-center">
+                      <p class="iw_popover-text"><span class="fa fa-check"></span>HAI VINTO!!!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 text-center">
+            <p style="font-size: 22px;">In palio per te oggi</p> 
+          </div>
+          <div class="col-sm-4 text-right">
+            <img style="height: 220px" ng-src="{{aux.instant_win_info.reward_info.image}}">
+          </div>
+          <div class="col-sm-8">
+            <p class="iw_reward-title">{{aux.instant_win_info.reward_info.title}}</p>
+            <p class="iw_reward-description" ng-bind-html="aux.instant_win_info.reward_info.description"></p>
+          </div>
+
+          <div ng-if="aux.instant_win_info.win" class="col-md-12 text-center">
+            <p>Hai già vinto un premio</p>
+          </div>
+          
+        </div>
+
+        
 
       </div>
 

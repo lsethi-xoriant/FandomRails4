@@ -101,6 +101,20 @@ $cover-height: 530px;
   font-size: 18px;
 }
 
+.iw-credits_label_yellow__container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.iw-credits_label_yellow {
+  background-color: $yellow;
+  color: #000;
+  border-radius: 25px;
+  font-size: 18px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .cta_cover-credits_label_yellow {
   background-color: $yellow;
   color: #000;
@@ -146,6 +160,7 @@ $cover-height: 530px;
 
 .cta_tip-img {
   width: 100%;
+  max-width: 430px;
 }
 
 .cta_tip-section_1_container {

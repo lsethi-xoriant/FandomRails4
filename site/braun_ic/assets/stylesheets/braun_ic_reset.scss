@@ -9,6 +9,86 @@ body {
   margin: 0;
 }
 
+.modal-interaction-instant-win__header {
+  border-bottom: 0;
+  h4 {
+    font-size: 28px;
+    padding-top: 15px;
+  }
+}
+
+.iw_t1 {
+  margin-top: 20%;
+}
+
+.iw_btn {
+  margin-top: 35%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.iw_slot {
+  width: 100%;
+  border: 2px solid transparent;
+}
+
+.iw_slot-red {
+  border: 2px solid red;
+}
+
+.iw_slot-green {
+  border: 2px solid $green;
+}
+
+.iw_popover {
+  margin-left: auto;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  top: 0;
+  max-width: none;
+  box-shadow: none;
+}
+
+.iw_popover-green {
+  background-color: $green;
+  color: #fff;
+  .arrow:after {
+    border-bottom-color: $green !important;
+  }
+}
+
+.iw_popover-red {
+  background-color: red;
+  color: #fff;
+  .arrow:after {
+    border-bottom-color: red !important;
+  }
+}
+
+.iw_panel {
+  box-shadow: none;
+  background-color: whitesmoke;
+  border-radius: 5px;
+}
+
+.iw_popover-text {
+  font-size: 18px; 
+  padding-top: 5px; 
+  padding-bottom: 5px;
+  span { padding-right: 5px; }
+}
+
+.iw_reward-title {
+  font-size: 24px; 
+  margin-top: 30px;
+  color: $green;
+}
+
+.iw_reward-description {
+  font-size: 16px;
+}
+
 .small-container {
   background-color: #000;
   padding-bottom: 30px;

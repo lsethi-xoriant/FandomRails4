@@ -40,6 +40,14 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.iwWin = function() {
+    return ($scope.aux.instant_win_info.win == true);
+  };
+
+  $scope.iwNotWin = function() {
+    return ($scope.aux.instant_win_info.win == false);
+  };
+
   $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
     //$("#pin-" + interaction_info.interaction.id).modal("show");
     if($scope.aux.mobile) {
@@ -52,8 +60,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.updateAnswer(calltoaction_info, interaction_info, params, when_show_interaction);
         interaction_info.active = true;
       }
-    }
-    
+    }    
   };
 
   $scope.fromCodeToHtml = function(code) {
@@ -129,7 +136,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       $http({ method: 'POST', url: ajax_url, data: { obj: $scope.form_data.current_user } })
         .success(function(data) {
-          alert(data.errors);
           if(data.errors) {
             $scope.form_data.current_user.errors = data.errors;
           } else {

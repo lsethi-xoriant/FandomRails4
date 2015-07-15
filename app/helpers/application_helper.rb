@@ -927,6 +927,15 @@ module ApplicationHelper
     iw_cta = CallToAction.find("instantwin-call-to-action") rescue nil
     if iw_cta.present?
       iw_interaction = iw_cta.interactions.where(resource_type: "InstantwinInteraction").first
+      reward = Reward.find_by_name(iw_cta.extra_fields["reward_name"])
+
+      if reward
+        reward_info = {
+          title: reward.title,
+          image: reward.main_image,
+          description: reward.short_description
+        }
+      end
 
       if iw_interaction.present?
         iw_user_info = user_already_won(iw_interaction.id)
@@ -939,7 +948,8 @@ module ApplicationHelper
           "active" => true,
           "win" => iw_user_info[:win],
           "message" => iw_user_info[:message],
-          "in_progress" => false
+          "in_progress" => false,
+          "reward_info" => reward_info
         }
       end
     end
