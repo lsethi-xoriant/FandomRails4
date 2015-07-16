@@ -109,13 +109,7 @@
                   <p class="iw_t2 hidden-xs">biglietti</p> 
                 </div>
                 <div class="col-sm-6">
-                  <!--<img class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=slot&w=350&h=150">-->
-
-                  <video autoplay loop>
-                    <source src="http://braun-ic.dev.fandomlab.com.s3.amazonaws.com/asset/instant-win/cuori.mp4
-" type="video/mp4">
-                  </video>
-
+                  <img id="iw_slot" class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=slot&w=350&h=150">
                 </div>
                 <div class="col-sm-3">
                   <button class="btn btn-green btn-block iw_btn" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
