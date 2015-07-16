@@ -786,6 +786,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return comment_interaction;
   }
 
+  $scope.getTestInteraction = function(cta_info) {
+    result = null;
+    angular.forEach(cta_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "test") {
+        result = interaction_info;
+      }
+    });
+    return result;
+  };
+
   function getStreamCommentInteractions() {
     comment_interactions = [];
     angular.forEach($scope.calltoactions, function(calltoaction_info) {
