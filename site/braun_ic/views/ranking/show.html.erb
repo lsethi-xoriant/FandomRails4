@@ -5,9 +5,43 @@
   <%= render partial: "/application/navbar" %>
 
   <div class="container ranking-container">
-
+    <div class="row ranking-title__row">
+      <div class="col-sm-12">
+        <p class="ranking-title">Il vostro benessere</p>
+      </div>
+    </div>
     <div class="row profile-container__row" ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="user in aux.ranking_info.ranking" >
-      <div class="col-sm-3 col-sm-offset-1 profile-container__user">    
+
+      <div class="col-xs-3 profile-container__badge text-center visible-xs">  
+        <div class="profile-container__badge-block">  
+          <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercentForRanking(user.badges)}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value percentage_circle_value_profile">
+                <img ng-src="{{user.avatar}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar"></div>
+              <div class="percentage_circle_fill"></div>
+            </div>            
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 profile-container__badge text-center visible-xs" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+        <div class="profile-container__badge-block">
+          <div class="percentage_circle small p{{getBadgeCost(badge)}}">
+            <div class="percentage_circle_fix_bar"></div>
+            <span class="percentage_circle_value">
+                <img ng-src="{{badge.image}}">
+            </span>
+            <div class="percentage_circle_slice">
+              <div class="percentage_circle_bar" ng-style="{'border-color': badge.extra_fields.color }"></div>
+              <div class="percentage_circle_fill" ng-style="{'border-color': badge.extra_fields.color }"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3 col-sm-offset-1 profile-container__user hidden-xs">    
         <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercentForRanking(user.badges)}}">
           <div class="percentage_circle_fix_bar"></div>
           <span class="percentage_circle_value percentage_circle_value_profile">
@@ -20,7 +54,7 @@
         </div>
         <p style="margin-top: 52px; font-weight: bold;">{{user.username}}</p>
       </div>
-      <div class="col-sm-2 profile-container__badge text-center" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+      <div class="col-sm-2 profile-container__badge text-center hidden-xs" ng-repeat="badge in user.badges | limitTo:3 |  orderBy:orderBadgesByCtas:true">
         <div class="profile-container__badge-block">
           <div class="percentage_circle small p{{getBadgeCost(badge)}}">
             <div class="percentage_circle_fix_bar"></div>
@@ -36,6 +70,7 @@
         <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.title}}</p>
         <p class="profile-container__badge-text" ng-class="{'inactive': badge.inactive }">{{badge.description}}</p>
       </div>
+
     </div>
 
     <div class="row">

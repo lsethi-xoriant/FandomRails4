@@ -18,11 +18,11 @@ body {
 }
 
 .iw_t1 {
-  margin-top: 20%;
+  margin-top: 25px;
 }
 
 .iw_btn {
-  margin-top: 35%;
+  margin-top: 50px;
   padding-left: 5px;
   padding-right: 5px;
   white-space: normal; 
@@ -163,6 +163,10 @@ p {
   background-color: transparent;
 }
 
+.ranking-title__row {
+  background-color: #fff;
+}
+
 .ranking-container .profile-container__row {
   height: 170px;
   background-color: whitesmoke;
@@ -249,10 +253,14 @@ p {
 
 @media (max-width: $screen-md-min) {
   .iw_t1 {
-    margin-top: 10px;
+    margin-top: 3px;
   }
   .iw_btn {
-    margin-top: 25px;
+    margin-top: 15px;
+  }
+  .iw-credits_label_yellow__container {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   .profile-container__badge-text {
     font-size: 10px;
@@ -268,7 +276,15 @@ p {
   }
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-sm-min) {
+  .ranking-container .profile-container__row {
+    height: 120px;
+  }
+
+  .small-container {
+    padding-bottom: 0;
+  }
+
   body {
     padding-top: 50px;
   }

@@ -497,13 +497,21 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction.id })
       .success(function(data) { 
-        $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_win.url);
+        if(data.win == true) {
+          iw_wrong_index = Math.floor((Math.random() * 2) + 1);
+          image = $scope.aux.assets.extra_fields.iw_win;
+        } else {
+          iw_wrong_index = Math.floor((Math.random() * 2) + 1);
+          image = $scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index];
+        }
+        $("#iw_slot").attr("src", image);
+
         $timeout(function() { 
           $scope.aux.instant_win_info.in_progress = false;
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
           $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
-        }, 10000);
+        }, 5000);
       }).error(function() {
         // ERROR.
       });
