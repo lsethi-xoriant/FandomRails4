@@ -25,7 +25,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     sign_up_params["password_confirmation"] = sign_up_params["password"]
-
+    
     if stored_anonymous_user?
       self.resource = adjust_anonymous_user(sign_up_params)
     else
@@ -44,7 +44,6 @@ class RegistrationsController < Devise::RegistrationsController
         set_account_up()
 
         log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })
-
         respond_with resource, :location => after_sign_up_path_for(resource)
       else
         set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}"
