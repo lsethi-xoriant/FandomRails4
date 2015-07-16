@@ -3,7 +3,7 @@
 
 class Answer < ActiveRecord::Base
   attr_accessible :text, :symbolic_name, :correct, :quiz_id, :image, :remove_answer, :call_to_action_id,
-    :media_data, :media_image, :media_type, :blocking, :destroy_image, :destroy_answer
+    :media_data, :media_image, :media_type, :blocking, :destroy_image, :destroy_answer, :aux
 
   attr_accessor :destroy_image, :destroy_answer, :symbolic_name
 
@@ -20,7 +20,7 @@ class Answer < ActiveRecord::Base
 
   # validates_presence_of :text
 
-  before_save :set_aux_for_symbolic_name
+  #before_update :set_aux_for_symbolic_name
 
   def image_url
     image.url
