@@ -4,7 +4,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     cta = CallToAction.find(params[:parent_cta_id])
     category_tag = get_cta_tag_tagged_with(cta, "test")
     
-    update_user_points(category_tag)
+    inactive_reward = update_user_points(category_tag)
 
     user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
     user_interactions.each do |user_interaction|
@@ -14,7 +14,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     end
 
     response = {
-      calltoaction_info: build_cta_info_list_and_cache_with_max_updated_at([cta]).first
+      calltoaction_info: build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
+      badge: adjust_braun_ic_reward(inactive_reward, true, cta.activated_at)
     }
 
     respond_to do |format|
@@ -25,14 +26,23 @@ class Sites::BraunIc::ApplicationController < ApplicationController
   def update_user_points(category_tag)
     reward_name = "#{category_tag.name}-point"
     point_reward = current_user.user_rewards.includes(:reward).where("rewards.name = ?", reward_name).references(:rewards).first
-    points = point_reward.counter
+    points = point_reward.present? ? point_reward.counter : 0
 
     ActiveRecord::Base.transaction do
       user_reward = current_user.user_rewards.includes(:reward).where("rewards.name = 'point'").references(:rewards).first
-      user_reward.update_attribute(:counter, (user_reward.counter - points))
+      if user_reward
+        user_reward.update_attribute(:counter, (user_reward.counter - points))
+      end
     end
 
-    point_reward.destroy
+    badge_tag = Tag.find("badge")
+    rewards = get_rewards_with_tags_in_and([category_tag, badge_tag])
+    user_rewards = current_user.user_rewards.where(reward_id: rewards.map { |r| r.id }).order(counter: :asc)
+    
+    user_rewards.destroy_all if user_rewards.any?
+    point_reward.destroy if point_reward
+
+    rewards.first
   end
 
   def index

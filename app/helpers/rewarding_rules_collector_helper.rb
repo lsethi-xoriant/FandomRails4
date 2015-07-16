@@ -8,7 +8,9 @@ module RewardingRulesCollectorHelper
     def initialize()
       @rules = []
       @interaction_id_by_rules = {}
-      @context_only_rules = [] 
+      @context_only_rules = []
+      # in memory cache used to avoid going to memcache during rules computation
+      @cta_id_to_tags_cache = {} 
     end
     
     # This is the method called by the rules file, through instance_eval. It just stores all parameters (and the block)
@@ -69,9 +71,19 @@ module RewardingRulesCollectorHelper
         interaction_is_included_in_options?(options, :ctas, interaction.call_to_action.name) &&
         interaction_type_is_included_in_options?(options, interaction) &&
         (!options[:interactions].key?(:tags) || 
-          (parent_object.get_cta_tags_from_cache(interaction.call_to_action) & (options[:interactions][:tags])).count > 0)
+          (get_cta_tags(interaction.call_to_action, parent_object) & (options[:interactions][:tags])).count > 0)
       )
     )
+  end
+
+  def get_cta_tags(cta, parent_object)
+    if @cta_id_to_tags_cache.include?(cta.id) 
+      @cta_id_to_tags_cache[cta.id] 
+    else
+      tags = parent_object.get_cta_tags_from_cache(cta)
+      @cta_id_to_tags_cache[cta.id] = tags
+      tags
+    end
   end
 
   def interaction_is_included_in_options?(options, label, element)

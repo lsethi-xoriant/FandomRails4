@@ -18,6 +18,9 @@ Fandom::Application.routes.draw do
         post "/append_tips", to: "application#append_tips", defaults: { format: 'json' }
         get "/ranking", to: "ranking#show"
         get "/update_ranking_pagination", to: "ranking#update_ranking_pagination", defaults: { format: 'json' }
+        devise_scope :user do
+          post "/users", :to => "registrations#create"
+        end
       end
     end
   end

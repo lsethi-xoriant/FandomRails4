@@ -19,16 +19,26 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     return url;
   };
 
+  $scope.isCtaDone = function(cta_info) {
+    return $scope.hasBadge(cta_info) || (angular.isDefined($scope.getTestInteraction(cta_info).user_interaction));      
+  };
+
   $scope.scrollTo = function(id) {
     if(id.charAt(0) == "#") {
       id = id.substring(1);
+    }
+
+    if($window.innerWidth < 720) {
+      offset = 50;
+    } else {
+      offset = 0;
     }
 
     if($scope.aux.tag_menu_item != "home") {
       window.location.href = $scope.aux.root_url + "#" + id;
     } else {
       $('html, body').animate({
-        scrollTop: $("#" + id).offset().top
+        scrollTop: ($("#" + id).offset().top - offset)
       }, 500);
     }
   };
@@ -134,6 +144,9 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     $http.post("/reset_redo_user_interactions", { user_interaction_ids: user_interaction_ids, parent_cta_id: parent_cta_id })
     .success(function(data) {   
       $scope.replaceCallToActionInCallToActionInfoList(cta_info, data.calltoaction_info);
+      if(data.badge) {
+        $scope.setCtaBadge($scope.getParentCtaInfo(cta_info), data.badge);
+      }
     }).error(function() {
     });
   };

@@ -184,6 +184,12 @@ $cover-height: 530px;
   padding-bottom: 25px; 
 }
 
+.ranking-title {
+  font-size: 32px;
+  padding-top: 45px;
+  padding-bottom: 45px;
+}
+
 .cta_tip-title {
   padding-top: 15px;
   font-size: 42px;
@@ -291,7 +297,8 @@ $cover-height: 530px;
 
   .cta_cover-img__container {
     height: 190px;
-    background-size: auto 100%;
+    background-size: 140% auto;
+    background-position: center;
   }
 
   .test-interaction__container {
@@ -311,6 +318,12 @@ $cover-height: 530px;
     font-size: 22px;
     padding-top: 25px;
     padding-bottom: 15px;
+  }
+
+  .ranking-title {
+    font-size: 22px;
+    padding-top: 25px;
+    padding-bottom: 25px;
   }
 
   .cta_tip-section_2_header {
@@ -348,17 +361,17 @@ $cover-height: 530px;
 
   .cta_cover-credits_container {
     padding-top: 15px;
-    padding-right: 25px;
+    padding-right: 15px;
   }
 
   .cta_cover-title {
-    font-size: 16px;
+    font-size: 18px;
     color: #000;
-    padding: 5px 15px;
+    padding: 5px 0;
   }
 
   .cta_cover-miniformat {
-    padding: 10px 15px 0 15px;
+    padding: 10px 0 0 0;
   }
 
   .cta_cover-container__col {
@@ -366,13 +379,13 @@ $cover-height: 530px;
   }
 
   .cta_cover-btn__container {
-    padding: 15px 30px;
+    padding: 15px;
     position: absolute;
     bottom: 5px;
   }
 
   .product-sub-container {
-    padding: 15px;
+    padding: 0;
   }
 
 }

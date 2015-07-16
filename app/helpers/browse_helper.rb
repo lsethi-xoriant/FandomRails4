@@ -85,6 +85,7 @@ module BrowseHelper
 
   def get_recent_ctas_with_cache(tags, params = {})
     if tags.any?
+      tag_names_for_cache = ""
       tags.each do |tag|
         tag_names_for_cache += "#{tag.name}_"
       end
