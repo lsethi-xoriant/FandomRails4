@@ -19,7 +19,42 @@
 }
 
 @media (max-width: $screen-sm-min) { 
+  .iw_btn-navbar {
+    float: right;
+    margin-right: 15px;
+    margin-top: 8px;
+    position: relative;
+  }
+
+  .iw_btn-navbar__tk {
+    position: absolute; 
+    width: 20px; height: 20px; 
+    background-color: $yellow;
+    line-height: 20px;
+    color: #000;
+    font-size: 12px;
+    border-radius: 50%;
+    top: -5px;
+    right: -10px; 
+  }
+
   .navbar {
     margin-bottom: 0;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    z-index: 1030;
+  }
+  .navbar-default__container {
+    min-height: 0;
+  }
+  .navbar-brand {
+    padding: 0;
+    img {
+      height: 30px;
+      margin-top: 10px;
+      margin-left: 15px;
+    }
   }
 }

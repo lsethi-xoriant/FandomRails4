@@ -87,7 +87,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Gioca e vinci</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body iw-model-body">
         <div ng-if="!aux.instant_win_info.active" class="modal-body">
           <div class="row">
             <div class="col-md-12 text-center">
@@ -102,11 +102,11 @@
             <div class="panel panel-default iw_panel">
               <div class="panel-body">
                 <div class="col-sm-3 text-center">
-                  <p class="iw_t1">Hai</p>
+                  <p class="iw_t1 hidden-xs">Hai</p>
                   <p class="iw-credits_label_yellow__container"><span class="label iw-credits_label_yellow">
                     +{{current_user.instantwin_tickets_counter}} <span class="fa fa-ticket"></span>
                   </span></p>
-                  <p class="iw_t2">biglietti</p> 
+                  <p class="iw_t2 hidden-xs">biglietti</p> 
                 </div>
                 <div class="col-sm-6">
                   <img class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=slot&w=350&h=150">
@@ -135,16 +135,12 @@
           <div class="col-sm-12 text-center">
             <p style="font-size: 22px;">In palio per te oggi</p> 
           </div>
-          <div class="col-sm-4 text-right">
+          <div class="col-sm-4 text-right hidden-xs">
             <img style="height: 220px" ng-src="{{aux.instant_win_info.reward_info.image}}">
           </div>
           <div class="col-sm-8">
             <p class="iw_reward-title">{{aux.instant_win_info.reward_info.title}}</p>
             <p class="iw_reward-description" ng-bind-html="aux.instant_win_info.reward_info.description"></p>
-          </div>
-
-          <div ng-if="aux.instant_win_info.win" class="col-md-12 text-center">
-            <p>Hai già vinto un premio</p>
           </div>
           
         </div>

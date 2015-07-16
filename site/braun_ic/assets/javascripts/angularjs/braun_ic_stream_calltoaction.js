@@ -24,11 +24,17 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
       id = id.substring(1);
     }
 
+    if($window.innerWidth < 720) {
+      offset = 50;
+    } else {
+      offset = 0;
+    }
+
     if($scope.aux.tag_menu_item != "home") {
       window.location.href = $scope.aux.root_url + "#" + id;
     } else {
       $('html, body').animate({
-        scrollTop: $("#" + id).offset().top
+        scrollTop: ($("#" + id).offset().top - offset)
       }, 500);
     }
   };

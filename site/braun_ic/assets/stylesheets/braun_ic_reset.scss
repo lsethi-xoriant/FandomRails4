@@ -25,6 +25,7 @@ body {
   margin-top: 35%;
   padding-left: 5px;
   padding-right: 5px;
+  white-space: normal; 
 }
 
 .iw_slot {
@@ -87,6 +88,8 @@ body {
 
 .iw_reward-description {
   font-size: 16px;
+  padding-right: 45px;
+  padding-bottom: 30px;
 }
 
 .small-container {
@@ -245,6 +248,12 @@ p {
 }
 
 @media (max-width: $screen-md-min) {
+  .iw_t1 {
+    margin-top: 10px;
+  }
+  .iw_btn {
+    margin-top: 25px;
+  }
   .profile-container__badge-text {
     font-size: 10px;
   }
@@ -260,8 +269,47 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  body {
+    padding-top: 50px;
+  }
+
   .modal-update-user__btn {
     width: 100%;
+  }
+
+  .modal-interaction-instant-win__header {
+    h4 {
+      font-size: 24px;
+      padding-top: 5px;
+    }
+  }
+
+  .iw-credits_label_yellow__container {
+    margin-top: 5px;
+  }
+
+  .iw_reward-title {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+
+  .iw_popover-text {
+    font-size: 10px;
+  }
+
+  .iw_popover {
+    top: 20px;
+  }
+
+  .iw_reward-description {
+    font-size: 14px;
+    padding-right: 0;
+    padding-bottom: 15px;
+    padding-top: 10px;
+  }
+
+  .iw-model-body {
+    padding-top: 0;
   }
 
   .profile-container__badge {
