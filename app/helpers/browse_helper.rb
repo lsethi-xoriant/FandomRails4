@@ -514,4 +514,12 @@ module BrowseHelper
     merge_contents(ctas, tags)
   end
   
+  def get_tags_from_contents(contents)
+    tags = {}
+    contents.each do |content|
+      tags = add_content_tags(tags, content)
+    end
+    tags
+  end
+  
 end

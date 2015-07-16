@@ -23,7 +23,33 @@
     end
     
     def browse_index
+      category = Tag.includes(:tags_tags).references(:tags_tags).find(params[:id])
+      
+      params[:limit] = {
+        offset: 0,
+        perpage: DEFAULT_VIEW_ALL_ELEMENTS
+      }
+      content_preview_list = get_content_previews(category.name, get_tags_for_category(category), params, DEFAULT_VIEW_ALL_ELEMENTS)
+      
+      response = {
+        "category" => category,
+        "tags" => get_tags_from_contents(content_preview_list.contents),
+        "contents" => content_preview_list.contents,
+        "has_more" => content_preview_list.has_view_all
+      }
+      
+      respond_with response.to_json
       
     end
-
+  
+    # hook for tenant with multiproperty
+    def get_tags_for_category(tag)
+      property = get_property()
+      if property.nil?
+        [tag]
+      else
+        [tag, property]
+      end
+    end
+  
 end
