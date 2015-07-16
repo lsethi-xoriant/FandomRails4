@@ -27,24 +27,24 @@ function DisneyStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
   };
 
   $scope.angularReady = function() {
-    if($scope.calltoactions.length == 1 && $scope.calltoactions[0].calltoaction.media_type == "IFRAME") {
+    // if($scope.calltoactions.length == 1 && $scope.calltoactions[0].calltoaction.media_type == "IFRAME") {
 
-      var hasFlash = false;
-      try {
-        hasFlash = Boolean(new ActiveXObject('ShockwaveFlash.ShockwaveFlash'));
-      } catch(exception) {
-        hasFlash = ('undefined' != typeof navigator.mimeTypes['application/x-shockwave-flash']);
-      }
+    //   var hasFlash = false;
+    //   try {
+    //     hasFlash = Boolean(new ActiveXObject('ShockwaveFlash.ShockwaveFlash'));
+    //   } catch(exception) {
+    //     hasFlash = ('undefined' != typeof navigator.mimeTypes['application/x-shockwave-flash']);
+    //   }
 
-      calltoaction = $scope.calltoactions[0].calltoaction;
-      if(hasFlash) {
-        $("#iframe-calltoaction-" + calltoaction.id).html(calltoaction.media_data);
-      } else {
-        $("#iframe-calltoaction-" + calltoaction.id).html("<p style=\"margin-bottom: 70px; margin-top: 70px;\">Accedi da desktop per visualizzare questo contenuto</p>");
-        $("#iframe-calltoaction-" + calltoaction.id).removeClass();
-        $("#iframe-calltoaction-" + calltoaction.id).addClass("text-center");
-      }
-    } 
+    //   calltoaction = $scope.calltoactions[0].calltoaction;
+    //   if(hasFlash) {
+    //     $("#iframe-calltoaction-" + calltoaction.id).html(calltoaction.media_data);
+    //   } else {
+    //     $("#iframe-calltoaction-" + calltoaction.id).html("<p style=\"margin-bottom: 70px; margin-top: 70px;\">Accedi da desktop per visualizzare questo contenuto</p>");
+    //     $("#iframe-calltoaction-" + calltoaction.id).removeClass();
+    //     $("#iframe-calltoaction-" + calltoaction.id).addClass("text-center");
+    //   }
+    // } 
   };
 
   $scope.setAvatar = function(avatar, id) {
