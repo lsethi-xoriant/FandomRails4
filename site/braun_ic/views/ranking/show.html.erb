@@ -1,16 +1,21 @@
 <% content_for :body_class, "small-body" %>
-
 <div class="small-container">
-
   <%= render partial: "/application/navbar" %>
+</div>
 
-  <div class="container ranking-container">
+<div class="ranking-container">
+  <div class="container">
     <div class="row ranking-title__row">
       <div class="col-sm-12">
         <p class="ranking-title">Il vostro benessere</p>
       </div>
     </div>
-    <div class="row profile-container__row" ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="user in aux.ranking_info.ranking" >
+  </div>
+</div>
+
+<div class="ranking-container" ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="user in aux.ranking_info.ranking">
+  <div class="container">
+    <div class="row profile-container__row">
 
       <div class="col-xs-3 profile-container__badge text-center visible-xs">  
         <div class="profile-container__badge-block">  
@@ -87,5 +92,4 @@
       </div>
     </div>
   </div>
-
 </div>

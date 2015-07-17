@@ -8,11 +8,18 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-3 text-center">
-            <a class="needsclick" ng-click="propagateClickOnFileUploadInput()" style="position: relative; display: inline-block;">
-              <img class="modal-update-user__avatar" ng-if="form_data.current_user._avatar[0].dataUrl != null" ng-src="{{form_data.current_user._avatar[0].dataUrl}}">
-              <img class="modal-update-user__avatar modal-update-user__avatar--rounded" ng-if="form_data.current_user._avatar[0].dataUrl == null" ng-src="{{form_data.current_user.avatar}}">
-              <span class="modal-update-user__pencil fa fa-pencil"></span>
-            </a>
+            <div class="row">
+              <div class="col-sm-12">
+                <a class="needsclick" ng-click="propagateClickOnFileUploadInput()" style="position: relative; display: inline-block;">
+                  <img class="modal-update-user__avatar" ng-if="form_data.current_user._avatar[0].dataUrl != null" ng-src="{{form_data.current_user._avatar[0].dataUrl}}">
+                  <img class="modal-update-user__avatar modal-update-user__avatar--rounded" ng-if="form_data.current_user._avatar[0].dataUrl == null" ng-src="{{form_data.current_user.avatar}}">
+                  <!--<span class="modal-update-user__pencil fa fa-pencil"></span>-->
+                </a>
+              </div>
+              <div class="col-sm-12">
+                <button class="btn btn-default btn-xs iw_upload-btn" ng-click="propagateClickOnFileUploadInput()">CARICA FOTO</button>
+              </div>
+            </div>
           </div>
           <div class="col-sm-9">
             <div ng-if="form_data.current_user.errors">

@@ -26,6 +26,10 @@ body {
   margin-top: 25px;
 }
 
+.iw_upload-btn {
+  margin-bottom: 15px;
+}
+
 .iw_btn {
   margin-top: 50px;
   padding-left: 5px;
@@ -177,12 +181,15 @@ p {
 
 .ranking-container .profile-container__row {
   height: 170px;
-  background-color: whitesmoke;
   padding-top: 15px;
 }
 
-.ranking-container .profile-container__row.even {
+.ranking-container {
   background-color: #fff;
+}
+
+.ranking-container.odd {
+  background-color: whitesmoke;
 }
 
 .profile-container__user_unlogged {

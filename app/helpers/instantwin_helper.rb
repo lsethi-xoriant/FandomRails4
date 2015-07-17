@@ -50,8 +50,9 @@ module InstantwinHelper
       end
     end
     
+    win = user_interactions.present? && user_interactions.any? ? true : nil
     {
-      win: (user_interactions.present? && user_interactions.any?),
+      win: win,
       message: reward_title
     }
 	end

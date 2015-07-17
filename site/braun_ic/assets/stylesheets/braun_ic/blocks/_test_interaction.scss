@@ -25,13 +25,13 @@
 }
 
 .test-question {
-  font-size: 36px;
-  margin-top: 15px;
+  font-size: 25px;
+  margin-top: 22px;
 }
 
 .test_progress-bar {
   position: absolute; 
-  bottom: 20px; 
+  bottom: 40px; 
   left: 0; 
   right: 0; 
   width: 150px; 
@@ -53,6 +53,7 @@
     padding: 15px 10px !important;
     font-size: 12px !important;
     width: 100% !important;
+    text-transform: uppercase;
   }
 
   .test-answer__container {

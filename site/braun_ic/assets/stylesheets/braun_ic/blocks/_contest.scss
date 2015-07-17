@@ -2,19 +2,24 @@
   color: #fff;
 }
 
-.contest-2-container {
+.contest-1-container {
   .contest-title, .contest-description { 
     color: #000;
   }
 }
 
 .contest-2-container-sp, .contest-2-container-sp-form {
+  background-color: #fff;
   .contest-title, .contest-description { 
     color: #000;
   }
   .contest-description {
     margin-bottom: 45px;
   }
+}
+
+.contest-2-container-sp-form {
+  padding-bottom: 30px;
 }
 
 .contest-img {
@@ -32,9 +37,9 @@
 }
 
 .contest-1-container {
-  background-color: #000;
+  background-color: #fff;
 }
 
 .contest-2-container {
-  background-color: #fff;
+  background-color: #000;
 }

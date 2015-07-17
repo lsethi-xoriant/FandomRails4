@@ -48,6 +48,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return ($scope.aux.instant_win_info.win == false);
   };
 
+  $scope.ticketsEmpty = function() {
+    return ($scope.aux.instant_win_info.win == null && $scope.current_user.instantwin_tickets_counter < 1);
+  };
+
   $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
     //$("#pin-" + interaction_info.interaction.id).modal("show");
     if($scope.aux.mobile) {
