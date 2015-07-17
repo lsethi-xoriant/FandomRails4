@@ -16,9 +16,12 @@ class Sites::Disney::RegistrationsController < RegistrationsController
   end
 
   def iur
-    unless cookies[:SWID] && cookies[:SWID]
+    if cookies[:SWID].blank? || cookies[:BLUE].blank?
       from_iur_authenticate = cookies[:from_iur_authenticate] || "/"
+      
       cookies.delete :from_iur_authenticate
+      cookies.delete :BLUE, domain: ".disneychannel.it"
+      cookies.delete :SWID, domain: ".disneychannel.it"
 
       flash[:notice] = "from-disney-registration"
       redirect_to from_iur_authenticate
@@ -71,11 +74,14 @@ class Sites::Disney::RegistrationsController < RegistrationsController
 
       if user
         user.update_attributes(swid: cookies[:SWID], aux: aux)
+        log_key = "signin"
       else
         user = User.create(email: hash_user["EMAIL_ADDRESS"], swid: cookies[:SWID], password: password, password_confirmation: password, first_name: hash_user["FIRST_NAME"], last_name: hash_user["LAST_NAME"], aux: aux)
+        log_key = "registration"
       end
       flash["notice"] = "privacy-addition"
     else
+      log_key = "signin"
       flash["notice"] = "privacy-addition"
       # unless privacy_addition_accepted?(user.aux)
       #   flash["notice"] = "privacy-addition"
@@ -88,11 +94,12 @@ class Sites::Disney::RegistrationsController < RegistrationsController
     if user.errors.any?
       flash[:errors] = user.errors.full_messages.join(", ")
     else
+      log_audit(log_key, { 'user_id' => user.id })
       sign_in(user)   
       set_account_up()
     end
 
-    from_iur_authenticate = cookies[:from_iur_authenticate]
+    from_iur_authenticate = cookies[:from_iur_authenticate] || "/"
 
     cookies.delete :from_iur_authenticate
     cookies.delete :BLUE, domain: ".disneychannel.it"
