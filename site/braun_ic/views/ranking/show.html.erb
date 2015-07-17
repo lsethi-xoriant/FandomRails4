@@ -77,9 +77,14 @@
       </div>
 
     </div>
+  </div>
+</div>
 
+
+<div class="ranking-container" ng-if="aux.ranking_info.num_pages > 1">
+  <div class="container">
     <div class="row">
-      <div class="col-sm-12 text-center" ng-if="aux.ranking_info.num_pages > 1">     
+      <div class="col-sm-12 text-center">     
         <ul class="pagination">
           <li ng-repeat="page in getPaginationPagesBefore(aux.ranking_info.page, aux.ranking_info.num_pages)">
             <a href="javascript:void(0)" ng-click="goToRankingPage(page)">{{page}}</a>
