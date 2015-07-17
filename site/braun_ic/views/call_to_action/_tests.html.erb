@@ -122,6 +122,19 @@
                     <div class="col-sm-12 cta_cover-end_container-share_container " ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
                         <%= render partial: "/call_to_action/share_interaction" %>
                     </div>
+
+                    <div class="col-sm-12">
+                      <button ng-if="isRegistratedUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openInstantWinModal()">
+                        SCOPRI SE HAI VINTO
+                      </button>
+                      <button ng-if="isRegistratedUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+                        SCOPRI SE HAI VINTO
+                      </button>
+                      <a ng-if="!isRegistratedUser()" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw">
+                        SCOPRI SE HAI VINTO
+                      </a>
+                    </div>
+
                     <div class="col-sm-12 text-right">
                       <span class="cta_cover-end_container-redo hidden-xs" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
                     </div>
