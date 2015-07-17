@@ -1,0 +1,40 @@
+<%= render partial: "/application/header" %>
+<%= render partial: "/call_to_action/user_bar" %>
+
+<div class="contest-1-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="contest-title">{{aux.assets.extra_fields.contest_section_1_title}}</p>
+      </div>
+      <div class="col-sm-12">
+        <img class="contest-img" ng-src="{{aux.assets.extra_fields.contest_section_1_img.url}}">
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <p class="contest-description">{{aux.assets.extra_fields.contest_section_1_description}}</p>
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <a class="btn btn-green btn-lg contest-btn" href="/users/sign_up">REGISTRATI E FAI IL TEST</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="contest-2-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="contest-title">{{aux.assets.extra_fields.contest_section_2_title}}</p>
+      </div>
+      <div class="col-sm-12">
+        <img class="contest-img" ng-src="{{aux.assets.extra_fields.contest_section_2_img.url}}">
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <p class="contest-description">{{aux.assets.extra_fields.contest_section_2_description}}</p>
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <a class="btn btn-green btn-lg contest-btn" href="/users/sign_up">REGISTRATI E INVIA IL TUO SCONTRINO</a>
+      </div>
+    </div>
+  </div>
+</div>

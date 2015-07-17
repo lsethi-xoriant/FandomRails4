@@ -1,5 +1,12 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
+  def contest
+    badges = compute_user_badge(current_user.id) if registered_user?
+    @aux_other_params = { 
+      badges: badges
+    }
+  end 
+
   def reset_redo_user_interactions
     cta = CallToAction.find(params[:parent_cta_id])
     category_tag = get_cta_tag_tagged_with(cta, "test")

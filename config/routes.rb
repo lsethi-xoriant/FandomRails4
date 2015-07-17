@@ -11,6 +11,7 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('braun_ic')) do
     scope module: "sites" do
       scope module: "braun_ic" do
+        get "/concorso", to: "application#contest"
         get "/", to: "application#index"
         get "/call_to_action/:id", to: "application#index"
         get "/call_to_action/:id/:descendent_id", to: "application#index"
