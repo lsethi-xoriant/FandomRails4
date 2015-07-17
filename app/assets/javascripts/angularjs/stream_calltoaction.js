@@ -500,9 +500,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         if(data.win == true) {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields.iw_win;
+          time = 7000;
         } else {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index];
+          time = 5000;
         }
         $("#iw_slot").attr("src", image);
 
@@ -511,7 +513,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
           $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
-        }, 5000);
+        }, time);
       }).error(function() {
         // ERROR.
       });

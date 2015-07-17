@@ -4,6 +4,7 @@ $cover-height: 530px;
   margin: 0 0 25px 0; 
   box-shadow: none;
   height: $cover-height;
+  cursor: pointer;
 }
 
 .tip-panel {
@@ -32,8 +33,9 @@ $cover-height: 530px;
 
 .cta_cover-end_container {
   height: ($cover-height - 2px);
-  background-color: #000;
   color: #fff;
+  background-size: 100% auto !important;
+  background-repeat: no-repeat;
 }
 
 .cta_cover-end_container-percentage_container {
@@ -54,6 +56,7 @@ $cover-height: 530px;
 .cta_cover-end_container-description {
   font-size: 18px; 
   padding-top: 15px;
+  padding-right: 60px;
 }  
 
 .cta_cover-end_container-redo {
@@ -291,10 +294,17 @@ $cover-height: 530px;
   .cta_cover-end_container-description {
     font-size: 12px;
     padding-top: 10px;
+    padding-right: 0;
   }
 
   .cta_cover-end_container {
     height: 378px;
+    background: #000 !important;
+  }
+
+  .cta_cover-end_container {
+    background-size: 100% auto !important;
+    background-position: center;
   }
 
   .cta_cover-img__container {
