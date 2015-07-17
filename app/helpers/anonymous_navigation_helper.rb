@@ -61,7 +61,7 @@ module AnonymousNavigationHelper
     resource.assign_attributes(params)
     if resource.valid? # TODO: comment this
       resource.assign_attributes(anonymous_id: nil)
-      sign_out(current_user) if request_via_api?
+      sign_out(current_user) # if request_via_api?
     end
     resource
   end
