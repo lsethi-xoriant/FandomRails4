@@ -1,11 +1,70 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
+  class ContestIdentityCollectionUser
+    include ActiveAttr::Attributes
+    include ActiveAttr::Model
+
+    attribute :first_name, type: String
+    attribute :last_name, type: String
+    attribute :receipt_number, type: String
+    attribute :day_of_emission, type: String
+    attribute :month_of_emission, type: String
+    attribute :year_of_emission, type: String
+    attribute :product_code, type: String
+
+    validates_presence_of :first_name, :last_name, :receipt_number, :product_code
+    validate :date_of_emission
+    
+    def date_of_emission
+      if day_of_emission.blank? || month_of_emission.blank? || year_of_emission.blank?
+        errors.add(:date_of_emission, "non può essere lasciata in bianco")
+      end
+    end                      
+  end
+
   def contest
     badges = compute_user_badge(current_user.id) if registered_user?
     @aux_other_params = { 
       badges: badges
     }
   end 
+
+  def contest_identitycollection
+    @contest_identitycollection_user = ContestIdentityCollectionUser.new(
+      first_name: current_user.first_name, 
+      last_name: current_user.last_name
+    )
+  end 
+
+  def contest_identitycollection_update
+    user_params = params[:sites_braun_ic_application_controller_contest_identity_collection_user]
+    @contest_identitycollection_user = ContestIdentityCollectionUser.new(user_params)
+    if @contest_identitycollection_user.valid?
+      aux = current_user.aux || {}
+
+      day_of_emission = user_params[:day_of_emission]
+      month_of_emission = user_params[:month_of_emission]
+      year_of_emission = user_params[:year_of_emission]
+
+      (aux["products"] ||= []) << {
+        receipt_number: user_params[:receipt_number],
+        product_code: user_params[:product_code],
+        date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}"
+      }
+
+      if current_user.update_attributes(first_name: user_params[:first_name],
+        last_name: user_params[:last_name], aux: aux)
+        flash[:notice] = "Dati salvati correttamente"
+        redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
+      else
+        flash[:error] = "Errore nel salvataggio, scrivi a support@shado.tv"
+        log_error("contest_identitycollection_update", { exception: current_user.errors.to_s }) 
+        redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
+      end
+    else
+      render template: "application/contest_identitycollection"
+    end
+  end
 
   def reset_redo_user_interactions
     cta = CallToAction.find(params[:parent_cta_id])

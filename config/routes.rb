@@ -12,6 +12,8 @@ Fandom::Application.routes.draw do
     scope module: "sites" do
       scope module: "braun_ic" do
         get "/concorso", to: "application#contest"
+        get "/concorso_identitycollection", to: "application#contest_identitycollection"
+        post "/concorso_identitycollection/update", to: "application#contest_identitycollection_update"
         get "/", to: "application#index"
         get "/call_to_action/:id", to: "application#index"
         get "/call_to_action/:id/:descendent_id", to: "application#index"
