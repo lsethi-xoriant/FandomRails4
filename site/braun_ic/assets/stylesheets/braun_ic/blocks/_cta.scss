@@ -265,6 +265,7 @@ $cover-height: 530px;
 @media (max-width: $screen-sm-min) {
   .cta_cover-end_container-share_container {
     padding-top: 15px;
+    padding-bottom: 15px;
   }
 
   .cta_cover-end_container-redo {
@@ -289,6 +290,7 @@ $cover-height: 530px;
 
   .cta_cover-end_container-description {
     font-size: 12px;
+    padding-top: 10px;
   }
 
   .cta_cover-end_container {
@@ -338,8 +340,8 @@ $cover-height: 530px;
   }
 
   .cta_tip-title {
-    font-size: 26px;
-    line-height: 30px;
+    font-size: 22px;
+    line-height: 26px;
   }
 
   .cta_tip-section_1_container, .cta_tip-section_2_container {
@@ -349,9 +351,9 @@ $cover-height: 530px;
 
   .cta_tip-description {
     margin-top: 25px;
+    margin-bottom: 25px;
     font-size: 14px;
     line-height: 18px;
-    margin-bottom: 15px;
   }
 
   .cta_cover-container__row {
