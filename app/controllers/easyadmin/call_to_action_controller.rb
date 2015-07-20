@@ -49,6 +49,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
     end
 
+    params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
+      if interaction_attributes["gallery_type"] == "twitter"
+        params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+      end
+    end
+
     @cta.aux = aux
 
     save_interaction_call_to_action_linking(@cta) unless @cta.errors.any?
@@ -86,6 +92,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     if params[:call_to_action]["media_image_gravity_position"]
       aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
+    end
+
+    params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
+      if interaction_attributes["gallery_type"] == "twitter"
+        params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+      end
     end
 
     @cta.aux = aux
