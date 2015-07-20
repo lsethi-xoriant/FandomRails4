@@ -112,7 +112,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
   end
 
   def index
-    debugger
     if current_user
       compute_save_and_notify_context_rewards(current_user)
     end
@@ -121,10 +120,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
     cta_id = params[:id]
     descendent_id = params[:descendent_id]
-
-    if cta_id
-      cta = CallToAction.find(cta_id)
-    end
 
     params = { "page_elements" => ["quiz", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream("test", params, 15)
@@ -159,7 +154,13 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, get_parent_cta(cta_info)["calltoaction"]["activated_at"])
     end
 
+    params = { "page_elements" => ["share"] }
+    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
+
+    product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
+
     if cta_id
+      cta = CallToAction.find(cta_id)
       set_seo_info_for_cta(cta)
       anchor_to = cta.slug
       compute_seo()
@@ -176,18 +177,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     else 
       compute_seo()
     end
-
-    params = { "page_elements" => ["share"] }
-
-    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
-
-    tip_tag = Tag.find("tip")
-    is_cta_tagged_with_tip = CallToActionTag.where(call_to_action_id: cta_id, tag_id: tip_tag.id)
-    if is_cta_tagged_with_tip
-      tip_info_list[0] = build_cta_info_list_and_cache_with_max_updated_at([cta], page_elements)
-    end
-
-    product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
 
     @aux_other_params = { 
       anchor_to: anchor_to,

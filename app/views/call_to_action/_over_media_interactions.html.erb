@@ -31,14 +31,12 @@
   </div>
 </div>
 
-<div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia | filter:excludePinInteractions">
-
-  <div class="play-interaction__container over-media-{{interaction_info.interaction.resource_type}}-interaction__container">
+<div class="play-interaction__container over-media-{{interaction_info.interaction.resource_type}}-interaction__container" ng-class="{'over-media-test-result-interaction__container': (hasCtaHistory(calltoaction_info) && isLastStepInLinkedCallToAction(calltoaction_info))}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia | filter:excludePinInteractions">
 
     <div ng-if="interaction_info.interaction.resource_type == 'vote'" class="col-xs-12 text-center" style="position: absolute; bottom: 15px;">
       <%= render partial: "/call_to_action/vote_interaction" %>
     </div>
-    <div ng-if="interaction_info.interaction.resource_type == 'trivia' || interaction_info.interaction.resource_type == 'test'" class="col-sm-8 col-sm-offset-2 over-media__col">
+    <div ng-if="interaction_info.interaction.resource_type == 'trivia'" class="col-sm-8 col-sm-offset-2 over-media__col">
       <%= render partial: "/call_to_action/trivia_interaction" %>
       <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
@@ -48,6 +46,23 @@
         </div>
       </div>
 
+      <div ng-if="!interaction_info.user_interaction" class="row text-center interaction__winnable-reward--undervideo__row">
+        <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
+          <span class="label label-warning cta-cover__winnable-reward__label">
+            +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+          </span>  
+        </div>
+      </div>
+    </div>
+    <div ng-if="interaction_info.interaction.resource_type == 'test'" class="col-sm-8 col-sm-offset-2 over-media__col">
+      <%= render partial: "/call_to_action/test_interaction" %>
+      <div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.outcome" class="row text-center interaction__winnable-reward--undervideo__row">
+        <div class="col-md-12 interaction__winnable-reward text-center interaction__winnable-reward--undervideo">
+          <span class="label label-success cta-cover__winnable-reward__label">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+          </span> 
+        </div>
+      </div>
       <div ng-if="!interaction_info.user_interaction" class="row text-center interaction__winnable-reward--undervideo__row">
         <div class="col-md-12 interaction__winnable-reward interaction__winnable-reward--undervideo">
           <span class="label label-warning cta-cover__winnable-reward__label">
@@ -75,28 +90,18 @@
       </div>
     </div>
     <div ng-if="interaction_info.interaction.resource_type == 'check'" class="col-sm-12 over-media__col">
-
       <div class="row">
-
         <div class="col-sm-12" style="padding: 15px;">
           <p style="font-size: 16px;">{{interaction_info.interaction.resource.description}}</p>
         </div>
-
         <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="interaction_info.user_interaction">
           <button class="btn btn-blue btn-lg active"><span>{{interaction_info.interaction.resource.title}}</span></button>
         </div>
-
         <div class="col-xs-6 col-xs-offset-3 text-center"  ng-if="!interaction_info.user_interaction">
           <a class="btn btn-lg btn-blue" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span>{{interaction_info.interaction.resource.title}}</span></a>
         </div>
-
       </div>
-
-
-    </div>  
-    <div ng-if="interaction_info.interaction.resource_type == 'share'" class="col-sm-12" style="position: absolute; bottom: 15px;">
-      <%= render partial: "/call_to_action/share_interaction" %>
-    </div>  
+    </div>   
     <div ng-if="interaction_info.interaction.resource_type == 'upload'" class="col-sm-12" style="position: absolute; bottom: 15px;">
       <%= render partial: "/call_to_action/upload_interaction" %>
     </div>  
@@ -109,5 +114,42 @@
     <div ng-if="interaction_info.interaction.resource_type == 'randomresource'" class="col-sm-12 text-center" style="position: absolute; bottom: 15px;">
       <%= render partial: "/call_to_action/random_interaction" %>
     </div>
-  </div>
+
+    <!-- TEST -->
+    <div ng-if="hasCtaHistory(calltoaction_info) && isLastStepInLinkedCallToAction(calltoaction_info)" class="col-sm-8 col-sm-offset-2 over-media__col">
+      <div class="row">
+        <div class="col-sm-4">
+          <img style="width: 100%;" class="property-border" ng-src="{{calltoaction_info.calltoaction.extra_fields.linked_result_image.url}}">
+        </div>
+        <div class="col-sm-8">
+          <div class="row">
+            <div class="col-xs-12 text-center">
+              <p class="share-interaction__extra-title" style="color: #fff; font-size: 32px;">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
+            </div>
+            <div class="col-sm-12 text-center">
+              <p class="share-interaction__extra-description" style="color: #fff;">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
+            </div>
+            <div class="col-xs-12 text-center" style="margin-top: 15px; margin-bottom: 15px;">
+              <%= render partial: "/call_to_action/share_interaction" %>
+            </div>
+            <div class="col-sm-12 text-center interaction__redo-col" ng-click="resetToRedo(calltoaction_info)">
+              <div class="row">
+                <div class="col-xs-12 interaction__redo-span-col">
+                  <span style="font-size: 26px; color: #fff;" class="fa fa-refresh undervideo-interaction__fa-refresh"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <div class="col-sm-6 col-sm-offset-3 text-center" ng-if="hasCtaHistory(calltoaction_info) && !isLastStepInLinkedCallToAction(calltoaction_info)" style="position: absolute; bottom: 15px; color: #fff;">
+      <p class="undervideo-interaction__progress-text">{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
+      <div class="progress undervideo-interaction__progress">
+        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (calltoaction_info.optional_history.optional_index_count/(calltoaction_info.optional_history.optional_total_count - 1)*100) + '%' }">
+        </div>
+      </div>
+    </div>
+
 </div>
