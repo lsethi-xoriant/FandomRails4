@@ -12,7 +12,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
   $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info) {
-    url = $scope.aux.root_url + "/call_to_action/" + parent_cta_info.calltoaction.slug;
+    url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;
     if(cta_info.calltoaction.extra_fields.linked_result_title) {
       url = url + "/" + cta_info.calltoaction.slug;
     }
