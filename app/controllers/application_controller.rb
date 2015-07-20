@@ -285,7 +285,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_optional_http_security_credentials
-    credentials = get_deploy_setting("sites/#{request.site.id}/http_security_credentials", nil)
+    credentials = get_deploy_setting("sites/#{$site.id}/http_security_credentials", nil)
     credentials = get_deploy_setting("http_security_credentials", nil) unless credentials
     if credentials 
       credentials
