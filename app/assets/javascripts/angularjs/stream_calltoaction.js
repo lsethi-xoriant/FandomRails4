@@ -504,7 +504,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         if(data.win == true) {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields.iw_win;
-          time = 7000;
+          time = 9000;
         } else {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index];

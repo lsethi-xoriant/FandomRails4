@@ -42,12 +42,20 @@ class Sites::BraunIc::RankingController < RankingController
           avatar: user_avatar(user_reward.user),
           position: ((index + 1) + (per_page * page)),
           badges: users_badge[user_reward.user_id],
-          username: "#{user_reward.user.first_name} #{user_reward.user.last_name}",
+          username: braun_username(user_reward.user),
           points: user_reward.counter
         }
       end
 
       ranking_info
+    end
+  end
+
+  def braun_username(user)
+    if user.first_name.present? && user.last_name.present?
+      "#{user.first_name} #{user.last_name}"
+    else
+      user.email.split("@")[0]
     end
   end
 
