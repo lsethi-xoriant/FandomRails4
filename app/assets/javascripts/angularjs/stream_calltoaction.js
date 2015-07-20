@@ -528,6 +528,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.openInstantWinModal = function() {
+    $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_cover.url);
+
     if($scope.aux.instant_win_info.win == false) {
       delete $scope.aux.instant_win_info.win;
     }
