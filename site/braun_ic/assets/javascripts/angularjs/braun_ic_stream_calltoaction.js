@@ -1,4 +1,4 @@
-var braunIcStreamCalltoactionModule = angular.module('BraunIcStreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate']);
+var braunIcStreamCalltoactionModule = angular.module('BraunIcStreamCalltoactionModule', ['ngRoute', 'ngSanitize', 'ngAnimate', 'angularFileUpload']);
 
 BraunIcStreamCalltoactionCtrl.$inject = ['$scope', '$window', '$http', '$timeout', '$interval', '$sce', '$upload'];
 braunIcStreamCalltoactionModule.controller('BraunIcStreamCalltoactionCtrl', BraunIcStreamCalltoactionCtrl);
