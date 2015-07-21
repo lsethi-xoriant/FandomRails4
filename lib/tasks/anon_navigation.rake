@@ -24,7 +24,7 @@ namespace :anon_navigation do
         throw Exception.new("anonymous_user empty")
       end
 
-      users = User.where("anonymous_id IS NOT NULL")#.where("updated_at < ?", (Time.now.utc - 10.days))
+      users = User.where("anonymous_id IS NOT NULL AND user_id <> ? AND updated_at < ?", anonymous_user.id, (Time.now.utc - 10.days))
       if users.any?
         user_ids = users.map { |user| user.id }
 
