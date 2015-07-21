@@ -2,7 +2,7 @@ namespace :anon_navigation do
 
   task :clear_anonymous_users, [:app_root_path] => :environment do |t, args| 
     logger = Logger.new("#{args.app_root_path}/log/clear_anonymous_users.log")
-    tenants = Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
+    tenants = all_site_ids_with_db
     tenants.each do |tenant|
       begin
         clear_users_for_tenant(tenant, logger)
@@ -21,7 +21,7 @@ namespace :anon_navigation do
     if $site.interactions_for_anonymous.present?
       anonymous_user = User.find_by_email("anonymous@shado.tv")
       unless anonymous_user
-        throw Exception.new("anonymous_user empty")
+        throw Exception.new("anonymous_user missing")
       end
 
       users = User.where("(anonymous_id IS NOT NULL AND anonymous_id != '') AND updated_at < ?", (Time.now.utc - 10.days))

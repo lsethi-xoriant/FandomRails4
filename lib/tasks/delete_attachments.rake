@@ -2,7 +2,7 @@ namespace :attachments do
 
   desc "Migrates the tag_fields table to the tag.extra_field JSON."
   task :delete => :environment do
-    tenants = Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
+    tenants = all_site_ids_with_db
     tenants.each do |tenant|
       delete_attachments(tenant)
     end
