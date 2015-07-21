@@ -122,13 +122,18 @@ module CallToActionHelper
       cache_key = "#{cache_key}_append_from_#{calltoaction_ids_shown.last}"
     end
 
+    exclude_cta_with_ids = params["exclude_cta_with_ids"]
+    if exclude_cta_with_ids
+      cache_key = "#{cache_key}_except_#{exclude_cta_with_ids.join("_")}"
+    end
+
     if ordering == "recent"
       cache_timestamp = get_cta_max_updated_at()
       ctas = cache_forever(get_ctas_cache_key(cache_key, cache_timestamp)) do
-        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+        get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check, exclude_cta_with_ids)
       end 
     else
-      ctas = get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check)
+      ctas = get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas_with_has_more_check, exclude_cta_with_ids)
     end
 
     page_elements = params && params["page_elements"] ? params["page_elements"] : nil
@@ -152,7 +157,7 @@ module CallToActionHelper
     [ctas, has_more]
   end
 
-  def get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas)
+  def get_ctas_for_stream_computation(tag, ordering, gallery_info, calltoaction_ids_shown, limit_ctas, exclude_cta_with_ids = nil)
     if gallery_info
       gallery_calltoaction_id = gallery_info["gallery_calltoaction_id"]
       gallery_user_id = gallery_info["gallery_user_id"]
@@ -163,6 +168,10 @@ module CallToActionHelper
     # Append other scenario
     if calltoaction_ids_shown
       calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", calltoaction_ids_shown)
+    end
+
+    if exclude_cta_with_ids
+      calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", exclude_cta_with_ids)
     end
 
     # User galleries scenario

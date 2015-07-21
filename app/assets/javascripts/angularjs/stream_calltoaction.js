@@ -1209,7 +1209,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     other_params = $scope.appendCallToActionOtherParams();
 
-    $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, other_params: other_params, ordering: $scope.calltoaction_ordering })
+    $http.post(append_calltoaction_path, { calltoaction_ids_shown: calltoaction_ids_shown, other_params: other_params, ordering: $scope.calltoaction_ordering, exclude_cta_with_ids: $scope.aux.exclude_cta_with_ids })
     .success(function(data) {
 
       angular.forEach(data.calltoaction_info_list, function(calltoaction_info) {

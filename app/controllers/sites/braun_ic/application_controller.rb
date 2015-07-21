@@ -154,13 +154,16 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, get_parent_cta(cta_info)["calltoaction"]["activated_at"])
     end
 
-    params = { "page_elements" => ["share"] }
-    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
-
     product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
-
     if cta_id
       cta = CallToAction.find(cta_id)
+
+      tip_tag = Tag.find("tip")
+      is_cta_tagged_with_tip = CallToActionTag.where(call_to_action_id: cta.id, tag_id: tip_tag.id).any?
+      if is_cta_tagged_with_tip
+        top_cta_info = build_cta_info_list_and_cache_with_max_updated_at([cta], ["share"])
+      end
+
       set_seo_info_for_cta(cta)
       anchor_to = cta.slug
       compute_seo()
@@ -178,8 +181,25 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       compute_seo()
     end
 
+    params = { "page_elements" => ["share"] }
+    if top_cta_info.present?
+      exclude_cta_with_ids = [top_cta_info[0]["calltoaction"]["id"]]
+      params = { "page_elements" => ["share"], "exclude_cta_with_ids" => exclude_cta_with_ids }
+      tip_cta_limit = 2
+    else
+      params = { "page_elements" => ["share"] }
+      tip_cta_limit = 3
+    end
+
+    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, tip_cta_limit)
+    
+    if top_cta_info.present?
+      tip_info_list = top_cta_info + tip_info_list
+    end
+
     @aux_other_params = { 
       anchor_to: anchor_to,
+      exclude_cta_with_ids: exclude_cta_with_ids,
       tag_menu_item: "home",
       badges: badges,
       tips: {

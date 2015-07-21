@@ -67,7 +67,6 @@ class CallToActionController < ApplicationController
     tag_name = tag.present? ? tag.name : nil
     calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
-    params[:page_elements] = ["empty"]
     response = {
       calltoaction_info_list: calltoaction_info_list,
       has_more: has_more
@@ -84,7 +83,6 @@ class CallToActionController < ApplicationController
     tag_name = tag.present? ? tag.name : nil
     calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
 
-    params[:page_elements] = ["empty"]
     response = {
       calltoaction_info_list: calltoaction_info_list,
       has_more: has_more
