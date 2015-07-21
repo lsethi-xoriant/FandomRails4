@@ -1,17 +1,44 @@
 namespace :anon_navigation do  
 
-  task :clear_users, [:tenant] => :environment do |task, args|
-    switch_tenant(args.tenant)
-    anonymous_user = User.find_by_email("anonymous@shado.tv")
+  task :clear_anonymous_users, [:app_root_path] => :environment do |t, args| 
+    logger = Logger.new("#{args.app_root_path}/log/clear_anonymous_users.log")
+    tenants = Rails.configuration.sites.select {|s| s.share_db.nil? }.map { |s| s.id }
+    tenants.each do |tenant|
+      begin
+        clear_users_for_tenant(tenant, logger)
+      rescue Exception => exception
+        logger.error("#{current_timestamp} exception in #{tenant}: #{exception} - #{exception.backtrace[0, 10]}")
+      end
+    end
+  end
 
-    users = User.where("anonymous_id IS NOT NULL").where("updated_at < ?", (Time.now.utc - 10.days))
-    user_ids = users.map { |user| user.id }
+  def current_timestamp()
+    "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")}]"
+  end
 
-    adjust_user_interactions(user_ids, anonymous_user)
-    adjust_user_comment_interactions(user_ids, anonymous_user)  
-    adjust_counters_for_users(user_ids, anonymous_user)
+  def clear_users_for_tenant(tenant, logger)
+    switch_tenant(tenant)
+    if $site.interactions_for_anonymous.present?
+      anonymous_user = User.find_by_email("anonymous@shado.tv")
+      unless anonymous_user
+        throw Exception.new("anonymous_user empty")
+      end
 
-    users.destroy_all()
+      users = User.where("anonymous_id IS NOT NULL")#.where("updated_at < ?", (Time.now.utc - 10.days))
+      if users.any?
+        user_ids = users.map { |user| user.id }
+
+        adjust_user_interactions(user_ids, anonymous_user)
+        adjust_user_comment_interactions(user_ids, anonymous_user)  
+        adjust_counters_for_users(user_ids, anonymous_user)
+
+        users_count = users.count
+
+        users.destroy_all()
+
+        logger.info "#{current_timestamp} clear #{users_count} anonymous users for #{tenant}"
+      end
+    end
   end
 
   def adjust_counters_for_users(user_ids, anonymous_user)
