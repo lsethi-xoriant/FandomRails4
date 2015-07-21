@@ -15,6 +15,15 @@
 
   <link rel="shortcut icon" href="/favicon/braun_ic/favicon.ico">
 
+  <!--[if lte IE 9]>
+    <script>
+      FileAPI = {
+        jsUrl: "<%= asset_path('FileAPI.js') %>",
+        flashUrl: "<%= asset_path('FileAPI.flash.swf') %>"
+      }
+    </script>
+  <![endif]-->
+
   <%= stylesheet_link_tag "braun_ic_application", :media => "all" %>
   <%= javascript_include_tag "braun_ic_application" %>
 

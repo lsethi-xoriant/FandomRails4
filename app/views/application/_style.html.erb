@@ -10,6 +10,14 @@
     }
   <% end %>
 
+  .progress-bar {
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .property-border {
+    border: 1px solid <%= aux["property_info"]['extra_fields']["background_color"] %>;
+  }
+
   .percentage_circle_bar, .percentage_circle_fill {
     border-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }
@@ -27,7 +35,7 @@
   }
 
   .reward-catalogue-header {
-     background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }
 
   .profile-menu-block {

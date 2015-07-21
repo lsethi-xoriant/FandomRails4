@@ -154,6 +154,11 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, get_parent_cta(cta_info)["calltoaction"]["activated_at"])
     end
 
+    params = { "page_elements" => ["share"] }
+    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
+
+    product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
+
     if cta_id
       cta = CallToAction.find(cta_id)
       set_seo_info_for_cta(cta)
@@ -172,10 +177,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     else 
       compute_seo()
     end
-
-    params = { "page_elements" => ["share"] }
-    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 3)
-    product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
 
     @aux_other_params = { 
       anchor_to: anchor_to,

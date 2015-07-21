@@ -432,8 +432,6 @@ module CallToActionHelper
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
     user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
 
-    adjust_counters(interaction_ids, calltoaction_info_list, comments)
-
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
         calltoaction_info_list, is_calltoaction_info_list_updated = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, interactions_to_compute)
@@ -481,6 +479,8 @@ module CallToActionHelper
     if calltoaction_info_list.length == 1 && calltoaction_info_list[0]["calltoaction"]["disqus"]
       calltoaction_info_list[0]["calltoaction"]["disqus"]["sso"] = disqus_sso
     end
+
+    adjust_counters(interaction_ids, calltoaction_info_list, comments)
 
     calltoaction_info_list
 

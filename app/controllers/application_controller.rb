@@ -273,14 +273,27 @@ class ApplicationController < ActionController::Base
     calltoactions_during_video_interactions_second
   end
 
-  before_filter :authenticate_admin
+  before_filter :basic_http_security_check
 
-  def authenticate_admin
-    if Rails.env == "production" && Rails.configuration.deploy_settings.fetch('http_security', true)
-      credentials = Rails.configuration.deploy_settings.fetch('http_security_credentials', { 'username' => 'admin', 'password' => 'supersecret'})
+  def basic_http_security_check
+    credentials = get_optional_http_security_credentials()
+    unless credentials.nil?
       authenticate_or_request_with_http_basic do |username, password|
         username == credentials['username'] && password == credentials['password']
       end
+    end
+  end
+
+  def get_optional_http_security_credentials
+    credentials = get_deploy_setting("sites/#{$site.id}/http_security_credentials", nil)
+    credentials = get_deploy_setting("http_security_credentials", nil) unless credentials
+    if credentials 
+      credentials
+    # backward compatibility
+    elsif get_deploy_setting("http_security", false)
+      { 'username' => 'admin', 'password' => 'supersecret'} 
+    else
+      nil
     end
   end
 
