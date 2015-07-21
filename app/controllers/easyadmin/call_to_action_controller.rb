@@ -78,9 +78,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
   end
 
   def update_cta
-
-    debugger
-
     if params[:part] == "user_cta_image" && params[:call_to_action]
       params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image']
     end
