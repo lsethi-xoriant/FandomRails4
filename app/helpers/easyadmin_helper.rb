@@ -175,6 +175,15 @@ module EasyadminHelper
     columns
   end
 
+  def set_cta_updated_at(cta)
+    resources_updated_at = []
+    cta.interactions.each do |interaction|
+      resources_updated_at << interaction.resource.updated_at
+    end
+    max_resources_updated_at = resources_updated_at.max
+    cta.update_attribute(:updated_at, max_resources_updated_at) if cta.updated_at < max_resources_updated_at
+  end
+
   def get_content_updated_at_cookie()
     cookies[:content_updated_at]
   end

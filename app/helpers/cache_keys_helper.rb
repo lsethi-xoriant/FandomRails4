@@ -177,10 +177,6 @@ module CacheKeysHelper
   def get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction_id, resource_type)
     "interaction_for_calltoaction_#{calltoaction_id}_by_resource_type_#{resource_type}"
   end
-
-  def get_interaction_for_calltoaction_by_resource_type_cache_key(calltoaction_id, resource_type)
-    "interaction_for_calltoaction_#{calltoaction_id}_by_resource_type_#{resource_type}"
-  end
   
   def get_comments_count_for_cta_key(cta_id)
     "comments_count_for_cta_#{cta_id}"

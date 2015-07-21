@@ -270,10 +270,11 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
           SELECT id FROM tags WHERE updated_at >= '#{content_updated_at}'
         );").to_a.map{ |v| v["other_tag_id"].to_i }
 
-      tag_ids.each do |tag_id|
+      tag_ids.to_set.each do |tag_id|
         update_updated_at_recursive(tag_id, content_updated_at)
       end
     end
+
     if get_user_call_to_action_moderation_cookie()
       cta = CallToAction.active_no_order_by.where("user_id IS NULL").order("updated_at DESC").first
       new_updated_at = cta.updated_at + 1.second

@@ -120,6 +120,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       end
 
       flash[:notice] = "CallToAction aggiornata correttamente"
+      set_cta_updated_at(@cta)
       set_content_updated_at_cookie(@cta.updated_at)
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
