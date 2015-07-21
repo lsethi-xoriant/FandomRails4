@@ -60,10 +60,6 @@
         </div>
         <div class="col-lg-6">
           <div class="form-group">
-            <label class="text-input">Call to action template</label>
-            <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
-          </div>
-          <div class="form-group">
             <label class="text-input">Numero di upload consentiti</label>
             <%= uploadform.text_field :upload_number, :class => "form-control" %>
           </div>
@@ -108,7 +104,7 @@
             <% instagram_tag = Interaction.find(f.object.id).aux["configuration"]["instagram_tag"] rescue {} %>
             <div class="form-group col-lg-2">
               <div class="form-group">
-                <%= f.check_box :registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
+                <%= f.check_box :instagram_registered_users_only, { checked: (instagram_tag["registered_users_only"] rescue true) } %>
                 <label class="text-input">Solo utenti registrati</label>
               </div>
             </div>
@@ -130,10 +126,6 @@
               </p>
               <img class="subscription-status-image" style="display:none;" src="/assets/loading.gif" width="32px" height="32px">
             </div>
-            <div class="form-group col-lg-4">
-              <label class="text-input">Call to action template</label>
-              <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
-            </div>
           <% else %>
             <div class="col-lg-6">
               <p> Per settare il tag Instagram da sottoscrivere, salvare prima la call to action. </p>
@@ -146,7 +138,7 @@
           <% twitter_tag = Interaction.find(f.object.id).aux["configuration"]["twitter_tag"] rescue {} %>
           <div class="form-group col-lg-2">
             <div class="form-group">
-              <%= f.check_box :registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
+              <%= f.check_box :twitter_registered_users_only, { checked: (twitter_tag["registered_users_only"] rescue true) } %>
               <label class="text-input">Solo utenti registrati</label>
             </div>
           </div>
@@ -155,9 +147,15 @@
             <% twitter_tag_name = twitter_tag["name"] rescue "" %>
             <%= f.text_field :twitter_tag_name, :class => "form-control twitter-tag", :value => twitter_tag_name %>
           </div>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0px;">
+        <div class="col-lg-12">
           <div class="form-group col-lg-4">
-            <label class="text-input">Call to action template</label>
-            <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+            <div class="form-group">
+              <label class="text-input">Call to action template</label>
+              <%= uploadform.select(:call_to_action_id, get_cta_template_option_list(), {}, { :class => "form-control" }) %>
+            </div>
           </div>
         </div>
       </div>

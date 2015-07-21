@@ -4,8 +4,10 @@
 class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
     :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed,
-    :interaction_positioning, :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, :registered_users_only
-  attr_accessor :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, :registered_users_only
+    :interaction_positioning, :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id,
+    :twitter_registered_users_only, :instagram_registered_users_only
+  attr_accessor :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, 
+    :twitter_registered_users_only, :instagram_registered_users_only
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -31,14 +33,14 @@ class Interaction < ActiveRecord::Base
           "instagram_tag" => {
             "name" => self.instagram_tag_name, 
             "subscription_id" => self.instagram_tag_subscription_id,
-            "registered_users_only" => (self.registered_users_only == "1" )
+            "registered_users_only" => (self.instagram_registered_users_only == "1" )
           }
         }
       elsif self.gallery_type == "twitter"
         tag_info = {
           "twitter_tag" => {
             "name" => self.twitter_tag_name,
-            "registered_users_only" => (self.registered_users_only == "1")
+            "registered_users_only" => (self.twitter_registered_users_only == "1")
           }
         }
       end
