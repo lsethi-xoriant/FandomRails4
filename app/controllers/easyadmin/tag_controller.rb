@@ -316,7 +316,7 @@ class Easyadmin::TagController < Easyadmin::EasyadminController
       CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
     end
     flash[:notice] = "CallToAction taggata"
-    set_content_updated_at_cookie(cta.call_to_action_tags.order("updated_at").first.updated_at)
+    set_content_updated_at_cookie(@cta.call_to_action_tags.order("updated_at").first.updated_at)
     unless params[:page].blank?
       redirect_to params[:page]
     else
