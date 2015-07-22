@@ -1,5 +1,13 @@
 module UserInteractionHelper
 
+  def create_user_interaction_for_registration()
+    basic_interaction = Basic.where({ :basic_type => "Registration" }).first
+    if basic_interaction
+      interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
+      create_or_update_interaction(current_user, interaction, nil, nil)
+    end
+  end
+
   def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list, resource_type = nil)
     interaction_ids = []
     calltoaction_info_list.each do |calltoaction_info|

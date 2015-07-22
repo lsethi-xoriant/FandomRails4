@@ -104,6 +104,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def set_account_up()
+    create_user_interaction_for_registration()
     SystemMailer.welcome_mail(current_user).deliver
   end
 
