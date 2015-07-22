@@ -103,6 +103,7 @@ namespace :twitter_gallery do
       user_id = anonymous_user.id 
     end
     { 
+      "title" => tweet.text[0..100], 
       "description" => tweet.text, 
       "user_id" => user_id,
       "extra_fields" => {
