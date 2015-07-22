@@ -319,16 +319,17 @@ module CallToActionHelper
     end
   end
 
-  def build_cta_info_list_and_cache_with_max_updated_at(calltoactions, interactions_to_compute = nil)
+  def build_cta_info_list_and_cache_with_max_updated_at(calltoactions, interactions_to_compute = nil, params = {})
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     interactions_to_compute_key = interactions_to_compute.present? ? interactions_to_compute.join("_") : "all"
     calltoactions_key = calltoaction_ids.join("_")
     cache_timestamp = get_max_updated_at(calltoactions)
-    cache_key = get_cta_info_list_cache_key("#{calltoactions_key}_interaction_types_#{interactions_to_compute_key}_#{cache_timestamp}")
-    build_cta_info_list(cache_key, calltoactions, interactions_to_compute)
+    cache_key = get_cta_info_list_cache_key("#{calltoactions_key}_interaction_types_#{interactions_to_compute_key}_#{cache_timestamp}", params)
+
+    build_cta_info_list(cache_key, calltoactions, interactions_to_compute, params)
   end
 
-  def build_cta_info_list(cache_key, calltoactions, interactions_to_compute = nil)
+  def build_cta_info_list(cache_key, calltoactions, interactions_to_compute = nil, params = {})
 
     calltoaction_info_list = cache_forever(cache_key) do
       
@@ -439,7 +440,7 @@ module CallToActionHelper
 
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
-    user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+    user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}", params)
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
@@ -490,6 +491,18 @@ module CallToActionHelper
     end
 
     adjust_counters(interaction_ids, calltoaction_info_list, comments)
+
+    if !params[:only_cover]
+      calltoaction_info_list.collect! do |calltoaction_info|
+        calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
+          if interaction_info["interaction"]["resource_type"] == "randomresource"
+            cta = get_random_call_to_action(Interaction.find(interaction_info["interaction"]["id"]))
+            calltoaction_info = build_cta_info_list_and_cache_with_max_updated_at([cta], nil, { :only_cover => true }).first
+          end
+        end
+        calltoaction_info
+      end
+    end
 
     calltoaction_info_list
 
@@ -1017,6 +1030,7 @@ module CallToActionHelper
     cta = CallToAction.find(old_cta_id)
     cta.title = "Copy of " + cta.title
     cta.name = "copy-of-" + cta.name
+    cta.slug = "copy-of-" + cta.slug
     cta.activated_at = DateTime.now
     cta_attributes = cta.attributes
     cta_attributes.delete("id")

@@ -537,11 +537,7 @@ module UserInteractionHelper
   end
 
   def update_random_interaction(cta, interaction, aux, response)
-    # TODO: Optimize next random call to action searching (with cache?)
-    tag = Tag.find_by_name(interaction.resource.tag)
-    ctas_without_me = get_ctas(tag).where("call_to_actions.id <> ?", cta.id)
-    ctas_without_me_count = ctas_without_me.count
-    next_random_cta = ctas_without_me.offset(rand(ctas_without_me_count)).first
+    next_random_cta = get_random_call_to_action(interaction, cta.id)
     aux[:next_random_cta] = next_random_cta.id
 
     user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)    
@@ -551,7 +547,17 @@ module UserInteractionHelper
 
     [user_interaction, outcome, response]
   end
-  
+
+  def get_random_call_to_action(interaction, id_cta_to_exclude = nil)
+    tag = Tag.find_by_name(interaction.resource.tag)
+    where_clause = "call_to_action_tags.tag_id = #{tag.id} AND rewards.id IS NULL"
+    if id_cta_to_exclude
+      where_clause << " AND call_to_actions.id <> #{id_cta_to_exclude}"
+    end
+    ctas = CallToAction.includes(:call_to_action_tags, :rewards, :interactions).where(where_clause).references(:call_to_action_tags, :rewards, :interactions)
+    random_cta = ctas.offset(rand(ctas.count)).first
+  end
+
   def get_interaction_counter_from_view_counter(interaction_id)
     counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction_id).first
     counter_aux = counter ? counter.aux : {}

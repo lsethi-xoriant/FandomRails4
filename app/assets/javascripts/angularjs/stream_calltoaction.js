@@ -392,7 +392,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.aux = aux;
     $scope.current_user = current_user;
-    
+
     $scope.initCallToActionInfoList(calltoaction_info_list);
 
     $scope.answer_in_progress = false;

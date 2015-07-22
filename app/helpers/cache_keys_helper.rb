@@ -78,12 +78,16 @@ module CacheKeysHelper
   # CTA
   # ~~~
 
-  def get_cta_info_list_cache_key(cache_key) 
-    "ctas_info_list_#{cache_key}"
+  def get_cta_info_list_cache_key(cache_key, params) 
+    key = "ctas_info_list_#{cache_key}"
+    key << "_only_cover" if params[:only_cover]
+    key
   end
 
-  def get_user_interactions_in_cta_info_list_cache_key(user_id, cache_key, timestamp)
-    "user_interactions_in_cta_info_list_#{cache_key}_user_#{user_id}_#{timestamp}"
+  def get_user_interactions_in_cta_info_list_cache_key(user_id, cache_key, timestamp, params)
+    key = "user_interactions_in_cta_info_list_#{cache_key}_user_#{user_id}_#{timestamp}"
+    key << "_only_cover" if params[:only_cover]
+    key
   end
 
   def get_user_interactions_in_evidence_cta_info_list_cache_key(user_id, cache_key, timestamp)
