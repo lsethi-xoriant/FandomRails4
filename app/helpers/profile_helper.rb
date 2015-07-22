@@ -118,6 +118,7 @@ module ProfileHelper
           last_name: auth.info.last_name,
           email: auth.info.email,
           avatar_selected: provider,
+          avatar_selected_url: auth.info.image,
           privacy: privacy
           )
         from_registration = true

@@ -277,7 +277,7 @@ class ApplicationController < ActionController::Base
 
   def basic_http_security_check
     credentials = get_optional_http_security_credentials()
-    unless credentials.nil?
+    if !request_via_api? && !credentials.nil?
       authenticate_or_request_with_http_basic do |username, password|
         username == credentials['username'] && password == credentials['password']
       end

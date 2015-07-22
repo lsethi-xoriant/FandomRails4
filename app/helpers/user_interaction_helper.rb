@@ -1,5 +1,13 @@
 module UserInteractionHelper
 
+  def create_user_interaction_for_registration()
+    basic_interaction = Basic.where({ :basic_type => "Registration" }).first
+    if basic_interaction
+      interaction = Interaction.where({ :resource_id => basic_interaction.id, :resource_type => "Basic" }).first
+      create_or_update_interaction(current_user, interaction, nil, nil)
+    end
+  end
+
   def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list, resource_type = nil)
     interaction_ids = []
     calltoaction_info_list.each do |calltoaction_info|
@@ -176,13 +184,14 @@ module UserInteractionHelper
     result = []
     comments.each do |comment|
       if comment.comment_id == resource_id
+        user = registered_user?(comment.user) ? comment.user : anonymous_user
         result << {
           "id" => comment.id,
           "text" => comment.text,
           "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
           "user" => {
-            "name" => comment.user.username,
-            "avatar" => user_avatar(comment.user)
+            "name" => user.username,
+            "avatar" => user_avatar(user)
           }
         }
       end
@@ -236,6 +245,8 @@ module UserInteractionHelper
           user_interaction_aux["providers"][provider] = value.present? ? (value + increment) : increment
         end
       end
+    when "comment"
+      adjust_counter!(interaction)
     when "like"
       if user_interaction
         like = user_interaction_aux["like"]

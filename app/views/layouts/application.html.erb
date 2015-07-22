@@ -31,6 +31,10 @@
     <audio ng-if="aux.assets.extra_fields.preinteraction_sound" class="preinteraction-sound hidden">
       <source ng-src="{{aux.assets.extra_fields.preinteraction_sound.url | trustAsResourceUrl}}" type="audio/mpeg" />
     </audio>
+
+    <audio ng-if="aux.assets.extra_fields.interaction_button_sound" class="interaction-button-sound hidden">
+      <source ng-src="{{aux.assets.extra_fields.interaction_button_sound.url | trustAsResourceUrl}}" type="audio/mpeg" />
+    </audio>
   
     <%= render partial: "/application/style", locals: { aux: @aux } %>
     <%= render partial: "/application/user_bar" %>

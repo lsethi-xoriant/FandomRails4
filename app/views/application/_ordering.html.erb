@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-6">
-    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Tutti</h2>
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Tutti <span style="font-size: 18px" ng-if="aux.gallery_calltoactions_count != null">- {{aux.gallery_calltoactions_count}} contenuti</span></h2>
     <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'comment'">Più commentati</h2>
     <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'view'">Più visti</h2>
   </div>

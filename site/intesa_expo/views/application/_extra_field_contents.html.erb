@@ -1,0 +1,5 @@
+<div class="cta__contents" ng-repeat="content in calltoaction_info.calltoaction.contents | orderBy:orderContent">
+  <img ng-src="{{content['value']['url']}}" ng-if="content['value']['type'] == 'media'">
+  <div ng-if="content['value']['type'] == 'html'" ng-bind-html="content['value']['value'] | unsafe"></div>
+  <div ng-if="content['value']['type'] == null" ng-bind-html="content['value'] | unsafe"></div>
+</div>

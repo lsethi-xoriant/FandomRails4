@@ -351,6 +351,7 @@ Fandom::Application.routes.draw do
       get "/browse_index", :to => "browse#browse_index", defaults: { format: 'json' }
       get "/browse", :to => "browse#index", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
+      get "/properties", :to => "application#get_properties", defaults: { format: 'json' }
       get "/index/load_more", :to => "application#load_more_ctas_in_stream", defaults: { format: 'json' }
       get "/users/sign_in", :to => "user#user_sign_in", defaults: { format: 'json' }
       get "/users/sign_up", :to => "user#user_sign_up", defaults: { format: 'json' }
