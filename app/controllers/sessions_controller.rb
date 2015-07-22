@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def anchor_provider_to_current_user
-    # Assign the provier at the current user.
+    # Assign the provier to the current user.
     current_user.logged_from_omniauth(env["omniauth.auth"], params[:provider])
     flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
 

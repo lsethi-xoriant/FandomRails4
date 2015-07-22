@@ -120,7 +120,7 @@
                       <p class="cta_cover-end_container-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
                     </div>
                     <div class="col-sm-12 cta_cover-end_container-share_container " ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
-                        <%= render partial: "/call_to_action/share_interaction" %>
+                        <%= render partial: "/call_to_action/share_interaction", locals: { enable_linked_share: true } %>
                     </div>
 
                     <div class="col-sm-12">
