@@ -101,6 +101,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     end
 
     @cta.aux = aux
+    old_cta_updated_at = @cta.updated_at
 
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
@@ -122,7 +123,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
       flash[:notice] = "CallToAction aggiornata correttamente"
       set_cta_updated_at(@cta)
-      set_content_updated_at_cookie(@cta.updated_at)
+      set_content_updated_at_cookie(@cta.updated_at) if @cta.updated_at != old_cta_updated_at
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
     end
   end
