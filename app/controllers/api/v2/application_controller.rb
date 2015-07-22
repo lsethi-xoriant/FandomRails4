@@ -27,7 +27,6 @@
         'call_to_action_info_list_has_more' => has_more,
         'menu_items' => get_menu_items(),
         'featured_content_previews' => featured_content_previews.contents,
-        'properties' => init_property_info_list().contents,
         # TODO: content section need to have their timestamp
         'content_sections' => []
       }
@@ -35,6 +34,11 @@
       respond_with result.to_json
     end
     
+    def get_properties
+      result = { 'properties' => init_property_info_list().contents }
+      respond_with_json result
+    end
+
     def load_more_ctas_in_stream
       cta_chunk_size = $site.init_ctas
       cta_chunk_size = 10
