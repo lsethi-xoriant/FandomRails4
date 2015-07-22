@@ -2439,7 +2439,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }
 
         } else {
-          interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
+
+          if(!isCommentPresent(data.comment.id, interaction_info.interaction.resource.comment_info.comments)) {
+            interaction_info.interaction.resource.comment_info.comments.unshift(data.comment);
+          }
+
 
           interaction_info.interaction.resource.comment_info.user_text = "";
           interaction_info.interaction.resource.comment_info.user_captcha = "";
@@ -2457,6 +2461,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }).error(function() {
       });
   };
+
+  function isCommentPresent(id, comments) {
+    angular.forEach(comments, function(comment) {
+      if(comment.id == id) return true;
+    });
+    return false;
+  }
 
   // TODO: ajax_comment_append_in_progress
 
@@ -2496,9 +2507,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   $scope.commentsPolling = function() {
     if(!$scope.ajax_comment_append_in_progress) {
       $scope.ajax_comment_append_in_progress = true;
-      comment_info = $scope.comments_polling.interaction_info.interaction.resource.comment_info;
       interaction_info = $scope.comments_polling.interaction_info;
-      interaction_id = $scope.comments_polling.interaction_info.interaction.id;
+      comment_info = interaction_info.interaction.resource.comment_info;
+      interaction_id = interaction_info.interaction.id;
       try {
         $http.post("/comments_polling", { interaction_id: interaction_id, comment_info: comment_info })
           .success(function(data) {
@@ -2509,7 +2520,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       } finally {
         $scope.ajax_comment_append_in_progress = false;
       }
-
     }
   };
   
@@ -2518,7 +2528,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 	    .success(function(data) { 
 	      $(".cta-preview__locked-layer--reward").html(data.html);
 	    }).error(function() {
-	      // ERROR.
+	      // ERROR
 	    });
   };
 

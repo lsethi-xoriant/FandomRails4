@@ -25,14 +25,16 @@ module CommentHelper
   end
 
   def build_comment_for_comment_info(comment, evidence = false) 
+    user = registered_user?(comment.user) ? comment.user : anonymous_user
+
     {
       "id" => comment.id,
       "text" => comment.text,
       "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
       "evidence" => evidence,
       "user" => {
-        "name" => comment.user.username,
-        "avatar" => user_avatar(comment.user)
+        "name" => user.username,
+        "avatar" => user_avatar(user)
       }
     }
   end

@@ -176,13 +176,14 @@ module UserInteractionHelper
     result = []
     comments.each do |comment|
       if comment.comment_id == resource_id
+        user = registered_user?(comment.user) ? comment.user : anonymous_user
         result << {
           "id" => comment.id,
           "text" => comment.text,
           "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
           "user" => {
-            "name" => comment.user.username,
-            "avatar" => user_avatar(comment.user)
+            "name" => user.username,
+            "avatar" => user_avatar(user)
           }
         }
       end
@@ -236,6 +237,8 @@ module UserInteractionHelper
           user_interaction_aux["providers"][provider] = value.present? ? (value + increment) : increment
         end
       end
+    when "comment"
+      adjust_counter!(interaction)
     when "like"
       if user_interaction
         like = user_interaction_aux["like"]

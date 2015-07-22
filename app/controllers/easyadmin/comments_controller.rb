@@ -19,7 +19,6 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     interaction = current_comment.comment.interaction
 
     if current_comment.approved
-      adjust_counter!(interaction, 1)
       cta = interaction.call_to_action
 
       if anonymous_user.id != current_comment.user_id
