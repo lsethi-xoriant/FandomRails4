@@ -527,6 +527,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $(".preinteraction-sound").trigger("play");
   }
 
+  function interactionButtonSound() {
+    $(".interaction-button-sound").trigger("play");
+  }
+
   $scope.openInstantWinModal = function() {
     $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_cover.url);
 
@@ -1846,6 +1850,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
     var resource_type = interaction_info.interaction.resource_type;
+    if($scope.aux.assets.extra_fields.interaction_button_sound) {
+      interactionButtonSound();
+    }
+
     if(interactionAllowed(interaction_info)) {
 
       if(!$scope.answer_in_progress) {
