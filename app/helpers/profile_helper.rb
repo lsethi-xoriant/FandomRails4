@@ -89,7 +89,7 @@ module ProfileHelper
 
   def not_logged_from_omniauth(auth, provider)  
     expires_at = provider.include?("facebook") || provider.include?("google_oauth2") ? Time.at(auth.credentials.expires_at) : nil
-    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid);
+    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid)
     if user_auth
       # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
       # Da tenere conto che vengono salvate informazioni differenti a seconda del PROVIDER di provenienza.
@@ -109,6 +109,8 @@ module ProfileHelper
       # Verifico se esiste l'utente con l'email del provider selezionato.
       unless auth.info.email && (user = User.find_by_email(auth.info.email))
         password = Devise.friendly_token.first(8)
+        privacy = $site.id == "braun_ic" ? true : false
+
         user = User.new(
           password: password,
           password_confirmation: password,
@@ -116,7 +118,7 @@ module ProfileHelper
           last_name: auth.info.last_name,
           email: auth.info.email,
           avatar_selected: provider,
-          privacy: nil # TODO: TENANT
+          privacy: privacy
           )
         from_registration = true
       else

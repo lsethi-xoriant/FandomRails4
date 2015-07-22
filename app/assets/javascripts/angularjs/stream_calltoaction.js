@@ -1703,9 +1703,13 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
-  $scope.shareWith = function(cta_info, interaction_info, provider) {
+  $scope.shareWith = function(cta_info, interaction_info, provider, enable_linked_share) {
+    if(angular.isUndefined(enable_linked_share)) {
+      enable_linked_share = false;
+    }
+
     if($scope.aux.free_provider_share && provider != "email") {
-      $scope.shareFree(cta_info, interaction_info, provider);
+      $scope.shareFree(cta_info, interaction_info, provider, enable_linked_share);
     } else {
       shareWithApp(calltoaction_info, interaction_info, provider);
     }
@@ -1719,7 +1723,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $("#modal-interaction-" + interaction_id + "-direct_url").modal("show");
   }
 
-  $scope.shareFree = function(cta_info, interaction_info, provider) {
+  $scope.shareFree = function(cta_info, interaction_info, provider, enable_linked_share) {
     if(!interactionAllowed(interaction_info)) {
       showRegistrateView();
     } else {
@@ -1734,7 +1738,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           message = cta_info.calltoaction.extra_fields.linked_result_title;
         }
 
-        url_to_share = $scope.computeShareFreeCallToActionUrl(parent_cta_info, cta_info);
+        url_to_share = $scope.computeShareFreeCallToActionUrl(parent_cta_info, cta_info, enable_linked_share);
 
         cta_url = encodeURI(url_to_share);
 
@@ -1773,10 +1777,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
-  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, calltoaction_info) {
+  $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info, enable_linked_share) {
     url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;
-    if(calltoaction_info.calltoaction.extra_fields.linked_result_title) {
-      url = url + "/" + $scope.calltoaction_info.calltoaction.id;
+    if(cta_info.calltoaction.extra_fields.linked_result_title && enable_linked_share) {
+      url = url + "/" + cta_info.calltoaction.slug;
     }
     return url;
   };

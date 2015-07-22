@@ -1,14 +1,16 @@
+<% enable_linked_share = false if local_assigns[:enable_linked_share].nil? %>
+
 <span class="share-title">Condividi</span>
 
 <!-- FACEBOOK -->   
-<button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')"><i class="fa fa-facebook"></i></button>
+<button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook', <%= enable_linked_share %>)"><i class="fa fa-facebook"></i></button>
 
 <!-- TWITTER -->   
-<button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter')"><i class="fa fa-twitter"></i></button>
+<button ng-if="interaction_info.interaction.resource.providers.twitter" class="btn btn-twitter share-interaction__cta__info__tt-button" ng-click="shareWith(calltoaction_info, interaction_info, 'twitter', <%= enable_linked_share %>)"><i class="fa fa-twitter"></i></button>
 
 <!-- WHATSAPP -->   
-<button ng-if="interaction_info.interaction.resource.providers.whatsapp && aux.mobile" class="btn btn-green" ng-click="shareWith(calltoaction_info, interaction_info, 'whatsapp')"><i class="fa fa-whatsapp"></i></button>
+<button ng-if="interaction_info.interaction.resource.providers.whatsapp && aux.mobile" class="btn btn-green" ng-click="shareWith(calltoaction_info, interaction_info, 'whatsapp', <%= enable_linked_share %>)"><i class="fa fa-whatsapp"></i></button>
 
 <!-- GPLUS -->   
-<button ng-if="interaction_info.interaction.resource.providers.gplus" class="btn btn-red" ng-click="shareWith(calltoaction_info, interaction_info, 'gplus')"><i class="fa fa-google-plus"></i></button>
+<button ng-if="interaction_info.interaction.resource.providers.gplus" class="btn btn-red" ng-click="shareWith(calltoaction_info, interaction_info, 'gplus', <%= enable_linked_share %>)"><i class="fa fa-google-plus"></i></button>
   

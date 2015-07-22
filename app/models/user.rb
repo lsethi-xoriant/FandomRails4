@@ -151,7 +151,7 @@ class User < ActiveRecordWithJSON
   end
 
   def logged_from_omniauth(auth, provider)
-    # Se il PROVIDER era agganciato ad un altro utente lo sgancio e lo attacco all'utente corrente.
+    # When the provider is anchor to another user, I move it to current user
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
       user_auth.update_attributes(
