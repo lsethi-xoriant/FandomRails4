@@ -41,6 +41,21 @@
       respond_with response.to_json
       
     end
+    
+    def browse_index_load_more
+      category = Tag.find(params[:id])
+      debugger
+      selected_tags = get_selected_tags(params[:selected_tags])
+      
+      params[:limit] = {
+        offset: params[:offset].to_i,
+        perpage: DEFAULT_VIEW_ALL_ELEMENTS
+      }
+      content_preview_list = get_content_previews(category.name, get_index_category_load_more_tags(category, selected_tags), params, DEFAULT_VIEW_ALL_ELEMENTS)
+      contents = content_preview_list.contents
+      
+      respond_with contents.to_json
+    end
   
     # hook for tenant with multiproperty
     def get_tags_for_category(tag)
