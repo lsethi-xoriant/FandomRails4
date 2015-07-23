@@ -7,18 +7,20 @@ class CloneTest < ActionController::TestCase
   setup do
     switch_tenant("fandom")
     @controller = Easyadmin::CallToActionController.new
-    @cta, @resources = load_seed("instances_to_be_cloned")
-    @cloned_cta = duplicate_cta(@cta.id)
+    @cta, @resources, @reward = load_seed("instances_to_be_cloned")
     @root_cta, @child_cta_1, @child_cta_2 = load_seed("linked_call_to_actions")
+
+    @cloned_cta = duplicate_cta(@cta.id)
   end
 
   test "duplicate cta method" do
 
-    check_attributes_equality(@cta, @cloned_cta, ["id", "title", "name", "activated_at"])
-    assert @cloned_cta.title == "Copy of " + @cta.title, "cloned_cta title should be '#{"Copy of " + @cta.name}', but it is '#{@cloned_cta.title}' instead"
-    assert @cloned_cta.name == "copy-of-" + @cta.name, "cloned_cta name should be '#{"copy-of-" + @cta.name}', but it is '#{@cloned_cta.name}' instead"
-    assert @cloned_cta.activated_at.present?, "cloned_cta activated_at is nil"
-    assert @cloned_cta.valid?, "cloned_cta is not valid"
+    check_attributes_equality(@cta, @cloned_cta, ["id", "title", "name", "slug", "activated_at"])
+    assert @cloned_cta.title == "Copy of " + @cta.title, "Cloned_cta title should be '#{"Copy of " + @cta.name}', but it is '#{@cloned_cta.title}'"
+    assert @cloned_cta.name == "copy-of-" + @cta.name, "Cloned_cta name should be '#{"copy-of-" + @cta.name}', but it is '#{@cloned_cta.name}'"
+    assert @cloned_cta.slug == "copy-of-" + @cta.slug, "Cloned_cta slug should be '#{"copy-of-" + @cta.slug}', but it is '#{@cloned_cta.slug}'"
+    assert @cloned_cta.activated_at.present?, "Cloned_cta activated_at is nil"
+    assert @cloned_cta.valid?, "Cloned_cta is not valid -> #{@cloned_cta.errors.messages}"
 
   end
 
@@ -39,16 +41,22 @@ class CloneTest < ActionController::TestCase
 
     params = { :id => @root_cta.id, :commit => "SALVA" }
     assert is_linking?(params[:id]), "is_linking method called on linked call to action returned false"
-    post(:clone, params)
-    puts flash[:error]
-    puts flash[:notice]
-    puts flash.keys
+    # TODO: end-to-end test
+
+  end
+
+  test "duplicate reward method" do
+
+    cloned_reward = duplicate_reward(@reward.id)
+    check_attributes_equality(@reward, cloned_reward, ["id", "name", "title", "created_at"])
+    assert cloned_reward.title == "Copy of " + @reward.title, "Cloned_reward title should be '#{"Copy of " + @reward.title}', but it is '#{cloned_reward.title}'"
+    assert cloned_reward.valid?, "Cloned_reward is not valid -> #{cloned_reward.errors.messages}"
 
   end
 
   def check_attributes_equality(original, cloned, except_values)
     cloned.attributes.except(*except_values).each do |attribute_name, value|
-      assert value == original.attributes[attribute_name], "#{attribute_name} attribute has value '#{original.attributes[attribute_name]}'' on original #{original.class}, but '#{value}' on cloned"
+      assert value == original.attributes[attribute_name], "#{attribute_name} attribute has value \"#{original.attributes[attribute_name]}\" on original #{original.class}, but \"#{value}\" on cloned"
     end
   end
 
