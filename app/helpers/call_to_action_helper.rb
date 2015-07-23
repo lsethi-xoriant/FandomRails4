@@ -145,7 +145,7 @@ module CallToActionHelper
       end
     end
 
-    ctas = build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements)
+    ctas = build_cta_info_list_and_cache_with_max_updated_at(ctas, page_elements, { :only_cover => true })
 
     if limit_ctas < ctas.length
       has_more = true

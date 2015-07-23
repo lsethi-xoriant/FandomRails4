@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
       featured_content_previews = nil
     end
 
-    params = { "page_elements" => ["like", "comment", "share"] }
+    params = { "page_elements" => ["like", "comment", "share", "randomresource"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream(property_name, params, init_ctas)
 
 
