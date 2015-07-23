@@ -34,6 +34,29 @@
       respond_with result.to_json
     end
     
+    def index_gallery
+      params["other_params"] = {}
+      params["other_params"]["gallery"] = {}
+      params["other_params"]["gallery"]["calltoaction_id"] = "all"
+  
+      if params[:user]
+        params["other_params"]["gallery"]["user"] = params[:user]
+      end
+      
+      params["page_elements"] = ["like", "comment", "share"]
+      calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+      
+      
+      result = {
+        'call_to_action_info_list' => calltoaction_info_list,
+        'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
+        'call_to_action_info_list_has_more' => has_more,
+        'galleries' => get_api_gallery_ctas_carousel,
+      }
+      
+      respond_with result.to_json
+    end
+    
     def get_properties
       result = { 'properties' => init_property_info_list().contents }
       respond_with_json result

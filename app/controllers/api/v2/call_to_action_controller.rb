@@ -10,7 +10,7 @@
     def update_interaction
       send_anonymous_user = current_user.nil?
 
-      response = update_interaction_helper(params)
+      response = update_interaction_computation(params)
 
       # update_interaction will create a new user if the user was not logged, it needs to be passed explicitly in the mobile API
       if send_anonymous_user

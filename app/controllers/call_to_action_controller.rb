@@ -360,7 +360,7 @@ class CallToActionController < ApplicationController
   end
 
   def update_interaction
-    response = update_interaction_helper(params)
+    response = update_interaction_computation(params)
     
     respond_to do |format|
       format.json { render :json => response.to_json }

@@ -523,4 +523,12 @@ module BrowseHelper
     tags
   end
   
+  def get_index_category_load_more_tags(tag, selected_tags)
+    tags = get_tags_for_category(tag) + selected_tags
+  end
+  
+  def get_selected_tags(selected_tags)
+    Tag.where("id IN (?)", JSON.parse(selected_tags).map{ |k,v| k }).to_a
+  end
+  
 end

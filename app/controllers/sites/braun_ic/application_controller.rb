@@ -1,5 +1,13 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
+  before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update]
+
+  def only_registered_user
+    unless registered_user?
+      redirect_to "/users/sign_up"
+    end
+  end
+
   class ContestIdentityCollectionUser
     include ActiveAttr::Attributes
     include ActiveAttr::Model

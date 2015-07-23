@@ -15,4 +15,20 @@ class ActiveSupport::TestCase
     eval(seed.read)
   end
 
+  def get_random_property
+    random_property_name = $site.allowed_context_roots.sample
+    Tag.find(random_property_name)
+  end
+
+  def get_default_property
+    Tag.find($site.default_property)
+  end
+
+  def current_user
+    User.offset(rand(User.count)).first
+  end
+
+  def initialize_tenant
+    switch_tenant("fandom")
+  end
 end
