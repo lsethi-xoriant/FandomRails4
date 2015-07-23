@@ -1,42 +1,60 @@
 require 'test_helper'
 
 class CallToActionTest < ActionController::TestCase
-  include Devise::TestHelpers
   include ApplicationHelper
+
+  LIMIT = 3
 
   setup :initialize_tenant
 
+  test "exclude cta from stream" do
+    property_tag = get_default_property()
+
+    cta_in_next_page_offset = LIMIT + 1
+    cta_in_next_page = get_ctas(property_tag).offset(cta_in_next_page_offset).first
+
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { "exclude_cta_with_ids" => [cta_in_next_page.id] }, LIMIT)
+  
+    assert ctas_not_include_cta_with_id?(cta_info_list, cta_in_next_page.id), "cta to exclude is present"
+  
+    if has_more
+      calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
+      params = { "exclude_cta_with_ids" => [cta_in_next_page.id], calltoaction_ids_shown: calltoaction_ids_shown }
+      cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, LIMIT)
+      
+      assert ctas_not_include_cta_with_id?(cta_info_list, cta_in_next_page.id), "cta to exclude is present in next page"
+    end
+  end
+
   test "all ctas in the head and append later ordered by comments are shown in the correct order" do
-    limit = 3
     ordering = "comment"
 
     property_tag = get_default_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, LIMIT)
  
     assert ctas_ordered_by_comment_count?(cta_info_list), "not all ctas are correctly ordered"
 
     if has_more
       calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
       params =  { ordering: ordering, calltoaction_ids_shown: calltoaction_ids_shown }
-      cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, limit)
+      cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, LIMIT)
 
       assert ctas_ordered_by_comment_count?(cta_info_list), "not all appended ctas are correctly ordered"
     end
   end
 
   test "all ctas in the head and append later belong to the current property" do
-    limit = 3
     ordering = "recent"
 
     property_tag = get_default_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, limit)
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: ordering }, LIMIT)
 
     assert ctas_tagged_with?(cta_info_list, property_tag), "not all ctas are tagged with current property tag"
 
     if has_more
       calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
       params =  { ordering: ordering, calltoaction_ids_shown: calltoaction_ids_shown }
-      cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, limit)
+      cta_info_list, has_more = get_ctas_for_stream(property_tag.name, params, LIMIT)
 
       result = true
       cta_info_list.each do |cta_info|
@@ -49,19 +67,16 @@ class CallToActionTest < ActionController::TestCase
   end
 
   test "there are other ctas to be added if the variable has more is true" do
-    limit = 3
     property_tag = get_default_property()
-    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, limit)
+    cta_info_list, has_more = get_ctas_for_stream(property_tag.name, { ordering: "recent" }, LIMIT)
     ctas_count = get_ctas(property_tag).count
 
     assert (has_more && cta_info_list.count < ctas_count) || (!has_more && cta_info_list.count >= ctas_count), "has more variable is not correctly set"
   end
 
   test "all galleries ctas in the head and append later are assigned to an user" do
-    limit = 3
-
     params = adjust_params_with_gallery_info({}, "all")
-    cta_info_list, has_more = get_ctas_for_stream(nil, params, limit)
+    cta_info_list, has_more = get_ctas_for_stream(nil, params, LIMIT)
  
     assert approved_ctas?(cta_info_list), "not all ctas are approved"
     assert user_ctas?(cta_info_list), "not all ctas are assigned to an user"
@@ -69,7 +84,7 @@ class CallToActionTest < ActionController::TestCase
     if has_more
       calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
       params = adjust_params_with_gallery_info({ calltoaction_ids_shown: calltoaction_ids_shown }, "all")
-      cta_info_list, has_more = get_ctas_for_stream(nil, params, limit)
+      cta_info_list, has_more = get_ctas_for_stream(nil, params, LIMIT)
 
       assert approved_ctas?(cta_info_list), "not all appended ctas are approved"
       assert user_ctas?(cta_info_list), "not all appended ctas are assigned to an user"
@@ -82,10 +97,8 @@ class CallToActionTest < ActionController::TestCase
     gallery_cta = CallToAction.includes(:call_to_action_tags).where("call_to_actions.user_id IS NULL AND call_to_action_tags.tag_id = ?", gallery_tag.id).references(:call_to_action_tags).first
 
     if gallery_cta.present?
-      limit = 3
-
       params = adjust_params_with_gallery_info({}, gallery_cta.id)
-      cta_info_list, has_more = get_ctas_for_stream(nil, params, limit)
+      cta_info_list, has_more = get_ctas_for_stream(nil, params, LIMIT)
    
       assert approved_ctas?(cta_info_list), "not all ctas are approved"
       assert user_ctas?(cta_info_list), "not all ctas are assigned to an user"
@@ -93,7 +106,7 @@ class CallToActionTest < ActionController::TestCase
       if has_more
         calltoaction_ids_shown = get_ids_from_cta_info_list(cta_info_list)
         params = adjust_params_with_gallery_info({ calltoaction_ids_shown: calltoaction_ids_shown }, gallery_cta.id)
-        cta_info_list, has_more = get_ctas_for_stream(nil, params, limit)
+        cta_info_list, has_more = get_ctas_for_stream(nil, params, LIMIT)
 
         assert approved_ctas?(cta_info_list), "not all appended ctas are approved"
         assert user_ctas?(cta_info_list), "not all appended ctas are assigned to an user"
@@ -173,20 +186,12 @@ class CallToActionTest < ActionController::TestCase
     get_tags_with_tag("gallery").sample
   end
 
-  def get_random_property
-    random_property_name = $site.allowed_context_roots.sample
-    Tag.find(random_property_name)
+  def ctas_not_include_cta_with_id?(cta_info_list, cta_to_exclude_id)
+    result = true
+    cta_info_list.each do |cta_info|
+      result = result && cta_info["calltoaction"]["id"] != cta_to_exclude_id 
+    end
+    result
   end
 
-  def get_default_property
-    Tag.find($site.default_property)
-  end
-
-  def current_user
-    User.offset(rand(User.count)).first
-  end
-
-  def initialize_tenant
-    switch_tenant("fandom")
-  end
 end

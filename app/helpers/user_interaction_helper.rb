@@ -356,7 +356,7 @@ module UserInteractionHelper
     [user_interaction, outcome]
   end
   
-  def update_interaction_helper(params)
+  def update_interaction_computation(params)
     interaction = Interaction.find(params[:interaction_id])
     calltoaction = interaction.call_to_action
 
