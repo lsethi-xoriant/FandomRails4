@@ -53,7 +53,6 @@ module AnonymousNavigationHelper
   def request_via_api?
     self.is_a? Api::V2::BaseController
   end
-
   
   def adjust_anonymous_user(params)
     resource = current_user
