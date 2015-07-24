@@ -9,6 +9,7 @@ module Fandom
       #interactions_for_anonymous_limit: 5,
       free_provider_share: true,
       default_property: "all",
+      aws_transcoding: true,
       allowed_context_roots: ["all", "sport", "series", "talent", "music", "branded"],
       init_ctas: 6,
       environment: { 'EMAIL_ADDRESS' => 'noreply@shado.tv' }
