@@ -531,4 +531,11 @@ module BrowseHelper
     Tag.where("id IN (?)", JSON.parse(selected_tags).map{ |k,v| k }).to_a
   end
   
+  # duplicated method for ios api
+  # in hangover don't know how to avoid duplication
+  # TODO: find why IOS send an hash insted of a JSON
+  def api_get_selected_tags(selected_tags)
+    Tag.where("id IN (?)", selected_tags.map{ |k,v| k }).to_a
+  end
+  
 end

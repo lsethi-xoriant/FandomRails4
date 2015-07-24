@@ -44,8 +44,7 @@
     
     def browse_index_load_more
       category = Tag.find(params[:id])
-      debugger
-      selected_tags = get_selected_tags(params[:selected_tags])
+      selected_tags = api_get_selected_tags(params[:selected_tags])
       
       params[:limit] = {
         offset: params[:offset].to_i,
