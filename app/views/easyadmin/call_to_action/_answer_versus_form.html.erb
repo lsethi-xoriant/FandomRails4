@@ -4,8 +4,13 @@
     <div class="row text-right">
       <div class="col-lg-12 remove-answer">
         <% if f.object.id %>
-            <%= f.hidden_field :destroy_answer %>
-            <!-- <a class="btn btn-secondary btn-xs " href="javascript: void(0)" onclick="updateDeleteHiddenField(this)">sgancia</a> -->
+          <%= f.hidden_field :destroy_answer %>
+          <% if can? :access, :rails_admin %>
+            <p style="float: right">
+              <a href="/rails_admin/answer/<%= f.object.id %>/edit"><button type="button" class="btn btn-primary btn-xs"> RAILS ADMIN </button></a>
+            </p>
+          <% end %>
+          <!-- <a class="btn btn-secondary btn-xs " href="javascript: void(0)" onclick="updateDeleteHiddenField(this)">sgancia</a> -->
         <% else %>
           <%= link_to_remove_fields("rimuovi", "answer_quiz") %>
         <% end %>

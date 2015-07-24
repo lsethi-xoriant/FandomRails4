@@ -1,6 +1,12 @@
 <div class="panel panel-default">
   <% if f.object.id %>
-    <div class="panel-heading-dark">UPLOAD</div>
+    <div class="panel-heading-dark">UPLOAD
+      <% if can? :access, :rails_admin %>
+        <p style="float: right">
+          <a href="/rails_admin/interaction/<%= f.object.id %>/edit"><button type="button" class="btn btn-primary btn-xs"> RAILS ADMIN </button></a>
+        </p>
+      <% end %>
+    </div>
   <% else %>
     <div class="panel-heading-dark">UPLOAD 
       <p style="float: right"><%= link_to_remove_fields("rimuovi", "upload") %></p>

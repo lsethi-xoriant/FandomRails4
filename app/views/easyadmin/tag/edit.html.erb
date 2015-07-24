@@ -41,6 +41,14 @@
       </div>
     </div>
 
+    <% if can? :access, :rails_admin %>
+      <div class="row text-right">
+        <div class="col-md-2 col-md-offset-10">
+          <a href="/rails_admin/tag/<%= @tag.id %>/edit"><button type="button" class="btn btn-primary"> RAILS ADMIN </button></a>
+        </div>
+      </div>
+    <% end %>
+
     <h3>Dati generali</h3>
     <hr/>
 

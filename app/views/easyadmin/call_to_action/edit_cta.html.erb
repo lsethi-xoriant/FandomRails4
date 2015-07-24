@@ -40,9 +40,14 @@
 
     <div class="row text-right">
       <!-- Button trigger modal -->
-      <div id="show-tree-button" class="col-md-2 col-md-offset-10">
+      <div id="show-tree-button" class="col-md-2 col-md-offset-8">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#treeModal"> CTA COLLEGATE </button>
       </div>
+      <% if can? :access, :rails_admin %>
+        <div class="col-md-2">
+          <a href="/rails_admin/call_to_action/<%= @cta.id %>/edit"><button type="button" class="btn btn-primary"> RAILS ADMIN </button></a>
+        </div>
+      <% end %>
     </div>
 
     <h3>Dati generali</h3>
