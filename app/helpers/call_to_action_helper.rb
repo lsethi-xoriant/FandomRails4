@@ -835,7 +835,7 @@ module CallToActionHelper
     unique_name = generate_unique_name()
 
     if params["upload"]
-      if params["upload"].content_type.start_with?("video")
+      if params["upload"].content_type.start_with?("video") || params["upload"].content_type.start_with?("audio")
         media_image = params["upload"]
         thumbnail = nil
         media_type = "FLOWPLAYER"

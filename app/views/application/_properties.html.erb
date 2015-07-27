@@ -22,7 +22,7 @@
 <div class="col-sm-3 text-left" ng-if="isRegistratedUser()">
 
   <%= light_link_to("/profile") do %>
-    <p class="properties__right-bar-text">{{current_user.username}}</p>
+    <p class="properties__right-bar-text">{{current_user.first_name}} {{current_user.last_name[0]}}.</p>
   <% end %>  
   <p class="properties__right-bar-level">{{current_user.level}}</p>
   <span class="label label-warning cta-cover__winnable-reward__label">
