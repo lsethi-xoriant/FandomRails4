@@ -4,6 +4,8 @@
     <%= render partial: "/application/evidence_ctas" %>
   </div>
 
+  <%= render partial: "/application/search", locals: { query: nil } %>
+
   <div class="row main-row main-row__covers">
     <div class="col-md-7 main-row__covers-left-col">
       <%= render partial: "application/ordering" %>
@@ -44,6 +46,5 @@
   <div class="row main-row filters__flexslider-main-row">
     <%= render partial: "/application/home_filters" %>
   </div>
-  <%= render partial: "/application/search", locals: { query: nil } %>
 
 </div>
