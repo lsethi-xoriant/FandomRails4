@@ -362,6 +362,7 @@ Fandom::Application.routes.draw do
       post "/call_to_action/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
       get "/call_to_action/get_single_cta", :to => "call_to_action#get_single_cta", defaults: { format: 'json' }
       get "/call_to_action/redo_test", :to => "call_to_action#redo_test", defaults: { format: 'json' }
+      get "/add_comment", :to => "comment#add_comment", defaults: { format: 'json' }
     end
   end
 

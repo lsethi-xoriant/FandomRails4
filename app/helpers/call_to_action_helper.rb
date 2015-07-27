@@ -1236,4 +1236,29 @@ module CallToActionHelper
     end
   end
 
+  def check_profanity_words_in_comment(user_comment)
+
+    user_comment_text = user_comment.text.downcase
+
+    @profanities_regexp = cache_short(get_profanity_words_cache_key()) do
+      pattern_array = Array.new
+
+      profanity_words = Setting.find_by_key("profanity.words")
+      if profanity_words
+        profanity_words.value.split(",").each do |exp|
+          pattern_array.push(build_regexp(exp))
+        end
+      end
+
+      Regexp.union(pattern_array)
+    end
+
+    if user_comment_text =~ @profanities_regexp
+      user_comment.errors.add(:text, "contiene parole non ammesse")
+      return user_comment
+    end
+
+    user_comment
+  end
+  
 end
