@@ -25,7 +25,7 @@ class ActiveSupport::TestCase
   end
 
   def current_user
-    User.offset(rand(User.count)).first
+    @current_user.nil? ? User.find_by_email("atolomio@shado.tv") : @current_user
   end
 
   def initialize_tenant
