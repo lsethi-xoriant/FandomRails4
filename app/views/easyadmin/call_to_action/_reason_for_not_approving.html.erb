@@ -8,9 +8,16 @@
 
       <div class="modal-body">
         <%= form_tag("/easyadmin/cta/send_reason_for_not_approving", method: "post", multipart: true) do %>
+
           <%= hidden_field_tag :cta_id, cta.id %>
           <%= hidden_field_tag :page, page %>
           <%= hidden_field_tag :page_number, page_number %>
+          <%= hidden_field_tag :title_filter, @title_filter %>
+          <%= hidden_field_tag :slug_filter, @slug_filter %>
+          <%= hidden_field_tag :tag_list_filter, @tag_list %>
+          <%= hidden_field_tag :username_filter, @username_filter %>
+          <%= hidden_field_tag :email_filter, @email_filter %>
+
           <div class="row">
             <div class="col-md-8 col-md-offset-2">
               <div class="form-group">

@@ -379,7 +379,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     if params[:commit] == "FILTRA" || params[:commit] == "ESPORTA"
       unless @tag_list.blank?
         cta_ids = get_tagged_objects(CallToAction.where(where_conditions), params[:tag_list], CallToActionTag, 'call_to_action_id', 'tag_id')
-        where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id in (#{cta_ids.join(', ')})")
+        where_conditions << (cta_ids.blank? ? " AND id IS NULL" : " AND id IN (#{cta_ids.join(',')})")
       end
       where_conditions << " AND title ILIKE '%#{@title_filter.gsub("'", "''")}%'" unless @title_filter.blank?
       where_conditions << " AND slug ILIKE '%#{@slug_filter}%'" unless @slug_filter.blank?
@@ -394,7 +394,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
         if user_ids.empty?
           where_conditions = "FALSE"
         else
-          where_conditions << " AND user_id IN (#{user_ids.join(', ')})" if user_ids
+          where_conditions << " AND user_id IN (#{user_ids.join(',')})" if user_ids
         end
       end
     end
@@ -504,14 +504,17 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       format.json { render :json => cta.to_json }
     end
   end
-  
+
   def send_reason_for_not_approving
     cta = CallToAction.find(params[:cta_id])
     aux = cta.aux || {}
     aux["reason_for_not_approving"] = params[:reason]
     cta.update_attribute(:aux, aux.to_json)
-    url = "/easyadmin/cta/#{params[:page]}"
-    url += "?page=#{params["page_number"]}" unless params["page_number"].blank?
-    redirect_to url
+    filter_params = params.merge({ :controller => "call_to_action", :action => "filter_ugc" }).to_h
+    filter_params["approvation_status"] = filter_params.delete "page"
+    filter_params["page"] = filter_params.delete "page_number"
+    filter_params["tag_list"] = filter_params.delete "tag_list_filter"
+    filter_params["commit"] = "FILTRA"
+    redirect_to filter_params
   end
 end
