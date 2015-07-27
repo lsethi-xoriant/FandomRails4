@@ -35,8 +35,7 @@
         "category" => category,
         "tags" => get_tags_from_contents(content_preview_list.contents),
         "contents" => content_preview_list.contents,
-        "has_more" => content_preview_list.has_view_all,
-        "gallery_ctas_count" => get_gallery_ctas_count()
+        "has_more" => content_preview_list.has_view_all
       }
       
       respond_with response.to_json

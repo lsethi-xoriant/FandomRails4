@@ -52,6 +52,7 @@
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
         'galleries' => get_api_gallery_ctas_carousel,
+        'gallery_ctas_count' => get_gallery_ctas_count()
       }
       
       respond_with result.to_json
