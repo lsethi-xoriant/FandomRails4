@@ -87,12 +87,58 @@ module ProfileHelper
     property_name == $site.default_property ? "point" : "#{property_name}-point"
   end
 
-  def not_logged_from_omniauth(auth, provider)  
+  def update_from_omniauth(auth, provider)
+    user = current_user
+    # When the provider is anchor to another user, I move it to current user
+    user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
+    if user_auth
+      user_auth.update_attributes(
+          uid: auth.uid,
+          name: auth.info.name,
+          oauth_token: auth.credentials.token,
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
+          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+          avatar: auth.info.image,
+          user_id: user.id
+      )
+    else
+      user.authentications.build(
+          uid: auth.uid,
+          name: auth.info.name,
+          oauth_token: auth.credentials.token,
+          oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
+          oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
+          provider: provider,
+          avatar: auth.info.image,
+          user_id: user.id
+      )
+    end 
+
+    if stored_anonymous_user?
+      privacy = $site.id == "braun_ic" ? true : false
+      user.assign_attributes({
+          username: nil,
+          first_name: auth.info.first_name,
+          last_name: auth.info.last_name,
+          email: auth.info.email,
+          avatar_selected: provider,
+          avatar_selected_url: auth.info.image,
+          privacy: privacy
+      })
+      if user.valid?
+        user.assign_attributes(anonymous_id: nil)
+        sign_out(user)
+      end
+    end
+
+    user.save
+    user
+  end
+
+  def create_from_omniauth(auth, provider)  
     expires_at = provider.include?("facebook") || provider.include?("google_oauth2") ? Time.at(auth.credentials.expires_at) : nil
     user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid)
     if user_auth
-      # Ho gia' agganciato questo PROVIDER, mi basta recuperare l'utente per poi aggiornarlo.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del PROVIDER di provenienza.
       user = user_auth.user
       user_auth.update_attributes(
           uid: auth.uid,
@@ -102,32 +148,32 @@ module ProfileHelper
           oauth_expires_at: expires_at,
           avatar: auth.info.image,
       )
-
       from_registration = false
-
     else
-      # Verifico se esiste l'utente con l'email del provider selezionato.
-      unless auth.info.email && (user = User.find_by_email(auth.info.email))
+      if auth.info.email.present?
+        user = User.find_by_email(auth.info.email)
+      end
+
+      if !user
         password = Devise.friendly_token.first(8)
         privacy = $site.id == "braun_ic" ? true : false
 
         user = User.new(
-          password: password,
-          password_confirmation: password,
-          first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
-          email: auth.info.email,
-          avatar_selected: provider,
-          avatar_selected_url: auth.info.image,
-          privacy: privacy
-          )
+            password: password,
+            password_confirmation: password,
+            first_name: auth.info.first_name,
+            last_name: auth.info.last_name,
+            email: auth.info.email,
+            avatar_selected: provider,
+            avatar_selected_url: auth.info.image,
+            privacy: privacy
+        )
+
         from_registration = true
       else
         from_registration = false
       end 
 
-      # Recupero l'autenticazione associata al provider selezionato.
-      # Da tenere conto che vengono salvate informazioni differenti a seconda del provider di provenienza.
       user.authentications.build(
           uid: auth.uid,
           name: (provider.include?("instagram") ? auth.info.nickname : auth.info.name),
@@ -143,7 +189,7 @@ module ProfileHelper
       user.save
     end 
     
-    return user, from_registration
+    [user, from_registration]
   end
 
   def user_for_registation_form()

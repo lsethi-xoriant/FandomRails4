@@ -150,37 +150,6 @@ class User < ActiveRecordWithJSON
     end 
   end
 
-  def logged_from_omniauth(auth, provider)
-    # When the provider is anchor to another user, I move it to current user
-    user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
-    if user_auth
-      user_auth.update_attributes(
-        uid: auth.uid,
-        name: auth.info.name,
-        oauth_token: auth.credentials.token,
-        oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-        oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-        avatar: auth.info.image,
-        user_id: self.id
-      )
-    else
-      self.authentications.build(
-        uid: auth.uid,
-        name: auth.info.name,
-        oauth_token: auth.credentials.token,
-        oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
-        oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
-        provider: provider,
-        avatar: auth.info.image,
-        user_id: self.id
-      )
-    end 
-
-    self.aux = JSON.parse(self.aux) if self.aux.present?
-    self.save
-    return self
-  end
-
   # Update the user without ask the account password again.
   def update_with_password(params={}) 
     if params[:password].blank? 

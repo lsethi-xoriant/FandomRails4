@@ -8,7 +8,7 @@ module AnonymousNavigationHelper
 
   def anonymous_user?(user = nil)
     user = current_user unless user
-    user && (user.anonymous_id.blank? || anonymous_user.id == user.id)
+    user.nil? || (user.present? && (user.anonymous_id.present? || anonymous_user.id == user.id))
   end
   
   def interaction_allowed?(resource_type, user = nil)

@@ -5,7 +5,7 @@ class SessionsController < Devise::SessionsController
   include FandomPlayAuthHelper
   include ProfileHelper
   
-  prepend_before_filter :anchor_provider_to_current_user, only: :create, :if => proc {|c| current_user && env["omniauth.auth"].present? }
+  prepend_before_filter :anchor_provider_to_current_user, only: :create
   skip_before_filter :iur_authenticate
   skip_before_filter :require_no_authentication, :if => :stored_anonymous_user?
 
@@ -18,24 +18,25 @@ class SessionsController < Devise::SessionsController
   end
 
   def anchor_provider_to_current_user
-    # Assign the provier to the current user.
-    current_user.logged_from_omniauth(env["omniauth.auth"], params[:provider])
-    flash[:notice] = "Agganciato #{ params[:provider] } all'utente"
+    if !anonymous_user? && env["omniauth.auth"].present?
+      # Assign the provier to the current user.
+      update_from_omniauth(env["omniauth.auth"], params[:provider])
 
-    site = get_site_from_request(request)
-    if site.force_facebook_tab && !request_is_from_mobile_device?(request)
-      redirect_to site.force_facebook_tab
-    elsif cookies[:oauth_connect_from_page].present?
-      oauth_connect_from_page = cookies[:oauth_connect_from_page]
-      cookies.delete(:oauth_connect_from_page)
-      redirect_to oauth_connect_from_page
-    else
-      if cookies[:calltoaction_id]
-        connect_from_calltoaction = cookies[:calltoaction_id]
-        cookies.delete(:calltoaction_id)
-        redirect_to "/?calltoaction_id=#{connect_from_calltoaction}"
+      site = get_site_from_request(request)
+      if site.force_facebook_tab && !request_is_from_mobile_device?(request)
+        redirect_to site.force_facebook_tab
+      elsif cookies[:oauth_connect_from_page].present?
+        oauth_connect_from_page = cookies[:oauth_connect_from_page]
+        cookies.delete(:oauth_connect_from_page)
+        redirect_to oauth_connect_from_page
       else
-        redirect_to "/"
+        if cookies[:calltoaction_id]
+          connect_from_calltoaction = cookies[:calltoaction_id]
+          cookies.delete(:calltoaction_id)
+          redirect_to "/?calltoaction_id=#{connect_from_calltoaction}"
+        else
+          redirect_to "/"
+        end
       end
     end
   end
@@ -75,16 +76,17 @@ class SessionsController < Devise::SessionsController
     user.nil? || !user.valid_password?(params['user']['password'])
   end
 
-  # Authenticates and log in the user from the an OAuth service
+  # Authenticates and log in the user from the an oauth service
   def create_from_oauth
-    user, from_registration = not_logged_from_omniauth(env["omniauth.auth"], params[:provider])
+    if stored_anonymous_user?
+      user = update_from_omniauth(env["omniauth.auth"], params[:provider])
+    else
+      user, from_registration = create_from_omniauth(env["omniauth.auth"], params[:provider])
+    end
+
     if user.errors.any?
       redirect_to_registration_page(user)
     else
-      if stored_anonymous_user?
-        sign_out(current_user)
-      end
-
       sign_in(user)
       fandom_play_login(user)
     
