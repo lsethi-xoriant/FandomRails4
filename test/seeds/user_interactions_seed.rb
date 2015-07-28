@@ -1,56 +1,40 @@
-cta_name = "cta-for-user-interactions-testing"
-cta = CallToAction.find_by_name(cta_name)
+cta = CallToAction.find_by_name(CTA_TEST_NAME)
 
 unless cta
   cta = CallToAction.create(
-          name: cta_name, 
-          title: cta_name, 
-          slug: cta_name,
+          name: CTA_TEST_NAME, 
+          title: CTA_TEST_NAME, 
+          slug: CTA_TEST_NAME,
           media_type: "VOID", 
           activated_at: DateTime.yesterday
         )
 end
 
-quiz_interactions = cta.interactions.where(resource_type: "Quiz")
-one_shot_present = false
-not_one_shot_present = false
-quiz_interactions.each do |quiz_interaction|
-  if quiz_interaction.resource.one_shot
-    one_shot_present = true
-  else
-    not_one_shot_present = true
+["TRIVIA", "VERSUS"].each do |quiz_type|
+  quiz_interactions = Quiz.includes(:interaction).where("quizzes.quiz_type = ? AND interactions.call_to_action_id = ?", quiz_type, cta.id).references(:interactions)
+
+  if quiz_interactions.where("quizzes.one_shot = true").empty?
+    build_quiz_interaction(cta, quiz_type, true)
+  end
+
+  if quiz_interactions.where("quizzes.one_shot = false").empty?
+    build_quiz_interaction(cta, quiz_type, false)
   end
 end
 
-unless one_shot_present
-  quiz_resource = Quiz.new(question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", quiz_type: "TRIVIA", one_shot: true)
-
-  quiz_resource.answers.build(quiz_id: quiz_resource.id, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", correct: true)
-  quiz_resource.answers.build(quiz_id: quiz_resource.id, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", correct: false)
-
-  quiz_resource.save
-  
-  quiz_interaction = Interaction.create(
-    resource: quiz_resource, 
-    when_show_interaction: "SEMPRE_VISIBILE",
-    call_to_action_id: cta.id,
-    registration_needed: false
-  )
+["Check", "Play", "Like"].each do |resource_type|
+  interactions = Object.const_get(resource_type).includes(:interaction).where("interactions.call_to_action_id = ?", cta.id).references(:interactions)
+  if interactions.empty?
+    build_base_interaction(cta, resource_type)
+  end
 end
 
-unless one_shot_present
-  quiz_resource = Quiz.new(question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", quiz_type: "TRIVIA", one_shot: false)
+vote_interactions = Vote.includes(:interaction).where("interactions.call_to_action_id = ?", cta.id).references(:interactions)
 
-  quiz_resource.answers.build(quiz_id: quiz_resource.id, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", correct: true)
-  quiz_resource.answers.build(quiz_id: quiz_resource.id, text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", correct: false)
-
-  quiz_resource.save
-  
-  quiz_interaction = Interaction.create(
-    resource: quiz_resource, 
-    when_show_interaction: "SEMPRE_VISIBILE",
-    call_to_action_id: cta.id,
-    registration_needed: false
-  )
+if vote_interactions.where("votes.one_shot = true").empty?
+  build_base_interaction(cta, "Vote", { title: lorem_ipsum, one_shot: true })
 end
 
+if vote_interactions.where("votes.one_shot = false").empty?
+  build_base_interaction(cta, "Vote", { title: lorem_ipsum, one_shot: false })
+end
