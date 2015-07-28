@@ -14,22 +14,32 @@ class SystemMailer < ActionMailer::Base
   def welcome_mail(user)
     @cuser = user
     mail(to: user.email, subject: "Benvenuto!")
-  end  
+  end
 
-  def win_mail(user, reward, time_to_win, request)
+  def welcome_mail_braun(user)
+    mail(to: user.email, subject: "Benvenuto!")
+  end
+
+  def win_mail(user, reward, ticket_id, request)
     subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"] rescue ""
     @reward = reward
   	@cuser = user
-  	@ticket_id = time_to_win
+  	@ticket_id = ticket_id
 
   	mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "#{subject} - Hai vinto #{@reward.title}")
   end
 
-  def win_admin_notice_mail(user, reward, time_to_win, request)
+  def braun_win_mail(user)
+    @full_name = "#{user.first_name} #{user.last_name}"
+
+    mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "Hai vinto un Minipimer!")
+  end
+
+  def win_admin_notice_mail(user, reward, ticket_id, request)
     subject = Rails.configuration.deploy_settings["sites"][get_site_from_request(request)["id"]]["title"]
     @reward = reward
   	@cuser = user
-  	@ticket_id = time_to_win
+  	@ticket_id = ticket_id
 
   	mail(to: [ "", "concorsi@shado.tv" ], subject: "#{subject} - #{@reward.title}")
   end

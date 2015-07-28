@@ -49,7 +49,7 @@ module InstantwinHelper
         reward_title = Reward.find(reward_id).title
       end
     end
-    
+
     win = user_interactions.present? && user_interactions.any? ? true : nil
     {
       win: win,

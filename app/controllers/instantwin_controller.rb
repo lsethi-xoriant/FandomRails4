@@ -29,11 +29,11 @@ class InstantwinController < ApplicationController
         if instantwin.nil?
           response[:win] = false
           response["message"] = "Non hai vinto, gioca ancora."
-          aux = {"instant_win_id" => nil, "reward_id" => nil}
+          aux = { "instant_win_id" => nil, "reward_id" => nil }
         else
           response[:win] = true
           response["message"] = prize.title
-          aux = {"instant_win_id" => instantwin.id, "reward_id" => prize.id}
+          aux = { "instant_win_id" => instantwin.id, "reward_id" => prize.id }
           assign_reward(current_user, prize.name, 1, request.site)
           send_winner_email(instantwin.reward_info["prize_code"], prize)
 

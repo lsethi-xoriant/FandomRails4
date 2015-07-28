@@ -14,6 +14,7 @@ Fandom::Application.routes.draw do
         get "/concorso", to: "application#contest"
         get "/concorso_identitycollection", to: "application#contest_identitycollection"
         post "/concorso_identitycollection/update", to: "application#contest_identitycollection_update"
+        post "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
         get "/", to: "application#index"
         get "/call_to_action/:id", to: "application#index"
         get "/call_to_action/:id/:descendent_id", to: "application#index"
