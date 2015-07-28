@@ -28,14 +28,12 @@ class UserInteractionsTest < ActionController::TestCase
       vote = 1 + Random.rand(10)
       votes << vote
       params = { vote: vote, one_shot: !ONE_SHOT }
-      puts "-----------"
       user_interaction, resource = update_interaction_computation_with_interaction(resource, "Vote", params, destroy_user_interactions)
       assert_counter = i + 1
 
       assert user_interaction.counter == assert_counter, "user interaction counter different from #{assert_counter}"
     end
-    puts votes.to_json
-    puts user_interaction
+    # TODO: check votes in view counter
   end
 
   test "the user do a play interaction multiple times" do
