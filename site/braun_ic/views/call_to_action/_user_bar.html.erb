@@ -2,7 +2,7 @@
 <div class="profile-container hidden-xs">
   <div class="container">
     <!-- USER LOGGED -->
-    <div class="row profile-container__row" ng-if="isRegistratedUser()">
+    <div class="row profile-container__row" ng-if="!isAnonymousUser()">
       
       <div class="col-sm-3 hidden-sm profile-container__user">    
         <a data-toggle="modal" data-target="#modal-update-user">
@@ -76,7 +76,7 @@
       </div>
     </div>
     <!-- USER UNLOGGED -->
-    <div class="row profile-container__row" ng-if="!isRegistratedUser()">
+    <div class="row profile-container__row" ng-if="isAnonymousUser()">
       <div class="col-sm-9 profile-container__user profile-container__user_unlogged">  
         <a href="/users/sign_up">    
           <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">

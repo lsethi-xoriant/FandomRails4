@@ -92,7 +92,7 @@ class Sites::Ballando::CallToActionController < CallToActionController
 
     end
 
-    if anonymous_user?(current_or_anonymous_user)
+    if anonymous_user?(current_or_anonymous_user) && !stored_anonymous_user?(current_or_anonymous_user)
       anonymous_user_main_reward_count = params["anonymous_user"][MAIN_REWARD_NAME] || 0
       response["main_reward_counter"] = {
         "general" => (anonymous_user_main_reward_count + outcome["reward_name_to_counter"][MAIN_REWARD_NAME])

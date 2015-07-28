@@ -1,22 +1,28 @@
 module AnonymousNavigationHelper
+
+  def anonymous_user
+    cache_medium('anonymous_user') { 
+      User.find_by_email("anonymous@shado.tv")
+    }
+  end
+
+  def anonymous_user?(user = nil)
+    user = current_user unless user
+    user && (user.anonymous_id.blank? || anonymous_user.id == user.id)
+  end
   
   def interaction_allowed?(resource_type, user = nil)
     user = current_user unless user
-    if registered_user?
-      true
-    else
+    if anonymous_user?
       $site.interactions_for_anonymous.present? && $site.interactions_for_anonymous.include?(resource_type)
+    else
+      true
     end
   end
 
   def stored_anonymous_user?(user = nil)
     user = current_user unless user
     user && !user.anonymous_id.blank?
-  end
-
-  def registered_user?(user = nil)
-    user = current_user unless user
-    user && user.anonymous_id.blank?
   end
 
   def new_stored_anonymous_user()

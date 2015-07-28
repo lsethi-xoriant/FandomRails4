@@ -184,7 +184,7 @@ module UserInteractionHelper
     result = []
     comments.each do |comment|
       if comment.comment_id == resource_id
-        user = registered_user?(comment.user) ? comment.user : anonymous_user
+        user = anonymous_user?(comment.user) ? anonymous_user : comment.user
         result << {
           "id" => comment.id,
           "text" => comment.text,
@@ -328,7 +328,7 @@ module UserInteractionHelper
       raise Exception.new("an interaction not allowed for anonymous user has been invoked")
     end
 
-    if anonymous_user?(user)
+    if anonymous_user?(user) && !stored_anonymous_user?(user)
       user = create_and_sign_in_stored_anonymous_user()
     elsif stored_anonymous_user?(user)
       user.update_attribute(:updated_at, Time.now)
