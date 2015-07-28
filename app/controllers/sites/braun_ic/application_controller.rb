@@ -3,7 +3,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
   before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update]
 
   def only_registered_user
-    unless registered_user?
+    if anonymous_user?
       redirect_to "/users/sign_up"
     end
   end
@@ -31,7 +31,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
   end
 
   def contest
-    badges = compute_user_badge(current_user.id) if registered_user?
+    badges = compute_user_badge(current_user.id) unless anonymous_user?
     @aux_other_params = { 
       badges: badges
     }

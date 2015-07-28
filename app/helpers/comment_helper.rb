@@ -25,7 +25,7 @@ module CommentHelper
   end
 
   def build_comment_for_comment_info(comment, evidence = false) 
-    user = registered_user?(comment.user) ? comment.user : anonymous_user
+    user = anonymous_user?(comment.user) ? anonymous_user : comment.user 
 
     {
       "id" => comment.id,

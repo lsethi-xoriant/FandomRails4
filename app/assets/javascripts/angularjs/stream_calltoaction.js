@@ -49,7 +49,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.ticketsEmpty = function() {
-    return ($scope.aux.instant_win_info.win == null && $scope.current_user.instantwin_tickets_counter < 1);
+    return ($scope.aux.instant_win_info.win == null && $scope.current_user && $scope.current_user.instantwin_tickets_counter < 1);
   };
 
   $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
@@ -358,7 +358,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function interactionAllowed(interaction_info) {
-    if(isRegistratedUser()) {
+    if(!$scope.isAnonymousUser()) {
       return true;
     } else {
       resource_type = getOrigResourceType(interaction_info.interaction.resource_type);
@@ -372,6 +372,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return ($scope.aux.site.attributes.interactions_for_anonymous != null);
   }
 
+  function isEmpty(str) {
+    return (!str || 0 === str.length);
+  }
+
   function loadYTApi() {
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
@@ -383,9 +387,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return ($scope.current_user && $scope.current_user.anonymous_id);
   }
 
-  function isRegistratedUser() {
-    return ($scope.current_user && !$scope.current_user.anonymous_id);
-  }
+  $scope.isAnonymousUser = function() {
+    return (!$scope.current_user || !isEmpty($scope.current_user.anonymous_id));
+  };
 
   $scope.init = function(current_user, calltoaction_info_list, has_more, calltoactions_during_video_interactions_second, google_analytics_code, current_calltoaction, aux) {
     FastClick.attach(document.body);
@@ -618,10 +622,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     });
     return overvideo_interactions;
   }
-
-  $scope.isRegistratedUser = function() {
-    return ($scope.current_user && $scope.current_user.anonymous_id == null);
-  };
 
   $scope.computeAvgForVote = function(interaction_info) {
     numerator = 0; denominator = 0;
@@ -1278,7 +1278,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#calltoaction-" + calltoaction_id + "-cover").addClass("hidden");
 
     }
-
   };
 
   $window.showRegistrateView = function() {

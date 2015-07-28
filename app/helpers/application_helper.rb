@@ -384,16 +384,6 @@ module ApplicationHelper
     end
   end
 
-  def anonymous_user
-    cache_medium('anonymous_user') { 
-      User.find_by_email("anonymous@shado.tv")
-    }
-  end
-
-  def anonymous_user?(user)
-    anonymous_user.id == user.id
-  end
-
   def current_or_anonymous_user
     if current_user.present? 
       current_user
@@ -438,10 +428,10 @@ module ApplicationHelper
   end
 
   def current_avatar size = "normal"
-    if registered_user?(current_user)
-      return user_avatar current_user
-    else
+    if anonymous_user?
       return anon_avatar()
+    else
+      return user_avatar current_user
     end
   end
 
@@ -460,7 +450,7 @@ module ApplicationHelper
   def disqus_sso
     disqus = get_deploy_setting("sites/#{$site.id}/disqus", nil)
 
-    if registered_user? && disqus
+    if !anonymous_user? && disqus
       data = {
         'id' => current_user.id,
         'username' => "#{ current_user.username }",

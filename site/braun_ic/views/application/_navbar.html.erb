@@ -11,11 +11,11 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/"><img ng-src="{{aux.assets.extra_fields.logo.url}}"></a>
-          <a ng-if="current_user.registration_fully_completed && isRegistratedUser()" ng-click="openInstantWinModal()" class="btn btn-green iw_btn-navbar visible-xs">
+          <a ng-if="current_user.registration_fully_completed && !isAnonymousUser()" ng-click="openInstantWinModal()" class="btn btn-green iw_btn-navbar visible-xs">
           <div class="iw_btn-navbar__tk text-center">{{current_user.instantwin_tickets_counter}}</div>
             GIOCA
           </a>
-          <a ng-if="!current_user.registration_fully_completed && isRegistratedUser()" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)" class="btn btn-green iw_btn-navbar visible-xs">
+          <a ng-if="!current_user.registration_fully_completed && !isAnonymousUser()" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)" class="btn btn-green iw_btn-navbar visible-xs">
             <div class="iw_btn-navbar__tk text-center">{{current_user.instantwin_tickets_counter}}</div>
             GIOCA
           </a>
