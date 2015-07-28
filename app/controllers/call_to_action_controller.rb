@@ -186,7 +186,7 @@ class CallToActionController < ApplicationController
 
     @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([calltoaction], nil)
     
-    sidebar_tag = calltoaction.user_id.present? ? "sidebar-cta-gallery" : "sidebar-cta"
+    sidebar_tag = calltoaction.user.present? ? "sidebar-cta-gallery" : "sidebar-cta"
 
     @aux_other_params = { 
       calltoaction: calltoaction,

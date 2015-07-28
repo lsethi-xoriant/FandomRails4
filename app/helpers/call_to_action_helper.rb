@@ -353,8 +353,14 @@ module CallToActionHelper
         end
 
         if calltoaction.user.present?
-          user_name = calltoaction.user.username
-          user_user_avatar = user_avatar(calltoaction.user)
+          user_info = {
+            username: calltoaction.user.username,
+            avatar: user_avatar(calltoaction.user),
+            first_name: calltoaction.user.first_name,
+            last_name: calltoaction.user.last_name,
+            is_anonymous: anonymous_user?(calltoaction.user),
+            is_stored_anonymous: stored_anonymous_user?(calltoaction.user)
+          }
         end
 
         cta_extra_fields = get_extra_fields!(calltoaction)
@@ -410,8 +416,7 @@ module CallToActionHelper
               "extra_fields" => get_extra_fields!(calltoaction),
               "activated_at" => calltoaction.activated_at,
               "user_id" => calltoaction.user_id,
-              "user_name" => user_name,
-              "user_avatar" => user_user_avatar,
+              "user" => user_info,
               "updated_at" => calltoaction.updated_at
             },
             "optional_history" => optional_history,

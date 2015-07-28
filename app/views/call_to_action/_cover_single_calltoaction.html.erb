@@ -37,18 +37,18 @@
           </span>  
         </div> 
 
-        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id == null">
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user == null">
           <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
             <%= render partial: "/call_to_action/miniformat" %>
           </div>
           <p>{{calltoaction_info.calltoaction.title}}</p>
         </div>
 
-        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user_id">
+        <div class="col-xs-12 text-left cta-cover__title" ng-if="calltoaction_info.calltoaction.user">
           <div class="row">
             <div class="col-xs-10" ng-if="!calltoaction_info.calltoaction.extra_fields || !calltoaction_info.calltoaction.extra_fields.layout">
-              <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>
-              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user_name}}</p>
+              <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user.avatar}}" class="img-responsive"/>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user.username}}</p>
             </div>
             <div class="col-xs-10" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
               <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields.twitter_avatar}}" class="img-responsive"/>
