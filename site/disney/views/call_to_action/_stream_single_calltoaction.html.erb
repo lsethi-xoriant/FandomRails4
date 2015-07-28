@@ -1,4 +1,4 @@
-<div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id == null">
+<div class="row main-row" ng-if="calltoaction_info.calltoaction.user == null">
   <div class="col-xs-6 cta__miniformat-col">
     <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
       <%= render partial: "/call_to_action/miniformat" %>
@@ -26,13 +26,13 @@
   </div>
 </div>
 
-<div class="back-to-gallery__container hidden-xs" ng-if="calltoaction_info.calltoaction.user_id">
+<div class="back-to-gallery__container hidden-xs" ng-if="calltoaction_info.calltoaction.user">
   <a class="back-to-gallery__container-a" href="/gallery/{{aux.gallery_calltoaction.slug}}" ng-style="{'color': aux.gallery_calltoaction.extra_fields.back_color}"><span class="glyphicon glyphicon-chevron-left"></span>Torna alla Gallery</a>
 </div>
 
-<div class="row main-row" ng-if="calltoaction_info.calltoaction.user_id != null">
+<div class="row main-row" ng-if="calltoaction_info.calltoaction.user != null">
   <div class="col-xs-12">
-    <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user_avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user_name}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{calculateVoteTotal(interaction_info)}} Voti</span></h1>
+    <h1 class="cta__title" style="padding-top: 16px;"><img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user.avatar}}" class="img-responsive"/>{{calltoaction_info.calltoaction.user.username}} <span class="label label-default cta-cover__vote-count--header" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVoteInteractions">{{calculateVoteTotal(interaction_info)}} Voti</span></h1>
   </div>
 </div>
 
