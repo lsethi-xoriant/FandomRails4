@@ -17,7 +17,7 @@
       end
       
       params = request.params
-      params["page_elements"] = ["like", "share", "comment", "quiz", "check"]
+      params["page_elements"] = nil
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       ctas_highlighted = map_highlighted_ctas_to_content_preview(get_cta_highlighted_carousel())
       result = {
@@ -43,7 +43,7 @@
         params["other_params"]["gallery"]["user"] = params[:user]
       end
       
-      params["page_elements"] = ["like", "comment", "share"]
+      params["page_elements"] = nil
       calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
       
       
