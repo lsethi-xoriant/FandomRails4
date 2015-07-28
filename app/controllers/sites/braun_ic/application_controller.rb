@@ -54,14 +54,17 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       month_of_emission = user_params[:month_of_emission]
       year_of_emission = user_params[:year_of_emission]
 
-      (aux["products"] ||= []) << {
+      product_hash = {
         receipt_number: user_params[:receipt_number],
         product_code: user_params[:product_code],
         date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}"
       }
 
+      (aux["products"] ||= []) << product_hash
+
       if current_user.update_attributes(first_name: user_params[:first_name],
         last_name: user_params[:last_name], aux: aux)
+        SystemMailer.braun_recipe_mail(current_user, product_hash).deliver
         flash[:notice] = "Dati salvati correttamente"
         redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
       else

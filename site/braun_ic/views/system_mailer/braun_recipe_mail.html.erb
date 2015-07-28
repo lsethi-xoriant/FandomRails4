@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>
+      Gentile <%= @full_name %>,
+    </p>
+    <p>
+      ti confermiamo che i dati del tuo scontrino sono stati memorizzati con successo. <br/>
+
+      Stai quindi partecipando all'estrazione della Identity Collection per il concorso  “MISURA IL TUO BENESSERE E VINCI BRAUN”  con i seguenti dati:
+      <ul>
+        <li>
+          Numero scontrino: <%= @product[:receipt_number] %> 
+        </li>
+        <li>
+          Codice prodotto: <%= @product[:product_code] %>
+        </li>
+        <li>
+          Data emissione: <%= @product[:date_of_emission] %>
+        </li>
+      </ul>
+    </p>
+    <p>
+      Nel caso in cui fossi tra i fortunati vincitori, verrai contattato via mail dal nostro staff. Ti ricordiamo che per convalidare la tua vincita dovrai inviare entro sette giorni dall’arrivo della email di conferma vincita, una raccomandata A/R con le seguenti informazioni:
+      <ul>
+        <li>
+          I dati anagrafici, insieme al numero di telefono
+        </li>
+        <li>
+          La fotocopia dello scontrino
+        </li>
+        <li>
+          La fotocopia della carta d’identità
+        </li>
+      </ul>
+    </p>
+    <p>
+      L’indirizzo a cui inviare la raccomandata è: <br/>
+      <i>
+        Concorso “MISURA IL TUO BENESSERE E VINCI BRAUN” <br/>
+        C/O GRUPPO FMA S.r.l.  <br/>
+        Viale Brenta 18 20139 Milano
+      </i>
+    </p>
+    <p>
+      <b>Lo staff di Braun | Wellness Machine</b>
+    </p>
+    <p>
+      <a href="http://braun-ic.dev.fandomlab.com">http://braun-ic.dev.fandomlab.com</a>
+    </p>
+  </body>
+</html>

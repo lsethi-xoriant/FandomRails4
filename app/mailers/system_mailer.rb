@@ -13,6 +13,7 @@ class SystemMailer < ActionMailer::Base
 
   def welcome_mail(user)
     @cuser = user
+
     mail(to: user.email, subject: "Benvenuto!")
   end
 
@@ -32,7 +33,14 @@ class SystemMailer < ActionMailer::Base
   def braun_win_mail(user)
     @full_name = "#{user.first_name} #{user.last_name}"
 
-    mail(to: user.email, bcc: 'contestfandom@gmail.com', subject: "Hai vinto un Minipimer!")
+    mail(to: user.email, subject: "Hai vinto un Minipimer!")
+  end
+
+  def braun_recipe_mail(user, product_hash)
+    @full_name = "#{user.first_name} #{user.last_name}"
+    @product = product_hash
+
+    mail(to: user.email, subject: "Il tuo scontrino è stato registrato")
   end
 
   def win_admin_notice_mail(user, reward, ticket_id, request)
@@ -43,7 +51,7 @@ class SystemMailer < ActionMailer::Base
 
   	mail(to: [ "", "concorsi@shado.tv" ], subject: "#{subject} - #{@reward.title}")
   end
-  
+
   def notification_mail(email, html_message, subject)
     @body = html_message
     mail(to: email, subject: subject)
