@@ -1904,6 +1904,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
+   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
+    calltoaction_info.status = data.calltoaction_status;
+
+    calltoaction_id = calltoaction_info.calltoaction.id;
+    interaction_id = interaction_info.interaction.id;
+    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+  };
+
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
@@ -1929,8 +1937,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
-    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-    calltoaction_info.status = data.calltoaction_status;
+    $scope.updateAnswerAjaxSuccessCtaStatuses(calltoaction_info, interaction_info, data);
 
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
@@ -2002,7 +2009,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
 
     } else {
-      interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      if(interaction_info.user_interaction) {
+        interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      }
 
       if(interaction_info.interaction.resource_type == "like") {
         if($scope.likePressed(interaction_info)) {

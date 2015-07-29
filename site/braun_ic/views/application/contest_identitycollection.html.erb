@@ -24,7 +24,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <p class="contest-title">Inserisci i tuoi dati</p>
+        <p class="contest-title">Inserisci i dati del tuo scontrino per partecipare</p>
       </div>
       <% if flash[:notice].present? %>
         <div class="col-sm-12">
@@ -55,19 +55,42 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Nome</label>
             <div class="col-sm-9">
-              <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome" %>
+              <%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome", readonly: @contest_identitycollection_user.first_name.present? %>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Cognome</label>
             <div class="col-sm-9">
-              <%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome" %>
+              <%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome", readonly: @contest_identitycollection_user.last_name.present? %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Data di nascita</label>
+            <div class="col-sm-9">
+              <div class="row">
+                <div class="col-sm-4">
+                  <% date_array = (1..31).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Giorno", ""] %>
+                  <%= f.select :day_of_birth, options_for_select(date_array, @contest_identitycollection_user[:day_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1..12).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= f.select :month_of_birth, options_for_select(date_array, @contest_identitycollection_user[:month_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (1900..2015).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Anno", ""] %>
+                  <%= f.select :year_of_birth, options_for_select(date_array, @contest_identitycollection_user[:year_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">Codice prodotto</label>
             <div class="col-sm-9">
-              <%= f.text_field :product_code, :class => "form-control", :placeholder => "Codice prodotto" %>
+              <% date_array = @products.map { |date| [date, date] } %>
+              <%= f.select :product_code, options_for_select(date_array, @contest_identitycollection_user[:product_code]), {}, { class: "form-control"} %>
             </div>
           </div>
           <div class="form-group">
