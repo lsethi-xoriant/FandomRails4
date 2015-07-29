@@ -115,7 +115,8 @@ module ProfileHelper
     end 
 
     if stored_anonymous_user?
-      privacy = $site.id == "braun_ic" ? true : false
+      # HERE BRAUN_IC
+      privacy = $site.id == "braun_ic" ? false : false ##### HERE HERE HERE
       user.assign_attributes({
           username: nil,
           first_name: auth.info.first_name,
