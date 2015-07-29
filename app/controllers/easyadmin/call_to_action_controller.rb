@@ -49,28 +49,35 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
     end
 
-    params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
-      if interaction_attributes["gallery_type"] == "twitter"
-        params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+    if params[:call_to_action]["interactions_attributes"]
+      params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
+        if interaction_attributes["gallery_type"] == "twitter"
+          params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+        end
       end
     end
 
     @cta.aux = aux
 
     save_interaction_call_to_action_linking(@cta) unless @cta.errors.any?
+
+    tag_list = params[:tag_list].split(",")
+    @cta.call_to_action_tags.delete_all
+    tag_list.each do |t|
+      tag = Tag.find_by_name(t)
+      tag = Tag.create(title: t, name: t, slug: t) unless tag
+      if tag.errors.any?
+        @cta.errors.messages.merge!(tag.errors.messages)
+      else
+        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+      end
+    end
+
     if @cta.errors.any?
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/new_cta"
     else
-      tag_list = params[:tag_list].split(",")
-      @cta.call_to_action_tags.delete_all
-      tag_list.each do |t|
-        tag = Tag.find_by_name(t)
-        tag = Tag.create(title: t, name: t, slug: t) unless tag
-        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
-      end
-
       flash[:notice] = "CallToAction generata correttamente"
       set_cta_updated_at(@cta)
       set_content_updated_at_cookie(@cta.updated_at)
@@ -94,9 +101,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       aux["media_image_gravity_position"] = params[:call_to_action]["media_image_gravity_position"]
     end
 
-    params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
-      if interaction_attributes["gallery_type"] == "twitter"
-        params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+    if params[:call_to_action]["interactions_attributes"]
+      params[:call_to_action]["interactions_attributes"].each do |key, interaction_attributes|
+        if interaction_attributes["gallery_type"] == "twitter"
+          params[:call_to_action]["interactions_attributes"][key]["resource_attributes"]["title_needed"] = "0"
+        end
       end
     end
 
@@ -106,21 +115,26 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
     saved_linking = save_interaction_call_to_action_linking(@cta)
-    unless updated_attributes && saved_linking
+
+    if params[:tag_list]
+      tag_list = params[:tag_list].split(",")
+      @cta.call_to_action_tags.delete_all
+      tag_list.each do |t|
+        tag = Tag.find_by_name(t)
+        tag = Tag.create(title: t, name: t, slug: t) unless tag
+        if tag.errors.any?
+          @cta.errors.messages.merge!(tag.errors.messages)
+        else
+          CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+        end
+      end
+    end
+
+    unless updated_attributes && saved_linking && @cta.errors.messages.empty?
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
     else
-      if params[:tag_list]
-        tag_list = params[:tag_list].split(",")
-        @cta.call_to_action_tags.delete_all
-        tag_list.each do |t|
-          tag = Tag.find_by_name(t)
-          tag = Tag.create(title: t, name: t, slug: t) unless tag
-          CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
-        end
-      end
-
       flash[:notice] = "CallToAction aggiornata correttamente"
       set_cta_updated_at(@cta)
       set_content_updated_at_cookie(@cta.updated_at) if @cta.updated_at != old_cta_updated_at
