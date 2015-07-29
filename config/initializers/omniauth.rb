@@ -19,7 +19,7 @@ module OmniAuth::Strategies
 
       Rails.application.config.middleware.use OmniAuth::Builder do
         provider "#{authentication_name}_#{tenant_id}".to_sym, authentication_app_data["app_id"], authentication_app_data["app_secret"], 
-                 :scope => authentication_app_data["scope"], :info_fields => authentication_app_data["info_fields"]
+                 scope: authentication_app_data["scope"], info_fields: authentication_app_data["info_fields"], image_size: 'large'
       end
 
     end

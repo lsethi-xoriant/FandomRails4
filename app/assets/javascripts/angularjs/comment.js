@@ -43,16 +43,16 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
   $window.initCaptcha = function() {
     $http.post("/captcha" , { })
       .success(function(data) { 
-        initSessionStorageAndCaptchaImage(data)
+        initSessionStorageAndCaptchaImage(data);
       }).error(function() {
         // ERROR.
       });
-  }
+  };
 
   $window.initSessionStorageAndCaptchaImage = function(captcha_data) {
     $("#captcha-img-" + $scope.comment.interaction_id).attr("src", 'data:image/jpeg;base64,' + captcha_data.image);
     sessionStorage.setItem("captcha" + $scope.comment.interaction_id, captcha_data.code);
-  }
+  };
 
   $window.newCommentsPolling = function() {
     if(!$scope.comment.ajax_polling_in_progress) {
@@ -82,11 +82,11 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       }
 
     }
-  }
+  };
 
   $window.haveNewCommentsToAppend = function(data_from_new_comments_polling_ajax) {
-    return data_from_new_comments_polling_ajax.first_comment_shown_date
-  }
+    return data_from_new_comments_polling_ajax.first_comment_shown_date;
+  };
 
   $window.appendComments = function() {
     if($scope.comments_shown.length < $scope.comment.comments_counter && !$scope.comment.ajax_append_in_progress) {
@@ -114,7 +114,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       }
 
     }
-  }
+  };
 
   $window.userFeedbackAfterSubmitCommentWithCaptcha = function(data_from_submit_comment_ajax) {
 
@@ -184,7 +184,7 @@ function CommentCtrl($scope, $window, $http, $timeout, $interval) {
       }).error(function() {
         $("#comment-button-" + $scope.comment.interaction_id).attr('disabled', false);
       });
-  }
+  };
 
   function showNewCommentFeedback() {
     $(".new-comment").animate({ backgroundColor: "#FFF5E5" }, 1000, function() {  
