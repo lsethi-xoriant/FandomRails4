@@ -505,26 +505,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction.id })
       .success(function(data) { 
+        
         if(data.win == true) {
-          iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields.iw_win;
-          time = 10000;
+          time = parseInt($scope.aux.assets.extra_fields["iw_win_time"]);
         } else {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index];
-          time = 5000;
+          time = parseInt($scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index + "_time"]);
         }
+
         $("#iw_slot").attr("src", image);
 
         if($scope.aux.assets.extra_fields.iw_running_sound) {
           iwRunningSound("play");
         }
 
+        $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
+
         $timeout(function() { 
           $scope.aux.instant_win_info.in_progress = false;
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
-          $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
 
           if($scope.aux.assets.extra_fields.iw_running_sound) {
             iwRunningSound("pause");
