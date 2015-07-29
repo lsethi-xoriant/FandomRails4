@@ -168,7 +168,7 @@ Fandom::Application.routes.draw do
         get "/", to: "application#index"
         get "/live", to: "application#live"
         get "/about", :to => "application#about"
-        get "/appzerowaste", to: "application#appzerowaste"
+        get "/zerowaste", to: "application#appzerowaste"
         get "/calendar", :to => "calendar#index"
         get "/calendar/:day", :to => "calendar#index"
         get "/calendar/fetch/events", :to => "calendar#fetch_events"
