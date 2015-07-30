@@ -505,26 +505,28 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction.id })
       .success(function(data) { 
+        
         if(data.win == true) {
-          iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields.iw_win;
-          time = 10000;
+          time = parseInt($scope.aux.assets.extra_fields["iw_win_time"]);
         } else {
           iw_wrong_index = Math.floor((Math.random() * 2) + 1);
           image = $scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index];
-          time = 5000;
+          time = parseInt($scope.aux.assets.extra_fields["iw_wrong" + iw_wrong_index + "_time"]);
         }
+
         $("#iw_slot").attr("src", image);
 
         if($scope.aux.assets.extra_fields.iw_running_sound) {
           iwRunningSound("play");
         }
 
+        $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
+
         $timeout(function() { 
           $scope.aux.instant_win_info.in_progress = false;
           $scope.aux.instant_win_info.message = data.message;
           $scope.aux.instant_win_info.win = data.win;
-          $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
 
           if($scope.aux.assets.extra_fields.iw_running_sound) {
             iwRunningSound("pause");
@@ -1902,6 +1904,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
+   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
+    calltoaction_info.status = data.calltoaction_status;
+
+    calltoaction_id = calltoaction_info.calltoaction.id;
+    interaction_id = interaction_info.interaction.id;
+    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
+  };
+
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
@@ -1927,8 +1937,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
-    adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-    calltoaction_info.status = data.calltoaction_status;
+    $scope.updateAnswerAjaxSuccessCtaStatuses(calltoaction_info, interaction_info, data);
 
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
@@ -2000,7 +2009,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
 
     } else {
-      interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      if(interaction_info.user_interaction) {
+        interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      }
 
       if(interaction_info.interaction.resource_type == "like") {
         if($scope.likePressed(interaction_info)) {
@@ -2488,52 +2499,56 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return false;
   }
 
-  // TODO: ajax_comment_append_in_progress
-
   $scope.appendComments = function(interaction_info) {
     if(!$scope.ajax_comment_append_in_progress) {
-      interaction_id = interaction_info.interaction.id;
-      comment_info = interaction_info.interaction.resource.comment_info;
       $scope.ajax_comment_append_in_progress = true;
+
+      interaction_id = interaction_info.interaction.id;
+      comments = interaction_info.interaction.resource.comment_info.comments;
+
+      comment_ids = [];
+      angular.forEach(comments, function(comment) {
+        comment_ids.push(comment.id);
+      });
+
       try {
-        $http.post("/append_comments", { interaction_id: interaction_id, comment_info: comment_info })
+        $http.post("/append_comments", { interaction_id: interaction_id, comment_ids: comment_ids, last_updated_at: (comments[comments.length - 1].updated_at) })
           .success(function(data) {
-
+            comment_info = interaction_info.interaction.resource.comment_info
             comment_info.comments = comment_info.comments.concat(data.comments);
-            
-            /*
-            $scope.comments_shown = $scope.comments_shown.concat(data.comments_to_append_ids);
-
-            $scope.comment.last_comment_shown_date = data.last_comment_shown_date;
-            $("#comments-" + $scope.comment.interaction_id).append(data.comments_to_append);
-
-            if($scope.comments_shown.length >= $scope.comment.comments_counter) {
-              $("#comment-append-button-" + $scope.comment.interaction_id).hide();
-            } 
-
-            showNewCommentFeedback();    
-            */
-            
           }).error(function() {
+            // error
           });
       } finally {
         $scope.ajax_comment_append_in_progress = false;
       }
-
     }
   };
 
   $scope.commentsPolling = function() {
     if(!$scope.ajax_comment_append_in_progress) {
       $scope.ajax_comment_append_in_progress = true;
+
       interaction_info = $scope.comments_polling.interaction_info;
-      comment_info = interaction_info.interaction.resource.comment_info;
       interaction_id = interaction_info.interaction.id;
+      comments = interaction_info.interaction.resource.comment_info.comments;
+
+      comment_ids = [];
+      angular.forEach(comments, function(comment) {
+        comment_ids.push(comment.id);
+      });
+
+      if(comments.length > 0) {
+        first_updated_at = comments[0].updated_at
+      } else {
+        first_updated_at = null;
+      }
+      
       try {
-        $http.post("/comments_polling", { interaction_id: interaction_id, comment_info: comment_info })
+        $http.post("/comments_polling", { interaction_id: interaction_id, comment_ids: comment_ids, first_updated_at: first_updated_at })
           .success(function(data) {
+            comment_info = interaction_info.interaction.resource.comment_info;
             comment_info.comments = data.comments.concat(comment_info.comments);
-            comment_info.comments_total_count = comment_info.comments_total_count + data.comments.length;
           }).error(function() {
           });
       } finally {

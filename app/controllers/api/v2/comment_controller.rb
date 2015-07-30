@@ -56,5 +56,9 @@
     response = generate_captcha_response
     respond_with response.to_json
   end
+  
+  def append_comment
+    append_comments_computation
+  end
 
 end

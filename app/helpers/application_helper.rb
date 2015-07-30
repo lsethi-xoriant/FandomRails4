@@ -427,17 +427,21 @@ module ApplicationHelper
     end
   end
 
-  def current_avatar size = "normal"
-    if anonymous_user?
-      return anon_avatar()
-    else
-      return user_avatar current_user
-    end
+  def current_avatar size = "large"
+    anonymous_user? ? anon_avatar() : (user_avatar(current_user))
   end
 
-  def user_avatar user, size = "normal"
+  def user_avatar user, size = "large"
     begin
-      user.avatar_selected_url.present? && !user.avatar_selected_url.include?("anon.png") ? user.avatar_selected_url : anon_avatar()
+      if user.avatar_selected_url.present? && !user.avatar_selected_url.include?("anon.png")
+        avatar = user.avatar_selected_url
+        if user.avatar_selected.include?("facebook")
+          avatar = "#{user.avatar_selected_url}?type=#{size}"
+        end
+        avatar
+      else
+        anon_avatar()
+      end
     rescue
       anon_avatar()
     end

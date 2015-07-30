@@ -15,19 +15,44 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     attribute :first_name, type: String
     attribute :last_name, type: String
     attribute :receipt_number, type: String
+    attribute :receipt_amount, type: String
+    attribute :product_code, type: String
+    attribute :newsletter, type: String
+
+    attribute :minute_of_emission, type: String
+    attribute :hour_of_emission, type: String
+
     attribute :day_of_emission, type: String
     attribute :month_of_emission, type: String
     attribute :year_of_emission, type: String
-    attribute :product_code, type: String
-
-    validates_presence_of :first_name, :last_name, :receipt_number, :product_code
-    validate :date_of_emission
     
+    attribute :day_of_birth, type: String 
+    attribute :month_of_birth, type: String
+    attribute :year_of_birth, type: String
+
+    validates_presence_of :first_name, :last_name, :receipt_number, :product_code, :receipt_amount
+    validate :date_of_emission
+    validate :time_of_emission
+    validate :birth_date
+
     def date_of_emission
       if day_of_emission.blank? || month_of_emission.blank? || year_of_emission.blank?
         errors.add(:date_of_emission, "non può essere lasciata in bianco")
       end
-    end                      
+    end  
+
+    def birth_date
+      if day_of_birth.blank? || month_of_birth.blank? || year_of_birth.blank?
+        errors.add(:birth_date, "non può essere lasciata in bianco")
+      end
+    end  
+
+    def time_of_emission
+      if minute_of_emission.blank? || hour_of_emission.blank?
+        errors.add(:time_of_emission, "non può essere lasciata in bianco")
+      end
+    end  
+
   end
 
   def contest
@@ -37,33 +62,70 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     }
   end 
 
-  def contest_identitycollection
+  def get_braun_products()
+    assets_tag = Tag.find("assets")
+    assets_tag.extra_fields["products"].present? ? assets_tag.extra_fields["products"].split(",") : []
+  end
+
+  def contest_identitycollection 
+    @products = get_braun_products()
+
     @contest_identitycollection_user = ContestIdentityCollectionUser.new(
       first_name: current_user.first_name, 
-      last_name: current_user.last_name
+      last_name: current_user.last_name,
+      day_of_birth: current_user.day_of_birth,
+      month_of_birth: current_user.month_of_birth,
+      year_of_birth: current_user.year_of_birth,
+      newsletter: current_user.newsletter
     )
   end 
 
   def contest_identitycollection_update
     user_params = params[:sites_braun_ic_application_controller_contest_identity_collection_user]
+
+    user_params[:first_name] = current_user.first_name if current_user.first_name.present?
+    user_params[:last_name] = current_user.last_name if current_user.last_name.present?
+    if current_user.day_of_birth.present? && current_user.month_of_birth.present? && current_user.year_of_birth.present?
+      user_params[:day_of_birth] = current_user.day_of_birth
+      user_params[:month_of_birth] = current_user.month_of_birth
+      user_params[:year_of_birth] = current_user.year_of_birth
+    end 
+    user_params[:year_of_emission] = "2015"
+
     @contest_identitycollection_user = ContestIdentityCollectionUser.new(user_params)
     if @contest_identitycollection_user.valid?
       aux = current_user.aux || {}
 
-      day_of_emission = user_params[:day_of_emission]
-      month_of_emission = user_params[:month_of_emission]
+      minute_of_emission = sprintf '%02d', user_params[:minute_of_emission]
+      hour_of_emission = sprintf '%02d', user_params[:hour_of_emission]
+
+      day_of_emission = sprintf '%02d', user_params[:day_of_emission]
+      month_of_emission = sprintf '%02d', user_params[:month_of_emission]
       year_of_emission = user_params[:year_of_emission]
+
+      newsletter = user_params[:newsletter] == "true"
 
       product_hash = {
         receipt_number: user_params[:receipt_number],
         product_code: user_params[:product_code],
-        date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}"
+        date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}",
+        time_of_emission: "#{hour_of_emission}:#{minute_of_emission}",
+        receipt_amount: user_params[:receipt_amount]
       }
 
       (aux["products"] ||= []) << product_hash
 
-      if current_user.update_attributes(first_name: user_params[:first_name],
-        last_name: user_params[:last_name], aux: aux)
+      current_user_update_status = current_user.update_attributes(
+          first_name: user_params[:first_name],
+          last_name: user_params[:last_name], 
+          day_of_birth: user_params[:day_of_birth],
+          month_of_birth: user_params[:month_of_birth],
+          year_of_birth: user_params[:year_of_birth],
+          newsletter: newsletter,
+          aux: aux
+      )
+
+      if current_user_update_status
         SystemMailer.braun_recipe_mail(current_user, product_hash).deliver
         flash[:notice] = "Dati salvati correttamente"
         redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
@@ -73,6 +135,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
       end
     else
+      @products = get_braun_products()
       render template: "application/contest_identitycollection"
     end
   end

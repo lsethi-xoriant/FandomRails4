@@ -11,6 +11,9 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
+  $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
+  };
+
   $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info, enable_linked_share) {
     url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;
     if(cta_info.calltoaction.extra_fields.linked_result_title && enable_linked_share) {

@@ -168,6 +168,7 @@ Fandom::Application.routes.draw do
         get "/", to: "application#index"
         get "/live", to: "application#live"
         get "/about", :to => "application#about"
+        get "/zerowaste", to: "application#appzerowaste"
         get "/calendar", :to => "calendar#index"
         get "/calendar/:day", :to => "calendar#index"
         get "/calendar/fetch/events", :to => "calendar#fetch_events"
@@ -175,7 +176,6 @@ Fandom::Application.routes.draw do
         get "/browse/category/:id", :to => "browse#intesa_index_category"
         get "/browse/view_all/:id", :to => "browse#intesa_index_category"
         get "/browse/autocomplete_search", :to => "browse#autocomplete_search", defaults: { format: 'json' }
-
         get "/call_to_action/:id", to: "call_to_action#show"
       end
     end
@@ -364,6 +364,7 @@ Fandom::Application.routes.draw do
       get "/call_to_action/get_single_cta", :to => "call_to_action#get_single_cta", defaults: { format: 'json' }
       get "/call_to_action/redo_test", :to => "call_to_action#redo_test", defaults: { format: 'json' }
       get "/add_comment", :to => "comment#add_comment", defaults: { format: 'json' }
+      get "/append_comment", :to => "comment#append_comment", defaults: { format: 'json' }
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
     end
   end

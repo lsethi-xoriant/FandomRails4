@@ -8,18 +8,11 @@
   }
 }
 
-.contest-2-container-sp, .contest-2-container-sp-form {
+.contest-2-container-sp-form {
   background-color: #fff;
-  border-bottom: 1px solid #ccc;
   .contest-title, .contest-description { 
     color: #000;
   }
-  .contest-description {
-    margin-bottom: 45px;
-  }
-}
-
-.contest-2-container-sp-form {
   padding-bottom: 30px;
 }
 
@@ -45,4 +38,14 @@
 
 .contest-2-container {
   background-color: #000;
+}
+
+.contest-2-container-sp {
+  background-color: #000;
+  .contest-title, .contest-description { 
+    color: #fff;
+  }
+  .contest-description {
+    margin-bottom: 45px;
+  }
 }

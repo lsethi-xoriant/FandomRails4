@@ -88,6 +88,16 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     render template: "/call_to_action/show"
   end
 
+  def appzerowaste
+    # http://appzerowaste.com/  
+    cta = CallToAction.find("appzerowaste")
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
+
+    complete_cta_for_show(cta)
+
+    @aux_other_params[:tag_menu_item] = get_extra_fields!(cta)["menu_item"]
+  end
+
   def about
     language = $context_root || "it"
     cta = CallToAction.find("about-#{language}")

@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="col-sm-9">
-            <div ng-if="form_data.current_user.errors">
+            <div ng-if="form_data.current_user.errors" class="iw-errors">
               <p>Errori nella compilazione:</p>
               <ul>
                 <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>

@@ -9,7 +9,7 @@
         <div class="row">
           <div class="col-md-10 col-md-offset-1">
             <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
-              <div ng-if="form_data.current_user.errors" class="row">
+              <div ng-if="form_data.current_user.errors" class="row iw-errors" >
                 <div class="col-md-12">
                   <p>Errori nell'inserimento dei dati:</p>
                   <ul>
@@ -118,7 +118,8 @@
                   <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin()}">
                     <div class="arrow" style="left: 50%;"></div>
                     <div class="popover-content">
-                      <p class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto. Gioca ancora</p>
+                      <p ng-if="!ticketsEmpty()" class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto. Gioca ancora</p>
+                      <p ng-if="ticketsEmpty()" class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto</p>
                     </div>
                   </div>
                   <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': ticketsEmpty()}">
