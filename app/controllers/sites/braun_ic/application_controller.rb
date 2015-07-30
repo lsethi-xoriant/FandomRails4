@@ -1,6 +1,6 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
-  before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update]
+  before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update, :contest_identitycollection_success]
 
   def only_registered_user
     if anonymous_user?
@@ -80,6 +80,9 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     )
   end 
 
+  def contest_identitycollection_success
+  end
+
   def contest_identitycollection_update
     user_params = params[:sites_braun_ic_application_controller_contest_identity_collection_user]
 
@@ -132,7 +135,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       else
         flash[:error] = "Errore nel salvataggio, scrivi a support@shado.tv"
         log_error("contest_identitycollection_update", { exception: current_user.errors.to_s }) 
-        redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
+        redirect_to "/concorso_identitycollection_success"
       end
     else
       @products = get_braun_products()

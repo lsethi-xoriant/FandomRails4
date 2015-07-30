@@ -13,6 +13,7 @@ Fandom::Application.routes.draw do
       scope module: "braun_ic" do
         get "/concorso", to: "application#contest"
         get "/concorso_identitycollection", to: "application#contest_identitycollection"
+        get "/concorso_identitycollection_success", to: "application#contest_identitycollection_success"
         post "/concorso_identitycollection/update", to: "application#contest_identitycollection_update"
         post "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
         get "/", to: "application#index"

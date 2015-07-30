@@ -12,6 +12,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
+    $scope.feedback = (data.user_interaction.outcome.reward_name_to_counter.credit == 1);
   };
 
   $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info, enable_linked_share) {
