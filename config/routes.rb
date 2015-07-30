@@ -329,11 +329,11 @@ Fandom::Application.routes.draw do
   get "/browse/contents/:tagname", :to => "browse#index"
   get "/browse/search", :to => "browse#search"
   get "/browse/fullscreen", :to => "browse#index_fullscreen"
-  
+
   get "/gallery", :to => "gallery#index"
   get "/gallery/:id", :to => "gallery#show"
   get "/gallery/how_to/:id", :to => "gallery#how_to"
-  
+
   # get "/classifica/:id", :to => "ranking#show"
   get "classifiche", :to => "ranking#show_rankings_page"
   get "bootcamp", :to => "ranking#show_vote_rankings_page"

@@ -268,6 +268,12 @@ module TagHelper
       CallToAction.active.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
     end
   end
+
+  def get_all_ctas_with_tag(tag_name)
+    cache_short get_all_ctas_with_tag_cache_key(tag_name) do
+      CallToAction.joins(:call_to_action_tags => :tag).where("tags.name = ? AND call_to_actions.user_id IS NULL", tag_name).to_a
+    end
+  end
   
   def get_user_ctas_with_tag(tag_name, offset = 0, limit = 6)
     cache_short get_user_ctas_with_tag_cache_key(tag_name) do

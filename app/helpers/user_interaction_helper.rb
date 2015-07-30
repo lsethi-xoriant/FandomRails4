@@ -561,7 +561,8 @@ module UserInteractionHelper
 
   def get_random_call_to_action(interaction, id_cta_to_exclude = nil)
     tag = Tag.find_by_name(interaction.resource.tag)
-    where_clause = "call_to_action_tags.tag_id = #{tag.id} AND rewards.id IS NULL"
+    template_ctas = get_all_ctas_with_tag("template")
+    where_clause = "call_to_actions.id NOT IN (#{template_ctas.map{|c| c.id}.join(",")}) AND call_to_action_tags.tag_id = #{tag.id} AND rewards.id IS NULL"
     if id_cta_to_exclude
       where_clause << " AND call_to_actions.id <> #{id_cta_to_exclude}"
     end
