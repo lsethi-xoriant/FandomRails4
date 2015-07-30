@@ -94,7 +94,6 @@ module CommentHelper
   def append_comments
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
       comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_ids])
-      debugger
       last_comment_shown_date = params[:last_updated_at]
       comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(10)
       comments_for_comment_info = Array.new
