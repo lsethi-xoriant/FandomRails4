@@ -83,4 +83,40 @@ module CommentHelper
     Regexp.new(string)
   end
   
+  def get_comments_approved_except_ids(user_comments, except_comment_ids)
+    if except_comment_ids
+      user_comments.approved.where("id NOT IN (?)", except_comment_ids)
+    else
+      user_comments.approved
+    end
+  end
+  
+  def append_comments
+    append_or_update_comments(params[:interaction_id]) do |interaction, response|
+      comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_ids])
+      debugger
+      last_comment_shown_date = params[:last_updated_at]
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(10)
+      comments_for_comment_info = Array.new
+      comments.each do |comment|
+        comments_for_comment_info << build_comment_for_comment_info(comment, true)
+      end
+      comments_for_comment_info
+    end    
+  end
+  
+  def append_or_update_comments(interaction_id, &query_block)
+    interaction = Interaction.find(interaction_id)
+    response = Hash.new
+    
+    comments = query_block.call(interaction, response)
+
+    response[:comments] = comments
+
+    respond_to do |format|
+      format.json { render :json => response.to_json }
+    end
+
+  end
+  
 end

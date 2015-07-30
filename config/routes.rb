@@ -364,6 +364,7 @@ Fandom::Application.routes.draw do
       get "/call_to_action/get_single_cta", :to => "call_to_action#get_single_cta", defaults: { format: 'json' }
       get "/call_to_action/redo_test", :to => "call_to_action#redo_test", defaults: { format: 'json' }
       get "/add_comment", :to => "comment#add_comment", defaults: { format: 'json' }
+      get "/append_comment", :to => "comment#append_comment", defaults: { format: 'json' }
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
     end
   end
