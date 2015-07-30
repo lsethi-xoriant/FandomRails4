@@ -55,7 +55,7 @@ a:hover{
 body {
   padding-top: 0;
   background-color: #f7b033;
-  background-image: url("orzoro/texture.png");
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
 }
 
 .form-error {
@@ -152,7 +152,7 @@ p{
 .main-container {
   background-color: $white;
   padding-top: 30px;
-  background-image: url("orzoro/texture.png");
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
 }
 
 .main-container-test {
@@ -238,7 +238,7 @@ a{
   padding-top: 30px;
   padding-bottom: 30px;
   border-bottom: 1px solid #d1d2d4;
-  background-image: url("orzoro/texture.png");
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
 }
 
 .brws-item--dark{
@@ -260,6 +260,107 @@ a{
   50% { background: yellow; }
   100% { background: transparent; }
 }
+
+.category-header__subtitle-container{
+  background-color: #ebe6d3;
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  width: 40%;
+  margin: 0 auto;
+  padding: 2px 15px;
+  margin-top: -10px;
+}
+
+.category-header__title-container {
+  -ms-transform: rotate(-3deg); /* IE 9 */
+  -webkit-transform: rotate(-3deg); /* Chrome, Safari, Opera */
+  transform: rotate(-3deg);
+  display: inline-block;
+  background-color: rgb(160, 198, 117);
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  padding: 0 10px;
+  margin-top: 20px;
+  h1{
+    color: #fff;
+    text-transform: uppercase;
+    font-family: "Allan";
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.category-header__title-container {
+  -ms-transform: rotate(-3deg); /* IE 9 */
+  -webkit-transform: rotate(-3deg); /* Chrome, Safari, Opera */
+  transform: rotate(-3deg);
+  display: inline-block;
+  background-color: rgb(160, 198, 117);
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  padding: 0 10px;
+  margin-top: 20px;
+  h1{
+    color: #fff;
+    text-transform: uppercase;
+    font-family: "Allan";
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.relateds-flexslider__item-panel {
+  background-color: #fff;
+  height: 270px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  position: relative;
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.related__row {
+  background-image: url("<%= asset_path('orzoro/texture.png') %>g");
+  background-color: $cream;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.navbar-default {
+  margin-bottom: 0;
+  border: none;
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+}
+
+.footer__row {
+  background-color: $brown;
+  color: #fff;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+} 
+
+.cta__comic {
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  img {
+    margin-bottom: -30px;
+  }
+}
+
+.cta-preview__miniformat {
+  background-image: url("<%= asset_path('orzoro/texture.png') %>");
+  font-family: "Allan";
+  font-weight: "700";
+  font-size: 18px;
+  padding: 5px 25px;
+  position: relative;
+  text-transform: uppercase;
+  top: -15px;
+  color: #fff;
+}
+
 
 /********************* ERRORS *********************/
 
