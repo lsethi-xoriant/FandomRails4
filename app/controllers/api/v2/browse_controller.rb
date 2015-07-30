@@ -55,7 +55,6 @@
         offset: params[:offset].to_i,
         perpage: DEFAULT_VIEW_ALL_ELEMENTS
       }
-      debugger
       content_preview_list = get_content_previews(category.name, get_index_category_load_more_tags(category, selected_tags), params, DEFAULT_VIEW_ALL_ELEMENTS)
       contents = content_preview_list.contents
       
