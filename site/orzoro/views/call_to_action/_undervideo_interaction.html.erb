@@ -51,7 +51,7 @@
     <div class="col-xs-10 col-xs-offset-1 text-center">
       <p class="undervideo-interaction__progress-text">{{calltoaction_info.optional_history.optional_index_count}} / {{calltoaction_info.optional_history.optional_total_count - 1}}</p>
       <div class="progress undervideo-interaction__progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (linked_call_to_actions_index/linked_call_to_actions_count*100) + '%' }">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': (calltoaction_info.optional_history.optional_index_count/(calltoaction_info.optional_history.optional_total_count - 1)*100) + '%' }">
         </div>
       </div>
     </div>
