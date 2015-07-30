@@ -15,28 +15,44 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     attribute :first_name, type: String
     attribute :last_name, type: String
     attribute :receipt_number, type: String
+    attribute :receipt_amount, type: String
+    attribute :product_code, type: String
+
+    attribute :minute_of_emission, type: String
+    attribute :hour_of_emission, type: String
+
     attribute :day_of_emission, type: String
     attribute :month_of_emission, type: String
     attribute :year_of_emission, type: String
-    attribute :day_of_birth, type: String
+    
+    attribute :day_of_birth, type: String 
     attribute :month_of_birth, type: String
     attribute :year_of_birth, type: String
-    attribute :product_code, type: String
 
-    validates_presence_of :first_name, :last_name, :receipt_number, :product_code
+    validates_presence_of :first_name, :last_name, :receipt_number, :product_code, :receipt_amount
     validate :date_of_emission
+    validate :time_of_emission
     validate :birth_date
-    
+    validate :receipt_amout_comma
+
     def date_of_emission
       if day_of_emission.blank? || month_of_emission.blank? || year_of_emission.blank?
         errors.add(:date_of_emission, "non può essere lasciata in bianco")
       end
-    end    
+    end  
+
     def birth_date
       if day_of_birth.blank? || month_of_birth.blank? || year_of_birth.blank?
         errors.add(:birth_date, "non può essere lasciata in bianco")
       end
-    end                      
+    end  
+
+    def time_of_emission
+      if minute_of_emission.blank? || hour_of_emission.blank?
+        errors.add(:time_of_emission, "non può essere lasciata in bianco")
+      end
+    end  
+
   end
 
   def contest
@@ -73,19 +89,25 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       user_params[:month_of_birth] = current_user.month_of_birth
       user_params[:year_of_birth] = current_user.year_of_birth
     end 
+    user_params[:year_of_emission] = "2015"
 
     @contest_identitycollection_user = ContestIdentityCollectionUser.new(user_params)
     if @contest_identitycollection_user.valid?
       aux = current_user.aux || {}
 
-      day_of_emission = user_params[:day_of_emission]
-      month_of_emission = user_params[:month_of_emission]
+      minute_of_emission = sprintf '%02d', user_params[:minute_of_emission]
+      hour_of_emission = sprintf '%02d', user_params[:hour_of_emission]
+
+      day_of_emission = sprintf '%02d', user_params[:day_of_emission]
+      month_of_emission = sprintf '%02d', user_params[:month_of_emission]
       year_of_emission = user_params[:year_of_emission]
 
       product_hash = {
         receipt_number: user_params[:receipt_number],
         product_code: user_params[:product_code],
-        date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}"
+        date_of_emission: "#{year_of_emission}/#{month_of_emission}/#{day_of_emission}",
+        time_of_emission: "#{hour_of_emission}:#{minute_of_emission}",
+        receipt_amount: user_params[:receipt_amount]
       }
 
       (aux["products"] ||= []) << product_hash
