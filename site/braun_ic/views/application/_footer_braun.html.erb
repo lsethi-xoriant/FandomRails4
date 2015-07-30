@@ -19,6 +19,9 @@
           <a ng-if="isAnchor(item.extra_fields.url)" href="javascript: void(0)" ng-click="scrollTo(item.extra_fields.url)">{{item.title}}</a>
           <a ng-if="!isAnchor(item.extra_fields.url)" href="{{item.extra_fields.url}}">{{item.title}}</a>
         </p>
+        <p class="footer-container-others__menu-item" ng-if="aux.assets.extra_fields.rules">
+          <a target="_blank" href="{{aux.assets.extra_fields.rules.url}}">REGOLAMENTO</a>
+        </p>
       </div>
       <div class="col-sm-3 col-sm-offset-1 footer-container-others__address">
         <span>DE'LONGHI APPLINACES S.r.l</span><br>
