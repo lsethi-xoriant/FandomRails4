@@ -17,6 +17,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     attribute :receipt_number, type: String
     attribute :receipt_amount, type: String
     attribute :product_code, type: String
+    attribute :newsletter, type: String
 
     attribute :minute_of_emission, type: String
     attribute :hour_of_emission, type: String
@@ -33,7 +34,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     validate :date_of_emission
     validate :time_of_emission
     validate :birth_date
-    validate :receipt_amout_comma
 
     def date_of_emission
       if day_of_emission.blank? || month_of_emission.blank? || year_of_emission.blank?
@@ -75,7 +75,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       last_name: current_user.last_name,
       day_of_birth: current_user.day_of_birth,
       month_of_birth: current_user.month_of_birth,
-      year_of_birth: current_user.year_of_birth
+      year_of_birth: current_user.year_of_birth,
+      newsletter: current_user.newsletter
     )
   end 
 
@@ -102,6 +103,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       month_of_emission = sprintf '%02d', user_params[:month_of_emission]
       year_of_emission = user_params[:year_of_emission]
 
+      newsletter = user_params[:newsletter] == "true"
+
       product_hash = {
         receipt_number: user_params[:receipt_number],
         product_code: user_params[:product_code],
@@ -118,6 +121,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
           day_of_birth: user_params[:day_of_birth],
           month_of_birth: user_params[:month_of_birth],
           year_of_birth: user_params[:year_of_birth],
+          newsletter: newsletter,
           aux: aux
       )
 
