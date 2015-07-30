@@ -3,6 +3,10 @@
   display: none;
 }
 
+.nav > li > a {
+  padding: 10px 10px;
+}
+
 @media (min-width: $screen-sm-min) { 
 
   .navbar__container {
