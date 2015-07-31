@@ -73,7 +73,7 @@
       end
 
       params = request.params
-      params["page_elements"] = ["like", "comment", "share", "quiz"]
+      params["page_elements"] = nil
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       
       result = {
