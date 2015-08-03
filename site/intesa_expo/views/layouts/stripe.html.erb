@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+
+  <% calltoaction_info_list = (@calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {}) %>
+  <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
+
+  <% aux = default_intesa_expo_aux(@aux_other_params, @calltoaction_info_list) %>  
+  
+  <%= render partial: "/layouts/seo_head" %>
+
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="shortcut icon" href="/favicon/intesa_expo/favicon.ico">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  <%= stylesheet_link_tag "intesa_expo_application", :media => "all" %>
+  <%= javascript_include_tag "intesa_expo_application" %>
+
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("intesa_expo_application.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("intesa_expo_application.js").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" type="text/javascript"></script>  
+    <link href="<%= asset_path("intesa_expo_ie9.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
+
+  <link href="http://unmondopossibile.intesasanpaolo.com/stylesheets/header-footer.css" media="screen" rel="stylesheet" type="text/css">
+
+  <%= csrf_meta_tags %>
+
+  <% if get_intesa_property == 'imprese' %>
+    <meta name="google-site-verification" content="Zjk2gp5eeAu0uwgoV3y1HSXL8SuAMhXH23PACjpYvvM" />
+  <% else %>
+    <meta name="google-site-verification" content="rLFXVG7Aq4CCbuL7EGRLy2_Fnvzu1oAPpov6oEIZIDE" />
+  <% end %>
+</head>
+
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+
+  <div ng-cloak>
+
+    <%= yield %>
+
+  </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    is_last_rewards_flexslider_slide = new Object();
+    $('.relateds-flexslider').flexslider({
+      animation: "slide",
+      slideshow: false,
+      animationLoop: false,
+      touch: true,
+      itemWidth: 215, //258
+      itemMargin: 15,
+      controlNav: false,
+      prevText: "",
+      nextText: "",
+      start: function(slider) {
+        if(slider.pagingCount == 1) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        }
+      },
+      before: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+        $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+      },
+      after: function(slider) {
+        if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+          $(slider).find(".flex-viewport-shadow").addClass("hidden");
+        } else {
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        }
+        
+        //_gaq.push(['_trackEvent','Navigation', $(slider).attr("data-title"),'arrow']);
+        
+      },
+      end: function(slider) {
+        is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+      }
+    });
+  });
+
+</script>
+  
+<%= render partial: "/application/ga" %>
+
+</body>
+</html>

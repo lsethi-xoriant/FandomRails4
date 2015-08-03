@@ -166,6 +166,7 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('intesa_expo')) do
     scope module: "sites" do
       scope module: "intesa_expo" do
+        get "/stripe/:name", to: "application#iframe_stripe"
         get "/", to: "application#index"
         get "/live", to: "application#live"
         get "/about", :to => "application#about"
