@@ -270,6 +270,11 @@ p {
   }
 }
 
+.btn-green-iw {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 @media (max-width: $screen-md-min) {
   .iw_t1 {
     margin-top: 3px;
@@ -286,8 +291,6 @@ p {
   }
   .btn-green-iw {
     font-size: 12px;
-    padding-left: 15px;
-    padding-right: 15px;
   }
   .profile-container__iw-text {
     margin-top: 45px;
