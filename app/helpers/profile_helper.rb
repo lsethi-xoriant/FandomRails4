@@ -1,5 +1,34 @@
 module ProfileHelper
 
+  def current_avatar size = "large"
+    user_avatar(current_user, size)
+  end
+
+  def user_avatar user, size = "large"
+    if !anonymous_user?(user) && user.avatar_selected_url.present?
+      avatar = user.avatar_selected_url
+      if (user.avatar_selected || "upload").include?("facebook")
+        avatar = "#{user.avatar_selected_url}?type=#{size}"
+      end
+      avatar
+    else
+      anon_avatar()
+    end
+  end
+
+  def anon_avatar
+    if $site.id == "ballando"
+      ActionController::Base.helpers.asset_path("ballando_anon.png")
+    else
+      assets_tag = Tag.find_by_name("assets")
+      if assets_tag.present? && assets_tag.extra_fields.present? && assets_tag.extra_fields["anon_avatar"].present?
+        assets_tag.extra_fields["anon_avatar"]["url"]
+      else
+        ActionController::Base.helpers.asset_path("anon.png")
+      end
+    end
+  end
+
   def get_level_number()
     property = get_property()
     if property.present?

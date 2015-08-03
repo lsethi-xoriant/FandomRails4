@@ -234,7 +234,7 @@ module DisneyHelper
 
       max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
       max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
-      user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{cache_timestamp}_#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}")
+      user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{cache_timestamp}_#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}", {})
 
       if current_user
         calltoaction_evidence_info = cache_forever(user_cache_key) do
