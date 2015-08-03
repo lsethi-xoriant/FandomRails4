@@ -46,19 +46,4 @@ module GalleryHelper
       gallery_carousel
   end
   
-  
-  def get_gallery_ctas_carousel
-    cache_medium(get_carousel_gallery_cache_key) do
-      gallery_tag_ids = get_tags_with_tag("gallery").map{ |t| t.id}
-      params = {
-        conditions: { 
-          without_user_cta: true 
-        }
-      }
-      
-      galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
-      construct_cta_gallery_info(galleries, gallery_tag_ids)
-    end
-  end
-  
 end
