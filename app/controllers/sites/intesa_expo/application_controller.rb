@@ -8,6 +8,8 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       "stripe" => get_intesa_expo_ctas_with_tag(params[:name])
     }
 
+    @iframe_stripe = true
+
     render '/application/iframe_stripe', :layout => 'stripe' 
   end
   
