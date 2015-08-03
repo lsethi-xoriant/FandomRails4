@@ -92,6 +92,16 @@
   </div>
 
 <script type="text/javascript">
+  window.addEventListener("message", receiveMessage, false);
+
+  function receiveMessage(event) {
+    if(event.data == "scrollToTop") {
+      $('html, body').animate({
+        scrollTop: $("#iframe-container").offset().top
+      }, 500);
+    }
+  }
+
   $(document).ready(function() {
     is_last_rewards_flexslider_slide = new Object();
     $('.relateds-flexslider').flexslider({
