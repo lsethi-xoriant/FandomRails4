@@ -1,0 +1,20 @@
+<% content_for :body_class, "small-body" %>
+<div class="small-container">
+  <%= render partial: "/application/navbar" %>
+</div>
+
+<div class="contest-1-container contest-2-container-sp">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="contest-title">Abbiamo memorizzato il tuo scontrino e stai partecipando all'estrazione della Identity Collection</p>
+      </div>
+      <div class="col-sm-12">
+        <img class="contest-img" ng-src="{{aux.assets.extra_fields.contest_identitycollection_success.url}}">
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 text-center">
+        <a class="btn btn-green btn-lg contest-btn" href="/concorso_identitycollection">INVIA UN NUOVO SCONTRINO</a>
+      </div>
+    </div>
+  </div>
+</div>

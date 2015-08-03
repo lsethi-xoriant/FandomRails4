@@ -7,9 +7,6 @@ module Fandom
       assets_precompile: ['ballando_application.css', 'ballando_application.js', 'ballando_application_light.js'],
       periodicity_kinds: [PERIOD_KIND_WEEKLY],
       required_attrs: ["username", "privacy"],
-      assets: {
-        "anon_avatar" => "ballando_anon.png"
-      },
       environment: { 
         'EMAIL_ADDRESS' => 'noreply@ballando.it', 
       }

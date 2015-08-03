@@ -13,6 +13,7 @@ Fandom::Application.routes.draw do
       scope module: "braun_ic" do
         get "/concorso", to: "application#contest"
         get "/concorso_identitycollection", to: "application#contest_identitycollection"
+        get "/concorso_identitycollection_success", to: "application#contest_identitycollection_success"
         post "/concorso_identitycollection/update", to: "application#contest_identitycollection_update"
         post "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
         get "/", to: "application#index"
@@ -329,11 +330,11 @@ Fandom::Application.routes.draw do
   get "/browse/contents/:tagname", :to => "browse#index"
   get "/browse/search", :to => "browse#search"
   get "/browse/fullscreen", :to => "browse#index_fullscreen"
-  
+
   get "/gallery", :to => "gallery#index"
   get "/gallery/:id", :to => "gallery#show"
   get "/gallery/how_to/:id", :to => "gallery#how_to"
-  
+
   # get "/classifica/:id", :to => "ranking#show"
   get "classifiche", :to => "ranking#show_rankings_page"
   get "bootcamp", :to => "ranking#show_vote_rankings_page"

@@ -90,6 +90,7 @@
             <label class="col-sm-3 control-label">Codice prodotto</label>
             <div class="col-sm-9">
               <% date_array = @products.map { |date| [date, date] } %>
+              <% date_array.unshift ["Scegli il prodotto", ""] %>
               <%= f.select :product_code, options_for_select(date_array, @contest_identitycollection_user[:product_code]), {}, { class: "form-control"} %>
             </div>
           </div>
@@ -100,26 +101,51 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-3 control-label">Importo</label>
+            <div class="col-sm-9">
+              <%= f.text_field :receipt_amount, :class => "form-control", :placeholder => "59,90" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Ora di emissione</label>
+            <div class="col-sm-9">
+              <div class="row">
+                <div class="col-sm-4">
+                  <% date_array = (0..23).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Ora", ""] %>
+                  <%= f.select :hour_of_emission, options_for_select(date_array, @contest_identitycollection_user[:hour_of_emission]), {}, { class: "form-control" } %>
+                </div>
+                <div class="col-sm-4">
+                  <% date_array = (0..59).map { |date| [date, date] } %>
+                  <% date_array.unshift ["Mese", ""] %>
+                  <%= f.select :minute_of_emission, options_for_select(date_array, @contest_identitycollection_user[:minute_of_emission]), {}, { class: "form-control" } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-3 control-label">Data di emissione</label>
             <div class="col-sm-9">
               <div class="row">
                 <div class="col-sm-4">
                   <% date_array = (1..31).map { |date| [date, date] } %>
                   <% date_array.unshift ["Giorno", ""] %>
-                  <%= f.select :day_of_emission, options_for_select(date_array, @contest_identitycollection_user[:day_of_emission]), {}, { class: "form-control"} %>
+                  <%= f.select :day_of_emission, options_for_select(date_array, @contest_identitycollection_user[:day_of_emission]), {}, { class: "form-control" } %>
                 </div>
                 <div class="col-sm-4">
                   <% date_array = (1..12).map { |date| [date, date] } %>
                   <% date_array.unshift ["Mese", ""] %>
-                  <%= f.select :month_of_emission, options_for_select(date_array, @contest_identitycollection_user[:month_of_emission]), {}, { class: "form-control"} %>
+                  <%= f.select :month_of_emission, options_for_select(date_array, @contest_identitycollection_user[:month_of_emission]), {}, { class: "form-control" } %>
                 </div>
                 <div class="col-sm-4">
-                  <% date_array = (2014..2015).map { |date| [date, date] } %>
-                  <% date_array.unshift ["Anno", ""] %>
-                  <%= f.select :year_of_emission, options_for_select(date_array, @contest_identitycollection_user[:year_of_emission]), {}, { class: "form-control"} %>
+                  <% date_array = [2015, 2015] %>
+                  <%= f.select :year_of_emission, options_for_select(date_array, @contest_identitycollection_user[:year_of_emission]), {}, { class: "form-control", disabled: true } %>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="checkbox text-left">
+            <label><%= f.check_box :newsletter, {}, "true", "false" %> Iscrizione alla newsletter</label>
           </div>
           <div class="col-sm-12 text-center">
             <button style="margin-top: 25px;" type="submit" class="btn btn-green btn-lg">Invia</button>            

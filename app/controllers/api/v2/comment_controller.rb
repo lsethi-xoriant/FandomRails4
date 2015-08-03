@@ -58,7 +58,7 @@
   end
   
   def append_comment
-    append_comments
+    append_comments_computation
   end
 
 end

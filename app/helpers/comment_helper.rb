@@ -91,7 +91,7 @@ module CommentHelper
     end
   end
   
-  def append_comments
+  def append_comments_computation
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
       comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_ids])
       last_comment_shown_date = params[:last_updated_at]

@@ -233,6 +233,10 @@ module CacheKeysHelper
   def get_ctas_with_tag_cache_key(tag_name, cta_max_updated_at = "")
     "ctas_with_tag_#{tag_name}_#{cta_max_updated_at}"
   end
+
+  def get_all_ctas_with_tag_cache_key(tag_name, cta_max_updated_at = "")
+    "all_ctas_with_tag_#{tag_name}_#{cta_max_updated_at}"
+  end
   
   def get_user_ctas_with_tag_cache_key(tag_name)
     "user_ctas_with_tag_#{tag_name}"
