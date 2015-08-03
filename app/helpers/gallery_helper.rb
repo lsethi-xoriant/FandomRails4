@@ -1,4 +1,16 @@
 module GalleryHelper
+
+  def adjust_params_for_gallery(params, gallery_calltoaction_id = "all")
+    params = {} unless params
+
+    params["other_params"] = {}
+    params["other_params"]["gallery"] = {}
+    params["other_params"]["gallery"]["calltoaction_id"] = gallery_calltoaction_id
+
+    params["other_params"]["gallery"]["user"] = params[:user] if params[:user].present?
+
+    params
+  end
   
   def get_gallery_ctas_count(gallery = nil)
     if gallery.nil?

@@ -33,17 +33,11 @@ class GalleryController < ApplicationController
   end
 
   def index
-
     @galleries_cta = get_gallery_ctas_carousel
 
+    params = adjust_params_for_gallery(params)
+
     gallery_calltoaction_id = "all"
-
-    params["other_params"] = {}
-    params["other_params"]["gallery"] = {}
-    params["other_params"]["gallery"]["calltoaction_id"] = "all"
-
-    params["other_params"]["gallery"]["user"] = params[:user] if params[:user].present?
-
     galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
 
     params["page_elements"] = ["like", "comment", "share"]
@@ -85,10 +79,7 @@ class GalleryController < ApplicationController
 
     gallery_calltoaction_id = cta.id
 
-    params["other_params"] = {}
-    params["other_params"]["gallery"] = { "calltoaction_id" => cta.id }
-
-    params["other_params"]["gallery"]["user"] = params[:user] if params[:user].present?
+    params = adjust_params_for_gallery(params, gallery_calltoaction_id)
 
     galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
 

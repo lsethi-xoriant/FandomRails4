@@ -802,7 +802,7 @@ module ApplicationHelper
       counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
       cta_info_list.each do |cta_info|
         cta_info["interaction_ids"].each do |interaction_id|
-          interaction = find_content_in_array_by_id(interactions, interaction_id)
+          interaction = find_content_by_id(interactions, interaction_id)
           counter = find_interaction_in_counters(counters, interaction_id)
           cta_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
         end
