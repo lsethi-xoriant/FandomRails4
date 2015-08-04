@@ -87,7 +87,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
     "Cuba", "Danimarca", "Dominica", "Ecuador", "Egitto", "El Salvador", "Emirati Arabi Uniti", "Eritrea", "Estonia", "Etiopia", "Figi", 
     "Filippine", "Finlandia", "Francia", "Gabon", "Gambia", "Georgia", "Germania", "Ghana", "Giamaica", "Giappone", "Gibuti", "Giordania", 
     "Grecia", "Grenada", "Guatemala", "Guinea", "Guinea Equatoriale", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", 
-    "Iran", "Iraq", "Irlanda", "Islanda", "Isole Marshall", "Isole Salomone", "Israele", "Kazakistan", "Kenya", "Kirghizistan", "Kiribati", 
+    "Iran", "Iraq", "Irlanda", "Islanda", "Isole Marshall", "Isole Salomone", "Israele", "Italia", "Kazakistan", "Kenya", "Kirghizistan", "Kiribati", 
     "Kosovo", "Kuwait", "Laos", "Lesotho", "Lettonia", "Libano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Lussemburgo", 
     "Madagascar", "Malawi", "Maldive", "Malesia", "Mali", "Malta", "Marocco", "Mauritania", "Mauritius", "Messico", "Micronesia", 
     "Moldavia", "Mongolia", "Montenegro", "Mozambico", "Myanmar", "Nagorno-Karabakh", "Namibia", "Nauru Yaren", "Nepal", "Nicaragua", 
