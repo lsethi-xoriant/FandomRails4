@@ -198,7 +198,7 @@ class Sites::Orzoro::CupRedeemerController < ApplicationController
         user_created_flag = true
         aux_hash = { "terms" => cache_value["identity"]["terms"], "sync_timestamp" => "" }
       else
-        aux_hash = JSON.parse(user.aux || "{}")
+        aux_hash = user.aux || "{}"
         unless aux_hash["terms"]
           aux_hash["terms"] = cache_value["identity"]["terms"]
         end
