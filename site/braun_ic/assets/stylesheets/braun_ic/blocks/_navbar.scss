@@ -1,9 +1,13 @@
 .navbar-default__container {
-  padding: 0 0 0 15px;
+  padding: 0 0 0 0;
 }
 
 .navbar-default {
   border: 0px;
+}
+
+.navbar {
+  margin-bottom: 0 !important;
 }
 
 /*
@@ -24,6 +28,22 @@
   padding: 5px;
   img { 
     height: 40px; 
+  }
+}
+
+@media (min-width: $screen-sm-min) { 
+  .navbar-header {
+    position: relative;
+    left: 15px;
+  }
+
+  .navbar-default {
+    margin-top: 15px;
+    margin-bottom: 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    background-color: transparent;
   }
 }
 

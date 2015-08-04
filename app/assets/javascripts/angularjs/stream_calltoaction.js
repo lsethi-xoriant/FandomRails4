@@ -40,6 +40,23 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.groupingArr = function(name, arr, group_size) {
+    if(angular.isUndefined($scope.groupingArrs[name])) {
+      groupingArr = []; tmpArr = [];
+      index = 1;
+      angular.forEach(arr, function(el) {
+        tmpArr.push(el);
+        if(index % group_size == 0 || index == arr.length) {
+          groupingArr.push(tmpArr);
+          tmpArr = [];
+        }
+        index++;
+      });
+      $scope.groupingArrs[name] = groupingArr;
+    }
+    return $scope.groupingArrs[name];
+  };
+
   $scope.iwWin = function() {
     return ($scope.aux.instant_win_info.win == true);
   };
@@ -400,6 +417,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.initCallToActionInfoList(calltoaction_info_list);
 
     $scope.answer_in_progress = false;
+
+    $scope.groupingArrs = {};
 
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");

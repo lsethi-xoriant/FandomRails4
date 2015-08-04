@@ -259,17 +259,6 @@ p {
   text-decoration: underline;
 }
 
-@media (min-width: $screen-md-min) { 
-  .navbar-default {
-    margin-top: 15px;
-    margin-bottom: 0;
-    position: absolute;
-    right: 0;
-    left: 0;
-    background-color: transparent;
-  }
-}
-
 .btn-green-iw {
   padding-left: 15px;
   padding-right: 15px;
