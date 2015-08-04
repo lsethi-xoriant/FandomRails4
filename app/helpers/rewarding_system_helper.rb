@@ -56,6 +56,22 @@ module RewardingSystemHelper
       self.unlocks += other.unlocks 
       self.errors += other.errors 
     end
+
+    # This method sets the outcome with max reward_name_to_counter values between self and other outcome
+    def max_outcome_for_test_interaction_prediction!(other)
+      if other.nil?
+        return
+      else
+        new_reward_counters = {}
+        self.reward_name_to_counter.each do |key, value|
+          new_reward_counters[key] = other.reward_name_to_counter[key].nil? ? value : [value, other.reward_name_to_counter[key]].max
+        end
+        other.reward_name_to_counter.each do |key, value|
+          new_reward_counters[key] ||= value
+        end
+        self.reward_name_to_counter = new_reward_counters
+      end
+    end
   end
 
   # Context used to parse and evaluate a buffer containing rules.
@@ -467,43 +483,61 @@ module RewardingSystemHelper
     outcome
   end
 
-  # Predicts the maximun outcome of a CTA.
+  # Predicts the maximum outcome of a CTA.
   #   cta - the cta
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
+
+    if is_linking?(cta.id)
+      trees, cycles = CtaForest.build_trees(cta.id)
+      if cycles.empty?
+        visited = {}
+        total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
+        trees.each do |tree|
+          max_outcome = compute_max_outcome(tree, user, visited)
+          total_outcome.max_outcome_for_test_interaction_prediction!(max_outcome)
+        end
+      end
+      [total_outcome, interaction_outcomes, sorted_interactions]
+    else
+      build_max_cta_outcome(cta, user)
+    end
+
+  end
+
+  def build_max_cta_outcome(cta, user)
+
     sorted_interactions = interactions_required_to_complete(cta)
 
     if sorted_interactions.count == 0
       [Outcome.new, [], []] 
     else
       start_time = Time.now.utc
-      
+
       interaction_outcomes = []
-      
+
       total_outcome = Outcome.new
 
       if sorted_interactions.any?
 
         first_interaction = sorted_interactions[0]
         other_interactions = sorted_interactions[1 .. -1]
-    
+
         user_interaction = get_mocked_user_interaction(first_interaction, user, true)
 
-        context = prepare_rules_and_context(user_interaction, nil)  
+        context = prepare_rules_and_context(user_interaction, nil)
         first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
 
         interaction_outcomes << first_outcome
         total_outcome.merge!(first_outcome)
-    
+
         other_interactions.each do |interaction|
           user_interaction = get_mocked_user_interaction(interaction, user, true)
           new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
           interaction_outcomes << new_outcome
           total_outcome.merge!(new_outcome)
         end
-
       end
-      
       log_outcome(total_outcome)
 
       total_time = Time.now.utc - start_time
@@ -512,9 +546,49 @@ module RewardingSystemHelper
         'cta' => cta.id, 
         'outcome_rewards' => total_outcome.reward_name_to_counter, 
         'outcome_unlocks' => total_outcome.unlocks.to_a })
-               
+
       [total_outcome, interaction_outcomes, sorted_interactions]
     end
+
+  end
+
+  def compute_max_outcome(tree, user, visited)
+
+    total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(CallToAction.find(tree.value), user)
+    visited = { tree.value => total_outcome }
+
+    if tree.children.any?
+
+      childrens_outcomes = []
+      tree.children.each do |child|
+        if visited[child.value].nil?
+          visited[child.value] = compute_max_outcome(child, user, visited)          
+        end
+        childrens_outcomes << visited[child.value]
+      end
+
+      childrens_outcomes.each_with_index do |outcome, i|
+        if i != 0
+          childrens_outcomes[0].max_outcome_for_test_interaction_prediction!(outcome)
+        end
+      end
+
+      total_outcome.reward_name_to_counter = sum_hashes_values(total_outcome.reward_name_to_counter, childrens_outcomes[0].reward_name_to_counter)
+      total_outcome
+
+    else # it's a leaf node
+
+      if visited[tree.value]
+        visited[tree.value]
+      else
+        cta = CallToAction.find(tree.value)
+        total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
+        visited[tree.value] = total_outcome
+        total_outcome
+      end
+
+    end
+
   end
 
 end
