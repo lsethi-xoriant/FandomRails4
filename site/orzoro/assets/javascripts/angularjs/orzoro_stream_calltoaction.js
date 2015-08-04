@@ -33,7 +33,7 @@ function OrzoroStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interva
     $scope.calltoaction_info.hide_class = "fadeout_animation";
     $timeout(function() { 
       //$http.get("/next_calltoaction" , { params: { calltoaction_id: $scope.calltoaction_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction }})   
-      $http.post("/next_calltoaction" , { calltoaction_id: $scope.parent_cta_info.calltoaction.id, category_id: $scope.aux.calltoaction_category.id, direction: direction })  
+      $http.post("/next_calltoaction" , { calltoaction_id: $scope.getParentCtaId($scope.calltoaction_info), category_id: $scope.aux.calltoaction_category.id, direction: direction })  
         .success(function(data) { 
 
           $scope.initCallToActionInfoList(data.calltoaction);

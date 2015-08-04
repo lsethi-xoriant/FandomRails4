@@ -71,7 +71,7 @@ Fandom::Application.routes.draw do
         post "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         get "/newsletter/subscribe", :to => "newsletter#subscribe"
-        get "/newsletter/subscription_request", :to => "newsletter#send_request"
+        post "/newsletter/subscription_request", :to => "newsletter#send_request"
         get "/newsletter/request_completed", :to => "newsletter#request_completed"
 
         get "/faq", :to => "application#faq"
