@@ -44,6 +44,10 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def adjust_link_with_https(link)
+    link.include?("https://") ? link : link.gsub("//", "https://")
+  end
+
   def darken_color(hex_color, amount = 0.8)
     if hex_color
       hex_color = hex_color.gsub('#','')
