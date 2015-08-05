@@ -114,8 +114,8 @@ class ActiveSupport::TestCase
     end
   end
 
-  def get_answer_points(points, text)
-    page.find("button", :text => text).click
+  def get_answer_points(points, button_type, text)
+    page.find(button_type, :text => text).click
 
     wait_for_angular
 
