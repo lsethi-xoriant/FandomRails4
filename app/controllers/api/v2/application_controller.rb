@@ -43,6 +43,11 @@
         params["other_params"]["gallery"]["user"] = params[:user]
       end
       
+      if params[:calltoaction_id]
+        params["other_params"]["gallery"]["calltoaction_id"] = params[:calltoaction_id]
+        gallery_tag = get_tag_with_tag_about_call_to_action(CallToAction.find(params[:calltoaction_id]), "gallery").first
+      end
+      
       params["page_elements"] = nil
       calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
       
@@ -52,7 +57,8 @@
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
         'galleries' => get_api_gallery_ctas_carousel,
-        'gallery_ctas_count' => get_gallery_ctas_count()
+        'gallery_ctas_count' => get_gallery_ctas_count(),
+        'gallery_tag' => gallery_tag
       }
       
       respond_with result.to_json
