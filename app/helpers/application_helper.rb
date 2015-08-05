@@ -44,6 +44,10 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def adjust_link_with_https(link)
+    link.include?("https://") ? link : link.gsub("//", "https://")
+  end
+
   def darken_color(hex_color, amount = 0.8)
     if hex_color
       hex_color = hex_color.gsub('#','')
@@ -802,7 +806,7 @@ module ApplicationHelper
       counters = ViewCounter.where(ref_type: 'interaction', ref_id: interaction_ids)
       cta_info_list.each do |cta_info|
         cta_info["interaction_ids"].each do |interaction_id|
-          interaction = find_content_in_array_by_id(interactions, interaction_id)
+          interaction = find_content_by_id(interactions, interaction_id)
           counter = find_interaction_in_counters(counters, interaction_id)
           cta_info[interaction.resource_type.downcase] = counter ? counter.counter : 0
         end
@@ -1031,6 +1035,49 @@ module ApplicationHelper
         other_interactions
       end
     end
+  end
+
+  # Public: Recursive method to sum integer values of same structured hashes.
+  # More precisely, second hash keys have to be a subset of first's.
+  #
+  # Examples
+  # 
+  #    sum_hashes_values({ "eggs" => 2, "chocolate_bars" => 1 }, { "eggs" => 3, "chocolate_bars" => 3 })
+  #    # => { "eggs" => 5, "chocolate_bars => 4" }
+  #
+  #    sum_hashes_values({ "pears" => 2, "apples" => { "red" => 1, "yellow" => 2 }, "bananas" => 4 }, 
+  #                      { "pears" => 3, "apples" => { "red" => 3, "yellow" => 2 } })
+  #    # => { "pears" => 5, "apples" => { "red" => 4, "yellow" => 4 }, "bananas" => 4 }
+  #
+  # Returns the summed values hash
+  def sum_hashes_values(hash_1, hash_2)
+    hash_1.merge(hash_2) do |k, value_1, value_2|
+      if value_1.class == Hash
+        sum_hashes_values(value_1, value_2)
+      else
+        value_1 + value_2
+      end
+    end
+  end
+
+  # Public: Recursive method to collect every Hash key with referring to a non-Hash value 
+  #
+  # Examples
+  # 
+  #    get_keys_with_simple_value({ "water" => 1, "red_wines" => { "cabernet" => 5, "merlot" => 2 }, "white_wines" => { "chardonnay" => 3, "moscato" => 4 } })
+  #    # => ["water", "cabernet", "merlot", "chardonnay", "moscato"]
+  #
+  # Returns the keys array
+  def get_keys_with_simple_value(hash)
+    res = []
+    hash.each do |key, value|
+      if value.class == Hash
+        res += get_keys_with_simple_value(value)
+      else
+        res << key
+      end
+    end
+    res
   end
   
 end

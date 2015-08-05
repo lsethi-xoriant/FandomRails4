@@ -54,7 +54,7 @@ class Sites::Orzoro::NewsletterController < ApplicationController
         user_created_flag = true
         aux_hash = { "terms" => aux_params["terms"], "sync_timestamp" => "" }
       else
-        aux_hash = JSON.parse(user.aux) rescue {}
+        aux_hash = user.aux || {}
       end
 
       if new_user || user.confirmation_token

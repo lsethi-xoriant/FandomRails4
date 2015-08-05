@@ -8,6 +8,31 @@ module UserInteractionHelper
     end
   end
 
+  def adjust_user_ctas(cta_info_list)
+    user_ids = []
+    cta_info_list.each do |cta_info|
+      if cta_info["calltoaction"]["user"].present?
+        user_ids << cta_info["calltoaction"]["user"][:id]
+      end
+    end
+    if user_ids.any?
+      users = User.where(id: user_ids)
+      cta_info_list.each do |cta_info|
+        if cta_info["calltoaction"]["user"].present?
+          user = find_content_by_id(users, cta_info["calltoaction"]["user"][:id])       
+          cta_info["calltoaction"]["user"] = {
+            username: user.username,
+            avatar: user_avatar(user),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            is_anonymous: anonymous_user?(user),
+            is_stored_anonymous: stored_anonymous_user?(user)
+          }
+        end
+      end
+    end
+  end
+
   def extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list, resource_type = nil)
     interaction_ids = []
     calltoaction_info_list.each do |calltoaction_info|
@@ -157,7 +182,7 @@ module UserInteractionHelper
   end
 
   def find_in_calltoactions(calltoactions, calltoaction_id)
-    find_content_in_array_by_id(calltoactions, calltoaction_id)
+    find_content_by_id(calltoactions, calltoaction_id)
   end
 
   def find_in_user_interactions(user_interactions, interaction_id)
@@ -199,7 +224,7 @@ module UserInteractionHelper
     result
   end
 
-  def find_content_in_array_by_id(elements, id)
+  def find_content_by_id(elements, id)
     content = nil
     elements.each do |element|
       if element.id == id

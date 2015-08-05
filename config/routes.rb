@@ -71,7 +71,7 @@ Fandom::Application.routes.draw do
         post "/next_calltoaction", to: "call_to_action#next_calltoaction_in_category", defaults: { format: 'json' }
         post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
         get "/newsletter/subscribe", :to => "newsletter#subscribe"
-        get "/newsletter/subscription_request", :to => "newsletter#send_request"
+        post "/newsletter/subscription_request", :to => "newsletter#send_request"
         get "/newsletter/request_completed", :to => "newsletter#request_completed"
 
         get "/faq", :to => "application#faq"
@@ -166,6 +166,7 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('intesa_expo')) do
     scope module: "sites" do
       scope module: "intesa_expo" do
+        get "/stripe/:name", to: "application#iframe_stripe"
         get "/", to: "application#index"
         get "/live", to: "application#live"
         get "/about", :to => "application#about"

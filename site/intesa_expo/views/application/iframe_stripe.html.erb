@@ -1,0 +1,16 @@
+<div class="container-fluid__blue stripe-container">
+  <div class="container main-container container">
+    <div class="row main-row">
+      <div class="col-sm-12">
+        <div class="relateds-flexslider" data-title="{{aux.stripe.title}}">
+          <div class="flex-viewport-shadow visible-sm"></div>
+          <ul class="slides">
+            <li class="relateds-flexslider__item" ng-repeat="content in aux.stripe.contents">
+              <%= render partial: "/application/content_preview" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>  
+  </div>
+</div>

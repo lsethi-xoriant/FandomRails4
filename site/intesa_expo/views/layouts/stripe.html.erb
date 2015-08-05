@@ -38,70 +38,15 @@
   <% end %>
 </head>
 
-<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
-
-  <% if !cookies[:IntesaSanpaoloTracciatura] %>
-    <% if aux && aux["tag_menu_item"] == "imprese-home" %>
-      <script type="text/javascript">
-        var axel = Math.random() + "";
-        var a = axel * 10000000000000;
-        document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
-      </script>
-      <noscript>
-      <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p00;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
-      </noscript>
-    <% elsif aux && aux["tag_menu_item"] == "home" %>
-      <script type="text/javascript">
-        var axel = Math.random() + "";
-        var a = axel * 10000000000000;
-        document.write('<iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
-      </script>
-      <noscript>
-      <iframe src="http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p0;ord=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
-      </noscript>
-    <% elsif has_cta_spotlight?(@calltoaction_info_list.present? ? @calltoaction_info_list.first : nil) %>
-      <%= @calltoaction_info_list.first["calltoaction"]["extra_fields"]["spotlight"].html_safe %>
-    <% end %>
-  <% end %>
+<body ng-app="FandomApp" class="bg-fluid iframe-body <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
   <div ng-cloak>
 
-    <div id="header"></div>
-
-    <div class="header-container">
-      <%= render partial: "/application/header" %>
-    </div>
-    
-    <div class="container-fluid stripe-darkwhite">
-      <div class="container main-container">
-        <div class="row">
-          <div class="col-xs-12 navbar__search">
-            <%= render partial: "/application/search", locals: { query: (defined? @query).nil? ? nil : @query } %>
-        </div>
-      </div>
-    </div>
-    </div>
-
     <%= yield %>
-
-    <%= render partial: "/application/footer" %>
-    <%= render partial: "/application/cookies_bar" %>
-
-    <div id="footer"></div>
 
   </div>
 
 <script type="text/javascript">
-  window.addEventListener("message", receiveMessage, false);
-
-  function receiveMessage(event) {
-    if(event.data == "scrollToTop") {
-      $('html, body').animate({
-        scrollTop: $("#iframe-container").offset().top
-      }, 500);
-    }
-  }
-
   $(document).ready(function() {
     is_last_rewards_flexslider_slide = new Object();
     $('.relateds-flexslider').flexslider({
@@ -137,11 +82,6 @@
         is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
       }
     });
-
-    //$.ajaxSettings.cache = false;
-    //$('#header').load("http://unmondopossibile.intesasanpaolo.com/snippets/header?color=3d6b80"); 
-    //$('#footer').load("http://unmondopossibile.intesasanpaolo.com/snippets/footer");
-    
   });
 
 </script>

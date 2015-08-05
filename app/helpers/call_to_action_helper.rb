@@ -352,16 +352,8 @@ module CallToActionHelper
           }
         end
 
-        if calltoaction.user.present?
-          user_info = {
-            username: calltoaction.user.username,
-            avatar: user_avatar(calltoaction.user),
-            first_name: calltoaction.user.first_name,
-            last_name: calltoaction.user.last_name,
-            is_anonymous: anonymous_user?(calltoaction.user),
-            is_stored_anonymous: stored_anonymous_user?(calltoaction.user)
-          }
-        end
+        # user cta adjusted out of cache block
+        user_info = { id: calltoaction.user.id } if calltoaction.user.present?
 
         cta_extra_fields = get_extra_fields!(calltoaction)
         
@@ -415,7 +407,6 @@ module CallToActionHelper
               "interaction_info_list" => interaction_info_list,
               "extra_fields" => get_extra_fields!(calltoaction),
               "activated_at" => calltoaction.activated_at,
-              "user_id" => calltoaction.user_id,
               "user" => user_info,
               "updated_at" => calltoaction.updated_at
             },
@@ -496,6 +487,7 @@ module CallToActionHelper
     end
 
     adjust_counters(interaction_ids, calltoaction_info_list, comments)
+    adjust_user_ctas(calltoaction_info_list)
 
     if !params[:only_cover]
       calltoaction_info_list.collect! do |calltoaction_info|

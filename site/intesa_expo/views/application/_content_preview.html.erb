@@ -1,4 +1,4 @@
-<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.type == 'cta' && content.layout == 'default'">
+<a href="{{linkTo(content.detail_url, stripe.key)}}" <%= "target=_blank" if @iframe_stripe %> ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.type == 'cta' && content.layout == 'default'">
   <img class="cta__flag" ng-src="{{content.aux.flag.extra_fields['image_' + aux.language].url}}" ng-if="content.aux.flag">
   <div class="content-preview__item-panel" ng-class="{'content-preview__border-bottom': (content.aux.miniformat['label_background'] != null)}" ng-style="{'border-color': content.aux.miniformat['label_background']}"> 
     <div class="row">
@@ -29,7 +29,7 @@
   </div>
 </a>
 
-<a class="relateds-flexslider__item--narrow--a" ng-href="{{linkToValidFrom(content)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.layout == 'narrow-img' || content.type == 'tag'" style="position: relative;">
+<a class="relateds-flexslider__item--narrow--a" <%= "target=_blank" if @iframe_stripe %> ng-href="{{linkToValidFrom(content)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.layout == 'narrow-img' || content.type == 'tag'" style="position: relative;">
   <div class="content-preview__item-panel--narrow">
     <div ng-if="!isContentValid(content)" class="content-preview__coming-soon__container--narrow">
       <div class="content-preview__coming-soon--narrow">
@@ -45,7 +45,7 @@
   <!--<p class="relateds-flexslider__item-title--narrow">{{content.extra_fields.content_title}}</p>-->
 </a>
 
-<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.layout == 'narrow-img-text'">
+<a href="{{linkTo(content.detail_url, stripe.key)}}" <%= "target=_blank" if @iframe_stripe %> ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug, $event)" ng-if="content.layout == 'narrow-img-text'">
   <div class="content-preview__item-panel--narrow"> 
     <div class="row">
       <div class="col-xs-12">
@@ -72,7 +72,7 @@
   <%= render partial: "application/press_content_preview" %>
 </a>
 
-<a href="{{linkTo(content.detail_url, stripe.key)}}" ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug)" ng-if="content.layout == 'press-release'"> 
+<a href="{{linkTo(content.detail_url, stripe.key)}}" <%= "target=_blank" if @iframe_stripe %> ng-click="intesaExpoGa('Navigation', <%= @category ? "'#{@category.slug}'" : "stripe.slug" %>, content.slug)" ng-if="content.layout == 'press-release'"> 
   <%= render partial: "application/press_release_content_preview" %>
 </a>
 

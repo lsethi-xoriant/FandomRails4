@@ -24,22 +24,21 @@ class GalleryController < ApplicationController
     end
   end
 
-  def index
+  def init_galleries_user_cta_count(gallery_calltoaction_id, user_id = nil)
+    if user_id
+      get_ctas(nil, gallery_calltoaction_id).where("user_id = ?", user_id).count
+    else
+      get_ctas(nil, gallery_calltoaction_id).count
+    end
+  end
 
+  def index
     @galleries_cta = get_gallery_ctas_carousel
 
-    params["other_params"] = {}
-    params["other_params"]["gallery"] = {}
-    params["other_params"]["gallery"]["calltoaction_id"] = "all"
+    params = adjust_params_for_gallery(params)
 
-    if params[:user]
-      params["other_params"]["gallery"]["user"] = params[:user]
-      galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(nil, params[:user])
-    else
-      galleries_user_cta, galleries_user_cta_count = cache_short(get_index_gallery_ctas_cache_key) { 
-        [get_gallery_ctas(), get_gallery_ctas_count()] 
-      }
-    end
+    gallery_calltoaction_id = "all"
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
 
     params["page_elements"] = ["like", "comment", "share"]
     @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
@@ -62,8 +61,9 @@ class GalleryController < ApplicationController
   end
   
   def get_ugc_number_gallery_map(tag_ids)
-    cta_active_ids = CallToAction.active.pluck(:id)
-    CallToActionTag.where("tag_id in (?) AND call_to_action_id in (?)", tag_ids, cta_active_ids).group(:tag_id).count
+    gallery_calltoaction_id = "all"
+    cta_active_ids = get_ctas(nil, gallery_calltoaction_id).pluck(:id)
+    CallToActionTag.where(tag_id: tag_ids, call_to_action_id: cta_active_ids).group(:tag_id).count
   end
   
   def show
@@ -77,17 +77,11 @@ class GalleryController < ApplicationController
     @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
-    params["other_params"] = {}
-    params["other_params"]["gallery"] = { "calltoaction_id" => cta.id }
+    gallery_calltoaction_id = cta.id
 
-    if params[:user]
-      galleries_user_cta, galleries_user_cta_count = get_user_gallery_ctas(@gallery_tag, params[:user])
-      params["other_params"]["gallery"]["user"] = params[:user]
-    else
-      galleries_user_cta, galleries_user_cta_count = cache_short(get_gallery_ctas_cache_key(@gallery_tag.id)) { 
-        [get_gallery_ctas(@gallery_tag), get_gallery_ctas_count(@gallery_tag)]
-      }
-    end
+    params = adjust_params_for_gallery(params, gallery_calltoaction_id)
+
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
 
     params["page_elements"] = ["like", "comment", "share"]
     gallery_tag_name = @gallery_tag.name
@@ -121,13 +115,13 @@ class GalleryController < ApplicationController
   end
   
   def construct_cta_gallery_info(galleries, gallery_tag_ids)
-    ugc_numebr_in_gallery_map = get_ugc_number_gallery_map(gallery_tag_ids)
+    ugc_number_in_gallery_map = get_ugc_number_gallery_map(gallery_tag_ids)
     galleries_info = []
     galleries.each do |gallery|
       gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
       galleries_info << {
         cta: gallery,
-        count: ugc_numebr_in_gallery_map[gallery_tag.id]
+        count: ugc_number_in_gallery_map[gallery_tag.id]
       }
     end
     galleries_info

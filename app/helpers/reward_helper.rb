@@ -110,7 +110,7 @@ module RewardHelper
     reward = get_reward_from_cache(reward_name)
     if reward
       winnable_outcome, interaction_outcomes, sorted_interactions = predict_max_cta_outcome(calltoaction, user)
-      
+
       interaction_outcomes_and_interaction = interaction_outcomes.zip(sorted_interactions)
 
       reward_status_images = Array.new

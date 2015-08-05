@@ -21,7 +21,7 @@ class Sites::Orzoro::Easyadmin::UserController < Easyadmin::EasyadminController
     end
     request_list = []
     users.each do |user|
-      cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
+      cups_redeemed = user.aux["cup_redeem"] rescue nil
       if cups_redeemed
         cups_redeemed.each do |entry|
           if entry["receipt"]

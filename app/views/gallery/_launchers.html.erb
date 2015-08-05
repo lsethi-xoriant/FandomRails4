@@ -7,7 +7,7 @@
           <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
             <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
             <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-            <p class="filters__title--gallery-counter"><%= gallery[:count] - 1 %> contenuti</p>
+            <p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
           <% end %>
           </li>
         <% end %>
@@ -21,7 +21,7 @@
           <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
             <div class="filters__gallery-item" style="background-image: url('<%= gallery[:cta].thumbnail(:medium) %>')">
               <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-              <p class="filters__title--gallery-counter"><%= gallery[:count] - 1 %> contenuti</p>
+              <p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
             </div>
           <% end %>
         </li>

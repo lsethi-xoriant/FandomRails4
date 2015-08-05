@@ -53,7 +53,7 @@ namespace :orzoro_tasks do
     csv = "\"PK_ID_Tprov\";\"PK_ID_Iprov\";\"PK_ID_Cprov\";\"LASTNAME\";\"FIRSTNAME\";\"RAGIONE_SOCIALE\";\"ADDRESS\";\"ADDRESS_NUM\";\"ZIPCODE\";\"CITY\";\"PROVINCE\";\"COUNTRY\";\"GENDER\";\"EMAIL\";\"FAMILY_MEMBERS_COUNT\";\"PRESENCE_OF_CHILDREN\";\"PRESENCE_OF_ANIMAL\";\"MARITAL_STATUS\";\"ACTUAL_JOB\";\"STUDY_LEVEL\";\"BIRTH_DATE\";\"AGE\";\"BIRTH_CITY\";\"BIRTH_PROVINCE\";\"PHONE_NUMBER_01\";\"PHONE_NUMBER_02\";\"MOBILE_NUMBER_01\";\"USERNAME\";\"DATE_REGISTRATION\";\"CHILD_WAITING\";\"CHILDREN_COUNT\";\"CHILDREN_NAME_01\";\"CHILDREN_GENDER_01\";\"CHILDREN_DOBDATE_01\";\"CHILDREN_NAME_02\";\"CHILDREN_GENDER_02\";\"CHILDREN_DOBDATE_02\";\"CHILDREN_NAME_03\";\"CHILDREN_GENDER_03\";\"CHILDREN_DOBDATE_03\";\"CHILDREN_NAME_04\";\"CHILDREN_GENDER_04\";\"CHILDREN_DOBDATE_04\";\"CHILDREN_NAME_05\";\"CHILDREN_GENDER_05\";\"CHILDREN_DOBDATE_05\";\"CHILDREN_NAME_06\";\"CHILDREN_GENDER_06\";\"CHILDREN_DOBDATE_06\";\"DOGS_COUNT\";\"CATS_COUNT\";\"RODENS_COUNT\";\"FISH_COUNT\";\"BIRDS_COUNT\";\"OTHER_SMALL_PETS_COUNT\";\"OTHER_SMALL_PETS_DESC\";\"DOG_NAME_01\";\"DOG_CLASS_01\";\"DOG_DOBDATE_01\";\"DOG_SIZE_01\";\"DOG_CIBO_PREF_01\";\"DOG_NAME_02\";\"DOG_CLASS_02\";\"DOG_DOBDATE_02\";\"DOG_SIZE_02\";\"DOG_CIBO_PREF_02\";\"DOG_NAME_03\";\"DOG_CLASS_03\";\"DOG_DOBDATE_03\";\"DOG_SIZE_03\";\"DOG_CIBO_PREF_03\";\"CAT_NAME_01\";\"CAT_CLASS_01\";\"CAT_DOBDATE_01\";\"CAT_CIBO_PREF_01\";\"CAT_GOURMET_PREF_01\";\"CAT_NAME_02\";\"CAT_CLASS_02\";\"CAT_DOBDATE_02\";\"CAT_CIBO_PREF_02\";\"CAT_GOURMET_PREF_02\";\"CAT_NAME_03\";\"CAT_CLASS_03\";\"CAT_DOBDATE_03\";\"CAT_CIBO_PREF_03\";\"CAT_GOURMET_PREF_03\";\"TIPO_LOCALE\";\"PROFILO_PROFESSIONALE\";\"DOVE_CONOSC_PRODOTTI\";\"PRODOTTO_INTERESSE\";\"OPTIN_CMZ_MIO_BC\";\"OPTIN_CMZ_MIO_BC_DATE\";\"HOW_REACH_MIO_BC\";\"WHY_OPTOUT_NEWS_CROSS\";\"WHY_OPTOUT_NEWS_BRAND\";\"VAR_DATA_01\";\"VAR_DATA_02\";\"VAR_DATA_03\";\"VAR_DATA_04\";\"VAR_DATA_05\";\"NUM_DATA_01\";\"NUM_DATA_02\";\"NUM_DATA_03\";\"NUM_DATA_04\";\"NUM_DATA_05\";\"FLAG_DATA_01\";\"FLAG_DATA_02\";\"FLAG_DATA_03\";\"FLAG_DATA_04\";\"FLAG_DATA_05\";\"NEWSLETTER_TYPE_01\";\"NEWSLETTER_TYPE_02\";\"NEWSLETTER_TYPE_03\";\"NEWSLETTER_TYPE_04\";\"NEWSLETTER_TYPE_05\";\"INFO_TYPE_01\";\"INFO_TYPE_02\";\"INFO_TYPE_03\";\"INFO_TYPE_04\";\"INFO_TYPE_05\";\"GOLD_QUESTION_01\";\"GOLD_QUESTION_02\";\"GOLD_QUESTION_03\";\"GOLD_QUESTION_04\";\"GOLD_QUESTION_05\";\"GOLD_QUESTION_06\";\"GOLD_QUESTION_07\";\"GOLD_QUESTION_08\";\"GOLD_QUESTION_09\";\"GOLD_QUESTION_10\";\"GOLD_QUESTION_11\";\"GOLD_QUESTION_12\";\"GOLD_QUESTION_13\";\"GOLD_QUESTION_14\";\"GOLD_QUESTION_15\";\"PROFILAZIONE_BRAND\";\"AGE_13\";\"PRIVACY_NES\";\"PRIVACY_NWI\";\"OPTIN_CMZ_BRAND\";\"OPTIN_CMZ_NES_CROSS\";\"OPTIN_CMZ_NWI_CROSS\";\"OPTIN_MOBILE\";\"OPTIN_MOBILE_FASCIA\";\"DATE_DATA_01\";\"DATE_DATA_02\";\"DATE_UPDATE_AGENCY\"\n"
     
     users.each do |user|
-      aux = JSON.parse(user.aux)
+      aux = user.aux
 
       csv << "\"WEB\";"
       csv << "\"orzoro\";"
@@ -102,7 +102,7 @@ namespace :orzoro_tasks do
       csv << "\"#{sync_timestamp}\"\n"
 
       aux["sync_timestamp"] = sync_timestamp
-      user.update_attribute(:aux, aux.to_json)
+      user.update_attribute(:aux, aux)
 
     end
 
@@ -133,7 +133,7 @@ namespace :orzoro_tasks do
 
             puts "#{index} - #{user.email}"
 
-            aux = JSON.parse(user.aux)
+            aux = user.aux
             terms = compute_terms_or_newsletter_value(aux["cup_redeem"][0]["identity"]["terms"])
 
             save_user = false
@@ -162,7 +162,7 @@ namespace :orzoro_tasks do
               aux["cup_redeem"][0]["identity"]["newsletter"] = newsletter
               aux["sync_timestamp"] = ""
 
-              user.update_attribute(:aux, aux.to_json)
+              user.update_attribute(:aux, aux)
             end
 
           end

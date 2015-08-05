@@ -2,6 +2,16 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
   include RewardHelper
   include RankingHelper
   include IntesaExpoHelper
+
+  def iframe_stripe
+    @aux_other_params = {
+      "stripe" => get_intesa_expo_ctas_with_tag(params[:name])
+    }
+
+    @iframe_stripe = true
+
+    render '/application/iframe_stripe', :layout => 'stripe' 
+  end
   
   def index
     if current_user

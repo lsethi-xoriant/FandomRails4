@@ -1,4 +1,4 @@
-$cover-height: 530px;
+$cover-height: 490px;
 
 .cta-panel {
   margin: 0 0 25px 0; 
@@ -44,17 +44,17 @@ $cover-height: 530px;
 }
 
 .cta_cover-end_container-pre-title {
-  font-size: 18px; 
-  padding-top: 45px;
+  font-size: 16px; 
+  padding-top: 0;
 }
 
 .cta_cover-end_container-title {
-  font-size: 28px; 
+  font-size: 26px; 
   padding-top: 15px;
 }
 
 .cta_cover-end_container-description {
-  font-size: 18px; 
+  font-size: 16px; 
   padding-top: 15px;
   padding-right: 60px;
 }  
@@ -163,7 +163,7 @@ $cover-height: 530px;
 
 .cta_tip-img {
   width: 100%;
-  max-width: 430px;
+  max-width: 370px;
 }
 
 .cta_tip-section_1_container {
@@ -195,16 +195,16 @@ $cover-height: 530px;
 
 .cta_tip-title {
   padding-top: 15px;
-  font-size: 42px;
-  line-height: 46px;
+  font-size: 28px;
+  line-height: 32px;
   color: #fff;
 }
 
 .cta_tip-description {
   color: #fff;
   margin-top: 25px;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 20px;
 }
 
 .cta_tip-section_2_description {
@@ -221,7 +221,7 @@ $cover-height: 530px;
 }
 
 .product-title {
-  font-size: 22px;
+  font-size: 20px;
   color: $green;
   padding-top: 15px;
   padding-bottom: 5px;
