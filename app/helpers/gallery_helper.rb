@@ -51,8 +51,8 @@ module GalleryHelper
       galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
       gallery_carousel = []
       galleries.each do |gallery|
-        gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
-        gallery_carousel << tag_to_content_preview(gallery_tag)
+        #gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
+        gallery_carousel << cta_to_content_preview(gallery)
       end
       
       gallery_carousel
