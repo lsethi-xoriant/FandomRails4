@@ -498,6 +498,7 @@ module RewardingSystemHelper
           total_outcome.max_outcome_for_test_interaction_prediction!(max_outcome)
         end
       end
+      total_outcome.reward_name_to_counter.default = 0
       [total_outcome, interaction_outcomes, sorted_interactions]
     else
       build_max_cta_outcome(cta, user)
@@ -555,7 +556,7 @@ module RewardingSystemHelper
   def compute_max_outcome(tree, user, visited)
 
     total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(CallToAction.find(tree.value), user)
-    visited = { tree.value => total_outcome }
+    visited.merge!({ tree.value => total_outcome })
 
     if tree.children.any?
 
