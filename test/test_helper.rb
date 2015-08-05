@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'capybara/rails'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -8,6 +9,26 @@ class ActiveSupport::TestCase
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
   fixtures :all
+
+  # Make the Capybara DSL available in all integration tests
+  include Capybara::DSL
+
+  Capybara.default_driver = :selenium
+
+  # self.use_transactional_fixtures = true
+
+  # class ActiveRecord::Base
+  #   mattr_accessor :shared_connection
+  #   @@shared_connection = nil
+
+  #   def self.connection
+  #     @@shared_connection || retrieve_connection
+  #   end
+  # end
+
+  # # Forces all threads to share the same connection. This works on
+  # # Capybara because it starts the web server in a thread.
+  # ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
   CORRECT_ANSWER = true
   INCORRECT_ANSWER = false
@@ -18,6 +39,89 @@ class ActiveSupport::TestCase
   def load_seed(seed_name, path = "seeds")
     seed = open("#{File.dirname(__FILE__)}/#{path}/#{seed_name}.rb")
     eval(seed.read)
+  end
+
+  def build_url_for_capybara(route)
+    host = get_deploy_setting("test", {})
+    if host["port"]
+      "#{host["capybara_hostname"]}:#{host["port"]}#{route}"
+    else
+      "#{host["capybara_hostname"]}#{route}"
+    end
+  end
+
+  def admin_login
+    visit(build_url_for_capybara("/users/sign_in"))
+    within("form#new_user") do
+      fill_in "user_email", :with => "fragazzo@shado.tv"
+      fill_in "user_password", :with => "shado00"
+      click_button("")
+    end
+  end
+
+  def admin_logout
+    visit(build_url_for_capybara("/users/sign_out"))
+  end
+
+  def reload_page
+    visit(build_url_for_capybara(current_path))
+  end
+
+  def delete_user_interactions
+    visit(build_url_for_capybara("/delete_current_user_interactions"))
+  end
+
+  def get_user_points_from_single_call_to_action_page
+    points = nil
+    within("div[ng-if='!isAnonymousUser()']") do
+      points = find("span.cta-cover__winnable-reward__label").text
+    end
+    points = points.gsub("+", "").to_i
+  end
+
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+  end
+
+  def wait_for_angular
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until finished_all_angular_requests?
+    end
+  end
+
+  def finished_all_angular_requests?
+    page.evaluate_script '(typeof angular === "undefined") || (angular.element(".ng-scope").injector().get("$http").pendingRequests.length == 0)'
+  end
+
+  def call_to_action_with_title(title, visit = false)
+    admin_login
+    visit(build_url_for_capybara("/easyadmin/cta"))
+    fill_in "title_filter", :with => title
+    page.find("input[value='APPLICA FILTRO']").click
+
+    cta_link = first("a[href^='/call_to_action/']")[:href]
+
+    if visit
+      visit(cta_link)
+    else
+      cta_link
+    end
+  end
+
+  def get_answer_points(points, text)
+    page.find("button", :text => text).click
+
+    wait_for_angular
+
+    new_points = get_user_points_from_single_call_to_action_page
+    assert new_points > points, "No point given for answer \"#{text}\""
+    new_points
   end
 
   def quiz?(resource_type)
@@ -61,7 +165,7 @@ class ActiveSupport::TestCase
     end
 
     resource.save
-    
+
     build_interaction(cta, resource)
   end
 
