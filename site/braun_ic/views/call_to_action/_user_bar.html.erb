@@ -76,7 +76,7 @@
     </div>
     <!-- USER UNLOGGED -->
     <div class="row profile-container__row" ng-if="isAnonymousUser()">
-      <div class="col-sm-9 profile-container__user profile-container__user_unlogged">  
+      <div class="col-sm-8 profile-container__user profile-container__user_unlogged">  
         <a href="/users/sign_up">    
           <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
             <div class="percentage_circle_fix_bar"></div>
@@ -89,12 +89,12 @@
             </div>
           </div>
         </a>
-        <p style="margin-top: 44px; font-weight: bold; font-size: 22px;">Hai le giuste abitudini alimentari?</p>
-        <p style="font-size: 22px;">Fai il test, misura il tuo benessere e vinci Braun.</p>
+        <p class="unlogged-title">Hai le giuste abitudini alimentari?</p>
+        <p class="unlogged-description">Fai il test, misura il tuo benessere e vinci Braun.</p>
       </div>
-      <div class="col-sm-3">
-        <a style="margin-top: 20px; padding-left: 30px;" href="/auth/facebook_<%= request.site.id %>" class="btn btn-facebook-default btn-block btn-lg"><span style="position: absolute; left: 30px; font-size: 24px;" class="fa fa-facebook"></span>ENTRA CON FACEBOOK</a>
-        <a style="margin-top: 15px;" href="/users/sign_up" class="btn btn-green btn-block btn-lg">REGISTRATI VIA EMAIL</a>
+      <div class="col-sm-4">
+        <a href="/auth/facebook_<%= request.site.id %>" class="btn btn-facebook-default btn-facebook-default-userbar btn-block btn-lg"><span class="fa fa-facebook"></span>ENTRA CON FACEBOOK</a>
+        <a style="margin-top: 15px;" href="/users/sign_up" class="btn btn-green btn-green-userbar btn-block btn-lg">REGISTRATI VIA EMAIL</a>
       </div>
     </div>
   </div>
