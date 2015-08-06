@@ -61,7 +61,7 @@ class ActiveSupport::TestCase
     within("div[ng-if='!isAnonymousUser()']") do
       points = find("span.cta-cover__winnable-reward__label").text
     end
-    points = points.gsub("+", "").to_i
+    points.gsub("+", "").to_i
   end
 
   def wait_for_ajax
@@ -107,6 +107,16 @@ class ActiveSupport::TestCase
     new_points = get_user_points_from_single_call_to_action_page
     assert new_points > points, "No point given for answer \"#{text}\""
     new_points
+  end
+
+  def verify_done_label_presence(div_last_class, should_be_present)
+    within("div[class$='#{div_last_class}']") do 
+      if should_be_present
+        assert assert_selector("span[class^='label label-success']"), "Success label is not present"
+      else
+        assert assert_no_selector("span[class^='label label-success']"), "Success label is present eve if it shouldn't be"
+      end
+    end    
   end
 
   def quiz?(resource_type)

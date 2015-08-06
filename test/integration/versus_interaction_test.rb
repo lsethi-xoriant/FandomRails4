@@ -31,9 +31,11 @@ class VersusInteraction < ActionController::TestCase
 
   def get_versus_answer_points(cta_link, answer)
     visit(cta_link)
+    verify_done_label_presence("interaction__winnable-reward--undervideo", false)
     starting_points = get_user_points_from_single_call_to_action_page
     points_after_versus_answer = get_answer_points(starting_points, "a", answer)
     versus_answer_points = points_after_versus_answer - starting_points
+    verify_done_label_presence("interaction__winnable-reward--undervideo", true)
     delete_user_interactions
     versus_answer_points
   end
