@@ -78,7 +78,6 @@ class SessionsController < Devise::SessionsController
 
   # Authenticates and log in the user from the an oauth service
   def create_from_oauth
-    debugger
     if stored_anonymous_user?
       user = update_from_omniauth(env["omniauth.auth"], params[:provider])
     else
