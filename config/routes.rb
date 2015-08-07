@@ -315,7 +315,10 @@ Fandom::Application.routes.draw do
   get "/profile/update_avatar", to: "application#update_avatar_image"
 
   get "/redirect_into_iframe_path", :to => "application#redirect_into_iframe_path"
+  
+  # deprecated: naming is misleading because the controller will create an ugc, not an upload_interaction. Use /ugc/create instead
   post "/upload_interaction/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+  post "/ugc/create/:cta_id/:interaction_id",                :to => "call_to_action#upload", defaults: { format: 'json' }
   get "/upload", :to => "call_to_action#upload"
   
   get "/browse", :to => "browse#index"
@@ -368,6 +371,7 @@ Fandom::Application.routes.draw do
       get "/add_comment", :to => "comment#add_comment", defaults: { format: 'json' }
       get "/append_comment", :to => "comment#append_comment", defaults: { format: 'json' }
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
+      post "/ugc/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
     end
   end
 
