@@ -350,6 +350,7 @@ Fandom::Application.routes.draw do
   
   namespace :api do
     namespace :v2 do
+      get "/browse", :to => "browse#index", defaults: { format: 'json' }
       get "/browse_index", :to => "browse#browse_index", defaults: { format: 'json' }
       get "/browse_index_load_more", :to => "browse#browse_index_load_more", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
@@ -366,6 +367,7 @@ Fandom::Application.routes.draw do
       get "/add_comment", :to => "comment#add_comment", defaults: { format: 'json' }
       get "/append_comment", :to => "comment#append_comment", defaults: { format: 'json' }
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
+      get "/catalogue", :to => "application#index_catalogue", defaults: { format: 'json' }
     end
   end
 

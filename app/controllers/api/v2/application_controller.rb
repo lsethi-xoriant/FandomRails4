@@ -64,6 +64,30 @@
       respond_with result.to_json
     end
     
+    def index_catalogue
+      #property = get_property_for_reward_catalogue
+      all_rewards_hash = get_all_rewards_map(nil)
+      reward_stripes = []
+      if current_user
+        user_rewards = get_user_rewards(all_rewards_hash).slice(0,8)
+        reward_stripes << prepare_reward_section(user_rewards, "I miei premi", "miei-premi")
+        user_available_rewards = get_user_available_rewards(all_rewards_hash)
+        reward_stripes << prepare_reward_section(user_available_rewards, "Premi che puoi sbloccare", "premi-sbloccabili")
+      else
+        user_rewards = []
+        user_available_rewards = []
+      end
+
+      reward_stripes << prepare_reward_section(all_rewards_hash.values, "Tutti i premi", "tutti-premi")
+      
+      response = {
+        "browse_sections" => reward_stripes,
+        "query" => (query rescue nil)
+      }
+      
+      respond_with response.to_json
+    end
+    
     def get_properties
       result = { 'properties' => init_property_info_list().contents }
       respond_with_json result
