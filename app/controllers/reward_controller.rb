@@ -55,32 +55,6 @@ class RewardController < ApplicationController
     end
   end
 
-  def get_catalogue_user_rewards_ids
-    cache_short(get_catalogue_user_rewards_ids_key(current_user.id)) do
-      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.period_id IS NULL AND user_rewards.available = true AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
-    end
-  end
-
-  def get_user_rewards(all_rewards)
-    return [] if all_rewards.empty?
-    user_rewards = []
-    get_catalogue_user_rewards_ids().each do |reward|
-      user_rewards << all_rewards[reward.id] if all_rewards[reward.id]
-    end
-    user_rewards
-  end
-
-  def get_user_available_rewards(all_rewards)
-    return [] if all_rewards.empty?
-    available_rewards = []
-    all_rewards.each do |key, reward|
-      if user_has_currency_for_reward(reward) && !user_has_reward(reward.name)
-        available_rewards << reward
-      end
-    end
-    available_rewards
-  end
-
   def show
     @reward = Reward.find(params[:reward_id])
     user_reward = UserReward.where("user_id = ? AND reward_id = ?", current_user.id, @reward.id).first

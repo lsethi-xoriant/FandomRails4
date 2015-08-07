@@ -533,4 +533,53 @@ module RewardHelper
     end
   end
   
+  def prepare_reward_section(rewards, title, key)
+    
+    reward_section = ContentSection.new(
+      {
+        key: key,
+        title: title,
+        icon_url: get_browse_section_icon(nil),
+        contents: prepare_rewards_for_stripe(rewards.slice(0,6)),
+        view_all_link: "",
+        column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
+      })
+      
+      reward_section
+  end
+  
+  def prepare_rewards_for_stripe(rewards)
+    reward_content_previews = []
+    rewards.each do |reward|
+      reward_content_previews << reward_to_content_preview(reward, false)
+    end
+    reward_content_previews
+  end
+  
+  def get_user_rewards(all_rewards)
+    return [] if all_rewards.empty?
+    user_rewards = []
+    get_catalogue_user_rewards_ids().each do |reward|
+      user_rewards << all_rewards[reward.id] if all_rewards[reward.id]
+    end
+    user_rewards
+  end
+  
+  def get_catalogue_user_rewards_ids
+    cache_short(get_catalogue_user_rewards_ids_key(current_user.id)) do
+      Reward.joins(:user_rewards).select("rewards.id").where("user_rewards.period_id IS NULL AND user_rewards.available = true AND user_rewards.counter > 0 AND user_rewards.user_id = ? AND rewards.id NOT IN (?)", current_user.id, get_basic_rewards_ids).to_a
+    end
+  end
+  
+  def get_user_available_rewards(all_rewards)
+    return [] if all_rewards.empty?
+    available_rewards = []
+    all_rewards.each do |key, reward|
+      if user_has_currency_for_reward(reward) && !user_has_reward(reward.name)
+        available_rewards << reward
+      end
+    end
+    available_rewards
+  end
+  
 end
