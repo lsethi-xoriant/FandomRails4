@@ -32,7 +32,7 @@ class TriviaInteraction < ActionController::TestCase
     visit(cta_link)
     verify_done_label_presence("interaction__winnable-reward--undervideo", false)
     starting_points = get_user_points_from_single_call_to_action_page
-    points_after_answer = get_answer_points(starting_points, "a", answer)
+    points_after_answer = get_points_after_answer(starting_points, "a", answer)
     verify_done_label_presence("interaction__winnable-reward--undervideo", true)
     points_after_answer - starting_points
   end

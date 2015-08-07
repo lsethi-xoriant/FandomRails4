@@ -20,12 +20,18 @@ class ActiveSupport::TestCase
 
   CTA_TEST_NAME = "cta-for-user-interactions-testing"
 
-  # Add more helper methods to be used by all tests here
+  # Loads the seed file statements
+  #
+  # seed_name - Seed file name (without .rb extension
+  # path - Path to the file, if different from "seeds"
   def load_seed(seed_name, path = "seeds")
     seed = open("#{File.dirname(__FILE__)}/#{path}/#{seed_name}.rb")
     eval(seed.read)
   end
 
+  # Builds the url to visit for end-to-end tests referring to deploy settings "test" setting
+  #
+  # route - Rails route to append
   def build_url_for_capybara(route)
     host = get_deploy_setting("test", {})
     if host["port"]
@@ -35,6 +41,7 @@ class ActiveSupport::TestCase
     end
   end
 
+  # Performs a login with admin credentials
   def admin_login
     visit(build_url_for_capybara("/users/sign_in"))
     within("form#new_user") do
@@ -56,14 +63,7 @@ class ActiveSupport::TestCase
     visit(build_url_for_capybara("/delete_current_user_interactions"))
   end
 
-  def get_user_points_from_single_call_to_action_page
-    points = nil
-    within("div[ng-if='!isAnonymousUser()']") do
-      points = find("span.cta-cover__winnable-reward__label").text
-    end
-    points.gsub("+", "").to_i
-  end
-
+  # Loops until all ajax requests have finished
   def wait_for_ajax
     Timeout.timeout(Capybara.default_wait_time) do
       loop until finished_all_ajax_requests?
@@ -74,6 +74,7 @@ class ActiveSupport::TestCase
     page.evaluate_script('jQuery.active').zero?
   end
 
+  # Loops until all AngularJS requests have finished
   def wait_for_angular
     Timeout.timeout(Capybara.default_wait_time) do
       loop until finished_all_angular_requests?
@@ -84,6 +85,12 @@ class ActiveSupport::TestCase
     page.evaluate_script '(typeof angular === "undefined") || (angular.element(".ng-scope").injector().get("$http").pendingRequests.length == 0)'
   end
 
+  # Finds the call to action with a specific title
+  #
+  # title - Cta title
+  # visit - Boolean value; if true, capybara visits the call to action page
+  #
+  # Returns call to action complete url if visit is not true
   def call_to_action_with_title(title, visit = false)
     admin_login
     visit(build_url_for_capybara("/easyadmin/cta"))
@@ -99,16 +106,42 @@ class ActiveSupport::TestCase
     end
   end
 
-  def get_answer_points(points, button_type, text)
+  # Gives an answer and returns current user points after this action
+  #
+  # points - User points before performing answer, useful to check points adding; can be nil
+  # button_type - String containing HTML button tag (usually, "button" or "a")
+  # text - Exact text inside button, in order to recognize the answer
+  #
+  # Returns total points after action
+  def get_points_after_answer(points, button_type, text)
     page.find(button_type, :text => text).click
 
     wait_for_angular
 
-    new_points = get_user_points_from_single_call_to_action_page
-    assert new_points > points, "No point given for answer \"#{text}\""
+    new_points = get_user_points_from_single_call_to_action_page()
+    assert new_points > points, "No point given for answer \"#{text}\"" if points
     new_points
   end
 
+  # Finds and returns current user main reward points when in single call to action page
+  def get_user_points_from_single_call_to_action_page
+    points = nil
+    within("div[ng-if='!isAnonymousUser()']") do
+      points = find("span.cta-cover__winnable-reward__label").text
+    end
+    points.gsub("+", "").to_i
+  end
+
+  # Tests if green "Done" label is present or not
+  #
+  # Examples
+  #
+  #   verify_done_label_presence("check-undervideo-interaction__row", false)
+  #   ...
+  #   verify_done_label_presence("check-undervideo-interaction__row", true)
+  #
+  # div_last_class - Last identifying class for div that should contain "Done" label
+  # should_be_present - Boolean value to perform presence or absence assertion
   def verify_done_label_presence(div_last_class, should_be_present)
     within("div[class$='#{div_last_class}']") do 
       if should_be_present

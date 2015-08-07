@@ -39,8 +39,7 @@ class CommentInteraction < ActionController::TestCase
 
     last_comment_text = all("p.comment-interaction__text-p").first.text[-(@comment_text.size)..-1]
 
-    assert last_comment_text == @comment_text, 
-      "Comment should be \"#{@comment_text}\", but it is \"#{last_comment_text}\""
+    assert last_comment_text == @comment_text, "Comment should be \"#{@comment_text}\", but it is \"#{last_comment_text}\""
 
     admin_logout
 
