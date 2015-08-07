@@ -180,14 +180,6 @@ p {
   color: $lightblue;
 }
 
-.iframe-body {
-  background-color: $blue !important; 
-  background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
-  .stripe-container {
-    border-bottom: 0 !important;
-  }
-}
-
 .container-fluid__blue, .container--blue {
   background-color: $blue !important; 
   background-image: url("<%= asset_path('intesa_expo/texture.png') %>");
@@ -453,13 +445,69 @@ p {
   margin-bottom: 220px;
 }
 
+/********************* IFRAME *********************/
+
+.iframe-stripe-container {
+  background-size: 100% auto;
+  max-width: 800px;
+  .relateds-flexslider .slides {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .relateds-flexslider {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+  }
+  .iframe-bookmark {
+    position: absolute; 
+    bottom: 0; 
+    left: -6px; 
+    width: 200px;
+  }
+  .main-row {
+    position: relative;
+    padding-right: 30px;
+    padding-left: 0;
+    border-top: 6px solid rgba(173, 123, 71, 0.5);
+    border-left: 6px solid rgba(173, 123, 71, 0.5);
+    border-right: 6px solid rgba(173, 123, 71, 0.5);
+  }
+  .content-preview__item-panel {
+    height: 218px;
+  }
+  .content-preview__title, .content-preview__title--press {
+    font-size: 13px;
+  }
+  .iframe-img {
+    margin-top: 5px;
+    width: 70px;
+  }
+  .iframe-title {
+    font-family: 'Gnuolane';
+    color: $gold;
+    font-size: 24px;
+    margin-top: 15px;
+    line-height: 26px;
+  }
+  .iframe-description {
+    font-family: 'Gnuolane';
+    color: #fff;
+    font-size: 26px;
+    line-height: 28px;
+  }
+}
+
+.iframe-body {
+  height: 250px;
+  overflow: hidden;
+}
+
 @media (min-width: $screen-md-min) {
   .ctas__flexslider__container {
     padding-left: 15px !important; 
     padding-right: 5px !important;
   }
 }
-
 
 @media (min-width: $screen-sm-min) {
   .custom-bt-browse-sections {

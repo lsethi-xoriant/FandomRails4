@@ -1,5 +1,20 @@
 module UserInteractionHelper
 
+  def reset_redo_user_interactions_computation(params)
+    user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
+    cta = CallToAction.find(params[:parent_cta_id])
+
+    user_interactions.each do |user_interaction|
+      aux = user_interaction.aux
+      aux["to_redo"] = true
+      user_interaction.update_attributes(aux: aux)
+    end
+
+    {
+      calltoaction_info: build_cta_info_list_and_cache_with_max_updated_at([cta]).first
+    }
+  end
+
   def create_user_interaction_for_registration()
     basic_interaction = Basic.where({ :basic_type => "Registration" }).first
     if basic_interaction
@@ -78,6 +93,7 @@ module UserInteractionHelper
 
       interaction_ids = extract_interaction_ids_from_call_to_action_info_list([cta_info])
       user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+
       next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
       linked_user_interaction_ids = init_or_update_linked_user_interaction_ids([], linked_user_interaction_id)
       
@@ -90,7 +106,7 @@ module UserInteractionHelper
         index = index + 1
       end
               
-      if result_cta_info  
+      if result_cta_info.present?  
         parent_cta_info = cta_info
         result_cta_info = build_cta_info_list_and_cache_with_max_updated_at([result_cta_info], interactions_to_compute).first
         result_cta_info["optional_history"] = update_cta_info_optional_history(parent_cta_info, result_cta_info, linked_user_interaction_ids, index) 

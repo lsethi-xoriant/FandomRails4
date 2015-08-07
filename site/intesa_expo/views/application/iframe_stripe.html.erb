@@ -1,16 +1,20 @@
-<div class="container-fluid__blue stripe-container">
-  <div class="container main-container container">
-    <div class="row main-row">
-      <div class="col-sm-12">
-        <div class="relateds-flexslider" data-title="{{aux.stripe.title}}">
-          <div class="flex-viewport-shadow visible-sm"></div>
-          <ul class="slides">
-            <li class="relateds-flexslider__item" ng-repeat="content in aux.stripe.contents">
-              <%= render partial: "/application/content_preview" %>
-            </li>
-          </ul>
-        </div>
+<div class="container iframe-stripe-container" ng-style="{'background-image': 'url(' + aux.assets.iframe_bg.url + ')'}">
+  <div class="row main-row">
+    <img class="iframe-bookmark" ng-src="{{aux.assets.iframe_bookmark.url}}">
+    <div class="col-sm-4">
+      <p class="iframe-title">INTESA SAN PAOLO<br>A EXPO MILANO 2015</p>
+      <p class="iframe-description">SCOPRI I NOSTRI APPUNTAMENTI</p>
+      <img class="iframe-img" ng-src="{{aux.assets.iframe_logo.url}}">
+    </div>
+    <div class="col-sm-8">
+      <div class="relateds-flexslider" data-title="{{aux.stripe.title}}">
+        <div class="flex-viewport-shadow visible-sm"></div>
+        <ul class="slides">
+          <li class="relateds-flexslider__item" ng-repeat="content in aux.stripe.contents">
+            <%= render partial: "/application/content_preview" %>
+          </li>
+        </ul>
       </div>
-    </div>  
-  </div>
+    </div>
+  </div>  
 </div>

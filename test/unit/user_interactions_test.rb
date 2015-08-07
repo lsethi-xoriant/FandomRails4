@@ -3,45 +3,84 @@ require 'test_helper'
 class UserInteractionsTest < ActionController::TestCase
   include ApplicationHelper
 
-  DESTROY_USER_INTERACTIONS = true
-  ONE_SHOT = true
-  CORRECT = true
-
   setup do
     initialize_tenant
     load_seed("user_interactions_seed")
   end
 
+  # warning: TEST interaction take from DB and not from temporaly seed  
+  test "the user makes a test" do
+    destroy_user_interactions()
+    
+    cta_test_name = "che-tipo-di-fan-dei-coldplay-sei"
+    cta_test_ending_name = "che-tipo-di-fan-dei-coldplay-sei-ending-2"
+    symbolic_name = "L" 
+
+    parent_cta = CallToAction.find(cta_test_name)
+    result_cta_info = execute_cta_with_test_interaction(parent_cta, symbolic_name)
+    
+    assert result_cta_info["calltoaction"]["name"] == cta_test_ending_name, "the test result is incorrect"
+
+    user_interaction_ids = result_cta_info["optional_history"]["user_interactions"]
+    params = { user_interaction_ids: user_interaction_ids, parent_cta_id: parent_cta.id }
+    
+    reset_redo_user_interactions_computation(params)
+
+    cta_test_ending_name = "che-tipo-di-fan-dei-coldplay-sei-ending-1"
+    symbolic_name = "G" 
+
+    result_cta_info = execute_cta_with_test_interaction(parent_cta, symbolic_name)
+
+    assert result_cta_info["calltoaction"]["name"] == cta_test_ending_name, "the test (2nd time) result is incorrect"
+  end
+
   test "the user responds correctly and incorrectly to a trivia and obtains correctly points amount" do
-    user_points, correct_answer_points = compute_user_outcome_in_trivia(CORRECT)
+    correct = true
+    user_points, correct_answer_points = compute_user_outcome_in_trivia(correct)
     assert user_points == correct_answer_points, "user interaction not have assign correctly points with correctly answer"
 
-    user_points, correct_answer_points = compute_user_outcome_in_trivia(!CORRECT)
+    correct = false
+    user_points, correct_answer_points = compute_user_outcome_in_trivia(correct)
     assert user_points < correct_answer_points, "user interaction not have assign correctly points with incorrectly answer"
   end
 
   test "the user do a not one shot vote interaction multiple times" do
-    votes = []
-    resource = user_interaction = nil
-    5.times.each_with_index do |i|
-      destroy_user_interactions = (i == 0)
-      vote = 1 + Random.rand(10)
-      votes << vote
-      params = { vote: vote, one_shot: !ONE_SHOT }
-      user_interaction, resource = update_interaction_computation_with_interaction(resource, "Vote", params, destroy_user_interactions)
-      assert_counter = i + 1
+    votes = {}
 
+    params = { one_shot: false }
+    resource = init_resource("Vote", params)
+
+    user_interaction = nil
+
+    (0..4).each_with_index do |i|
+      vote = 1 + Random.rand(10)
+
+      votes["#{vote}"] = votes.has_key?(vote) ? (votes["#{vote}"] + 1) : 1
+
+      params = { vote: vote }
+      user_interaction = init_and_update_interaction_computation(resource, params)
+      
+      counter = get_counter("interaction", user_interaction.interaction_id)
+      assert_counter = i + 1
       assert user_interaction.counter == assert_counter, "user interaction counter different from #{assert_counter}"
     end
-    # TODO: check votes in view counter
+
+    interaction_id = user_interaction.interaction_id
+    counter = get_counter("interaction", interaction_id)
+    
+    counter_valid = true
+    counter.aux.each do |key, value|
+      counter_valid = false if votes[key] != value
+    end
+
+    assert user_interaction, "counter different from votes generated"
   end
 
   test "the user do a play interaction multiple times" do
-    resource = nil
+    resource = init_resource("Play")
     5.times.each_with_index do |i|
-      destroy_user_interactions = (i == 0)
-      params = nil
-      user_interaction, resource = update_interaction_computation_with_interaction(resource, "Play", params, destroy_user_interactions)
+
+      user_interaction = init_and_update_interaction_computation(resource)
       assert_counter = i + 1
 
       assert user_interaction.counter == assert_counter, "user interaction counter different from #{assert_counter}"
@@ -49,11 +88,10 @@ class UserInteractionsTest < ActionController::TestCase
   end
 
   test "the user do a like interaction multiple times" do
-    resource = nil
+    resource = init_resource("Like")
     5.times.each_with_index do |i|
-      destroy_user_interactions = (i == 0)
-      params = nil
-      user_interaction, resource = update_interaction_computation_with_interaction(resource, "Like", params, destroy_user_interactions)
+
+      user_interaction = init_and_update_interaction_computation(resource)
       assert_counter = i + 1
 
       like_must_be = i % 2 == 0
@@ -64,13 +102,12 @@ class UserInteractionsTest < ActionController::TestCase
   end
 
   test "the user do a check interaction multiple times" do  
-    resource = nil
-    params = nil
-    user_interaction, resource = update_interaction_computation_with_interaction(resource, "Check", params, DESTROY_USER_INTERACTIONS)
+    resource = init_resource("Check")
+    user_interaction = init_and_update_interaction_computation(resource)
     assert user_interaction.counter == 1, "user interaction not saved correctly with one shot interaction"
 
     begin
-      update_interaction_computation_with_interaction(resource, "Check", params)
+      init_and_update_interaction_computation(resource)
     rescue Exception => exception
       interaction_attempted_more_than_once = true
     end
@@ -80,10 +117,11 @@ class UserInteractionsTest < ActionController::TestCase
 
   test "the user do a one shot quiz interaction multiple times" do  
     ["TRIVIA", "VERSUS"].each do |quiz_type|
-      resource = nil
+      params = { one_shot: true, quiz_type: quiz_type }
+      resource = init_resource("Quiz", params)
       
-      params = init_quiz_params(quiz_type, ONE_SHOT)
-      user_interaction, resource = update_interaction_computation_with_interaction(resource, "Quiz", params, DESTROY_USER_INTERACTIONS)
+      params = { correct_answer: true }
+      user_interaction = init_and_update_interaction_computation(resource, params)
      
       assert user_interaction.counter == 1, "user interaction not saved correctly with one shot interaction"
 
@@ -93,7 +131,7 @@ class UserInteractionsTest < ActionController::TestCase
       end
 
       begin
-        update_interaction_computation_with_interaction(resource, "Quiz", params)
+        init_and_update_interaction_computation(resource, params)
       rescue Exception => exception
         interaction_attempted_more_than_once = true
       end
@@ -104,11 +142,14 @@ class UserInteractionsTest < ActionController::TestCase
 
   test "the user do a not one shot quiz interaction multiple times" do
     ["TRIVIA", "VERSUS"].each do |quiz_type|
-      resource = nil
+      
+      params = { one_shot: false, quiz_type: quiz_type }
+      resource = init_resource("Quiz", params)
+      
       5.times.each_with_index do |i|
-        destroy_user_interactions = (i == 0)
-        params = init_quiz_params(quiz_type, !ONE_SHOT)
-        user_interaction, resource = update_interaction_computation_with_interaction(resource, "Quiz", params, destroy_user_interactions)
+
+        params = { correct_answer: true }
+        user_interaction = init_and_update_interaction_computation(resource, params)
         assert_counter = i + 1
 
         if quiz_type == "VERSUS"
@@ -126,9 +167,11 @@ class UserInteractionsTest < ActionController::TestCase
   end
 
   def compute_user_outcome_in_trivia(correct)
-    resource = find_quiz_resource("TRIVIA")
-    params = { one_shot: ONE_SHOT, correct_answer: correct, quiz_type: "TRIVIA" }
-    user_interaction, resource = update_interaction_computation_with_interaction(resource, "Quiz", params, DESTROY_USER_INTERACTIONS)
+    params = { quiz_type: "TRIVIA", one_shot: false }
+    resource = init_resource("Quiz", params)
+
+    params = { correct_answer: correct }
+    user_interaction = init_and_update_interaction_computation(resource, params)
 
     outcome = JSON.parse(user_interaction.outcome)
     user_points = outcome["win"]["attributes"]["reward_name_to_counter"]["point"]
@@ -137,39 +180,43 @@ class UserInteractionsTest < ActionController::TestCase
     [user_points, correct_answer_points]
   end
 
-  def update_interaction_computation_with_interaction(resource, resource_type, params, destroy_user_interactions = false)
-    if resource.nil?
-      if quiz?(resource_type)
-        resource = find_quiz_resource(params[:quiz_type], params[:one_shot])
-      else
-        if params && params.has_key?(:one_shot)
-          resource = Object.const_get(resource_type).includes(interaction: :call_to_action)
-                                                    .where("call_to_actions.name = '#{CTA_TEST_NAME}'")
-                                                    .where("#{resource_type.downcase.pluralize}.one_shot = ?", params[:one_shot])
-                                                    .references(:interactions, :call_to_actions).first
-        else
-          resource = Object.const_get(resource_type).includes(interaction: :call_to_action).where("call_to_actions.name = '#{CTA_TEST_NAME}'")
-                         .references(:interactions, :call_to_actions).first
-        end
-      end
-    end
-
+  def init_resource(resource_type, params = {}, destroy_user_interactions = true)
     if quiz?(resource_type)
-      ui_params = init_quiz_user_interaction_params(resource, params[:correct_answer])
+      resource = find_quiz_resource(params[:quiz_type], params[:one_shot])
     else
-      ui_params = { interaction_id: resource.interaction.id }
-      if params.present? && params.has_key?(:vote)
-        ui_params[:vote] = params[:vote] 
+      if params && params.has_key?(:one_shot)
+        resource = Object.const_get(resource_type).includes(interaction: :call_to_action)
+                                                  .where("call_to_actions.name = '#{CTA_TEST_NAME}'")
+                                                  .where("#{resource_type.downcase.pluralize}.one_shot = ?", params[:one_shot])
+                                                  .references(:interactions, :call_to_actions).first
+      else
+        resource = Object.const_get(resource_type).includes(interaction: :call_to_action).where("call_to_actions.name = '#{CTA_TEST_NAME}'")
+                       .references(:interactions, :call_to_actions).first
       end
     end
 
     if destroy_user_interactions
       UserInteraction.where(interaction_id: resource.interaction.id, user_id: current_user.id).destroy_all
     end
+
+    resource
+  end
+
+  def init_and_update_interaction_computation(resource, params = nil)
+    resource_type = resource.class.name
+
+    if quiz?(resource_type)
+      ui_params = init_quiz_user_interaction_params(resource, params)
+    else
+      ui_params = { interaction_id: resource.interaction.id }
+      if params.present? && params.has_key?(:vote)
+        ui_params[:params] = params[:vote] 
+      end
+    end
     
     response = update_interaction_computation(ui_params)
     user_interaction = UserInteraction.find(response[:user_interaction]["id"])
-    [user_interaction, resource]
+    user_interaction
   end
 
   def find_quiz_resource(quiz_type, one_shot = true)
@@ -178,18 +225,57 @@ class UserInteractionsTest < ActionController::TestCase
       .references(:interactions, :call_to_actions).first
   end
 
-  def init_quiz_params(quiz_type, one_shot)
-    { one_shot: one_shot, correct_answer: CORRECT, quiz_type: quiz_type }
-  end
-
-  def init_quiz_user_interaction_params(quiz_resource, correct) 
-    if quiz_resource.quiz_type == "TRIVIA"
-      answer = quiz_resource.answers.where(correct: correct).order(created_at: :asc).first
+  def init_quiz_user_interaction_params(quiz_resource, params) 
+    case quiz_resource.quiz_type
+    when "TRIVIA"
+      answer = quiz_resource.answers.where(correct: params[:correct_answer]).order(created_at: :asc).first
+    when "TEST"
+      answer = quiz_resource.answers.where("aux->>'symbolic_name' = ?", params[:symbolic_name]).order(created_at: :asc).first
     else
       answer = quiz_resource.answers.order(created_at: :asc).first
     end
 
-    { interaction_id: quiz_resource.interaction.id, params: answer.id }
+    throw Exception.new("in quiz resource #{quiz_resource.id} answer can not be blank") if answer.blank?
+
+    { interaction_id: quiz_resource.interaction.id, params: answer.id, parent_cta_id: params[:parent_cta_id] }
+  end
+
+  def find_resource_in_interaction_info_list(interaction_info_list, resource_type)
+    resource = nil
+    interaction_info_list.each do |interaction_info|
+      if interaction_info["interaction"]["resource_type"] == resource_type
+        resource = Interaction.find(interaction_info["interaction"]["id"]).resource
+        break
+      end
+    end
+    resource
+  end
+
+  def execute_cta_with_test_interaction(cta, symbolic_name)
+    times = nil
+    index = 0
+
+    begin
+      cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
+      cta_info = cta_info_list[0]
+      
+      interaction_info_list = cta_info["calltoaction"]["interaction_info_list"]
+      resource = find_resource_in_interaction_info_list(interaction_info_list, "test")
+
+      parent_cta_info = get_parent_cta(cta_info)
+
+      params = { correct_answer: false, parent_cta_id: parent_cta_info["calltoaction"]["id"], symbolic_name: symbolic_name }
+      user_interaction = init_and_update_interaction_computation(resource, params)
+
+      if times.blank?
+        times = cta_info["optional_history"]["optional_total_count"].to_i
+      end
+
+      index = cta_info["optional_history"]["optional_index_count"].to_i
+    end while times.present? && (times - 1) != index
+
+    cta_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
+    cta_info_list[0]
   end
 
   def render_to_string(arg1, arg2)

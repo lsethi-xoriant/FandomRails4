@@ -181,6 +181,10 @@ class ActiveSupport::TestCase
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   end
 
+  def destroy_user_interactions()
+    UserInteraction.where(user_id: current_user.id).destroy_all if current_user.present?
+  end
+
   # SEEDS HELPER
 
   def build_quiz_interaction(cta, quiz_type, one_shot = true)

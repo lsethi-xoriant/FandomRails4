@@ -10,6 +10,8 @@ unless cta
         )
 end
 
+################# TRIVIA - VERSUS #################
+
 ["TRIVIA", "VERSUS"].each do |quiz_type|
   quiz_interactions = Quiz.includes(:interaction).where("quizzes.quiz_type = ? AND interactions.call_to_action_id = ?", quiz_type, cta.id).references(:interactions)
 
@@ -22,12 +24,16 @@ end
   end
 end
 
+################# CHECK - PLAY- LIKE #################
+
 ["Check", "Play", "Like"].each do |resource_type|
   interactions = Object.const_get(resource_type).includes(:interaction).where("interactions.call_to_action_id = ?", cta.id).references(:interactions)
   if interactions.empty?
     build_base_interaction(cta, resource_type)
   end
 end
+
+################# VOTE #################
 
 vote_interactions = Vote.includes(:interaction).where("interactions.call_to_action_id = ?", cta.id).references(:interactions)
 
