@@ -500,8 +500,8 @@ p {
   }
 }
 
-.iframe-body {
-  height: 250px;
+.iframe-body .container {
+  height: 250px !important;
   overflow: hidden;
 }
 
@@ -529,6 +529,24 @@ p {
 }
 
 @media (max-width: $screen-sm-min) { 
+  .iframe-stripe-container {
+    .main-row {
+      padding: 0;
+    }
+    .content-preview__item-panel {
+      height: 186px !important;
+      min-height: 0;
+      margin-bottom: 42px;
+    }
+    .content-preview__title, .content-preview__title--press {
+      font-size: 12px;
+      line-height: 14px;
+    }
+    .relateds-flexslider-col {
+      padding: 0;
+    }
+  }
+
   .cookies-footer__description {
     font-size: 11px;
     line-height: 13px;
