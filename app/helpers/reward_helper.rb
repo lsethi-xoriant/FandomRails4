@@ -540,12 +540,20 @@ module RewardHelper
         key: key,
         title: title,
         icon_url: get_browse_section_icon(nil),
-        contents: rewards,
+        contents: prepare_rewards_for_stripe(rewards.slice(0,6)),
         view_all_link: "",
         column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
       })
       
       reward_section
+  end
+  
+  def prepare_rewards_for_stripe(rewards)
+    reward_content_previews = []
+    rewards.each do |reward|
+      reward_content_previews << reward_to_content_preview(reward, false)
+    end
+    reward_content_previews
   end
   
   def get_user_rewards(all_rewards)
