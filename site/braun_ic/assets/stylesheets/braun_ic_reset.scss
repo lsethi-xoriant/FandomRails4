@@ -13,6 +13,16 @@ body {
   color: red;
 }
 
+.unlogged-title {
+  padding-top: 45px; 
+  font-weight: bold; 
+  font-size: 22px;
+}
+
+.unlogged-description {
+  font-size: 22px;
+}
+
 .modal-interaction-instant-win__header {
   border-bottom: 0;
   h4 {
@@ -284,6 +294,13 @@ p {
   .profile-container__iw-text {
     margin-top: 45px;
     font-size: 14px;
+  }
+  .unlogged-title {
+    font-size: 18px;
+    padding-top: 50px;
+  }
+  .unlogged-description {
+    font-size: 16px;
   }
 }
 

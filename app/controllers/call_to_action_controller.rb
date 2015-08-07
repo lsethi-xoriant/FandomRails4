@@ -14,18 +14,7 @@ class CallToActionController < ApplicationController
   end
 
   def reset_redo_user_interactions
-    user_interactions = UserInteraction.where(id: params[:user_interaction_ids]).order(created_at: :desc)
-    cta = CallToAction.find(params[:parent_cta_id])
-
-    user_interactions.each do |user_interaction|
-      aux = user_interaction.aux
-      aux["to_redo"] = true
-      user_interaction.update_attributes(aux: aux)
-    end
-
-    response = {
-      calltoaction_info: build_cta_info_list_and_cache_with_max_updated_at([cta]).first
-    }
+    response = reset_redo_user_interactions_computation(params)
 
     respond_to do |format|
       format.json { render json: response.to_json }

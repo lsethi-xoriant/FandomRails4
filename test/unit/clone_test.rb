@@ -9,7 +9,7 @@ class CloneTest < ActionController::TestCase
     @controller = Easyadmin::CallToActionController.new
     @cta, @resources, @reward = load_seed("instances_to_be_cloned")
     @root_cta, @child_cta_1, @child_cta_2 = load_seed("linked_call_to_actions")
-
+    @users = load_seed("default_seed")
     @cloned_cta = duplicate_cta(@cta.id)
   end
 
@@ -38,10 +38,23 @@ class CloneTest < ActionController::TestCase
   end
 
   test "clone linking cta method" do
+    
+    admin_login
 
-    params = { :id => @root_cta.id, :commit => "SALVA" }
-    assert is_linking?(params[:id]), "is_linking method called on linked call to action returned false"
-    # TODO: end-to-end test
+    cta_id = CallToAction.find_by_name("starting-call-to-action-for-testing").id
+    assert is_linking?(cta_id), "is_linking method called on linked call to action returned false"
+
+    visit(build_url_for_capybara("/easyadmin/cta/clone/#{cta_id}"))
+
+    assert page.find("form")[:action].include?("post"), "Form for linking cta does not have action = post"
+
+    within("form") do
+      fill_in "cloned_cta_title", :with => "Cloned cta title for testing"
+      assert page.find("input#cloned_cta_name").value == "cloned-cta-title-for-testing", 
+        "Cloned cta name is \"#{page.find("input#cloned_cta_name").text}\" instead of \"cloned-cta-title-for-testing\""
+      assert page.find("input#cloned_cta_linked-cta-helper-test-cta-1_name").value == "cloned-cta-title-for-testing-1", 
+        "Cloned linked cta name is \"#{page.find("input#cloned_cta_linked-cta-helper-test-cta-1_name").text}\" instead of \"cloned-cta-title-for-testing-1\""
+    end
 
   end
 

@@ -144,23 +144,27 @@ module ProfileHelper
     end 
 
     if stored_anonymous_user?
-      # HERE BRAUN_IC
-      privacy = $site.id == "braun_ic" ? false : false ##### HERE HERE HERE
-      user.assign_attributes({
-          username: nil,
-          first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
-          email: auth.info.email,
-          avatar_selected: provider,
-          avatar_selected_url: auth.info.image,
-          privacy: privacy
-      })
-      if user.valid?
-        user.assign_attributes(anonymous_id: nil)
+      privacy = $site.id == "braun_ic" ? true : false
+      if user_auth
         sign_out(user)
+        user = user_auth.user
+      else
+        user.assign_attributes({
+            username: nil,
+            first_name: auth.info.first_name,
+            last_name: auth.info.last_name,
+            email: auth.info.email,
+            avatar_selected: provider,
+            avatar_selected_url: auth.info.image,
+            privacy: privacy
+        })
+        if user.valid?
+          user.assign_attributes(anonymous_id: nil)
+          sign_out(user)
+        end
       end
     end
-
+    
     user.save
     user
   end

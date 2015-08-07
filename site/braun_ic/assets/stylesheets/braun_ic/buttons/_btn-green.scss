@@ -47,3 +47,9 @@ fieldset[disabled] .btn-green.active {
   color: $green; 
   background-color: #FFFFFF; 
 }
+
+@media (max-width: $screen-md-min) {
+  .btn-green-userbar {
+    font-size: 15px;
+  }
+}

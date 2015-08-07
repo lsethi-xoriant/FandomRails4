@@ -353,10 +353,9 @@ Fandom::Application.routes.draw do
   
   namespace :api do
     namespace :v2 do
-      get "/get_stripe/:tag_name", :to => "browse#get_stripe_from_tag", defaults: { format: 'json' }
+      get "/browse", :to => "browse#index", defaults: { format: 'json' }
       get "/browse_index", :to => "browse#browse_index", defaults: { format: 'json' }
       get "/browse_index_load_more", :to => "browse#browse_index_load_more", defaults: { format: 'json' }
-      get "/browse", :to => "browse#index", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
       get "/index_gallery", :to => "application#index_gallery", defaults: { format: 'json' }
       get "/properties", :to => "application#get_properties", defaults: { format: 'json' }
@@ -372,6 +371,7 @@ Fandom::Application.routes.draw do
       get "/append_comment", :to => "comment#append_comment", defaults: { format: 'json' }
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
       post "/ugc/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
+      get "/catalogue", :to => "application#index_catalogue", defaults: { format: 'json' }
     end
   end
 

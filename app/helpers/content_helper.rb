@@ -69,6 +69,8 @@ module ContentHelper
     attr_accessor :valid_from
     attr_accessor :valid_to
     attr_accessor :slug
+    #added to fit content preview also for reward objects
+    attr_accessor :reward_info
     
     def initialize(params)
       @id = params[:id]
@@ -105,6 +107,7 @@ module ContentHelper
       @valid_to = params[:valid_to]
       @ical_id = params[:ical_id]
       @slug = params[:slug]
+      @rweard_info = params[:reward_info]
     end
     
   end
@@ -248,5 +251,37 @@ module ContentHelper
       slug: cta.slug,
     )
   end
+    
+  #reward-cta type 
+  def reward_to_content_preview(reward, populate_desc = true)
+    cta = reward.calltoaction
+    ContentPreview.new(
+      type: "reward-cta",
+      media_type: nil,
+      id: cta.id, 
+      name: cta.name,
+      has_thumb: cta.thumbnail.present?, 
+      thumb_url: cta.thumbnail(:thumb), 
+      title: cta.title, 
+      description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
+      long_description: populate_desc ? cta.description : nil,
+      detail_url: cta_url(cta),
+      created_at: cta.created_at.to_time.to_i,
+      comments: nil,
+      likes: nil,
+      status: nil,
+      tags: nil,
+      votes: nil,
+      extra_fields: get_extra_fields!(cta),
+      layout: get_content_preview_layout(cta),
+      slug: cta.slug,
+      reward_info: {
+        cost: reward.cost,
+        currency: reward.currency_id,
+        id: reward.id
+      }
+    )
+  end
+
 
 end
