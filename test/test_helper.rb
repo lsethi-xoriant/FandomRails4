@@ -55,6 +55,10 @@ class ActiveSupport::TestCase
     visit(build_url_for_capybara("/users/sign_out"))
   end
 
+  def visit_home
+    visit(build_url_for_capybara(""))
+  end
+
   def reload_page
     visit(build_url_for_capybara(current_path))
   end
@@ -147,7 +151,7 @@ class ActiveSupport::TestCase
       if should_be_present
         assert assert_selector("span[class^='label label-success']"), "Success label is not present"
       else
-        assert assert_no_selector("span[class^='label label-success']"), "Success label is present eve if it shouldn't be"
+        assert assert_no_selector("span[class^='label label-success']"), "Success label is present even if it shouldn't be"
       end
     end    
   end

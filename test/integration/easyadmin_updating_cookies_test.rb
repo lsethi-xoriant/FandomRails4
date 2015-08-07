@@ -4,10 +4,8 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
   include Devise::TestHelpers
   include EasyadminHelper
-  # tests Easyadmin::CallToActionController
 
   setup do
-    @cta, @user_cta = load_seed("instances_to_be_updated")
   end
 
   test "content updated at cookie" do
@@ -40,9 +38,6 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
     admin_logout
 
-    # assert tag.updated_at != tag_updated_at, "tag.updated_at has not been updated"
-    # assert tag_2.updated_at != tag_2_updated_at, "tag_2.updated_at has not been updated"
-
   end
 
   test "moderation cookie" do
@@ -58,6 +53,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     page.find("button[onclick^='updateCta(false,']").click
 
     wait_for_ajax
+
     visit(build_url_for_capybara("/easyadmin/cta/to_approve"))
 
     find_and_click_update_cache_button

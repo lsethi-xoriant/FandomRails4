@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CommentInteraction < ActionController::TestCase
+class CommentInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
 
@@ -12,8 +12,6 @@ class CommentInteraction < ActionController::TestCase
 
     cta_link = call_to_action_with_title("Cta with comment interaction")
     visit(cta_link)
-
-    points = get_user_points_from_single_call_to_action_page
 
     page.fill_in "text", :with => @comment_text
     page.find("button[ng-click='submitComment(interaction_info)']").click

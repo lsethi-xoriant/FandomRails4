@@ -1,3 +1,5 @@
+# TODO: add call to action flowplayer media and overvideo during versus interaction after 3 seconds (With "A" and "B" answers)
+
 call_to_action = CallToAction.where(
   :title => "Cta with versus interaction", 
   :name => "cta-with-versus-interaction", 

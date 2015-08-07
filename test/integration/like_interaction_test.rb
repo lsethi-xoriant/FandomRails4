@@ -1,6 +1,6 @@
 require "test_helper"
 
-class LikeInteraction < ActionController::TestCase
+class LikeInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
 
@@ -19,7 +19,7 @@ class LikeInteraction < ActionController::TestCase
     wait_for_angular
 
     new_points = get_user_points_from_single_call_to_action_page
-    assert new_points > starting_points, "No point given like interaction"
+    assert new_points > starting_points, "No point given for like interaction"
 
     delete_user_interactions
 

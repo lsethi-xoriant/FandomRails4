@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ShareInteraction < ActionController::TestCase
+class ShareInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
 
@@ -15,8 +15,6 @@ class ShareInteraction < ActionController::TestCase
 
     visit(cta_link)
 
-    # starting_points = get_user_points_from_single_call_to_action_page
-
     # Direct url
     assert assert_no_selector("div[id$='-direct_url']"), "Direct url share div is present before click"
     find("button[ng-if$='.direct_url']").click
@@ -26,9 +24,6 @@ class ShareInteraction < ActionController::TestCase
     assert assert_no_selector("div[id$='-email']"), "Email share div is present before click"
     find("button[ng-if$='.email']").click
     assert assert_selector("div[id$='-email']"), "Email share div is not present after click"
-
-    # new_points = get_user_points_from_single_call_to_action_page
-    # assert new_points > starting_points, "No point given like interaction"
 
     delete_user_interactions
 

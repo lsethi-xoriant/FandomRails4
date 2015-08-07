@@ -35,18 +35,6 @@ class InstantwinControllerTest < ActionController::TestCase
     dates_and_wins_array = generate_dates_and_wins_array(Time.parse("2015-01-01T10:35:01 +0000"), Time.parse("2015-01-01T10:44:59 +0000"), true)
     check_win_test(dates_and_wins_array)
 
-    # params = { :interaction_id => @interaction.id, :format => :json }
-    # post(:play_ticket, params)
-
-    # assert_response :success, "Response was not successful"
-
-    # response_hash = JSON.parse(@response.body)
-    # assert response_hash["errors"].nil?, "Errors on response: #{ response_hash["errors"] }"
-
-    # puts "response: #{@response.body}"
-
-    # assert response_hash["approved"] == it_should_pass, "Comment approvation should have status #{it_should_pass}, but it has status \"#{ response_hash["approved"] }\""
-
   end
 
   def generate_dates_and_wins_array(from = 0.0, to = Time.now, with_a_winner = true, number_of_dates = 20)

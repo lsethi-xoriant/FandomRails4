@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CheckInteraction < ActionController::TestCase
+class CheckInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
 

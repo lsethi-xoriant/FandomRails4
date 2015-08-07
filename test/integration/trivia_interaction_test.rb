@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TriviaInteraction < ActionController::TestCase
+class TriviaInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
 
