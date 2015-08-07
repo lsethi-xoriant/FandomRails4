@@ -1,5 +1,5 @@
 require "test_helper"
-require "byebug"
+
 class VersusInteractionTest < ActionController::TestCase
 
   include Devise::TestHelpers
