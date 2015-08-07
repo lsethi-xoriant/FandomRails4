@@ -8,8 +8,65 @@ class UserInteractionsTest < ActionController::TestCase
     load_seed("user_interactions_seed")
   end
 
+  test "the user insert a comment" do
+    resource = init_resource("Comment")
+    switch_comment_interaction_approve_setting(resource, false)
+
+    comment_info =  { user_text: lorem_ipsum() }
+    params = { comment_info: comment_info, interaction_id: resource.interaction.id }
+
+    response = add_comment_computation(params)
+    comment = UserCommentInteraction.find(response[:comment]["id"])
+    assert check_comment_storage(comment, resource, true), "user comment not saved correctly"
+
+    resource = init_resource("Comment")
+    switch_comment_interaction_approve_setting(resource, true)
+    response = add_comment_computation(params)
+    comment = UserCommentInteraction.find(response[:comment]["id"])
+
+    assert check_comment_storage(comment, resource, nil), "user comment not saved correctly"
+  end
+
+  test "the anonymous user insert a comment" do
+    @current_user = anonymous_user()
+
+    captcha_code = "0000"
+    user_captcha = captcha_code
+    session_storage_captcha = Digest::MD5.hexdigest(captcha_code)
+
+    resource = init_resource("Comment")
+
+    switch_comment_interaction_approve_setting(resource, false)
+
+    comment_info =  { user_text: lorem_ipsum(), user_captcha: user_captcha }
+    params = { comment_info: comment_info, interaction_id: resource.interaction.id, session_storage_captcha: session_storage_captcha}
+
+    response = add_comment_computation(params)
+
+    assert !response.has_key?(:errors), "anonymous user comment not saved correctly"
+  end
+
+  def switch_comment_interaction_approve_setting(resource, must_be_approved, destroy_user_comment_interactions = true)
+    if resource.must_be_approved != must_be_approved
+      resource.update_attribute(:must_be_approved, must_be_approved)
+    end
+    if destroy_user_comment_interactions
+      resource.user_comment_interactions.where("user_comment_interactions.user_id = ?", current_user.id).destroy_all
+    end
+  end
+
+  def check_comment_storage(comment, resource, approved)
+    check_status = comment.approved == approved
+    check_storage = current_user.user_comment_interactions.count > 0
+
+    user_interactions_any = current_user.user_interactions.where(interaction_id: resource.interaction.id).any?
+    check_storage = approved ? (check_storage && user_interactions_any) : (check_storage && !user_interactions_any)
+
+    check_storage && check_status
+  end
+
   # warning: TEST interaction take from DB and not from temporaly seed  
-  test "the user makes a test" do
+  test "the user makes a test 2 times" do
     destroy_user_interactions()
     
     cta_test_name = "che-tipo-di-fan-dei-coldplay-sei"
@@ -184,15 +241,12 @@ class UserInteractionsTest < ActionController::TestCase
     if quiz?(resource_type)
       resource = find_quiz_resource(params[:quiz_type], params[:one_shot])
     else
+      resource = Object.const_get(resource_type).includes(interaction: :call_to_action).where("call_to_actions.name = '#{CTA_TEST_NAME}'")
+                       .references(:interactions, :call_to_actions)
       if params && params.has_key?(:one_shot)
-        resource = Object.const_get(resource_type).includes(interaction: :call_to_action)
-                                                  .where("call_to_actions.name = '#{CTA_TEST_NAME}'")
-                                                  .where("#{resource_type.downcase.pluralize}.one_shot = ?", params[:one_shot])
-                                                  .references(:interactions, :call_to_actions).first
-      else
-        resource = Object.const_get(resource_type).includes(interaction: :call_to_action).where("call_to_actions.name = '#{CTA_TEST_NAME}'")
-                       .references(:interactions, :call_to_actions).first
+        resource = resource.where("#{resource_type.downcase.pluralize}.one_shot = ?", params[:one_shot])
       end
+      resource = resource.first
     end
 
     if destroy_user_interactions
@@ -279,6 +333,9 @@ class UserInteractionsTest < ActionController::TestCase
   end
 
   def render_to_string(arg1, arg2)
+  end
+
+  def sign_in(arg1)
   end
   
 end
