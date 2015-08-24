@@ -36,7 +36,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
     find_and_click_update_cache_button
 
-    admin_logout
+    perform_logout
 
   end
 
@@ -61,7 +61,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     user_cta = CallToAction.where(:name => "user-cta-to-update").first
     user_cta.update_attribute(:approved, nil)
 
-    admin_logout
+    perform_logout
 
   end
 

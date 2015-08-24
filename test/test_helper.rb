@@ -41,17 +41,21 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Performs a login with admin credentials
-  def admin_login
+  # Performs a login with the given parameters
+  def login_with_data(user_email, user_password)
     visit(build_url_for_capybara("/users/sign_in"))
     within("form#new_user") do
-      fill_in "user_email", :with => "fragazzo@shado.tv"
-      fill_in "user_password", :with => "shado00"
+      fill_in "user_email", :with => user_email
+      fill_in "user_password", :with => user_password
       click_button("")
     end
   end
 
-  def admin_logout
+  def admin_login
+    login_with_data("fragazzo@shado.tv", "shado00")
+  end
+
+  def perform_logout
     visit(build_url_for_capybara("/users/sign_out"))
   end
 

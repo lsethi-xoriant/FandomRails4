@@ -27,7 +27,7 @@ class ShareInteractionTest < ActionController::TestCase
 
     delete_user_interactions
 
-    admin_logout
+    perform_logout
 
   end
 

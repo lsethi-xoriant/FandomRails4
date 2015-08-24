@@ -25,7 +25,7 @@ class VersusInteractionTest < ActionController::TestCase
 
     assert answers_points.values.uniq.count == 1, "Different points amount given for two versus answer"
 
-    admin_logout
+    perform_logout
 
   end
 

@@ -1,22 +1,21 @@
 require "test_helper"
 
-class RegistrationTest < ActionController::TestCase
+class ProfileTest < ActionController::TestCase
 
   include Devise::TestHelpers
 
   setup do
+    @user_email = build_new_user_email
   end
 
-  test "registration" do
-
-    user_email = build_new_user_email
+  test "uesr registration and editing" do
 
     visit(build_url_for_capybara("/users/sign_up"))
 
     within("form[action='/users']") do
       fill_in "user_first_name", :with => "John"
       fill_in "user_last_name", :with => "Doe"
-      fill_in "user_email", :with => user_email
+      fill_in "user_email", :with => @user_email
       fill_in "user_password", :with => "shado00"
       fill_in "user_password_confirmation", :with => "shado00"
       check("user_privacy")
@@ -29,7 +28,7 @@ class RegistrationTest < ActionController::TestCase
     assert user_first_name == "John", "User name is not \"John\", but \"#{user_first_name}\""
 
     notices_link = find("a[ng-href='/profile/notices']")
-    assert notices_link.text.to_i > 0, "User hasn't any notice after registration"
+    assert notices_link.text.to_i > 0, "User has no notice after registration"
     notices_link.click
 
     within("div.section-heading") do
@@ -43,6 +42,12 @@ class RegistrationTest < ActionController::TestCase
     profile_url = current_url
     find("a", :text => "Profilo").click
     assert current_url == profile_url, "After secondary menu profile link click, redirected to #{current_url} instead of #{profile_url}"
+
+    within("div.profile-header__item--level") do
+      level = find("p.profile-header__item__title").text
+      assert level == "level-1", "Level in profile page should be \"level-1\", but it is \"#{level}\""
+    end
+
     assert assert_selector("input#user_first_name"), "User first name input is not present"
     assert assert_selector("input#user_last_name"), "User last name input is not present"
     fill_in "user_first_name", :with => "Joe"
@@ -51,7 +56,6 @@ class RegistrationTest < ActionController::TestCase
 
     assert assert_selector("div.alert"), "No alert present after changing user full name"
     assert find("div.alert")[:class].include?("alert-success"), "No success alert rendered after changing user full name"
-
 
   end
 

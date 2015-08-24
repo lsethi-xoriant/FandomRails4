@@ -39,7 +39,7 @@ class CommentInteractionTest < ActionController::TestCase
 
     assert last_comment_text == @comment_text, "Comment should be \"#{@comment_text}\", but it is \"#{last_comment_text}\""
 
-    admin_logout
+    perform_logout
 
   end
 

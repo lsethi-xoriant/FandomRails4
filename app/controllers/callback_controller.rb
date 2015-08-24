@@ -70,7 +70,7 @@ class CallbackController < ApplicationController
           request_params.merge!({ "min_tag_id" => min_tag_id.to_i }) if min_tag_id
           url = "https://api.instagram.com/v1/tags/#{tag_name}/media/recent#{build_arguments_string_for_request(request_params)}"
           res = JSON.parse(open(url).read)
-          headers = { "Content-Type" => "application/json", "Accept" => "application/json"}
+          headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
           media_already_processed = []
 
           res["data"].each do |media|
