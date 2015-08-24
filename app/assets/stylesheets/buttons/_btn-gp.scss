@@ -1,0 +1,47 @@
+/********************* BTN GOOGLE+ *********************/
+
+.btn-gp { 
+  color: #FFFFFF; 
+  background-color: #D73D32; 
+  border-color: #D73D32; 
+} 
+ 
+.btn-gp:hover, 
+.btn-gp:focus, 
+.btn-gp:active, 
+.btn-gp.active, 
+.open .dropdown-toggle.btn-gp { 
+  color: #FFFFFF; 
+  background-color: #DB584F; 
+  border-color: #D73D32; 
+} 
+ 
+.btn-gp:active, 
+.btn-gp.active, 
+.open .dropdown-toggle.btn-gp { 
+  background-image: none; 
+} 
+ 
+.btn-gp.disabled, 
+.btn-gp[disabled], 
+fieldset[disabled] .btn-gp, 
+.btn-gp.disabled:hover, 
+.btn-gp[disabled]:hover, 
+fieldset[disabled] .btn-gp:hover, 
+.btn-gp.disabled:focus, 
+.btn-gp[disabled]:focus, 
+fieldset[disabled] .btn-gp:focus, 
+.btn-gp.disabled:active, 
+.btn-gp[disabled]:active, 
+fieldset[disabled] .btn-gp:active, 
+.btn-gp.disabled.active, 
+.btn-gp[disabled].active, 
+fieldset[disabled] .btn-gp.active { 
+  background-color: #D73D32; 
+  border-color: #D73D32; 
+} 
+ 
+.btn-gp .badge { 
+  color: #D73D32; 
+  background-color: #FFFFFF; 
+}

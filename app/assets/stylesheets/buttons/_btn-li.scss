@@ -1,0 +1,47 @@
+/********************* BTN LINKEDIN *********************/
+
+.btn-li { 
+  color: #FFFFFF; 
+  background-color: #1078B3; 
+  border-color: #1078B3; 
+} 
+ 
+.btn-li:hover, 
+.btn-li:focus, 
+.btn-li:active, 
+.btn-li.active, 
+.open .dropdown-toggle.btn-li { 
+  color: #FFFFFF; 
+  background-color: #368FC2; 
+  border-color: #1078B3; 
+} 
+ 
+.btn-li:active, 
+.btn-li.active, 
+.open .dropdown-toggle.btn-li { 
+  background-image: none; 
+} 
+ 
+.btn-li.disabled, 
+.btn-li[disabled], 
+fieldset[disabled] .btn-li, 
+.btn-li.disabled:hover, 
+.btn-li[disabled]:hover, 
+fieldset[disabled] .btn-li:hover, 
+.btn-li.disabled:focus, 
+.btn-li[disabled]:focus, 
+fieldset[disabled] .btn-li:focus, 
+.btn-li.disabled:active, 
+.btn-li[disabled]:active, 
+fieldset[disabled] .btn-li:active, 
+.btn-li.disabled.active, 
+.btn-li[disabled].active, 
+fieldset[disabled] .btn-li.active { 
+  background-color: #1078B3; 
+  border-color: #1078B3; 
+} 
+ 
+.btn-li .badge { 
+  color: #1078B3; 
+  background-color: #FFFFFF; 
+}

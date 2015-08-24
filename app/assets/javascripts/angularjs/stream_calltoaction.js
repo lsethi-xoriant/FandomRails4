@@ -1131,8 +1131,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     angular.forEach(cta_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.when_show_interaction == "OVERVIDEO_DURING_WITH_CHAPTERING") {
         chaptering.push({
+          id: interaction_info.interaction.id,
           position: ((interaction_info.interaction.seconds * 100) / duration),
-          second: interaction_info.interaction.seconds
+          second: interaction_info.interaction.seconds,
+          active: false
         });
       }
     });
@@ -1335,8 +1337,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     player.pause();
 
+    cta_info = getCallToActionInfo(calltoaction_id);
+    if(cta_info.chaptering) {
+      angular.forEach(cta_info.chaptering, function(chapter) {
+        if(chapter.id == overvideo_interaction.interaction.id) {
+          chapter.active = true;
+        }
+      });
+    }
+
     if(overvideo_interaction.user_interaction) {
-      cta_info = getCallToActionInfo(calltoaction_id);
       cta_info.overvideo_interaction_timeout = $timeout(function() { 
         removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction);
       }, 5000);
@@ -1345,6 +1355,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   function removeOvervideoInteraction(player, calltoaction_id, overvideo_interaction) {
+    cta_info = getCallToActionInfo(calltoaction_id);
+    if(cta_info.chaptering) {
+      angular.forEach(cta_info.chaptering, function(chapter) {
+        if(chapter.id == overvideo_interaction.interaction.id) {
+          chapter.active = false;
+        }
+      });
+    }
 
     if(overvideo_interaction.interaction.resource_type == "trivia") {
       overvideo_interaction.question_class = "trivia-interaction__question-fade-out";
@@ -1382,7 +1400,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         });
 
         if(overvideo_interaction.interaction.when_show_interaction == "OVERVIDEO_END") {
-          getCallToActionInfo(calltoaction_id).active_end_interaction = true;
+          cta_info.active_end_interaction = true;
         }
 
       }, 1500);
@@ -1397,7 +1415,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	this.media_data = media_data;
   	
 	  this.playerManager = new YT.Player( (this.playerId), {
-        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0, autohide: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
+        playerVars: { html5: 1, rel: 0, wmode: "transparent", showinfo: 0 }, /* { html5: 1, controls: 0, disablekb: 1, rel: 0, wmode: "transparent", showinfo: 0 }, */
         height: "100%", width: "100%",
         videoId: this.media_data,
         events: { 'onReady': onYouTubePlayerReady, 'onStateChange': onPlayerStateChange }
@@ -1739,7 +1757,14 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   //////////////////////// USER EVENTS METHODS ////////////////////////
 
+  $scope.showEmailShareModal = function(cta_info, interaction_info) {
+    $("#cta-" + cta_info.calltoaction.id + "-share-modal").modal("hide");
+    $("#modal-interaction-" + interaction_info.interaction.id + "-email").modal("show");
+  };
+
   $scope.shareWith = function(cta_info, interaction_info, provider, enable_linked_share) {
+    $("#cta-" + cta_info.calltoaction.id + "-share-modal").modal("hide");
+
     if(angular.isUndefined(enable_linked_share)) {
       enable_linked_share = false;
     }

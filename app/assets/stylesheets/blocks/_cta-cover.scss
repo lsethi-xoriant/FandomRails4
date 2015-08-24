@@ -26,25 +26,23 @@
   position: absolute; 
   width: 100%; 
   z-index: 10; 
-  top: 25%;
+  top: 0;
+  bottom: 0;
   opacity: 0;
   -webkit-transition: opacity 200ms ease 0s;
   transition: opacity 200ms ease 0s;
 }
 
 .cta-cover__media_type--content {
-  background: $blu; 
-  border-radius: 50%; 
-  width: 80px; 
-  height: 80px; 
-  margin-left: auto; 
-  margin-right: auto;
-  opacity: 0.65;
   text-align: center;
   .fa {
+    position: absolute;
+    top: 25%;
     color: #fff;
-    font-size: 42px;
+    font-size: 46px;
     line-height: 80px;
+    left: 0;
+    right: 0;
   }
 }
 
@@ -59,7 +57,7 @@
   -moz-box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
   .cta-cover__media_type {
-    opacity: 1;
+    opacity: 0.65;
     -webkit-transition: opacity 200ms ease 0s;
     transition: opacity 200ms ease 0s;
   }
@@ -104,7 +102,7 @@
 }
 
 .cta-cover__winnable-reward__label {
-  font-size: 14px;
+  font-size: 18px;
   border-radius: 15px;
   color: $red;
   background: #fcc839; 
@@ -112,11 +110,11 @@
   background: -o-linear-gradient(#fcc839, #ecb62d);
   background: -moz-linear-gradient(#fcc839, #ecb62d);
   background: linear-gradient(#fcc839, #ecb62d);
-  padding-top: 7px;
+  padding-top: 5px;
 }
 
 .cta-cover__glyphicon-icon {
-  font-size: 10px !important;
+  font-size: 14px !important;
   margin-left: 3px;
   position: relative;
   top: -1px;
@@ -139,7 +137,7 @@
 .cta-cover__miniformat {
   font-size: 10px;
   text-transform: capitalize;
-  color: #fff;
+  color: #999;
 }
 
 .cta-cover__winnable-reward__label.label-success {

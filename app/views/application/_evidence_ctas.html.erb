@@ -27,10 +27,6 @@
               <%= render partial: "/call_to_action/miniformat" %>
             </div>
             <p class="ctas__title">{{calltoaction.title}}</p>
-            <!-- <p class="hidden-xs" style="color: #fff; margin-bottom: 15px; margin-top: 5px;" ng-bind-html="calltoaction.description | cut:true:70"></p> -->
-            <%= light_link_to("/call_to_action/{{calltoaction.slug}}", class: "btn btn-primary ctas__button hidden-xs") do %>
-              <span>Vai</span>
-            <% end %>
             <p class="ctas_likes hidden-xs"><span class="fa fa-thumbs-up ctas__thumbs-up"></span>{{calltoaction.like}}</p>
             <p class="ctas_comments hidden-xs"><span class="glyphicon glyphicon-comment ctas__glyphicon-comment"></span>{{calltoaction.comment}}</p>
           </div>
