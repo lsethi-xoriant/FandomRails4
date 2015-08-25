@@ -231,17 +231,23 @@ module BrowseHelper
   end
   
   def get_browse_section_icon(extra_fields)
+    icon_info = {}
     if !extra_fields.nil?
       if extra_fields["icon"] && upload_extra_field_present?(extra_fields["icon"])
-        "<img src='#{get_upload_extra_field_processor(extra_fields["icon"], :original)}' class='img-responsive' />"
+        icon_info["html"] = "<img src='#{get_upload_extra_field_processor(extra_fields["icon"], :original)}' class='img-responsive' />"
+        icon_info["html-class"] = ""
       elsif !extra_fields["icon"].nil?
-        "<span class=\"#{extra_fields["icon"]}\"></span>"
+        icon_info["html"] = "<span class=\"#{extra_fields["icon"]}\"></span>"
+        icon_info["html-class"] = extra_fields["icon"]
       else
-        "<span class=\"fa fa-star\"></span>"
+        icon_info["html"] = "<span class=\"fa fa-star\"></span>"
+        icon_info["html-class"] = "fa fa-star"
       end
     else
-      "<span class=\"fa fa-star\"></span>"
-    end      
+      icon_info["html"] = "<span class=\"fa fa-star\"></span>"
+      icon_info["html-class"] = "fa fa-star"
+    end
+    icon_info
   end
   
   def get_content_previews_with_tags(tags, params = {}) # TODO: removed carousel_elements

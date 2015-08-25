@@ -32,4 +32,8 @@
       cta_info = reset_redo_user_interactions
       respond_with cta_info.to_json
     end
+
+    def upload
+      upload_helper
+    end
 end

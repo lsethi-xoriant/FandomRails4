@@ -363,38 +363,7 @@ class CallToActionController < ApplicationController
   end
 
   def upload
-    upload_interaction = Interaction.find(params[:interaction_id]).resource
-    extra_fields = JSON.parse(get_extra_fields!(upload_interaction.interaction.call_to_action)['form_extra_fields'])['fields'] rescue nil;
-    calltoaction = CallToAction.find(params[:cta_id])
-
-    params_obj = JSON.parse(params["obj"])
-    params_obj["releasing"] = params["releasing"]
-    params_obj["upload"] = params["attachment"]
-
-    extra_fields_valid, extra_field_errors, cloned_cta_extra_fields = validate_upload_extra_fields(params_obj, extra_fields)
-
-    if !extra_fields_valid
-      response = { "errors" => extra_field_errors.join(", ") }
-    else
-      cloned_cta = create_user_calltoactions(upload_interaction, params_obj)
-      if cloned_cta.errors.any?
-        response = { "errors" => cloned_cta.errors.full_messages.join(", ") }
-      else
-        get_extra_fields!(cloned_cta).merge!(cloned_cta_extra_fields)
-        cloned_cta.save
-      end
-    end
-
-    respond_to do |format|
-      format.json { render json: response.to_json }
-    end     
-  end
-
-  def create_user_calltoactions(upload_interaction, params)
-    cloned_cta = clone_and_create_cta(upload_interaction, params, upload_interaction.watermark)
-    cloned_cta.build_user_upload_interaction(user_id: current_user.id, upload_id: upload_interaction.id)
-    cloned_cta.save
-    cloned_cta
+    upload_helper
   end
   
   def check_privacy_accepted(upload_interaction)
