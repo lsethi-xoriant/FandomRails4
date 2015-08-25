@@ -1080,4 +1080,16 @@ module ApplicationHelper
     res
   end
   
+  def get_max_updated_at_from_cta_info_list(calltoaction_info_list)
+    result = nil
+    calltoaction_info_list.each do |cta_info|
+      updated_at = cta_info['calltoaction']['updated_at']
+      if result.nil? || result < updated_at
+        result = updated_at
+      end
+    end
+
+    result.nil? ? "" : result
+  end
+  
 end

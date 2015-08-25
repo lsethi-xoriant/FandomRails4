@@ -533,7 +533,7 @@ module RewardHelper
     end
   end
   
-  def prepare_reward_section(rewards, title, key, icon)
+  def prepare_reward_section(rewards, title, key, icon, link)
     
     reward_section = ContentSection.new(
       {
@@ -544,7 +544,7 @@ module RewardHelper
           "html-class" => icon
         },
         contents: prepare_rewards_for_stripe(rewards.slice(0,6)),
-        view_all_link: "",
+        view_all_link: link,
         column_number: DEFAULT_VIEW_ALL_ELEMENTS/4
       })
       
@@ -583,6 +583,10 @@ module RewardHelper
       end
     end
     available_rewards
+  end
+  
+  def get_property_for_reward_catalogue
+    get_context()
   end
   
 end

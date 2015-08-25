@@ -28,10 +28,6 @@ class RewardController < ApplicationController
     @reward_list = reward_list
   end
 
-  def get_property_for_reward_catalogue
-    get_context()
-  end
-
   def prepare_rewards_for_presentation(rewards)
     unless rewards.empty?
       reward_info_list = []

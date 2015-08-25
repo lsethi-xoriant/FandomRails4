@@ -71,9 +71,9 @@
       extra_info = {}
       if current_user
         user_rewards = get_user_rewards(all_rewards_hash).slice(0,8)
-        reward_stripes << prepare_reward_section(user_rewards, "I miei premi", "miei-premi", "fa fa-bullseye")
+        reward_stripes << prepare_reward_section(user_rewards, "I miei premi", "miei-premi", "fa fa-bullseye", "gained")
         user_available_rewards = get_user_available_rewards(all_rewards_hash)
-        reward_stripes << prepare_reward_section(user_available_rewards, "Premi che puoi sbloccare", "premi-sbloccabili", "fa fa-unlock-alt")
+        reward_stripes << prepare_reward_section(user_available_rewards, "Premi che puoi sbloccare", "premi-sbloccabili", "fa fa-unlock-alt", "avaiable")
         header_message = "Hai #{get_counter_about_user_reward("credit")} crediti a disposizione"
         extra_info = {
           "credits" => get_counter_about_user_reward("credit")
@@ -84,7 +84,7 @@
         header_message = "Registrati per ottenere crediti e sbloccare i contenuti esclusivi della community."
       end
 
-      reward_stripes << prepare_reward_section(all_rewards_hash.values, "Tutti i premi", "tutti-premi", "fa fa-th-large")
+      reward_stripes << prepare_reward_section(all_rewards_hash.values, "Tutti i premi", "tutti-premi", "fa fa-th-large", "all")
       
       response = {
         "browse_sections" => reward_stripes,
@@ -124,18 +124,6 @@
     def get_cta_highlighted_carousel()
       property = get_property()
       build_evidence_cta_info_list(property)
-    end
-
-    def get_max_updated_at_from_cta_info_list(calltoaction_info_list)
-      result = nil
-      calltoaction_info_list.each do |cta_info|
-        updated_at = cta_info['calltoaction']['updated_at']
-        if result.nil? || result < updated_at
-          result = updated_at
-        end
-      end
-
-      result.nil? ? "" : result
     end
     
     def map_highlighted_ctas_to_content_preview(hightlight_ctas)

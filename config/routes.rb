@@ -372,6 +372,9 @@ Fandom::Application.routes.draw do
       get "/captcha", :to => "comment#generate_captcha", defaults: { format: 'json' }
       post "/ugc/create/:cta_id/:interaction_id", :to => "call_to_action#upload", defaults: { format: 'json' }
       get "/catalogue", :to => "application#index_catalogue", defaults: { format: 'json' }
+      get "/catalogue/all", :to => "reward#show_all_catalogue", defaults: { format: 'json' }
+      get "/catalogue/avaiable", :to => "reward#show_all_available_catalogue", defaults: { format: 'json' }
+      get "/catalogue/gained", :to => "reward#show_all_my_catalogue", defaults: { format: 'json' }
     end
   end
 
