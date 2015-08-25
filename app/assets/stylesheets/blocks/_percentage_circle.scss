@@ -1,4 +1,5 @@
 .percentage_circle_overvideo {
+  z-index: 15;
   position: absolute !important;
   bottom: 0 !important;
   right: 0 !important;
@@ -832,18 +833,6 @@
 .percentage_circle:hover {
   cursor: default;
 }
-.percentage_circle:hover > span {
-  width: 3.33em;
-  line-height: 3.33em;
-  font-size: 0.3em;
-  color: #307bbb;
-}
-.percentage_circle:hover:after {
-  top: 0.04em;
-  left: 0.04em;
-  width: 0.92em;
-  height: 0.92em;
-}
 .percentage_circle.dark {
   background-color: #777777;
 }
@@ -857,30 +846,22 @@
 .percentage_circle.dark:after {
   background-color: #666666;
 }
-.percentage_circle.dark:hover > span {
-  color: #c6ff00;
-}
 .percentage_circle.green .percentage_circle_bar, .percentage_circle.green .percentage_circle_fill {
   border-color: #4db53c !important;
-}
-.percentage_circle.green:hover > span {
-  color: #4db53c;
 }
 .percentage_circle.green.dark .percentage_circle_bar, .percentage_circle.green.dark .percentage_circle_fill {
   border-color: #5fd400 !important;
 }
-.percentage_circle.green.dark:hover > span {
-  color: #5fd400;
-}
 .percentage_circle.orange .percentage_circle_bar, .percentage_circle.orange .percentage_circle_fill {
   border-color: #dd9d22 !important;
-}
-.percentage_circle.orange:hover > span {
-  color: #dd9d22;
 }
 .percentage_circle.orange.dark .percentage_circle_bar, .percentage_circle.orange.dark .percentage_circle_fill {
   border-color: #e08833 !important;
 }
-.percentage_circle.orange.dark:hover > span {
-  color: #e08833;
+.percentace_circle_value {
+  width: 100px !important;
+  height: 100px !important;
+  line-height: 100px !important;
+  font-size: 42px !important;
+  color: #fff !important;
 }

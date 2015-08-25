@@ -57,9 +57,10 @@ $filters-item-margin-right: 15px;
     font-size: 18px;
     font-weight: bold;
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 15px;
+    right: 15px;
     bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .filters__title--gallery-counter {

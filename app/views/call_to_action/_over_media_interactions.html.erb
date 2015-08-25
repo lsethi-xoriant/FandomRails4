@@ -17,18 +17,14 @@
     </div>
   </div>
 
-  <div class="play-interaction__container over-media-pin-interaction__container">
-
-    <div style="position: relative; height: 100%; width: 100%;">
-
+  <div class="over-media-pin-interaction__container">
+    <div class="over-media-pin-interaction__subcontainer">
       <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia | filter:filterPinInteractions">
-        <div id="pin-btn-{{interaction_info.interaction.id}}" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="{{interaction_info.interaction.resource.coordinates.description}}" ng-style="{'top': interaction_info.interaction.resource.coordinates.y_coord + '%', 'left': interaction_info.interaction.resource.coordinates.x_coord + '%'}" class="pin-interaction__pin {{interaction_info.class}}" ng-click="updatePin(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" ></div>
-
+        <div id="pin-btn-{{interaction_info.interaction.id}}" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-content="{{interaction_info.interaction.resource.coordinates.description}}" ng-style="{'top': interaction_info.interaction.resource.coordinates.y_coord + '%', 'left': interaction_info.interaction.resource.coordinates.x_coord + '%'}" class="pin-interaction__pin cta-{{calltoaction_info.calltoaction.id}}-pin {{interaction_info.class}}" ng-click="updatePin(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)" ></div>
       </div>
-
     </div>
-
   </div>
+
 </div>
 
 <div class="play-interaction__container over-media-{{interaction_info.interaction.resource_type}}-interaction__container" ng-class="{'over-media-test-result-interaction__container': (hasCtaHistory(calltoaction_info) && isLastStepInLinkedCallToAction(calltoaction_info))}" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterVisibleInteractionsOverMedia | filter:excludePinInteractions">

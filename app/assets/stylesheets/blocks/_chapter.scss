@@ -16,19 +16,8 @@
 
   animation: pulsePinAnimation 1.5s ease-out;
   animation-iteration-count: infinite; 
-
-  opacity: 0;
-
-  -webkit-transition: opacity 300ms ease 0s;
-  transition: opacity 300ms ease 0s;
 }
 
 .chapter-active {
   background-color: #fff !important;
-}
-
-.media-youtube:hover {
-  .chapter {
-    opacity: 1;
-  }
 }

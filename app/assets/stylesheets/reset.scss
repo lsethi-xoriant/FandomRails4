@@ -13,12 +13,22 @@ body {
   color: red;
 }
 
-p{
+p {
   margin: 0;
   line-height: inherit;
 }
 
-.row-load-more{
+.media-progress {
+  z-index: 10; 
+  position: absolute; 
+  bottom: 15px; 
+  left: 15px; 
+  right: 15px; 
+  height: 5px; 
+  border-radius: 0;
+}
+
+.row-load-more {
   padding: 20px 0 !important;
   text-align: center;
 }
@@ -157,11 +167,7 @@ a {
 }
 
 .brws-item {
-  background: $grey; 
-  background: -webkit-linear-gradient(#FFFFFF, $grey);
-  background: -o-linear-gradient(#FFFFFF, $grey);
-  background: -moz-linear-gradient(#FFFFFF, $grey);
-  background: linear-gradient(#FFFFFF, $grey);
+  background: #fff; 
   border-bottom: 1px solid #d1d2d4;
   padding-bottom: 30px;
 }

@@ -37,7 +37,7 @@
   text-align: center;
   .fa {
     position: absolute;
-    top: 25%;
+    top: 30%;
     color: #fff;
     font-size: 46px;
     line-height: 80px;
@@ -187,6 +187,13 @@
   font-size: 13px;
 }
 
+.cta-cover__tt {
+  position: absolute; 
+  color: #fff; 
+  margin-top: 15px; 
+  font-size: 18px;
+}
+
 @media (max-width: $screen-sm-min) { 
   .cta-cover__flag {
     left: 10px;
@@ -197,7 +204,7 @@
 
   .cta-cover__vote-username {
     font-size: 16px;
-    margin-top: 8px;
+    margin-top: 5px;
     text-overflow: ellipsis;
   }
 
