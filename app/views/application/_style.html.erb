@@ -10,11 +10,36 @@
     }
   <% end %>
 
+  .section-heading__marker {
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
   .append-comments {
     color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }
 
-  .relateds__title a {
+  .btn-filter {
+    background-color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+    border-color: <%= darken_color(aux["property_info"]['extra_fields']["background_color"]) %> !important;
+  }
+
+  .cta__sidebar-panel--sign-up__title {
+    color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .btn-filter:hover {
+    background-color: <%= lighten_color(aux["property_info"]['extra_fields']["background_color"], 0.5) %> !important;
+  }
+
+  .profile-header__item__rank-position {
+    color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .ranking-element__position {
+    color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
+  }
+
+  .relateds__title a, .section-heading__see-all {
     color: <%= aux["property_info"]['extra_fields']["background_color"] %> !important;
   }
 

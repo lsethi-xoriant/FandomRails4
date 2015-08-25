@@ -20,6 +20,8 @@ module CallToActionHelper
     
     sidebar_content_previews.contents.each do |content|
       case content.title
+      when "sign-up-widget"
+        content.type = content.title
       when "fan-of-the-day-widget"
         content.type = content.title
         winner_of_the_day = get_winner_of_day(Date.yesterday)

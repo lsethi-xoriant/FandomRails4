@@ -1,8 +1,12 @@
 <div class="container container--default">
 	<% unless small_mobile_device? %>
-  		<%= render partial: "profile/profile_header" %>
-  		<%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
-  	<% end %>
+		<div class="row">
+      <div class="col-md-12" style="margin-bottom: 15px; margin-top: 15px;">
+        <%= render partial: "profile/profile_header" %>
+      </div>
+    </div>
+		<%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
+  <% end %>
   <%= form_for(resource, :as => resource_name, :url => "/users/edit", :html => { :method => :put, :multipart => true }) do |f| %>
     <div class="row" style="padding: 10px 0;">
       <div class="col-md-12">

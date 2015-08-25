@@ -1,8 +1,12 @@
 <div class="container container--default">
 	<% if current_user %>
-		<%= render partial: "profile/profile_header" %>
-  		<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
-  	<% end %>
+		<div class="row">
+      <div class="col-md-12" style="margin-bottom: 15px; margin-top: 15px;">
+        <%= render partial: "profile/profile_header" %>
+      </div>
+    </div>
+  	<%= render partial: "profile/profile_navbar", locals: { page: "rankings" } %>
+  <% end %>
 
   <div class="row brws-item main-row" style="padding-top: 30px;">
     <div class="col-xs-12">
