@@ -52,8 +52,10 @@
     <div class="relateds-flexslider__item-panel text-left cta__sidebar-panel cta__sidebar-panel--tag" ng-if="content.extra_fields.layout == 'image'"> 
       <div class="row">
         <div class="col-xs-12" style="padding: 0;">
-          <img class="cta-preview__image--tag" ng-src="{{content.thumb_original_url}}">            
+          <img class="cta-preview__image--tag" ng-src="{{content.thumb_original_url}}">   
         </div>
+      </div>
+      <div ng-if="content.extra_fields.text" style="position: absolute; bottom: 0; padding: 10px; color: #fff; background-color: rgba(0, 0, 0, 0.6); font-size: 18px;" ng-bind-html="content.extra_fields.text">   
       </div>
     </div>  
   </a>

@@ -64,8 +64,8 @@ module ProfileHelper
   def get_max_level_with_status(levels, status)
     max_level = nil
     max_cost = -1
-    levels.each do  |key, level| 
-      cost = level["cost"].to_i
+    levels.each do |key, level|
+      cost = level["level"]["cost"].to_i
       if level["status"] == status && (!max_level || cost > max_cost)
         max_level = level
         max_cost = cost

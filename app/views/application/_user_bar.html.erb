@@ -1,25 +1,29 @@
 <%= render partial: "/application/modals" %>
 
-<div class="container properties__container hidden-xs" style="border-top: 10px solid {{aux.property_info.background}};">
-  <div class="row text-center">
-    <%= render partial: "/application/properties" %>
+<div class="properties__container hidden-xs">
+  <div class="container">
+    <div class="row text-center">
+      <%= render partial: "/application/properties" %>
+    </div>
   </div>
 </div>
 
-<div class="container main-menu__container hidden-xs">
-  <div class="row main-menu__row">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.extra_fields.url}}">{{item.title}}</a>
-            </li>
-            <li class="navbar-item--socials" ng-if="aux.assets.extra_fields.menu_item_socials" ng-bind-html="aux.assets.extra_fields.menu_item_socials">
-            </li>
-          </ul>
+<div class="main-menu__container hidden-xs">
+  <div class="container">
+    <div class="row main-menu__row">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.extra_fields.url}}">{{item.title}}</a>
+              </li>
+              <li class="navbar-item--socials" ng-if="aux.assets.extra_fields.menu_item_socials" ng-bind-html="aux.assets.extra_fields.menu_item_socials">
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </div>
 </div>
 

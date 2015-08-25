@@ -1,0 +1,47 @@
+/********************* BTN INSTAGRAM *********************/
+
+.btn-ig { 
+  color: #FFFFFF; 
+  background-color: #125688; 
+  border-color: #125688; 
+} 
+ 
+.btn-ig:hover, 
+.btn-ig:focus, 
+.btn-ig:active, 
+.btn-ig.active, 
+.open .dropdown-toggle.btn-ig { 
+  color: #FFFFFF; 
+  background-color: #2A638C; 
+  border-color: #125688; 
+} 
+ 
+.btn-ig:active, 
+.btn-ig.active, 
+.open .dropdown-toggle.btn-ig { 
+  background-image: none; 
+} 
+ 
+.btn-ig.disabled, 
+.btn-ig[disabled], 
+fieldset[disabled] .btn-ig, 
+.btn-ig.disabled:hover, 
+.btn-ig[disabled]:hover, 
+fieldset[disabled] .btn-ig:hover, 
+.btn-ig.disabled:focus, 
+.btn-ig[disabled]:focus, 
+fieldset[disabled] .btn-ig:focus, 
+.btn-ig.disabled:active, 
+.btn-ig[disabled]:active, 
+fieldset[disabled] .btn-ig:active, 
+.btn-ig.disabled.active, 
+.btn-ig[disabled].active, 
+fieldset[disabled] .btn-ig.active { 
+  background-color: #125688; 
+  border-color: #125688; 
+} 
+ 
+.btn-ig .badge { 
+  color: #125688; 
+  background-color: #FFFFFF; 
+}

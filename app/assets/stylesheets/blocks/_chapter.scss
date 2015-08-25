@@ -3,23 +3,21 @@
 
   margin-left: 5px;
 
-  width: 15px; 
-  height: 15px; 
+  width: 20px; 
+  height: 20px; 
   border-radius: 50%; 
   position: absolute; 
-  bottom: 23px;
+  bottom: 28px;
 
   z-index: 10;
-
-  background: #BF0C19; 
-  background: -webkit-linear-gradient(#e73141, #BF0C19);
-  background: -o-linear-gradient(#e73141, #BF0C19);
-  background: -moz-linear-gradient(#e73141, #BF0C19);
-  background: linear-gradient(#e73141, #BF0C19);
 
   -webkit-animation: pulsePinAnimation 1.5s ease-out;
   -webkit-animation-iteration-count: infinite; 
 
   animation: pulsePinAnimation 1.5s ease-out;
   animation-iteration-count: infinite; 
+}
+
+.chapter-active {
+  background-color: #fff !important;
 }

@@ -60,6 +60,11 @@ $properties-item-margin-right: 8px;
   border-top: 1px solid #ccc;
 }
 
+.properties__flexslider .flex-direction-nav .flex-next, .properties__flexslider .flex-direction-nav .flex-prev {
+  box-shadow: none;
+  border: none;
+}
+
 @media (max-width: $screen-md-min) {
   .properties__flexslider {
     max-width: 250px;

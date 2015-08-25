@@ -13,40 +13,50 @@ body {
   color: red;
 }
 
-.disney-js-mh-footer-logo {
-    background: url("http://navbar.disneyinternational.com/disney-logo-dark.png") no-repeat scroll 0 0 / contain rgba(0, 0, 0, 0) !important;
-}
-
-.disney-js-mh-footer-menu.disney-js-mh-footer-about > li > a {
-  color: #000 !important;
-}
-
-p{
+p {
   margin: 0;
   line-height: inherit;
 }
 
-.row-load-more{
+.media-progress {
+  z-index: 10; 
+  position: absolute; 
+  bottom: 15px; 
+  left: 15px; 
+  right: 15px; 
+  height: 5px; 
+  border-radius: 0;
+}
+
+.row-load-more {
   padding: 20px 0 !important;
   text-align: center;
 }
 
-#goc-body {
-  background: transparent !important;
+.btn-square {
+  color: #999;
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  span {
+    font-size: 18px !important; 
+    line-height: 40px;
+  }
 }
 
-.adv-square__container {
-  //padding: 0;
+.btn-square--big {
+  height: 50px;
+  width: 50px;
+  margin: 3px;
+  span {
+    font-size: 28px !important; 
+    line-height: 50px;
+  }
 }
 
 .main-row__covers {
   padding-top: 40px;
-  background-image: url("disney/bg-shadow.png");
   background-color: #ffffff;
-  background-image: url("http://cdnvideo.dolimg.com/cdn_assets/2e50c273c01614fbe457f8ef521884397b600fe5.jpg");
-  background-position: left top;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 0;
 }
@@ -85,10 +95,6 @@ p{
   width: 728px;
 }
 
-//.flowplayer.is-paused {
-//  opacity: 0.9;
-//}
-
 .container--footer {
   background: #ebebeb;
   border-left: 1px solid #ccc;
@@ -97,6 +103,10 @@ p{
   padding-bottom: 15px;
   margin-top: 0;
   margin-bottom: 0;
+  img {
+    max-width: 160px;
+    margin-bottom: 15px;
+  }
 }
 
 .main-container {
@@ -105,11 +115,6 @@ p{
   border-right: 1px solid #ccc;
   background-color: #fff;
   padding-bottom: 0;
-  /*
-    -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  */
 }
 
 .main-row {
@@ -118,11 +123,10 @@ p{
 }
 
 * {
-  /*font-family: 'Matterhorn-Regular';*/
-  font-family: "Matterhorn";
+  font-family: "Roboto Condensed", helvetica, arial, sans-serif;
 }
 
-a{
+a {
   color: $blu;
 }
 
@@ -153,12 +157,6 @@ a{
   text-decoration: underline;
 }
 
-.btn {
-  span {
-    position: relative; top: 2px;
-  }
-}
-
 .comment_evidence {
     -webkit-animation: comment_evidence_animation 5s; /* Chrome, Safari, Opera */
     animation: comment_evidence_animation 3s;
@@ -169,11 +167,7 @@ a{
 }
 
 .brws-item {
-  background: $grey; 
-  background: -webkit-linear-gradient(#FFFFFF, $grey);
-  background: -o-linear-gradient(#FFFFFF, $grey);
-  background: -moz-linear-gradient(#FFFFFF, $grey);
-  background: linear-gradient(#FFFFFF, $grey);
+  background: #fff; 
   border-bottom: 1px solid #d1d2d4;
   padding-bottom: 30px;
 }

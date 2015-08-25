@@ -20,7 +20,7 @@
           <img ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}" class="cta-cover__thumbnail">
         </div>  
 
-        <div class="col-xs-12" style="position: absolute; color: #fff; margin-top: 55px;" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
+        <div class="col-xs-12 cta-cover__tt" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
           <p>{{calltoaction_info.calltoaction.description}}</p>
         </div>
 
@@ -48,7 +48,7 @@
           <div class="row">
             <div class="col-xs-10" ng-if="!calltoaction_info.calltoaction.extra_fields || !calltoaction_info.calltoaction.extra_fields.layout">
               <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.user.avatar}}" class="img-responsive"/>
-              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user.username}}</p>
+              <p class="cta-cover__vote-username">{{calltoaction_info.calltoaction.user.username | cut:true:15}}</p>
             </div>
             <div class="col-xs-10" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
               <img class="cta-cover__user-avatar" ng-src="{{calltoaction_info.calltoaction.extra_fields.twitter_avatar}}" class="img-responsive"/>

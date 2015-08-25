@@ -41,17 +41,22 @@
     </audio>
   
     <%= render partial: "/application/style", locals: { aux: @aux } %>
-    <%= render partial: "/application/user_bar" %>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 text-center" style="padding: 15px 0;">
-          <img style="max-width: 100%;" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=ADV%20728x90&w=728&h=90">
+    <div style="background-color: #fff; padding-bottom: 30px;">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 text-center" style="padding: 15px 0;">
+            <img style="max-width: 100%;" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=ADV%20728x90&w=728&h=90">
+          </div>
         </div>
       </div>
     </div>
 
+    <%= render partial: "/application/user_bar" %>
+
     <%= yield %>
+
+    <%= render partial: "/application/footer" %>
   </div>
 
   <%= render partial: "/application/ga" %>

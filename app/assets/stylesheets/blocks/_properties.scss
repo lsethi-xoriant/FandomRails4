@@ -1,12 +1,10 @@
 /* PROPERTIES */
 
 .properties__container {
-  position: relative;
   background-color: #fff;
-  -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
-  -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.6);
-  border-radius: 5px 5px 0 0;
+  .container {
+    position: relative;
+  }
 }
 
 .properties__logo {

@@ -1,0 +1,55 @@
+/********************* BTN TWITTER *********************/
+ 
+.btn-tt { 
+  color: #FFFFFF !important;
+  background-color: #55ACEE; 
+  border-color: #55ACEE; 
+} 
+ 
+.btn-tt-square {
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  padding: 0;
+  line-height: 40px;
+}
+
+.btn-tt:hover, 
+.btn-tt:focus, 
+.btn-tt:active, 
+.btn-tt.active, 
+.open .dropdown-toggle.btn-tt { 
+  color: #FFFFFF; 
+  background-color: #65AEE6; 
+  border-color: #55ACEE; 
+} 
+ 
+.btn-tt:active, 
+.btn-tt.active, 
+.open .dropdown-toggle.btn-tt { 
+  background-image: none; 
+} 
+ 
+.btn-tt.disabled, 
+.btn-tt[disabled], 
+fieldset[disabled] .btn-tt, 
+.btn-tt.disabled:hover, 
+.btn-tt[disabled]:hover, 
+fieldset[disabled] .btn-tt:hover, 
+.btn-tt.disabled:focus, 
+.btn-tt[disabled]:focus, 
+fieldset[disabled] .btn-tt:focus, 
+.btn-tt.disabled:active, 
+.btn-tt[disabled]:active, 
+fieldset[disabled] .btn-tt:active, 
+.btn-tt.disabled.active, 
+.btn-tt[disabled].active, 
+fieldset[disabled] .btn-tt.active { 
+  background-color: #55ACEE; 
+  border-color: #55ACEE; 
+} 
+ 
+.btn-tt .badge { 
+  color: #55ACEE; 
+  background-color: #FFFFFF; 
+}
