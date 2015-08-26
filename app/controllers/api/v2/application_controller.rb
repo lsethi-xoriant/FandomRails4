@@ -71,9 +71,9 @@
       extra_info = {}
       if current_user
         user_rewards = get_user_rewards(all_rewards_hash).slice(0,8)
-        reward_stripes << prepare_reward_section(user_rewards, "I miei premi", "miei-premi", "fa fa-bullseye", "gained")
+        reward_stripes << prepare_reward_section(user_rewards, "I miei premi", "gained", "fa fa-bullseye")
         user_available_rewards = get_user_available_rewards(all_rewards_hash)
-        reward_stripes << prepare_reward_section(user_available_rewards, "Premi che puoi sbloccare", "premi-sbloccabili", "fa fa-unlock-alt", "avaiable")
+        reward_stripes << prepare_reward_section(user_available_rewards, "Premi che puoi sbloccare", "avaiable", "fa fa-unlock-alt")
         header_message = "Hai #{get_counter_about_user_reward("credit")} crediti a disposizione"
         extra_info = {
           "credits" => get_counter_about_user_reward("credit")
@@ -84,7 +84,7 @@
         header_message = "Registrati per ottenere crediti e sbloccare i contenuti esclusivi della community."
       end
 
-      reward_stripes << prepare_reward_section(all_rewards_hash.values, "Tutti i premi", "tutti-premi", "fa fa-th-large", "all")
+      reward_stripes << prepare_reward_section(all_rewards_hash.values, "Tutti i premi", "all", "fa fa-th-large")
       
       response = {
         "browse_sections" => reward_stripes,
