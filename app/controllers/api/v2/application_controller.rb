@@ -66,7 +66,7 @@
     
     def index_catalogue
       #property = get_property_for_reward_catalogue
-      all_rewards_hash = get_all_rewards_map(nil)
+      all_rewards_hash = get_all_rewards_map(get_property_for_reward_catalogue)
       reward_stripes = []
       extra_info = {}
       if current_user
