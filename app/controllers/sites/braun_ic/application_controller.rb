@@ -131,11 +131,11 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       if current_user_update_status
         SystemMailer.braun_recipe_mail(current_user, product_hash).deliver
         flash[:notice] = "Dati salvati correttamente"
-        redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
+        redirect_to "/concorso_identitycollection_success#contest_identitycollection_success"
       else
-        flash[:error] = "Errore nel salvataggio, scrivi a support@shado.tv"
+        flash[:error] = "Errore nel salvataggio dei dati. Scrivi a support@shado.tv"
         log_error("contest_identitycollection_update", { exception: current_user.errors.to_s }) 
-        redirect_to "/concorso_identitycollection_success"
+        redirect_to "/concorso_identitycollection#contest_identitycollection_user_form"
       end
     else
       @products = get_braun_products()
