@@ -430,11 +430,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.groupingArrs = {};
 
-    if($scope.aux.from_registration) {
-      $("#registration-modal").modal("show");
-      update_ga_event("Registration", "Registration", "Registration", 1);
-    }
-
     $scope.calltoaction_ordering = "recent";
 
     if($scope.aux.mobile) {
@@ -472,6 +467,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.google_analytics_code = google_analytics_code;
     $scope.polling = false;
     $scope.youtube_api_ready = false;
+
+    if($scope.aux.from_registration) {
+      $("#registration-modal").modal("show");
+      update_ga_event("Registration", "Registration", "Registration", 1);
+    }
     
     loadYTApi();
     
