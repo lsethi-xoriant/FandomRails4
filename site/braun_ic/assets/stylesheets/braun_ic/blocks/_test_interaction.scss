@@ -56,10 +56,11 @@
     font-size: 12px !important;
     width: 100% !important;
     text-transform: uppercase;
+    min-height: 60px;
   }
 
   .test-answer__container {
-    height: 210px;
+    height: 235px;
     background-size: auto 100% !important;
     background-position: center;
   }
@@ -84,7 +85,7 @@
   }
 
   .test-question__col {
-    height: 80px;
+    height: 90px;
   }
 
   .test-question {

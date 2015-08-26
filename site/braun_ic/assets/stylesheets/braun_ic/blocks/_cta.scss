@@ -30,12 +30,12 @@ $cover-height: 490px;
   padding-top: 15px;
 }
 
-
 .cta_cover-end_container {
   height: ($cover-height - 2px);
   color: #fff;
-  background-size: 100% auto !important;
+  background-size: auto 100% !important;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 .cta_cover-end_container-percentage_container {
@@ -56,18 +56,44 @@ $cover-height: 490px;
 .cta_cover-end_container-description {
   font-size: 16px; 
   padding-top: 15px;
-  padding-right: 60px;
+  padding-right: 15px;
 }  
 
 .cta_cover-end_container-redo {
   font-size: 42px;
-  padding-right: 15px;
   cursor: pointer;
+  position: absolute;
+  bottom: 0;
 }
 
 .cta_cover-end_container-share_container {
   padding-top: 30px;
   padding-bottom: 30px;
+}
+
+.cta_cover-end_container-btn_container {
+  padding: 20px;
+  background-color: #000;
+  border-radius: 5px;
+  .btn-green-iw {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.cta_cover-end_container-btn_container-img {
+  width: 100px;
+  position: absolute;
+  left: -10px;
+  top: -40px;
+}
+
+.cta_cover-end_container-iw-title {
+  font-size: 16px;
+  padding-left: 85px;
+  span {
+    color: $green;
+  }
 }
 
 .cta_cover-img_container {
@@ -94,7 +120,7 @@ $cover-height: 490px;
 
 .cta_cover-end_container-credits_container {
   padding-top: 25px;
-  padding-bottom: 25px;
+  padding-bottom: 15px;
 }
 
 .cta_cover-credits_label_green {
@@ -257,11 +283,34 @@ $cover-height: 490px;
 
 @media (max-width: $screen-md-min) {
   .cta_cover-title {
-    font-size: 26px;
+    font-size: 22px;
     color: #fff;
   }
+
+  .cta_cover-end_container-description {
+    font-size: 14px;
+  }
+
   .cta_cover-img_container {
     background-size: auto 100%;
+  }
+
+  .cta_cover-end_container-btn_container {
+    padding: 15px;
+    background-color: #000;
+    border-radius: 5px;
+  }
+
+  .cta_cover-end_container-btn_container-img {
+    width: 85px;
+    position: absolute;
+    left: 0;
+    top: -35px;
+  }
+
+  .cta_cover-end_container-iw-title {
+    font-size: 12px;
+    padding-top: 3px;
   }
 }
 
@@ -271,10 +320,14 @@ $cover-height: 490px;
     padding-bottom: 15px;
   }
 
+  .cta_cover-end_container-btn_container-btn_col {
+    text-align: left !important; 
+  }
+
   .cta_cover-end_container-redo {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
+    bottom: -5px;
+    right: 15px;
+    z-index: 10;
   }
 
   .cta_cover-end_container-percentage_container {
@@ -300,11 +353,6 @@ $cover-height: 490px;
   .cta_cover-end_container {
     height: 378px;
     background: #000 !important;
-  }
-
-  .cta_cover-end_container {
-    background-size: 100% auto !important;
-    background-position: center;
   }
 
   .cta_cover-img__container {

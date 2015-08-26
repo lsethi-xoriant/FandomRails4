@@ -10,7 +10,7 @@
               <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-credits_container" } %>
 
               <!-- COVER IMAGE AND DESCRIPTION -->
-              <div class="col-sm-5 cta_cover-description_container">
+              <div class="col-sm-6 cta_cover-description_container">
                 <div class="row">
 
                   <div class="col-sm-12 hidden-sm cta_cover-description_padding">
@@ -83,6 +83,9 @@
             </div>
             <!-- COVER SHARE -->
             <div class="col-sm-12 cta_cover-end_container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)" ng-style="{'background': 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
+              
+              <span class="cta_cover-end_container-redo" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
+
               <div class="row">
                 <!-- STATUS -->
                 <%= render partial: "/call_to_action/cta_status", locals: { container_class: "cta_cover-end_container-credits_container hidden-xs" } %> 
@@ -119,29 +122,33 @@
                       <p class="cta_cover-end_container-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
                       <p class="cta_cover-end_container-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
                     </div>
-                    <div class="col-sm-12 cta_cover-end_container-share_container " ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
+                    <div class="col-sm-12 cta_cover-end_container-share_container" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions">
                         <%= render partial: "/call_to_action/share_interaction", locals: { enable_linked_share: true } %>
                     </div>
 
-                    <div class="col-sm-12">
-                      <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openInstantWinModal()">
-                        SCOPRI SE HAI VINTO
-                      </button>
-                      <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
-                        SCOPRI SE HAI VINTO
-                      </button>
-                      <a ng-if="isAnonymousUser()" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw">
-                        SCOPRI SE HAI VINTO
-                      </a>
+                    <div class="col-sm-11">
+                      <div class="row cta_cover-end_container-btn_container">
+                        <div class="col-sm-7 hidden-xs">
+                          <img class="cta_cover-end_container-btn_container-img" ng-src="{{aux.assets.extra_fields.minipimer.url}}">
+                          <p class="cta_cover-end_container-iw-title">Prova a vincere subito<br><span>1 Minipimer Braun</span></p>
+                        </div>
+                        <div class="col-sm-5 text-right cta_cover-end_container-btn_container-btn_col" style="padding: 0;">
+                          <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openInstantWinModal()">
+                            GIOCA E VINCI
+                          </button>
+                          <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+                            GIOCA E VINCI
+                          </button>
+                          <a ng-if="isAnonymousUser()" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw">
+                            GIOCA E VINCI
+                          </a>
+                        </div>
+                      </div>
                     </div>
 
-                    <div class="col-sm-12 text-right">
-                      <span class="cta_cover-end_container-redo hidden-xs" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
-                    </div>
                   </div>
                 </div>
               </div>
-              <span class="cta_cover-end_container-redo visible-xs" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
             </div>   
           </div>
         </div>
