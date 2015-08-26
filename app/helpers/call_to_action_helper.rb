@@ -436,7 +436,8 @@ module CallToActionHelper
       comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC").limit(5)
     end
 
-    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+    calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
+    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.includes(:interaction).where(interactions: { call_to_action_id: calltoaction_ids }).references(:interactions).maximum(:updated_at))
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
     user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}", params)
 

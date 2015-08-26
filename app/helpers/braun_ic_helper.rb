@@ -1,12 +1,8 @@
 module BraunIcHelper
   
   def adjust_braun_ic_reward(reward, inactive, activated_at)
-    if inactive
-      image = reward.not_awarded_image
-    else
-      image = reward.main_image
-    end
-
+    image = inactive.present? ? reward.not_awarded_image : reward.main_image
+      
     { 
       name: reward.name,
       title: reward.title,

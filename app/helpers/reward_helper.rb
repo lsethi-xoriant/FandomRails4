@@ -89,9 +89,7 @@ module RewardHelper
   end
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
-    if user.nil?
-      user = current_or_anonymous_user
-    end
+    user = current_or_anonymous_user if user.nil?
 
     if call_to_action_completed?(calltoaction, user)
       nil
