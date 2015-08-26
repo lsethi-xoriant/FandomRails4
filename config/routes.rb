@@ -375,6 +375,7 @@ Fandom::Application.routes.draw do
       get "/catalogue/all", :to => "reward#show_all_catalogue", defaults: { format: 'json' }
       get "/catalogue/avaiable", :to => "reward#show_all_available_catalogue", defaults: { format: 'json' }
       get "/catalogue/gained", :to => "reward#show_all_my_catalogue", defaults: { format: 'json' }
+      get "/catalogue/buy_reward", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
     end
   end
 

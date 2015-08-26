@@ -58,4 +58,21 @@ class Api::V2::RewardController < Api::V2::BaseController
     respond_with result.to_json
   end
   
+  def buy_reward_attempt
+    response = {}
+    reward = Reward.find(params[:reward_id])
+    
+    if user_has_currency_for_reward(reward)
+      buy_reward(current_user, reward)
+      
+      response["unlocked"] = true 
+      response["message"] = "Premio sbloccato hai ancora #{get_counter_about_user_reward(reward.currency.name)} #{reward.currency.name} crediti"
+    else
+      response["unlocked"] = false
+      response["message"] = "Non hai abbastanza #{reward.currency.name} per sbloccare questo premio"
+    end
+    
+    respond_with response.to_json
+  end
+  
 end
