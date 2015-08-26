@@ -13,6 +13,10 @@ body {
   color: red;
 }
 
+.panel-default > .panel-heading {
+  background-color: #fff;
+}
+
 p {
   margin: 0;
   line-height: inherit;

@@ -73,7 +73,7 @@ module UserInteractionHelper
   end
 
   def get_user_interactions_with_interaction_id(interaction_ids, user)
-    UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id).references(:interactions)
+    UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id)
   end
 
   def init_or_update_linked_user_interaction_ids(user_interaction_ids, value)
@@ -164,7 +164,6 @@ module UserInteractionHelper
           
           interaction_id = interaction_info["interaction"]["id"]
           user_interaction = find_in_user_interactions(user_interactions, interaction_id)
-
           if user_interaction
             user_interaction_for_interaction_info = build_user_interaction_for_interaction_info(user_interaction)
             interaction = user_interaction.interaction

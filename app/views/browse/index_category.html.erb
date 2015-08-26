@@ -4,8 +4,8 @@
     <h1 class="category-header__title"><%= @category.title %></h1>
     <div class="category-header__filter-area">
       <button class="btn btn-primary" ng-click="isTagFilterOpen = !isTagFilterOpen">
-        <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
-          Filtra
+        Filtra
+        <span class="fa fa-chevron-down"></span>
       </button>
     </div>
   </div>
@@ -13,7 +13,7 @@
     <div class="col-xs-12">
       <div collapse="!isTagFilterOpen" class="row category-filter main-row">
         <div ng-repeat="(tag_id, tag_name) in tags" class="col-sm-2 col-xs-6 category-filter__col">
-          <button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
+          <button class="category-filter__btn btn btn-xs btn-default category-filter__tag" ng-class="{ 'category-filter__tag--disabled': tagsEnabled[tag_id] == undefined, 'btn-dark-blue btn-filter': activeTags[tag_id] != undefined }" ng-disabled="tagsEnabled[tag_id] == undefined" ng-click="tagSelected(tag_id)">
             {{tag_name.title}}<span class="fa fa-remove" ng-if="activeTags[tag_id] != undefined"></span>
           </button>
         </div> 
@@ -26,8 +26,8 @@
     <div class="col-md-12 text-right" style="margin-top: 15px; margin-bottom: 15px;">
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-          <span class="glyphicon glyphicon-chevron-down" style="position: relative; top: 3px;"></span>
           Ordina
+          <span class="fa fa-chevron-down"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right text-left" role="menu" aria-labelledby="dropdownMenu1">
           <li class="active" role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="order('created_at',false)">Più recenti</a></li>

@@ -59,6 +59,16 @@
       </div>
     </div>  
   </a>
+  <!-- SIGN UP WIDGET -->
+  <div class="row text-left" ng-if="content.type == 'sign-up-widget'">
+    <div class="col-xs-12">
+      <div class="cta__sidebar-panel cta__sidebar-panel--sign-up">
+        <p class="cta__sidebar-panel--sign-up__title">Sei nuovo?</p>
+        <p class="cta__sidebar-panel--sign-up__description">Registrati per partecipare alla community e vincere premi.</p>
+        <a class="btn btn-primary btn-lg btn-block" href="{{linkTo('/users/sign_up')}}">Registati</a>
+      </div>
+    </div>
+  </div>
   <!-- FAN OF THE DAY -->
   <div class="row text-left" ng-if="content.type == 'fan-of-the-day-widget'">
     <div class="col-xs-12">

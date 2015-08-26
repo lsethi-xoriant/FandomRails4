@@ -25,6 +25,24 @@
   background-color: whitesmoke !important;
 }
 
+.cta__sidebar-panel--sign-up {
+  height: auto !important;
+  padding: 15px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  background-color: #fff !important;
+}
+
+.cta__sidebar-panel--sign-up__title {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.cta__sidebar-panel--sign-up__description {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
 .cta__sidebar-panel--tag {
   border-radius: 0 !important;
   height: 290px !important;

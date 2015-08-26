@@ -20,6 +20,8 @@ module CallToActionHelper
     
     sidebar_content_previews.contents.each do |content|
       case content.title
+      when "sign-up-widget"
+        content.type = content.title
       when "fan-of-the-day-widget"
         content.type = content.title
         winner_of_the_day = get_winner_of_day(Date.yesterday)
@@ -489,12 +491,12 @@ module CallToActionHelper
     adjust_counters(interaction_ids, calltoaction_info_list, comments)
     adjust_user_ctas(calltoaction_info_list)
 
-    if !params[:only_cover]
+    if params[:only_cover].blank?
       calltoaction_info_list.collect! do |calltoaction_info|
         calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
           if interaction_info["interaction"]["resource_type"] == "randomresource"
             cta = get_random_call_to_action(Interaction.find(interaction_info["interaction"]["id"]))
-            calltoaction_info = build_cta_info_list_and_cache_with_max_updated_at([cta], nil, { :only_cover => true }).first
+            calltoaction_info = build_cta_info_list_and_cache_with_max_updated_at([cta], nil, { only_cover: true }).first
           end
         end
         calltoaction_info
@@ -536,8 +538,9 @@ module CallToActionHelper
   def build_interaction_info_list(calltoaction, interactions_to_compute)
 
     interaction_info_list = Array.new
+    interactions = enable_interactions(calltoaction) 
 
-    enable_interactions(calltoaction).each do |interaction|
+    interactions.each do |interaction|
 
       resource_type = interaction.resource_type.downcase
 
@@ -640,7 +643,7 @@ module CallToActionHelper
         "text" => answer.text,
         "aux" => answer.aux,
         "image_medium" => answer.image(:medium),
-        "image" => answer.image,
+        "image" => answer.image(:original),
         "correct" => answer_correct
         #{}"percentage" => percentage
       }
@@ -651,22 +654,16 @@ module CallToActionHelper
   def build_votes_for_resource(interaction)
     {
       min: interaction.resource.vote_min,
-      max: interaction.resource.vote_max,
-      # total: get_cta_vote_info(interaction.id)['total']
+      max: interaction.resource.vote_max
     } 
   end
 
   def build_comments_for_resource(interaction)
     comments, comments_total_count = get_comments_approved(interaction)
 
-    #if page_require_captcha?(interaction)
-    #  captcha_data = generate_captcha_response
-    #end
-
     comments_for_resource = {
       "comments" => comments,     
       "comments_total_count" => comments_total_count,  
-      #"captcha_data" => captcha_data,
       "open" => false
     }
   end
@@ -712,9 +709,7 @@ module CallToActionHelper
   end
 
   def enable_interactions(calltoaction)
-    cache_short("enable_interactions_#{calltoaction.id}") do
-      calltoaction.interactions.includes(:resource, :call_to_action).where("when_show_interaction <> ?", "MAI_VISIBILE").to_a
-    end
+    Interaction.where(call_to_action_id: calltoaction.id).where.not(when_show_interaction: "MAI_VISIBILE")
   end
 
   def get_cta_tags_from_cache(cta)

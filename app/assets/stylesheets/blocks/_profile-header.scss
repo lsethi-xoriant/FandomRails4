@@ -11,7 +11,7 @@
 }
 
 .profile-header__item--level{
-  padding-top: 15px;
+  padding-top: 0;
 }
 
 .profile-header__item--last{
@@ -20,9 +20,13 @@
 
 .profile-header__item__image{
   display: block;
-  max-width: 65px;
+  max-width: 75px;
   margin: 0 auto 10px auto;
   
+}
+
+.profile-header__avatar__image {
+  border-radius: 50%;
 }
 
 .profile-header__item__title{
