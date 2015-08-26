@@ -1,0 +1,11 @@
+<% content_for :body_class, "small-body" %>
+<div class="small-container">
+  <%= render partial: "/application/navbar" %>
+</div>
+
+<div class="container cookies-policy-container">
+  <div class="row">
+    <div class="col-sm-12" ng-bind-html="aux.assets.extra_fields.privacy_policy">
+    </div>
+  </div>
+</div>

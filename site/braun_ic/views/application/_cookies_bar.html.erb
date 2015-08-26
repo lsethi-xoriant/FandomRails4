@@ -1,0 +1,12 @@
+<% unless cookies[:user_cookies] %>
+  <div id="cookies-bar" class="navbar navbar-fixed-bottom cookies-footer">
+    <div class="row">
+      <div class="col-sm-11">
+        <p class="cookies-footer__description">Usiamo cookies per assicurarti la migliore navigazione possibile. Per favore leggi la <a target="_blank" class="cookies-footer__link" href="http://www.braunhousehold.com/it-it/servizio-clienti/cookie-policy">pagina</a> dedicata ai termini ed alle condizioni d'uso per avere informazioni su quali cookies utilizziamo e quali informazioni raccogliamo nel nostro sito. Continuando ad usare il sito, accetti che noi installiamo ed accediamo ai cookies sul tuo dispositivo.</p>
+      </div>
+      <div class="col-sm-1 text-right">
+        <a class="btn btn-green btn-xs btn-block" href="javascript: void(0)" ng-click="acceptCookies()">Accetto</a>
+      </div>
+    </div>
+  </div>
+<% end %>

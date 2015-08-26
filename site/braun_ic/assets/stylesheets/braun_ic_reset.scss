@@ -5,6 +5,34 @@ body {
   background-color: whitesmoke;
 }
 
+#registration-modal .modal-content {
+  background-color: #efefef;
+}
+
+#cookies-bar {
+  top: auto !important;
+  bottom: 0 !important;
+  .btn-green {
+    padding-left: 0; padding-right: 0;
+  }
+}
+
+.modal-welcome__btn {
+  margin-bottom: 15px;
+}
+
+.cookies-policy-container {
+ h2 {
+  font-size: 22px;
+ } 
+}
+
+.modal-welcome__description {
+  font-size: 14px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 .header-container h1 {
   margin: 0;
 }
@@ -116,6 +144,7 @@ body {
 }
 
 .small-container {
+  padding-bottom: 15px;
   background-color: #000;
   .form-container {
     background-color: #fff;
@@ -305,6 +334,13 @@ p {
 }
 
 @media (max-width: $screen-sm-min) {
+  #cookies-bar {
+    bottom: 0 !important;
+    .btn-green {
+      margin-top: 10px;
+    }
+  }
+
   .ranking-container .profile-container__row {
     height: 120px;
   }

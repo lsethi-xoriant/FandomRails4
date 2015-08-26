@@ -937,6 +937,12 @@ module ApplicationHelper
     end
 
     assets = Tag.find("assets")
+
+    if cookies[:from_registration].present?
+      connect_from_page = cookies[:from_registration]
+      cookies.delete(:from_registration)
+      from_registration = true
+    end
     
     @aux = {
       "site" => $site,
@@ -957,7 +963,8 @@ module ApplicationHelper
       "instant_win_info" => iw_info,
       "emoticons" => EMOTICONS,
       "assets" => assets,
-      "root_url" => root_url
+      "root_url" => root_url,
+      "from_registration" => from_registration
     }
 
     if other

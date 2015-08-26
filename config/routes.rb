@@ -7,6 +7,7 @@ Fandom::Application.routes.draw do
   mount RailsAdmin::Engine => '/rails_admin/'
 
   get '/cookies_policy', :to => 'application#cookies_policy'
+  get '/privacy_policy', :to => 'application#privacy_policy'
 
   constraints(SiteMatcher.new('braun_ic')) do
     scope module: "sites" do

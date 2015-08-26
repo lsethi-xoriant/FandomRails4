@@ -432,7 +432,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if($scope.aux.from_registration) {
       $("#registration-modal").modal("show");
-      ga('send', 'event', "Registration", "Registration", "Registration", 1, true);
+      update_ga_event("Registration", "Registration", "Registration", 1);
     }
 
     $scope.calltoaction_ordering = "recent";

@@ -97,12 +97,12 @@ module UserInteractionHelper
       next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
       linked_user_interaction_ids = init_or_update_linked_user_interaction_ids([], linked_user_interaction_id)
       
-      result_cta_info = next_cta_info if next_cta_info.present?
+      result_cta_info = nil
       while next_cta_info
+        result_cta_info = next_cta_info
         user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ? AND user_interactions.user_id = ?", next_cta_info.id, current_user.id).references(:interactions)
         next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(next_cta_info, user_interactions)
         linked_user_interaction_ids = init_or_update_linked_user_interaction_ids(linked_user_interaction_ids, linked_user_interaction_id)
-        result_cta_info = next_cta_info if next_cta_info.present?
         index = index + 1
       end
               
@@ -116,6 +116,7 @@ module UserInteractionHelper
       end
       result_cta_info_list << result_cta_info
     end
+
     [result_cta_info_list, is_cta_info_list_updated]
   end
 
@@ -147,7 +148,7 @@ module UserInteractionHelper
     {
       "cost" => reward.cost,
       "status" => get_user_reward_status(reward),
-      "id" => reward.id,
+      "id" => reward.id
     }
   end
 
@@ -461,7 +462,7 @@ module UserInteractionHelper
         response[:notice_anonymous_user] = user_interactions_count > 0 && user_interactions_count % $site.interactions_for_anonymous_limit == 0
       end
     end 
-    
+
     response = update_cta_and_interaction_status(calltoaction, interaction, response)
 
     if linked_cta.present?

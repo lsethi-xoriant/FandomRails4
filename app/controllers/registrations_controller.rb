@@ -41,6 +41,7 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :signed_up
         sign_up(resource_name, resource)
 
+        cookies[:from_registration] = true 
         set_account_up()
 
         log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })
@@ -56,7 +57,7 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def set_account_up
+  def set_account_up    
     create_user_interaction_for_registration()
     SystemMailer.welcome_mail(current_user).deliver
   end

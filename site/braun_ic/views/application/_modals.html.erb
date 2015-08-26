@@ -61,5 +61,32 @@
   </div>
 </div>
 
+<!-- WELCOME -->
+<div class="modal fade" id="registration-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Benvenuto</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-5 col-sm-offset-1">
+            <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.welcome_img_1.url}}">
+          </div>
+          <div class="col-sm-5">
+            <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.welcome_img_2.url}}">
+          </div>
+          <div class="col-sm-10 col-sm-offset-1 text-center">
+            <p class="modal-welcome__description">Vincere un Minipimer è semplice, misura il tuo livello di benessere rispondendo alle domande dei test. Guadagnerai un biglietto instant win per ogni test fatto che ti permetterà di scoprire se sarai tra i
+            fortunati vincitori.</p>
+            <button type="button" class="btn btn-green modal-welcome__btn" data-dismiss="modal" aria-label="Close">INIZIA E FAI IL TEST</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%= render partial: "/instantwin/instant_win_modal" %>
 
