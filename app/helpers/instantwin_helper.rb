@@ -43,7 +43,7 @@ module InstantwinHelper
 	#
 	def user_already_won(interaction_id)
     if current_user
-  	  user_interactions = UserInteraction.where("interaction_id = ? AND user_id = ? AND (aux->>'instant_win_id') IS NOT NULL", interaction_id, current_user.id).to_a
+  	  user_interactions = UserInteraction.where("interaction_id = ? AND user_id = ? AND (aux->>'instant_win_id') IS NOT NULL", interaction_id, current_user.id)
       if user_interactions.any?
         reward_id = user_interactions.first.aux["reward_id"]
         reward_title = Reward.find(reward_id).title

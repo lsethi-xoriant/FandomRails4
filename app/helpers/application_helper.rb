@@ -115,6 +115,7 @@ module ApplicationHelper
 
   def build_current_user()
     if current_user
+      instantwin_tickets_counter = get_counter_about_user_reward($site.instantwin_ticket_name)
       anonymous_id = current_user.anonymous_id.blank? ? nil : current_user.anonymous_id
       current_user_for_view = {
         "facebook" => current_user.facebook($site.id),
@@ -122,7 +123,7 @@ module ApplicationHelper
         "first_name" => current_user.first_name,
         "last_name" => current_user.last_name,
         "main_reward_counter" => get_property_point(),
-        "instantwin_tickets_counter" => get_counter_about_user_reward($site.instantwin_ticket_name),
+        "instantwin_tickets_counter" => instantwin_tickets_counter,
         "username" => current_user.username,
         "notifications" => get_unread_notifications_count(),
         "avatar" => current_avatar,
@@ -604,21 +605,6 @@ module ApplicationHelper
     result
   end
 
-  # def registration_fully_completed?
-  #   if current_user
-  #     #instantwin_cta = ActiveRecord::Base.connection.execute("SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'").to_a.first
-  #     if instantwin_cta
-  #       instantwin_form_attributes = CallToAction.find(instantwin_cta["call_to_action_id"].to_i).extra_fields["instantwin_form_attributes"]
-  #       if instantwin_form_attributes
-  #         JSON.parse(instantwin_form_attributes).each do |form_attr|
-  #           return false unless ((current_user.send(form_attr["name"]).present? rescue false) || current_user.aux[form_attr["name"]].present? rescue false)
-  #         end
-  #       end
-  #     end
-  #     true
-  #   end
-  # end
-
   def extra_field_to_html(field, ng_model_name = nil)
     ac = ActionController::Base.new()
 
@@ -912,7 +898,7 @@ module ApplicationHelper
           description: reward.short_description
         }
       end
-
+      
       if iw_interaction.present?
         iw_user_info = user_already_won(iw_interaction.id)
         if iw_cta.extra_fields && iw_cta.extra_fields["instantwin_form_attributes"]
