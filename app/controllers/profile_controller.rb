@@ -97,7 +97,7 @@ class ProfileController < ApplicationController
 
   def index
     if small_mobile_device?
-      @level = get_current_level;
+      @level = get_current_level
       @my_position, total = get_my_general_position_in_property
 
       render template: "/profile/index_mobile"
