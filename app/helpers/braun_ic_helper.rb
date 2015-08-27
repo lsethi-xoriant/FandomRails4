@@ -1,4 +1,18 @@
 module BraunIcHelper
+
+  def braun_ic_birth_date_valid?
+    if current_user
+      if current_user.birth_date
+        contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
+        birth_date = Time.parse(current_user.birth_date.to_s)
+        (contest_start_date - birth_date) / 1.year >= 18
+      else
+        true
+      end
+    else
+      true
+    end
+  end
   
   def adjust_braun_ic_reward(reward, inactive, activated_at)
     image = inactive.present? ? reward.not_awarded_image : reward.main_image

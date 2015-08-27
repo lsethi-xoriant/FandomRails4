@@ -606,7 +606,7 @@ module ApplicationHelper
             end
 
           end
-          if form_attr["required"] && current_user[name].blank? && (current_user.aux.present? && current_user.aux[name].blank?)
+          if form_attr["required"] && (current_user[name].blank? && (current_user.aux.blank? || current_user.aux[name].blank?))
             result = false
             break
           end
@@ -653,17 +653,16 @@ module ApplicationHelper
           when "date"
             if params["day_of_birth"].blank? || params["month_of_birth"].blank? || params["year_of_birth"].blank?
               errors << "#{extra_field['label']} deve essere compilata"
-            end
+            else
+              if $site.id == "braun_ic" 
+                contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
+                birth_date = Time.parse("#{params["year_of_birth"]}/#{params["month_of_birth"]}/#{params["day_of_birth"]}")
 
-            if $site.id == "braun_ic"
-              contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
-              birth_date = Time.parse("#{params["year_of_birth"]}/#{params["month_of_birth"]}/#{params["day_of_birth"]}")
-
-              if (contest_start_date - birth_date) / 1.year < 18
-                errors << "All'inizio del concorso (3 settembre 2015) devi avere compiuto 18 anni"
+                if (contest_start_date - birth_date) / 1.year < 18
+                  errors << "All'inizio del concorso (3 settembre 2015) devi avere compiuto 18 anni"
+                end
               end
             end
-
           else
             errors << "#{extra_field['label']} deve essere selezionato"
           end
