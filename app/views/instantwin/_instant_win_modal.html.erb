@@ -133,20 +133,19 @@
                   <button class="btn btn-green btn-block iw_btn" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
                 </div>
                 <div class="col-sm-6 col-sm-offset-3">
-                  <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin()}">
+                  <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin() && !aux.instant_win_info.in_progress}">
                     <div class="arrow" style="left: 50%;"></div>
                     <div class="popover-content">
-                      <p ng-if="!ticketsEmpty()" class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto. Gioca ancora</p>
-                      <p ng-if="ticketsEmpty()" class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto</p>
+                      <p class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Non hai vinto. Gioca ancora</p>
                     </div>
                   </div>
-                  <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': ticketsEmpty()}">
+                  <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': ticketsEmpty() && !aux.instant_win_info.in_progress}">
                     <div class="arrow" style="left: 50%;"></div>
                     <div class="popover-content">
                       <p class="iw_popover-text"><span class="fa fa-close"></span>PECCATO! Hai terminato i biglietti</p>
                     </div>
                   </div>
-                  <div class="iw_popover iw_popover-green popover bottom in" ng-class="{'show': iwWin()}">
+                  <div class="iw_popover iw_popover-green popover bottom in" ng-class="{'show': iwWin() && !aux.instant_win_info.in_progress}">
                     <div class="arrow" style="left: 50%;"></div>
                     <div class="popover-content text-center">
                       <p class="iw_popover-text"><span class="fa fa-check"></span>HAI VINTO!!!</p>
