@@ -22,13 +22,8 @@
                 <div class="col-xs-12" ng-repeat="field in aux.instant_win_info.form_extra_fields">
 
                   <!-- CHECKBOX -->
-                  <div class="row" ng-if="field.type == 'checkbox'">
-                    <div class="col-sm-4 text-right">
-                      <input id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="checkbox" value="1" ng-model="form_data.current_user[field.name]">
-                    </div>
-                    <div class="col-sm-8">
-                      <label style="color: #555555;">{{field.label}}<span ng-if="field.required">*</span></label>
-                    </div>
+                  <div class="checkbox text-left" ng-if="field.type == 'checkbox'">
+                    <input id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="checkbox" value="1" ng-model="form_data.current_user[field.name]">{{field.label}}<span ng-if="field.required">*</span>
                   </div>
 
                   <!-- TEXTFIELD -->
@@ -47,17 +42,17 @@
                         <div class="col-sm-4 margin-top-15-mobile">
                           <% date_array = (1..31).map { |date| [date, date] } %>
                           <% date_array.unshift ["Giorno", ""] %>
-                          <%= select_tag(:day_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.day_of_birth", name: "extra_fields_age_{{field.name}}_day") %>
+                          <%= select_tag(:day_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.day_of_birth", name: "extra_fields_age_{{field.name}}_day", disabled: current_user && current_user.birth_date.present?) %>
                         </div>
                         <div class="col-sm-4 margin-top-15-mobile">
                           <% date_array = (1..12).map { |date| [date, date] } %>
                           <% date_array.unshift ["Mese", ""] %>
-                          <%= select_tag(:month_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.month_of_birth", name: "extra_fields_age_{{field.name}}_month") %>
+                          <%= select_tag(:month_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.month_of_birth", name: "extra_fields_age_{{field.name}}_month", disabled: current_user && current_user.birth_date.present?) %>
                         </div>
                         <div class="col-sm-4 margin-top-15-mobile">
                           <% date_array = (1900..2020).map { |date| [date, date] } %>
                           <% date_array.unshift ["Anno", ""] %>
-                          <%= select_tag(:year_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.year_of_birth", name: "extra_fields_age_{{field.name}}_year") %>
+                          <%= select_tag(:year_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.year_of_birth", name: "extra_fields_age_{{field.name}}_year", disabled: current_user && current_user.birth_date.present?) %>
                         </div>
                       </div>
                     </div>

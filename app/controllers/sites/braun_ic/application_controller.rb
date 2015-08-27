@@ -8,8 +8,6 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     end
   end
 
-  CONTEST_IDENTITY_COLLECTION_START_DATE = "2015/09/10"
-
   class ContestIdentityCollectionUser
     include ActiveAttr::Attributes
     include ActiveAttr::Model
@@ -43,7 +41,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       birth_date = Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}")
 
       if (contest_start_date - birth_date) / 1.year < 18
-        errors.add(:base, "Alla partenza del concorso devi avere compiuto 18 anni")
+        errors.add(:base, "All'inizio del concorso (15 settembre 2015) devi avere compiuto 18 anni")
       end
     end
 
@@ -81,6 +79,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
   def contest_identitycollection 
     @products = get_braun_products()
+    @birth_date_in_db = User.find(current_user.id).birth_date.present?
 
     @contest_identitycollection_user = ContestIdentityCollectionUser.new(
       first_name: current_user.first_name, 

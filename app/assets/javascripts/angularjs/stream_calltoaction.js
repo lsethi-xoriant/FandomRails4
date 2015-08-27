@@ -593,7 +593,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.openRegistrationModalForInstantWin = function(user) {
-  	//$(".click-sound").trigger("play");
     $scope.form_data.current_user = user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };

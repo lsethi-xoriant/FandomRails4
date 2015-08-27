@@ -227,12 +227,19 @@ module ProfileHelper
   end
 
   def user_for_registation_form()
-    user = current_user
-    if user
-      aux = user.aux || {}
-      user.attributes.merge(aux)
+    if current_user
+      {
+        email: current_user.email,
+        first_name: current_user.first_name, 
+        last_name: current_user.last_name,
+        day_of_birth: current_user.day_of_birth,
+        month_of_birth: current_user.month_of_birth,
+        year_of_birth: current_user.year_of_birth,
+        newsletter: current_user.newsletter
+      }
+    else
+      {}
     end
-    user
   end
 
 end
