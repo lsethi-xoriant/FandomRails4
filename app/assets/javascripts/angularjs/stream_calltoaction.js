@@ -40,6 +40,11 @@ var OVERVIDEO_COUNTDOWN_ANIMATION_TIME = 3;
 
 function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
 
+  $scope.isIE = function() {
+    var myNav = navigator.userAgent.toLowerCase();
+    return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+  };
+
   $scope.groupingArr = function(name, arr, group_size) {
     if(angular.isUndefined($scope.groupingArrs[name])) {
       groupingArr = []; tmpArr = [];
