@@ -12,7 +12,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
   $scope.disableIWButton = function() {
-    return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || $scope.current_user.instantwin_tickets_counter < 1);
+    return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || ($scope.current_user && $scope.current_user.instantwin_tickets_counter < 1));
   };
 
   $scope.thumbWithGradient = function(calltoaction_info) {
