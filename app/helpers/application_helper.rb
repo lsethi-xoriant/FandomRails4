@@ -595,7 +595,7 @@ module ApplicationHelper
           if form_attr["name"] == "date"
             name = "birth_date"
             
-            if $site.id == "braun_ic"
+            if $site.id == "braun_ic" && current_user[name].present?
               contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
               birth_date = Time.parse(current_user[name].to_s)
 
