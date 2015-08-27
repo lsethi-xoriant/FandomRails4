@@ -11,6 +11,10 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
+  $scope.disableIWButton = function() {
+    return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || $scope.current_user.instantwin_tickets_counter < 1);
+  };
+
   $scope.thumbWithGradient = function(calltoaction_info) {
     parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
     if($scope.isIE() && $scope.isIE() < 10) {

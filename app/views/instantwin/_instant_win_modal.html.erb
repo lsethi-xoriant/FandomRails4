@@ -130,7 +130,7 @@
                   <img id="iw_slot" class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" ng-src="{{aux.assets.extra_fields.iw_cover.url}}">
                 </div>
                 <div class="col-sm-3">
-                  <button class="btn btn-green btn-block iw_btn" ng-class="{disabled: (aux.instant_win_info.in_progress || aux.instant_win_info.win || current_user.instantwin_tickets_counter < 1)}" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
+                  <button class="btn btn-green btn-block iw_btn" disabled="disableIWButton()" ng-class="{disabled: disableIWButton()}" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
                 </div>
                 <div class="col-sm-6 col-sm-offset-3">
                   <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin() && !aux.instant_win_info.in_progress}">
