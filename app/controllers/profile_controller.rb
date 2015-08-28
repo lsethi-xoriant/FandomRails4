@@ -49,6 +49,13 @@ class ProfileController < ApplicationController
   def complete_for_contest
     user_params = params[:user]
 
+    # braun_ic
+    if $site.id == "braun_ic" && current_user.day_of_birth.present? && current_user.month_of_birth.present? && current_user.year_of_birth.present?
+      user_params[:day_of_birth] = current_user.day_of_birth
+      user_params[:month_of_birth] = current_user.month_of_birth
+      user_params[:year_of_birth] = current_user.year_of_birth
+    end 
+
     extra_fields = get_form_attributes(params["interaction_id"])
 
     form_attributes_valid, errors, user_extra_fields = validate_upload_extra_fields(user_params, extra_fields)

@@ -121,6 +121,7 @@ module ProfileHelper
     # When the provider is anchor to another user, I move it to current user
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
     if user_auth
+      user = user_auth.user if stored_anonymous_user?
       user_auth.update_attributes(
           uid: auth.uid,
           name: auth.info.name,
@@ -131,37 +132,34 @@ module ProfileHelper
           user_id: user.id
       )
     else
-      user.authentications.build(
+      if stored_anonymous_user?
+        user = User.find_by_email(auth.info.email) || current_user 
+      end
+      user_auth = user.authentications.build(
           uid: auth.uid,
           name: auth.info.name,
           oauth_token: auth.credentials.token,
           oauth_secret: (provider.include?("twitter") ? auth.credentials.secret : ""),
           oauth_expires_at: (provider == "facebook" ? Time.at(auth.credentials.expires_at) : ""),
           provider: provider,
-          avatar: auth.info.image,
-          user_id: user.id
+          avatar: auth.info.image
       )
     end 
 
-    if stored_anonymous_user?
+    if stored_anonymous_user?(user_auth.user)
       privacy = $site.id == "braun_ic" ? true : false
-      if user_auth
+      user.assign_attributes({
+          username: nil,
+          first_name: auth.info.first_name,
+          last_name: auth.info.last_name,
+          email: auth.info.email,
+          avatar_selected: provider,
+          avatar_selected_url: auth.info.image,
+          privacy: privacy
+      })
+      if user.valid?
+        user.assign_attributes(anonymous_id: nil)
         sign_out(user)
-        user = user_auth.user
-      else
-        user.assign_attributes({
-            username: nil,
-            first_name: auth.info.first_name,
-            last_name: auth.info.last_name,
-            email: auth.info.email,
-            avatar_selected: provider,
-            avatar_selected_url: auth.info.image,
-            privacy: privacy
-        })
-        if user.valid?
-          user.assign_attributes(anonymous_id: nil)
-          sign_out(user)
-        end
       end
     end
     
@@ -170,8 +168,11 @@ module ProfileHelper
   end
 
   def create_from_omniauth(auth, provider)
-    expires_at = provider.include?("facebook") || provider.include?("google_oauth2") ? Time.at(auth.credentials.expires_at) : nil
-    user_auth =  Authentication.find_by_provider_and_uid(provider, auth.uid)
+    if provider.include?("facebook") || provider.include?("google_oauth2")
+      expires_at = Time.at(auth.credentials.expires_at)
+    end
+
+    user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid)
     if user_auth
       user = user_auth.user
       user_auth.update_attributes(
@@ -227,12 +228,19 @@ module ProfileHelper
   end
 
   def user_for_registation_form()
-    user = current_user
-    if user
-      aux = user.aux || {}
-      user.attributes.merge(aux)
+    if current_user
+      {
+        email: current_user.email,
+        first_name: current_user.first_name, 
+        last_name: current_user.last_name,
+        day_of_birth: current_user.day_of_birth,
+        month_of_birth: current_user.month_of_birth,
+        year_of_birth: current_user.year_of_birth,
+        newsletter: current_user.newsletter
+      }
+    else
+      {}
     end
-    user
   end
 
 end

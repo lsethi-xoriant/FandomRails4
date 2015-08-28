@@ -1,10 +1,10 @@
-<div class="col-sm-8 col-sm-offset-2 col-xs-12 text-center test-question__col">
+<div class="col-sm-12 text-center test-question__col">
   <p class="test-question">{{interaction_info.interaction.resource.question}}</p>
 </div>
 
-<%= render partial: "/call_to_action/cta_status", locals: { container_class: "hidden-xs test-interaction-credits_container" } %>
+<%#= render partial: "/call_to_action/cta_status", locals: { container_class: "hidden-xs test-interaction-credits_container" } %>
 
-<div class="col-xs-6 text-center test-answer__container" ng-style="{'background': 'linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1)), url(' + answer.image + ')'}" ng-repeat="answer in interaction_info.interaction.resource.answers" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">
+<div class="col-xs-6 text-center test-answer__container" ng-style="{'background': answerImgWithGradient(answer)}" ng-repeat="answer in interaction_info.interaction.resource.answers" ng-click="updateAnswer(calltoaction_info, interaction_info, answer.id, interaction_info.interaction.when_show_interaction)">
   <div class="row">
     <div class="col-sm-12 test-answer__btn">
       <%= render partial: "/call_to_action/test_answer" %>

@@ -11,6 +11,27 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
+  $scope.disableIWButton = function() {
+    return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || ($scope.current_user && $scope.current_user.instantwin_tickets_counter < 1));
+  };
+
+  $scope.thumbWithGradient = function(calltoaction_info) {
+    parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
+    if($scope.isIE() && $scope.isIE() < 10) {
+      return '#333';
+    } else {
+      return 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + parent_cta_info.calltoaction.thumbnail_url + ')';
+    }
+  };
+
+  $scope.answerImgWithGradient = function(answer) {
+    if($scope.isIE() && $scope.isIE() < 10) { 
+      return 'url(' + answer.image + ')';
+    } else {
+      return 'linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1)), url(' + answer.image + ')';
+    }
+  };
+
   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
     $scope.feedback = (data.user_interaction.outcome.reward_name_to_counter.credit == 1);
   };

@@ -82,7 +82,7 @@
               <%= render partial: "/call_to_action/test_interaction" %>
             </div>
             <!-- COVER SHARE -->
-            <div class="col-sm-12 cta_cover-end_container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)" ng-style="{'background': 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + getParentCtaInfo(calltoaction_info).calltoaction.thumbnail_url + ')'}">
+            <div class="col-sm-12 cta_cover-end_container" ng-class="{'hidden': isCoverHidden(calltoaction_info)}" ng-if="isLastStepInLinkedCallToAction(calltoaction_info)" ng-style="{'background': thumbWithGradient(calltoaction_info) }">
               
               <span class="cta_cover-end_container-redo" ng-click="resetToRedo(calltoaction_info)"><span class="fa fa-refresh"></span></span>
 

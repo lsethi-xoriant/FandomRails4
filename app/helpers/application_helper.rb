@@ -593,9 +593,20 @@ module ApplicationHelper
         instantwin_form_attributes.each do |form_attr|
           name = form_attr["name"]
           if form_attr["name"] == "date"
-           name = "birth_date"
+            name = "birth_date"
+            
+            if $site.id == "braun_ic" && current_user[name].present?
+              contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
+              birth_date = Time.parse(current_user[name].to_s)
+
+              if (contest_start_date - birth_date) / 1.year < 18
+                result = false
+                break
+              end
+            end
+
           end
-          unless current_user[name].present? || (current_user.aux.present? && current_user.aux[name].present?)
+          if form_attr["required"] && (current_user[name].blank? && (current_user.aux.blank? || current_user.aux[name].blank?))
             result = false
             break
           end
@@ -642,6 +653,15 @@ module ApplicationHelper
           when "date"
             if params["day_of_birth"].blank? || params["month_of_birth"].blank? || params["year_of_birth"].blank?
               errors << "#{extra_field['label']} deve essere compilata"
+            else
+              if $site.id == "braun_ic" 
+                contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
+                birth_date = Time.parse("#{params["year_of_birth"]}/#{params["month_of_birth"]}/#{params["day_of_birth"]}")
+
+                if (contest_start_date - birth_date) / 1.year < 18
+                  errors << "All'inizio del concorso (3 settembre 2015) devi avere compiuto 18 anni"
+                end
+              end
             end
           else
             errors << "#{extra_field['label']} deve essere selezionato"

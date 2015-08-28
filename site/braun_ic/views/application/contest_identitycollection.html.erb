@@ -71,17 +71,17 @@
                 <div class="col-sm-4">
                   <% date_array = (1..31).map { |date| [date, date] } %>
                   <% date_array.unshift ["Giorno", ""] %>
-                  <%= f.select :day_of_birth, options_for_select(date_array, @contest_identitycollection_user[:day_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                  <%= f.select :day_of_birth, options_for_select(date_array, @contest_identitycollection_user[:day_of_birth]), {}, { class: "form-control", disabled: current_user.birth_date.present? } %>
                 </div>
                 <div class="col-sm-4">
                   <% date_array = (1..12).map { |date| [date, date] } %>
                   <% date_array.unshift ["Mese", ""] %>
-                  <%= f.select :month_of_birth, options_for_select(date_array, @contest_identitycollection_user[:month_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                  <%= f.select :month_of_birth, options_for_select(date_array, @contest_identitycollection_user[:month_of_birth]), {}, { class: "form-control", disabled: current_user.birth_date.present? } %>
                 </div>
                 <div class="col-sm-4">
                   <% date_array = (1900..2015).map { |date| [date, date] } %>
                   <% date_array.unshift ["Anno", ""] %>
-                  <%= f.select :year_of_birth, options_for_select(date_array, @contest_identitycollection_user[:year_of_birth]), {}, { class: "form-control", disabled: (@contest_identitycollection_user.day_of_birth.present? && @contest_identitycollection_user.month_of_birth.present? && @contest_identitycollection_user.year_of_birth.present?) } %>
+                  <%= f.select :year_of_birth, options_for_select(date_array, @contest_identitycollection_user[:year_of_birth]), {}, { class: "form-control", disabled: current_user.birth_date.present? } %>
                 </div>
               </div>
             </div>
