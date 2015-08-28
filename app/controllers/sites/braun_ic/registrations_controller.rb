@@ -9,6 +9,6 @@ class Sites::BraunIc::RegistrationsController < RegistrationsController
 
   def set_account_up
     create_user_interaction_for_registration()
-    SystemMailer.welcome_mail_braun(current_user).deliver
+    SystemMailer.welcome_mail_braun(current_user).deliver_now
   end
 end

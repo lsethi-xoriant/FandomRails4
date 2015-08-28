@@ -18,7 +18,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   $scope.thumbWithGradient = function(calltoaction_info) {
     parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
     if($scope.isIE() && $scope.isIE() < 10) {
-      return 'url(' + parent_cta_info.calltoaction.thumbnail_url + ')';
+      return '#333';
     } else {
       return 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + parent_cta_info.calltoaction.thumbnail_url + ')';
     }

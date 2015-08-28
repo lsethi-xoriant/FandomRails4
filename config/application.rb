@@ -133,18 +133,22 @@ module Fandom
 
     class MailLogger
       def info(msg)
-        log_info('email sent', { data: msg.strip })
+        msg = msg.strip if msg
+        log_info('email sent', { data: msg })
       end
       def error(msg)
-        log_error('email sent', { data: msg.strip })
+        msg = msg.strip if msg
+        log_error('email sent', { data: msg })
       end
       def debug(msg)
       end
       def fatal(msg)
-        log_error('email sent', { data: msg.strip })
+        msg = msg.strip if msg
+        log_error('email sent', { data: msg })
       end
       def log(msg)
-        log_info('email sent', { data: msg.strip })
+        msg = msg.strip if msg
+        log_info('email sent', { data: msg })
       end
     end
     config.action_mailer.logger = MailLogger.new
