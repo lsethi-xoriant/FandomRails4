@@ -57,14 +57,14 @@ module RewardingSystemHelper
       self.errors += other.errors 
     end
 
-    # This method sets the outcome with max reward_name_to_counter values between self and other outcome
-    def max_outcome_for_test_interaction_prediction!(other)
+    # This method sets the outcome with max reward_name_to_counter values among self and other outcome
+    def set_max!(other)
       if other.nil?
         return
       else
         new_reward_counters = {}
         self.reward_name_to_counter.each do |key, value|
-          new_reward_counters[key] = other.reward_name_to_counter[key].nil? ? value : [value, other.reward_name_to_counter[key]].max
+          new_reward_counters[key] = [value, other.reward_name_to_counter.fetch(key, 0)].max
         end
         other.reward_name_to_counter.each do |key, value|
           new_reward_counters[key] ||= value
@@ -487,23 +487,22 @@ module RewardingSystemHelper
   #   cta - the cta
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
-
     if is_linking?(cta.id)
-      trees, cycles = CtaForest.build_trees(cta.id)
+
+      graph, cycles = CtaForest.build_linked_cta_graph(cta.id)
+      tree = graph[cta.id]
+      total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
       if cycles.empty?
         visited = {}
-        total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
-        trees.each do |tree|
-          max_outcome = compute_max_outcome(tree, user, visited)
-          total_outcome.max_outcome_for_test_interaction_prediction!(max_outcome)
-        end
+        total_outcome = compute_max_outcome(tree, user, get_ctas_for_max_outcome(), visited)
       end
+
       total_outcome.reward_name_to_counter.default = 0
       [total_outcome, interaction_outcomes, sorted_interactions]
+
     else
       build_max_cta_outcome(cta, user)
     end
-
   end
 
   def build_max_cta_outcome(cta, user)
@@ -513,83 +512,101 @@ module RewardingSystemHelper
     if sorted_interactions.count == 0
       [Outcome.new, [], []] 
     else
-      start_time = Time.now.utc
-
-      interaction_outcomes = []
-
-      total_outcome = Outcome.new
-
-      if sorted_interactions.any?
-
-        first_interaction = sorted_interactions[0]
-        other_interactions = sorted_interactions[1 .. -1]
-
-        user_interaction = get_mocked_user_interaction(first_interaction, user, true)
-
-        context = prepare_rules_and_context(user_interaction, nil)
-        first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-
-        interaction_outcomes << first_outcome
-        total_outcome.merge!(first_outcome)
-
-        other_interactions.each do |interaction|
-          user_interaction = get_mocked_user_interaction(interaction, user, true)
-          new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
-          interaction_outcomes << new_outcome
-          total_outcome.merge!(new_outcome)
-        end
+      if user.nil?
+        user = MOCKED_USER
       end
-      log_outcome(total_outcome)
 
-      total_time = Time.now.utc - start_time
-      log_info("predict max cta outcome", { 
-        'time' => total_time, 
-        'cta' => cta.id, 
-        'outcome_rewards' => total_outcome.reward_name_to_counter, 
-        'outcome_unlocks' => total_outcome.unlocks.to_a })
+      cache_key = "#{cta.id}_#{user.id}"
+      cache_timestamp = get_user_interactions_max_updated_at_for_cta(user, cta)
 
+      total_outcome, interaction_outcomes, sorted_interactions = cache_forever(get_outcome_values_cache_key(cache_key, cache_timestamp)) do
+
+        start_time = Time.now.utc
+
+        interaction_outcomes = []
+
+        total_outcome = Outcome.new
+
+        if sorted_interactions.any?
+
+          first_interaction = sorted_interactions[0]
+          other_interactions = sorted_interactions[1 .. -1]
+
+          user_interaction = get_mocked_user_interaction(first_interaction, user, true)
+
+          context = prepare_rules_and_context(user_interaction, nil)
+          first_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+
+          interaction_outcomes << first_outcome
+          total_outcome.merge!(first_outcome)
+
+          other_interactions.each do |interaction|
+            user_interaction = get_mocked_user_interaction(interaction, user, true)
+            new_outcome = context.compute_outcome_just_for_interaction(user_interaction)
+            interaction_outcomes << new_outcome
+            total_outcome.merge!(new_outcome)
+          end
+        end
+        log_outcome(total_outcome)
+
+        total_time = Time.now.utc - start_time
+        log_info("predict max cta outcome", { 
+          'time' => total_time, 
+          'cta' => cta.id, 
+          'outcome_rewards' => total_outcome.reward_name_to_counter, 
+          'outcome_unlocks' => total_outcome.unlocks.to_a })
+
+        [total_outcome, interaction_outcomes, sorted_interactions]
+      end
       [total_outcome, interaction_outcomes, sorted_interactions]
     end
 
   end
 
-  def compute_max_outcome(tree, user, visited)
-
-    total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(CallToAction.find(tree.value), user)
-    visited.merge!({ tree.value => total_outcome })
+  def compute_max_outcome(tree, user, ctas, visited)
+    total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(ctas[tree.value], user)
+    visited[tree.value] = total_outcome
 
     if tree.children.any?
-
       childrens_outcomes = []
       tree.children.each do |child|
         if visited[child.value].nil?
-          visited[child.value] = compute_max_outcome(child, user, visited)          
+          visited[child.value] = compute_max_outcome(child, user, ctas, visited)          
         end
         childrens_outcomes << visited[child.value]
       end
 
-      childrens_outcomes.each_with_index do |outcome, i|
-        if i != 0
-          childrens_outcomes[0].max_outcome_for_test_interaction_prediction!(outcome)
-        end
-      end
-
-      total_outcome.reward_name_to_counter = sum_hashes_values(total_outcome.reward_name_to_counter, childrens_outcomes[0].reward_name_to_counter)
-      total_outcome
-
-    else # it's a leaf node
-
-      if visited[tree.value]
-        visited[tree.value]
-      else
-        cta = CallToAction.find(tree.value)
-        total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
-        visited[tree.value] = total_outcome
-        total_outcome
-      end
-
+      max_children_outcome = get_max_children_outcome!(childrens_outcomes)
+      total_outcome = sum_total_outcome_with_children(total_outcome, max_children_outcome)
     end
+    total_outcome
+  end
 
+  def get_max_children_outcome!(childrens_outcomes)
+    result_outcome = childrens_outcomes.pop
+    childrens_outcomes.each do |outcome|
+      result_outcome.set_max!(outcome)
+    end
+    result_outcome
+  end
+
+  def sum_total_outcome_with_children(total_outcome, max_children_outcome)
+    result = Outcome.new()
+    result.reward_name_to_counter = sum_hashes_values(total_outcome.reward_name_to_counter, max_children_outcome.reward_name_to_counter)
+    result
+  end
+
+  def get_ctas_for_max_outcome()
+    cta_ids = CtaForest.get_neighbourhood_map().keys
+    cache_timestamp = get_cta_max_updated_at(cta_ids)
+
+    ctas = cache_forever(get_ctas_for_max_outcome_cache_key(cache_timestamp)) do
+      ctas = {}
+      CallToAction.where(:id => cta_ids).each do |cta|
+        ctas[cta.id] = cta
+      end
+      ctas
+    end
   end
 
 end

@@ -6,48 +6,72 @@ module LinkedCallToActionHelper
   class CtaForest
 
     # Internal: Builds the graph of all the reachable call to actions from a given cta.
-    # neighbourhood_map is a hash representing the undirected graph of all linked call to actions.
     # reachable_cta_id_set is the all reachable call to actions ids from starting call to action set.
     #
     # starting_cta_id - Call to action id to reach.
+    # return_tree - Boolean value for structure to return.
     #
-    # Returns an array of trees containing the starting call to action and a boolean set to true if there are cycles.
-    def self.build_trees(starting_cta_id)
-      neighbourhood_map = {}
-      InteractionCallToAction.all.each do |interaction_call_to_action|
-        if interaction_call_to_action.interaction_id.present?
-          cta_linking_id = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
-          cta_linked_id = interaction_call_to_action.call_to_action_id
-          add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
-          add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
-        end
-      end
-      Answer.all.each do |answer|
-        if answer.call_to_action_id
-          cta_linking_ids = Interaction.where(:resource_type => "Quiz", :resource_id => answer.quiz_id).pluck(:call_to_action_id)
-          cta_linked_id = answer.call_to_action_id
-          cta_linking_ids.each do |cta_linking_id|
-            add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
-            add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
+    # Returns the graph starting from starting_cta_id and the cycles boolean value.
+    def self.build_linked_cta_graph(starting_cta_id)
+      cache_key = starting_cta_id
+      cta_ids = CtaForest.get_neighbourhood_map().keys
+      cache_timestamp = get_cta_max_updated_at(cta_ids)
+
+      seen_nodes, cycles = cache_forever(get_linked_cta_graph_cache_key(cache_key, cache_timestamp)) do
+        reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), [])
+        seen_nodes = {}
+        cycles = []
+        reachable_cta_id_set.each do |cta_id|
+          if seen_nodes[cta_id].nil? and !in_cycles(cta_id, cycles)
+            tree = Node.new(cta_id)
+            tree, cycles = add_next_cta(seen_nodes, tree, cycles, [cta_id])
           end
         end
+        [seen_nodes, cycles]
       end
-      reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), neighbourhood_map, [])
-      seen_nodes = {}
-      cycles = []
-      reachable_cta_id_set.each do |cta_id|
-        if seen_nodes[cta_id].nil? and !in_cycles(cta_id, cycles)
-          tree = Node.new(cta_id)
-          tree, cycles = add_next_cta(seen_nodes, tree, cycles, [cta_id])
-        end
-      end
+      [seen_nodes, cycles]
+    end
+
+    def self.build_trees(starting_cta_id)
+      seen_nodes, cycles = build_linked_cta_graph(starting_cta_id)
+      reachable_cta_id_set = build_reachable_cta_set(starting_cta_id, Set.new([starting_cta_id]), [])
       trees = []
       reachable_cta_id_set.each do |cta_id|
-        if (InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? and Answer.where(:call_to_action_id => cta_id).count == 0 ) or (cycles.any? and cta_id == starting_cta_id) # add roots
+        if (InteractionCallToAction.find_by_call_to_action_id(cta_id).nil? && Answer.where(:call_to_action_id => cta_id).count == 0) or (cycles.any? and cta_id == starting_cta_id) # add roots
           trees << seen_nodes[cta_id]
         end
       end
       return trees, cycles
+    end
+
+    # Internal: Builds the undirected graph of all linked call to actions
+    #
+    # Returns a hash of (cta_id => Set of reachable cta ids) couples
+    def self.get_neighbourhood_map()
+      cache_timestamp = get_cta_max_updated_at()
+
+      neighbourhood_map = cache_forever(get_linked_ctas_cache_key(cache_timestamp)) do
+        neighbourhood_map = {}
+        InteractionCallToAction.all.each do |interaction_call_to_action|
+          if interaction_call_to_action.interaction_id.present?
+            cta_linking_id = Interaction.find(interaction_call_to_action.interaction_id).call_to_action_id
+            cta_linked_id = interaction_call_to_action.call_to_action_id
+            add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
+            add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
+          end
+        end
+        Answer.all.each do |answer|
+          if answer.call_to_action_id
+            cta_linking_ids = Interaction.where(:resource_type => "Quiz", :resource_id => answer.quiz_id).pluck(:call_to_action_id)
+            cta_linked_id = answer.call_to_action_id
+            cta_linking_ids.each do |cta_linking_id|
+              add_neighbour(neighbourhood_map, cta_linking_id, cta_linked_id)
+              add_neighbour(neighbourhood_map, cta_linked_id, cta_linking_id)
+            end
+          end
+        end
+        neighbourhood_map
+      end
     end
 
     # Internal: Recursive method to build the tree starting from a root node (tree variable).
@@ -65,19 +89,18 @@ module LinkedCallToActionHelper
         if cta.interactions.any?
           cta.interactions.each do |interaction|
             children_cta_ids = InteractionCallToAction.where(:interaction_id => interaction.id).pluck(:call_to_action_id) + call_to_action_linked_to_answers(interaction.id)
-            children_cta_ids.each do |cta_id|
-              if path.include?(cta_id) # cycle
+            children_cta_ids.each do |children_cta_id|
+              if path.include?(children_cta_id) # cycle
                 cycles << path
                 return seen_nodes[path[0]], cycles
               else
-                if seen_nodes[cta_id].nil?
-                  path << cta_id
-                  cta_child = CallToAction.find(cta_id)
-                  cta_child_node = Node.new(cta_child.id)
+                if seen_nodes[children_cta_id].nil?
+                  path << children_cta_id
+                  cta_child_node = Node.new(children_cta_id)
                 else
-                  cta_child_node = seen_nodes[cta_id]
+                  cta_child_node = seen_nodes[children_cta_id]
                 end
-                tree.children << cta_child_node unless is_a_child(tree, cta_id)
+                tree.children << cta_child_node unless is_a_child(tree, children_cta_id) # to avoid double adding
                 add_next_cta(seen_nodes, cta_child_node, cycles, path)
               end
             end
@@ -109,14 +132,15 @@ module LinkedCallToActionHelper
       end
     end
 
-    def self.build_reachable_cta_set(cta_id, reachable_cta_id_set, neighbourhood_map, visited)
+    def self.build_reachable_cta_set(cta_id, reachable_cta_id_set, visited)
+      neighbourhood_map = get_neighbourhood_map()
       neighbours = neighbourhood_map[cta_id]
       unless neighbours.nil?
         reachable_cta_id_set += neighbours
         visited << cta_id
         neighbours.each do |neighbour|
           unless visited.include?(neighbour)
-            reachable_cta_id_set += build_reachable_cta_set(neighbour, reachable_cta_id_set, neighbourhood_map, visited)
+            reachable_cta_id_set += build_reachable_cta_set(neighbour, reachable_cta_id_set, visited)
           end
         end
       end

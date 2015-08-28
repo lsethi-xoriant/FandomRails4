@@ -94,7 +94,7 @@ module RewardHelper
     if call_to_action_completed?(calltoaction, user)
       nil
     else
-      call_to_action_completed_or_reward_status = compute_current_call_to_action_reward_status(reward_name, calltoaction, nil)
+      call_to_action_completed_or_reward_status = compute_current_call_to_action_reward_status(reward_name, calltoaction, user)
       JSON.parse(call_to_action_completed_or_reward_status)
     end
   end

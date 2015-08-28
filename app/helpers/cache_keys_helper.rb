@@ -102,6 +102,22 @@ module CacheKeysHelper
     "evidence_ctas_#{cache_key}_#{timestamp}"
   end
 
+  def get_linked_ctas_cache_key(timestamp)
+    "linked_ctas_#{timestamp}"
+  end
+
+  def get_linked_cta_graph_cache_key(cache_key, timestamp)
+    "linked_cta_graph_#{cache_key}_#{timestamp}"
+  end
+
+  def get_ctas_for_max_outcome_cache_key(timestamp)
+    "ctas_for_max_outcome_#{timestamp}"
+  end
+
+  def get_outcome_values_cache_key(cache_key, timestamp)
+    "outcome_values_#{cache_key}_#{timestamp}"
+  end
+
   def get_home_stripes_cache_key(context_root = nil)
     "#{context_root}_home_stripes"
   end
@@ -476,23 +492,22 @@ module CacheKeysHelper
   def get_month_calendar_cache_key(extra_key)
     "month_#{extra_key}_events"
   end
-  
+
   # Stripe
   # ~~~~~~
   def get_content_previews_cache_key(tag_name, ts, params)
     extra_key = get_extra_key_from_params(params)
     "#{tag_name}_content_previews_#{ts}_#{extra_key}"
   end
-  
-  def get_content_previews_statuses_for_tag_cache_key(tag_name, current_user, params)
-    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.maximum(:updated_at))
+
+  def get_content_previews_statuses_for_tag_cache_key(tag_name, current_user, timestamp, params)
     extra_key = get_extra_key_from_params(params)
-    "content_previews_statuses_for_tag_#{tag_name}_#{extra_key}_user_#{current_user.id}_#{max_user_interaction_updated_at}"
+    "content_previews_statuses_for_tag_#{tag_name}_#{timestamp}_#{extra_key}_user_#{current_user.id}"
   end
-  
+
   def get_recent_content_previews_cache_key(params)
     extra_key = get_extra_key_from_params(params)
     "recent_content_previews_#{extra_key}"
   end
-  
+
 end

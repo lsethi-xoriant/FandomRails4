@@ -153,12 +153,12 @@ module TagHelper
 
     tags.order("tags.created_at DESC").to_a
   end
-  
+
   def get_tags_with_tags(tag_ids, params = {})
 
     hidden_tags_ids = get_hidden_tag_ids
     exclude_tag_ids = params[:conditions][:exclude_tag_ids] rescue []
-    
+
     tags = Tag.includes(:tags_tags).references(:tags_tags)
 
     where_clause = get_tag_where_clause_from_params(params)
@@ -166,7 +166,7 @@ module TagHelper
     if where_clause.present?
       tags.where("#{where_clause}") 
     end
-    
+
     if hidden_tags_ids.any? && tag_ids.empty?
       tags = tags.where("tags.id not in (#{(hidden_tags_ids + exclude_tag_ids).join(",")})")
     elsif hidden_tags_ids.any? && !tag_ids.empty?
@@ -183,7 +183,7 @@ module TagHelper
       offset, limit = params[:limit][:offset], params[:limit][:perpage]
       tags = tags.offset(offset).limit(limit)
     end
-    
+
     tags.order("tags.created_at DESC").to_a
   end
 

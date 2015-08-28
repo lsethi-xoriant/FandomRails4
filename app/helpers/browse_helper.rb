@@ -189,14 +189,11 @@ module BrowseHelper
           exclude_tag_ids << content.id
         end
       end
-      if params[:conditions]
-        params[:conditions][:exclude_tag_ids] = exclude_tag_ids
-        params[:conditions][:exclude_cta_ids] = exclude_cta_ids
-      else
-        params[:conditions] = {
-          exclude_tag_ids: exclude_tag_ids,
-          exclude_cta_ids: exclude_cta_ids
-        }
+      if exclude_tag_ids.any?
+        (params[:conditions] ||= {})[:exclude_tag_ids] = exclude_tag_ids
+      end
+      if exclude_cta_ids.any?
+        (params[:conditions] ||= {})[:exclude_cta_ids] = exclude_cta_ids
       end
       extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end
@@ -432,16 +429,19 @@ module BrowseHelper
     end
 
     content_preview_list, carousel_elements = cache_forever(get_content_previews_cache_key(main_tag_name_for_cache, timestamp, params)) do
+      # Params are used for cache key, so they shouldn't be modified. However some helpers could afterwards
+      # modify the params, so they are cloned here.
+      cloned_params = params.clone
       if number_of_elements.nil?
         carousel_elements = get_elements_for_browse_carousel(main_tag)
       else
         carousel_elements = number_of_elements
       end
 
-      if(get_extra_fields!(main_tag)['ordering'] && !params[:related])
-        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, other_tags, carousel_elements, params)
+      if(get_extra_fields!(main_tag)['ordering'] && !cloned_params[:related])
+        content_preview_list = get_content_previews_by_tags_with_ordering(main_tag, other_tags, carousel_elements, cloned_params)
       else
-        content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, params)
+        content_preview_list = get_content_previews_by_tags(main_tag, other_tags, carousel_elements, cloned_params)
       end
 
       content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, anonymous_user)
@@ -449,7 +449,10 @@ module BrowseHelper
     end
 
     if current_user
-      content_preview_list = cache_forever(get_content_previews_statuses_for_tag_cache_key(main_tag_name_for_cache, current_user, params)) do
+      timestamp = from_updated_at_to_timestamp(current_user.user_interactions.maximum(:updated_at))
+      key = get_content_previews_statuses_for_tag_cache_key(main_tag_name_for_cache, current_user, timestamp, params)
+      debugger # !!!!!!!!!!!!!!!!!!!!!!!!!!!
+      content_preview_list = cache_forever(key) do
         content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)
         content_preview_list
       end

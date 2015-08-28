@@ -298,8 +298,9 @@ module CallToActionHelper
     end
   end
 
-  def get_cta_max_updated_at()
-    maximum = CallToAction.active_no_order_by.where(user_id: nil).maximum(:updated_at)
+  def get_cta_max_updated_at(ids = [])
+    where_clause = ids.empty? ? "user_id IS NULL" : "user_id IS NULL AND id IN (#{ids.join(",")})"
+    maximum = CallToAction.active_no_order_by.where(where_clause).maximum(:updated_at)
     from_updated_at_to_timestamp(maximum)
   end
 
@@ -311,6 +312,11 @@ module CallToActionHelper
       end
     end
     from_updated_at_to_timestamp(max_updated_at)
+  end
+
+  def get_user_interactions_max_updated_at_for_cta(user, cta)
+    maximum = UserInteraction.where(:user_id => user.id, :interaction_id => Interaction.where(:call_to_action_id => cta.id)).maximum(:updated_at)
+    from_updated_at_to_timestamp(maximum)
   end
 
   def from_updated_at_to_timestamp(updated_at)
@@ -443,16 +449,14 @@ module CallToActionHelper
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
+        # calltoaction_info_list is updated in case of linked ctas; if so, it already fully "prepared"
         calltoaction_info_list, is_calltoaction_info_list_updated = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, interactions_to_compute)
       
-        if is_calltoaction_info_list_updated
-          cta_ids = calltoaction_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
-          calltoactions = CallToAction.where(id: cta_ids)
+        unless is_calltoaction_info_list_updated
+          interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+          user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
         end
-
-        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
-        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
@@ -466,9 +470,8 @@ module CallToActionHelper
             end
           end
         end
-
-        calltoaction_info_list
       end
+      calltoaction_info_list
     end
 
     if small_mobile_device?()

@@ -97,19 +97,20 @@ class BrowseController < ApplicationController
       format.json { render :json => contents.to_json }
     end
   end
-  
+
   def index_category
     @category = Tag.includes(:tags_tags).references(:tags_tags).find(params[:id])
     params[:limit] = {
       offset: 0,
       perpage: DEFAULT_VIEW_ALL_ELEMENTS
     }
+
     content_preview_list = get_content_previews(@category.name, get_tags_for_category(@category), params, DEFAULT_VIEW_ALL_ELEMENTS)
-    
+
     @tags = get_tags_from_contents(content_preview_list.contents)
     @contents = content_preview_list.contents
     @has_more = content_preview_list.has_view_all
-    
+
     @aux_other_params = { 
       page_tag: {
         miniformat: {
@@ -117,11 +118,10 @@ class BrowseController < ApplicationController
         }
       }
     }
-    
+
     set_seo_info_for_tag(@category)
-    
   end
-  
+
   # hook for tenant with multiproperty
   def get_tags_for_category(tag)
     property = get_property()
