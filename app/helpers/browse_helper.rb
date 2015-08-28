@@ -451,7 +451,6 @@ module BrowseHelper
     if current_user
       timestamp = from_updated_at_to_timestamp(current_user.user_interactions.maximum(:updated_at))
       key = get_content_previews_statuses_for_tag_cache_key(main_tag_name_for_cache, current_user, timestamp, params)
-      debugger # !!!!!!!!!!!!!!!!!!!!!!!!!!!
       content_preview_list = cache_forever(key) do
         content_preview_list.contents = compute_cta_status_contents(content_preview_list.contents, current_user)
         content_preview_list
