@@ -28,7 +28,7 @@
 
 .test-question {
   font-size: 25px;
-  margin-top: 22px;
+  padding-top: 22px;
 }
 
 .test_progress-bar {
@@ -42,7 +42,7 @@
   color: #fff;
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-xs) { 
 
   .test-answer__btn {
     left: 0;
@@ -63,6 +63,8 @@
     height: 235px;
     background-size: auto 100% !important;
     background-position: center;
+    background-repeat: no-repeat !important;
+    background-color: #333 !important;
   }
 
   .test_progress-bar {
@@ -86,10 +88,15 @@
 
   .test-question__col {
     height: 90px;
+    line-height: 90px;
   }
 
   .test-question {
     font-size: 18px;
+    padding-top: 0;
+    vertical-align: middle;
+    display: inline-block;
+    line-height: normal;
   }
 
 }

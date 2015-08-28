@@ -6,15 +6,19 @@
 <div class="small-container">
   <div class="container form-container">
     <div class="row">
-      <div class="col-sm-5 col-sm-offset-1">
+      <div class="col-sm-5 col-sm-offset-1 col-xs-6 col-xs-offset-0">
         <h1 class="devise-title">Registrati</h1>
       </div>
-      <div class="col-sm-5 text-right">
+      <div class="col-sm-5 col-xs-6 text-right">
         <p class="devise-next-title"><a href="/users/sign_in">Loggati</a></p>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-10 col-sm-offset-1">
         <hr class="devise-title-hr">
       </div>
+    </div>
+    <div class="row">
       <% if resource.errors.any? %>
       <div class="col-sm-10 col-sm-offset-1 devise-errors">
         <p>Errori nella compilazione del modulo:</p>

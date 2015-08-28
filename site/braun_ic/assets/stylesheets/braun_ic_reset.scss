@@ -386,16 +386,17 @@ p {
   }
 }
 
-@media (max-width: $screen-sm-min) {
-  .sub-header-container__arrow {
-    font-size: 42px !important;
-    top: -7px;
+@media (max-width: $screen-sm) {
+  body {
+    padding-top: 50px;
   }
+}
 
-  .sub-header-container__description {
+@media (max-width: $screen-xs) {
+  .devise-next-title {
+    font-size: 22px;
+    margin-bottom: 0;
     margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 10px;
   }
 
   #cookies-bar {

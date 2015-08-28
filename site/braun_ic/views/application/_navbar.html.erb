@@ -11,6 +11,9 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/"><img ng-src="{{aux.assets.extra_fields.logo.url}}"></a>
+          <a ng-if="isAnonymousUser()" href="/users/sign_up" class="btn btn-green iw_btn-navbar visible-xs">
+            REGISTRATI
+          </a>
           <a ng-if="current_user.registration_fully_completed && !isAnonymousUser()" ng-click="openInstantWinModal()" class="btn btn-green iw_btn-navbar visible-xs">
           <div class="iw_btn-navbar__tk text-center">{{current_user.instantwin_tickets_counter}}</div>
             GIOCA
@@ -28,6 +31,9 @@
               <a ng-if="!isAnchor(item.extra_fields.url)" href="{{item.extra_fields.url}}">{{item.title}}</a>
             </li>
             <li class="navbar-item--socials" ng-if="aux.assets.extra_fields.menu_item_socials" ng-bind-html="aux.assets.extra_fields.menu_item_socials">
+            </li>
+            <li class="visible-xs" ng-if="current_user">
+              <a href="/users/sign_out">Esci</a>
             </li>
           </ul>
         </div>

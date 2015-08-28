@@ -552,7 +552,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $("#iw_slot").attr("src", image);
 
         if($scope.aux.assets.extra_fields.iw_running_sound) {
-          iwRunningSound("play");
+          runningSound("iw-running-sound", "play");
         }
 
         $scope.current_user.instantwin_tickets_counter = data.instantwin_tickets_counter;
@@ -563,8 +563,17 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $scope.aux.instant_win_info.win = data.win;
 
           if($scope.aux.assets.extra_fields.iw_running_sound) {
-            iwRunningSound("pause");
+            runningSound("iw-running-sound", "pause");
           }
+
+          if($scope.aux.assets.extra_fields.iw_ending_sound_win && $scope.aux.assets.extra_fields.iw_ending_sound_wrong) {
+            if(data.win == true) {
+              runningSound("iw-ending-sound-win", "play");
+            } else {
+              runningSound("iw-ending-sound-wrong", "play");
+            }
+          }
+
         }, time);
       }).error(function() {
         // ERROR.
@@ -572,15 +581,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function preinteractionAnimationSound() {
-    $(".preinteraction-sound").trigger("play");
-  }
-
-  function iwRunningSound(status) {
-    $(".iw-running-sound").trigger(status);
+    runningSound("preinteraction-sound", "play");
   }
 
   function interactionButtonSound() {
-    $(".interaction-button-sound").trigger("play");
+    runningSound("interaction-button-sound", "play");
+  }
+
+  function runningSound(sound_class, status) {
+    $("." + sound_class).trigger(status);
   }
 
   $scope.openInstantWinModal = function() {

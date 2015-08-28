@@ -31,7 +31,7 @@
   }
 }
 
-@media (min-width: $screen-sm-min) { 
+@media (min-width: $screen-md) { 
   .navbar-header {
     position: relative;
     left: 15px;
@@ -47,7 +47,7 @@
   }
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-sm) { 
   .iw_btn-navbar {
     float: right;
     margin-right: 15px;

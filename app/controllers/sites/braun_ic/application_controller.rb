@@ -246,15 +246,20 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     if cta_id
       cta = CallToAction.find(cta_id)
 
+      set_seo_info_for_cta(cta)
+      anchor_to = cta.slug
+      compute_seo()
+
+      if cta.extra_fields["share_img"].present?
+        update_seo_value(cta.extra_fields["share_img"]["url"], "meta_image")
+      end
+
       tip_tag = Tag.find("tip")
       is_cta_tagged_with_tip = CallToActionTag.where(call_to_action_id: cta.id, tag_id: tip_tag.id).any?
       if is_cta_tagged_with_tip
         top_cta_info = build_cta_info_list_and_cache_with_max_updated_at([cta], ["share"])
       end
-
-      set_seo_info_for_cta(cta)
-      anchor_to = cta.slug
-      compute_seo()
+      
       if descendent_id
         calltoaction_to_share = CallToAction.find(descendent_id)
         extra_fields = calltoaction_to_share.extra_fields

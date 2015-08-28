@@ -73,6 +73,14 @@
       <source ng-src="{{aux.assets.extra_fields.iw_running_sound.url | trustAsResourceUrl}}" type="audio/mpeg"/>
     </audio>
 
+    <audio ng-if="aux.assets.extra_fields.iw_ending_sound_win" class="iw-ending-sound-win hidden">
+      <source ng-src="{{aux.assets.extra_fields.iw_ending_sound_win.url | trustAsResourceUrl}}" type="audio/mpeg"/>
+    </audio>
+
+    <audio ng-if="aux.assets.extra_fields.iw_ending_sound_wrong" class="iw-ending-sound-wrong hidden">
+      <source ng-src="{{aux.assets.extra_fields.iw_ending_sound_wrong.url | trustAsResourceUrl}}" type="audio/mpeg"/>
+    </audio>
+
     <%= render partial: "/application/style", locals: { cta_info_list: @calltoaction_info_list } %>
     <%= render partial: "/application/modals" %>
 
