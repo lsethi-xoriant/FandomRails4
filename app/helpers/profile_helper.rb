@@ -117,6 +117,7 @@ module ProfileHelper
   end
 
   def update_from_omniauth(auth, provider)
+    from_registration = false
     user = current_user
     # When the provider is anchor to another user, I move it to current user
     user_auth = Authentication.find_by_provider_and_uid(provider, auth.uid);
@@ -133,7 +134,12 @@ module ProfileHelper
       )
     else
       if stored_anonymous_user?
-        user = User.find_by_email(auth.info.email) || current_user 
+        tmp_user = User.find_by_email(auth.info.email)
+        if tmp_user.present?
+          user = tmp_user
+        else
+          from_registration = true
+        end
       end
       user_auth = user.authentications.build(
           uid: auth.uid,
@@ -164,7 +170,7 @@ module ProfileHelper
     end
     
     user.save
-    user
+    [user, from_registration]
   end
 
   def create_from_omniauth(auth, provider)
