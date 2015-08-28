@@ -953,6 +953,7 @@ module ApplicationHelper
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
+      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "context_root" => $context_root,
       "free_provider_share" => $site.free_provider_share,
       "property_info" => property_info,
