@@ -81,7 +81,7 @@
           <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
             <div class="percentage_circle_fix_bar"></div>
             <span class="percentage_circle_value percentage_circle_value_profile">
-                <img src="<%= anon_avatar() %>">
+              <img src="<%= anon_avatar() %>">
             </span>
             <div class="percentage_circle_slice">
               <div class="percentage_circle_bar"></div>
@@ -106,11 +106,23 @@
     <div class="row">
       <div class="col-xs-3 profile-container__badge text-center">  
         <div class="profile-container__badge-block">  
-          <a data-toggle="modal" data-target="#modal-update-user">
+          <a ng-if="!isAnonymousUser()" data-toggle="modal" data-target="#modal-update-user">
             <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
               <div class="percentage_circle_fix_bar"></div>
               <span class="percentage_circle_value percentage_circle_value_profile">
-                  <img ng-src="{{current_user.avatar}}">
+                <img ng-src="{{current_user.avatar}}">
+              </span>
+              <div class="percentage_circle_slice">
+                <div class="percentage_circle_bar"></div>
+                <div class="percentage_circle_fill"></div>
+              </div>            
+            </div>
+          </a>
+          <a ng-if="isAnonymousUser()" href="/users/sign_up">
+            <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
+              <div class="percentage_circle_fix_bar"></div>
+              <span class="percentage_circle_value percentage_circle_value_profile">
+                <img src="<%= anon_avatar() %>">
               </span>
               <div class="percentage_circle_slice">
                 <div class="percentage_circle_bar"></div>
