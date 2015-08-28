@@ -31,4 +31,3 @@
 //= require ui-bootstrap-0.12.min
 //= require jquery.flexslider
 //= require fastclick
-//= require ckeditor/config
