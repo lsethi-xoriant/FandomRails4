@@ -42,7 +42,7 @@
   color: #fff;
 }
 
-@media (max-width: $screen-sm-min) { 
+@media (max-width: $screen-xs) { 
 
   .test-answer__btn {
     left: 0;
@@ -63,6 +63,8 @@
     height: 235px;
     background-size: auto 100% !important;
     background-position: center;
+    background-repeat: no-repeat !important;
+    background-color: #333 !important;
   }
 
   .test_progress-bar {
