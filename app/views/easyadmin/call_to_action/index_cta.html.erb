@@ -25,6 +25,14 @@
       </div>
     <% end %>
 
+    <%= render partial: "/easyadmin/easyadmin/update_cache_banner" %>
+
+    <% if get_content_updated_at_cookie() || get_user_call_to_action_moderation_cookie() %>
+      <script type="text/javascript">
+        $("#update-cache-banner").removeClass("hidden");
+      </script>
+    <% end %>
+
     <div class="row text-right">
       <div class="col-md-12">
         <a href="/easyadmin/cta/new"><button type="button" class="btn btn-primary">NUOVA</button></a>
