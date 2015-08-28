@@ -593,11 +593,16 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   }
 
   $scope.openInstantWinModal = function() {
-    $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_cover.url);
-
     if($scope.aux.instant_win_info.win == false) {
       delete $scope.aux.instant_win_info.win;
     }
+
+    if($scope.aux.instant_win_info.win == true) {
+      $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_cover_winner.url);
+    } else {
+      $("#iw_slot").attr("src", $scope.aux.assets.extra_fields.iw_cover.url);
+    }
+
   	//$(".click-sound").trigger("play");
     $("#modal-interaction-instant-win").modal("show");
   };
