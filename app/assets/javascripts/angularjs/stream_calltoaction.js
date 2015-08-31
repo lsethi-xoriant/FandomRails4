@@ -734,33 +734,40 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return interaction_present;
   };
 
+  $scope.likeInteractions = function(cta_info) {
+    if($scope.likeInteractionPresent(cta_info)) {
+      return [cta_info.like_interaction_info];
+    } else {
+      return [];
+    }
+  };
+
   $scope.likeInteractionPresent = function(calltoaction_info) {
-    interaction_present = false;
-    angular.forEach(calltoaction_info.calltoaction.interaction_info_list, function(interaction_info) {
+    parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
+    angular.forEach(parent_cta_info.calltoaction.interaction_info_list, function(interaction_info) {
       if(interaction_info.interaction.resource_type == "like") {
         calltoaction_info.like_interaction_info = interaction_info;
-        interaction_present = true;
       }
     });
-    return interaction_present;
+    return angular.isDefined(calltoaction_info.like_interaction_info);
   };
 
-  $scope.openCommentInfo = function(interaction_info) {
-    if($scope.comments_polling.interaction_info) {
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5);
+  $scope.commentInteractions = function(cta_info) {
+    if($scope.commentInteractionPresent(cta_info)) {
+      return [cta_info.comment_interaction_info];
+    } else {
+      return [];
     }
-    interaction_info.interaction.resource.comment_info.open = true;
-    $scope.comments_polling.polling = $interval($scope.commentsPolling, 15000);
-    $scope.comments_polling.interaction_info = interaction_info;
   };
 
-  $scope.closeCommentInfo = function(interaction_info) {
-    if($scope.comments_polling.interaction_info) {
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.open = false;
-      $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments = $scope.comments_polling.interaction_info.interaction.resource.comment_info.comments.slice(0, 5);
-      $interval.cancel($scope.comments_polling.polling);
-    }
+  $scope.commentInteractionPresent = function(calltoaction_info) {
+    parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
+    angular.forEach(parent_cta_info.calltoaction.interaction_info_list, function(interaction_info) {
+      if(interaction_info.interaction.resource_type == "comment") {
+        calltoaction_info.comment_interaction_info = interaction_info;
+      }
+    });
+    return angular.isDefined(calltoaction_info.comment_interaction_info);
   };
 
   $scope.overvideoInteractionsPresent = function(calltoaction_id) {

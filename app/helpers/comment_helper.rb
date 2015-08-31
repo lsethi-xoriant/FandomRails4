@@ -27,7 +27,6 @@ module CommentHelper
       user_comment = UserCommentInteraction.create(user_id: current_user.id, approved: approved, text: user_text, comment_id: comment_resource.id, aux: aux)
       response[:comment] = build_comment_for_comment_info(user_comment, true)
       if approved && user_comment.errors.blank?
-        adjust_counter!(interaction, 1)
         user_interaction, outcome = create_or_update_interaction(current_user, interaction, nil, nil)
       end
     else

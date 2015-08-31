@@ -56,16 +56,16 @@
   <div class="col-sm-12 cta__media-footer">
     <div class="row">
       <div class="col-xs-6">
-        <div class="like-interaction__cta__info" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterLikeInteractions">
+        <div class="like-interaction__cta__info" ng-repeat="interaction_info in likeInteractions(calltoaction_info)">
           <button class="btn btn-default like-interaction__cover__info__button" ng-class="{active: likePressed(interaction_info)}" ng-click="updateAnswer(calltoaction_info, interaction_info, null, interaction_info.interaction.when_show_interaction)"><span class="fa fa-thumbs-up like-interaction__cover__info__glyphicon-thumbs-up"></span></button><span class="like-interaction__cta__info__text">{{interaction_info.interaction.resource.counter}}<span class="hidden-xs"> mi piace</span></span>
         </div>
-        <div class="comment-interaction__cta__info hidden-xs" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions">
+        <div class="comment-interaction__cta__info hidden-xs" ng-repeat="interaction_info in commentInteractions(calltoaction_info)">
             <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-default comment-interaction__cta__info__button">
               <span class="glyphicon glyphicon-comment comment-interaction__cta__info__glyphicon-comment"></span>
             </a><span class="comment-interaction__cta__info__text">{{interaction_info.interaction.resource.comment_info.comments_total_count}}<span class="hidden-xs"> commenti</span></span>
         </div>
       </div>
-      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
+      <div ng-repeat="interaction_info in commentInteractions(calltoaction_info)" class="col-xs-6 text-right">
         <%= render partial: "/call_to_action/share_interaction" %>
       </div>
     </div>
@@ -95,7 +95,7 @@
         <%= render partial: "/call_to_action/share_interaction" %>
       </div>
     </div>
-    <div id="comment-interactions" ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
+    <div id="comment-interactions" ng-repeat="interaction_info in commentInteractions(calltoaction_info)" class="row">
       <%= render partial: "/call_to_action/comment_interaction" %>
     </div>  
 

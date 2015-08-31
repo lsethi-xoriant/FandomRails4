@@ -434,14 +434,6 @@ module CallToActionHelper
 
     interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
 
-    resource_ids = extract_resource_ids_from_call_to_action_info_list(calltoaction_info_list, "comment")
-    if resource_ids.any?
-      get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
-      comments = ActiveRecord::Base.connection.execute(get_comments_query)
-      comment_ids = comments.map { |comment| comment["id"] }
-      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC").limit(5)
-    end
-
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
     max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.includes(:interaction).where(interactions: { call_to_action_id: calltoaction_ids }).references(:interactions).maximum(:updated_at))
     max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
@@ -492,7 +484,15 @@ module CallToActionHelper
       calltoaction_info_list[0]["calltoaction"]["disqus"]["sso"] = disqus_sso
     end
 
-    adjust_counters(interaction_ids, calltoaction_info_list, comments)
+    calltoaction_info_list_to_adjust = []
+    calltoaction_info_list.each do |calltoaction_info|
+      calltoaction_info_list_to_adjust << calltoaction_info
+      if calltoaction_info["optional_history"]["parent_cta_info"].present?
+        calltoaction_info_list_to_adjust << calltoaction_info["optional_history"]["parent_cta_info"]
+      end
+    end
+
+    adjust_counters(calltoaction_info_list_to_adjust)
     adjust_user_ctas(calltoaction_info_list)
 
     if params[:only_cover].blank?
@@ -511,7 +511,17 @@ module CallToActionHelper
 
   end
 
-  def adjust_counters(interaction_ids, calltoaction_info_list, comments)
+  def adjust_counters(calltoaction_info_list)
+    interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+
+    resource_ids = extract_resource_ids_from_call_to_action_info_list(calltoaction_info_list, "comment")
+    if resource_ids.any?
+      get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
+      comments = ActiveRecord::Base.connection.execute(get_comments_query)
+      comment_ids = comments.map { |comment| comment["id"] }
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC").limit(5)
+    end
+
     counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
     calltoaction_info_list.each do |calltoaction_info|
       calltoaction_info["calltoaction"]["interaction_info_list"].each do |interaction_info|
