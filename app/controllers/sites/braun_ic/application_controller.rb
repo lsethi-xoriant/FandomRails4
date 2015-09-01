@@ -40,7 +40,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       contest_start_date = Time.parse(CONTEST_IDENTITY_COLLECTION_START_DATE)
       birth_date = Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}")
 
-      if (contest_start_date - birth_date) / 1.year < 18
+      if (contest_start_date < birth_date + 18.year)
         errors.add(:base, "All'inizio del concorso (15 settembre 2015) devi avere compiuto 18 anni")
       end
     end

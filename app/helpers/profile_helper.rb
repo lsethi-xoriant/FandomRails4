@@ -1,5 +1,9 @@
 module ProfileHelper
 
+  def birth_date_valid_for_contest?(contest_start_date, birth_date, age_limit = 18)
+    (contest_start_date >= birth_date + age_limit.year)
+  end
+
   def current_avatar size = "large"
     user_avatar(current_user, size)
   end
