@@ -1,7 +1,7 @@
 .footer-container {
   background-color: #000;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 60px;
   color: #fff;
 }
 
@@ -65,6 +65,10 @@
 }
 
 @media (max-width: $screen-xs) { 
+  .footer-container {
+    padding-bottom: 30px;
+  }
+
   .footer-container-others__address {
     padding-top: 15px;
   }

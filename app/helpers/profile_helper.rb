@@ -12,7 +12,7 @@ module ProfileHelper
     if !anonymous_user?(user) && user.avatar_selected_url.present?
       avatar = user.avatar_selected_url
       if (user.avatar_selected || "upload").include?("facebook")
-        avatar = "#{user.avatar_selected_url}?type=#{size}"
+        avatar = "#{user.avatar_selected_url}?width=200&height=200" #type=#{size}
       end
       avatar
     else
