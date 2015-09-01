@@ -1,6 +1,13 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
   before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update, :contest_identitycollection_success]
+  before_filter :contest_identitycollection_active, only: [:contest_identitycollection, :contest_identitycollection_update, :contest_identitycollection_success]
+
+  def contest_identitycollection_active
+    unless braun_ic_contest_identitycollection_active?
+      redirect_to "/users/sign_up"
+    end
+  end
 
   def only_registered_user
     if anonymous_user?

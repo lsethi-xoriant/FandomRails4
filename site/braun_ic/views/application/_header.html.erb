@@ -18,18 +18,20 @@
   </h1>
 </div>
 
-<a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
-  <div class="sub-header-container">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-5 sub-header-container__img-col hidden-xs">
-          <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
-        </div>
-        <div class="col-sm-7">
-          <p class="sub-header-container__description">Hai acquistato un prodotto della <span class="sub-header-container__description--green">IdentityCollection</span>?<br><span class="sub-header-container__description--bold">Scopri se hai vinto la collezione completa!</span></p>
-          <span class="sub-header-container__arrow fa fa-angle-right"></span>
+<% if braun_ic_contest_identitycollection_active? %>
+  <a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
+    <div class="sub-header-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-5 sub-header-container__img-col hidden-xs">
+            <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
+          </div>
+          <div class="col-sm-7">
+            <p class="sub-header-container__description">Hai acquistato un prodotto della <span class="sub-header-container__description--green">IdentityCollection</span>?<br><span class="sub-header-container__description--bold">Scopri se hai vinto la collezione completa!</span></p>
+            <span class="sub-header-container__arrow fa fa-angle-right"></span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</a>
+  </a>
+<% end %>
