@@ -189,11 +189,20 @@ module BrowseHelper
           exclude_tag_ids << content.id
         end
       end
+      # params has class ActionController::Parameters, not Hash, so we need to be more verbose
       if exclude_tag_ids.any?
-        (params[:conditions] ||= {})[:exclude_tag_ids] = exclude_tag_ids
+        if params[:conditions]
+          params[:conditions][:exclude_tag_ids] = exclude_tag_ids
+        else
+          params[:conditions] = { :exclude_tag_ids => exclude_tag_ids }
+        end
       end
       if exclude_cta_ids.any?
-        (params[:conditions] ||= {})[:exclude_cta_ids] = exclude_cta_ids
+        if params[:conditions]
+          params[:conditions][:exclude_cta_ids] = exclude_cta_ids
+        else
+          params[:conditions] = { :exclude_cta_ids => exclude_cta_ids }
+        end
       end
       extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end

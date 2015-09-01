@@ -157,7 +157,9 @@ module TagHelper
   def get_tags_with_tags(tag_ids, params = {})
 
     hidden_tags_ids = get_hidden_tag_ids
-    exclude_tag_ids = params[:conditions][:exclude_tag_ids] rescue []
+    if params[:conditions]
+      exclude_tag_ids = params[:conditions][:exclude_tag_ids]
+    end
 
     tags = Tag.includes(:tags_tags).references(:tags_tags)
 
@@ -168,14 +170,15 @@ module TagHelper
     end
 
     if hidden_tags_ids.any? && tag_ids.empty?
-      tags = tags.where("tags.id not in (#{(hidden_tags_ids + exclude_tag_ids).join(",")})")
+      tag_ids_to_exclude = exclude_tag_ids ? hidden_tags_ids + exclude_tag_ids : hidden_tags_ids
+      tags = tags.where("tags.id not in (#{tag_ids_to_exclude.join(",")})")
     elsif hidden_tags_ids.any? && !tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{(hidden_tags_ids + exclude_tag_ids).join(",")}) )" }.join(' INTERSECT ')
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     elsif hidden_tags_ids.empty? && !tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
       tags_where_clause = "tags.id in (#{tag_ids_subselect})"
-      tags_where_clause += " AND tags.id not in (#{exclude_tag_ids.join(",")})" if exclude_tag_ids.any?
+      tags_where_clause += " AND tags.id not in (#{exclude_tag_ids.join(",")})" if exclude_tag_ids
       tags = tags.where(tags_where_clause)
     end
 
