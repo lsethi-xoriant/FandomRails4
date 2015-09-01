@@ -1,6 +1,13 @@
 class Sites::BraunIc::ApplicationController < ApplicationController
   
   before_filter :only_registered_user, only: [:contest_identitycollection, :contest_identitycollection_update, :contest_identitycollection_success]
+  before_filter :contest_identitycollection_active, only: [:contest_identitycollection, :contest_identitycollection_update, :contest_identitycollection_success]
+
+  def contest_identitycollection_active
+    unless braun_ic_contest_identitycollection_active?
+      redirect_to "/users/sign_up"
+    end
+  end
 
   def only_registered_user
     if anonymous_user?
@@ -33,27 +40,23 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     validates_presence_of :first_name, :last_name, :receipt_number, :product_code, :receipt_amount
     validate :date_of_emission_present?
     validate :time_of_emission_present?
-    validate :birth_date_present?
     validate :adult?
 
     def adult?
-      contest_start_date = Time.parse(CONTEST_IDENTITY_COLLECTION_START_DATE)
-      birth_date = Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}")
-
-      if (contest_start_date < birth_date + 18.year)
-        errors.add(:base, "All'inizio del concorso (15 settembre 2015) devi avere compiuto 18 anni")
+      if year_of_birth.blank? || month_of_birth.blank? || day_of_birth.blank?
+        errors.add(:birth_date, "non può essere lasciata in bianco")
+      else
+        contest_start_date = Time.parse(CONTEST_IDENTITY_COLLECTION_START_DATE)
+        birth_date = Time.parse("#{year_of_birth}/#{month_of_birth}/#{day_of_birth}")
+        if (contest_start_date < birth_date + 18.year)
+          errors.add(:base, "All'inizio del concorso (15 settembre 2015) devi avere compiuto 18 anni")
+        end
       end
     end
 
     def date_of_emission_present?
       if day_of_emission.blank? || month_of_emission.blank? || year_of_emission.blank?
         errors.add(:date_of_emission, "non può essere lasciata in bianco")
-      end
-    end  
-
-    def birth_date_present?
-      if day_of_birth.blank? || month_of_birth.blank? || year_of_birth.blank?
-        errors.add(:birth_date, "non può essere lasciata in bianco")
       end
     end  
 

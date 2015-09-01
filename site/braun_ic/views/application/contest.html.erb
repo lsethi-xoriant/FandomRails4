@@ -92,9 +92,11 @@
       <div class="col-sm-6 col-sm-offset-3 text-center">
         <p class="contest-description">{{aux.assets.extra_fields.contest_section_2_description}}</p>
       </div>
-      <div class="col-sm-6 col-sm-offset-3 text-center">
-        <a class="btn btn-green btn-lg contest-btn" href="/concorso_identitycollection">REGISTRATI E INVIA IL TUO SCONTRINO</a>
-      </div>
+      <% if braun_ic_contest_identitycollection_active? %>
+        <div class="col-sm-6 col-sm-offset-3 text-center">
+          <a class="btn btn-green btn-lg contest-btn" href="/concorso_identitycollection">REGISTRATI E INVIA IL TUO SCONTRINO</a>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

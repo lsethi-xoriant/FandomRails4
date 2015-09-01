@@ -30,10 +30,10 @@
             </div>
 
             <div class="form-group">
-              <input name="first_name" ng-model="form_data.current_user.first_name" class="form-control" placeholder="Nome"></input>
+              <input name="first_name" ng-model="form_data.current_user.first_name" class="form-control" placeholder="Nome" ng-readonly="current_user.first_name"></input>
             </div>
             <div class="form-group">
-              <input name="last_name" ng-model="form_data.current_user.last_name" class="form-control" placeholder="Cognome"></input>
+              <input name="last_name" ng-model="form_data.current_user.last_name" class="form-control" placeholder="Cognome"ng-readonly="current_user.last_name"></input>
             </div>
             <div class="form-group hidden">
               <input id="upload-input" name="form_data.current_user._avatar" ng-file-select="" ng-model="form_data.current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.current_user._avatar[0])">

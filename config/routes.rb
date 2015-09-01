@@ -12,6 +12,7 @@ Fandom::Application.routes.draw do
   constraints(SiteMatcher.new('braun_ic')) do
     scope module: "sites" do
       scope module: "braun_ic" do
+        post "/profile/update_user", to: "profile#update_user", defaults: { format: 'json' }
         get "/concorso", to: "application#contest"
         get "/concorso_identitycollection", to: "application#contest_identitycollection"
         get "/concorso_identitycollection_success", to: "application#contest_identitycollection_success"

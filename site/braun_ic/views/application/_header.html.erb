@@ -1,9 +1,15 @@
 <%= render partial: "/application/navbar" %>
 
-<div class="header-container hidden-xs">
-  <h1>
-    <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
-  </h1>
+<div class="header-container hidden-xs" ng-click="scrollTo('#tests')">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>
+          <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
+        </h1>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="header-container visible-xs">
@@ -12,18 +18,20 @@
   </h1>
 </div>
 
-<a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
-  <div class="sub-header-container">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-5 sub-header-container__img-col hidden-xs">
-          <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
-        </div>
-        <div class="col-sm-7">
-          <p class="sub-header-container__description">Hai acquistato un prodotto della <span class="sub-header-container__description--green">IdentityCollection</span>?<br><span class="sub-header-container__description--bold">Scopri se hai vinto la collezione completa!</span></p>
-          <span class="sub-header-container__arrow fa fa-angle-right"></span>
+<% if braun_ic_contest_identitycollection_active? %>
+  <a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
+    <div class="sub-header-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-5 sub-header-container__img-col hidden-xs">
+            <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
+          </div>
+          <div class="col-sm-7">
+            <p class="sub-header-container__description">Hai acquistato un prodotto della <span class="sub-header-container__description--green">IdentityCollection</span>?<br><span class="sub-header-container__description--bold">Scopri se hai vinto la collezione completa!</span></p>
+            <span class="sub-header-container__arrow fa fa-angle-right"></span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</a>
+  </a>
+<% end %>

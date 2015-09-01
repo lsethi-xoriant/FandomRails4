@@ -1,5 +1,11 @@
 module BraunIcHelper
 
+  def braun_ic_contest_identitycollection_active?
+    assets = Tag.find("assets")
+    date = assets.extra_fields["contest_identitycollection_start_date"] || CONTEST_IDENTITY_COLLECTION_START_DATE
+    Time.now.utc >= date.to_time.utc
+  end
+
   def braun_ic_iw_user_valid?()
     if current_user
       if current_user.birth_date
