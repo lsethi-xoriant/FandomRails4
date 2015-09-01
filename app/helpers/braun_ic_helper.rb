@@ -20,7 +20,7 @@ module BraunIcHelper
     end
   end
   
-  def adjust_braun_ic_reward(reward, inactive, activated_at)
+  def adjust_braun_ic_reward(reward, inactive, activated_at, related_cta_name)
     image = inactive.present? ? reward.not_awarded_image : reward.main_image
       
     { 
@@ -31,7 +31,8 @@ module BraunIcHelper
       cost: reward.cost,
       extra_fields: reward.extra_fields,
       inactive: inactive,
-      activated_at: activated_at
+      activated_at: activated_at,
+      related_cta_name: related_cta_name
     }
   end  
 
@@ -45,7 +46,9 @@ module BraunIcHelper
 
     users_badge = {}
     category_tags.each do |category_tag| 
-      activated_at = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_tag.id).references(:call_to_action_tags).first.activated_at
+      cta = CallToAction.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ?", category_tag.id).references(:call_to_action_tags).first
+      activated_at = cta.activated_at
+      name = cta.name
 
       badge_inactive = Reward.includes(:reward_tags).where("reward_tags.tag_id = ?", category_tag.id).references(:reward_tags).order("rewards.cost asc").first
       user_to_rewards = get_user_to_rewards_with_tags_in_and([badge_tag, category_tag], user_ids)
@@ -60,7 +63,7 @@ module BraunIcHelper
 
         image = inactive ? user_reward.not_awarded_image : user_reward.main_image
 
-        (users_badge[user_id] ||= []) << adjust_braun_ic_reward(user_reward, inactive, activated_at)
+        (users_badge[user_id] ||= []) << adjust_braun_ic_reward(user_reward, inactive, activated_at, name)
       end
     end
 

@@ -456,7 +456,7 @@ module UserInteractionHelper
         
         if reward
           parent_cta = CallToAction.find(params[:parent_cta_id])
-          response[:badge] = adjust_braun_ic_reward(reward, false, parent_cta.activated_at)
+          response[:badge] = adjust_braun_ic_reward(reward, false, parent_cta.activated_at, parent_cta.name)
         end
       end
 

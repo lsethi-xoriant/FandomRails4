@@ -1,23 +1,41 @@
 <%= render partial: "/application/navbar" %>
 
 <%# 
-<div class="header-container hidden-xs" ng-click="scrollTo('#tests')">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <h1>
-          <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
-        </h1>
+  <div class="header-container hidden-xs" ng-click="scrollTo('#tests')">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1>
+            <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
+          </h1>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="header-container visible-xs">
-  <h1>
-    <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img_mobile.url}}" alt="Wellness machine">
-  </h1>
-</div>
+  <div class="header-container visible-xs">
+    <h1>
+      <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img_mobile.url}}" alt="Wellness machine">
+    </h1>
+  </div>
+
+  if braun_ic_contest_identitycollection_active?
+  <a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
+    <div class="sub-header-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-5 sub-header-container__img-col hidden-xs">
+            <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
+          </div>
+          <div class="col-sm-7">
+            <div ng-bind-html="aux.assets.extra_fields.sub_header_description"></div>
+            <span class="sub-header-container__arrow fa fa-angle-right"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  end
 %>
 
 <div class="header-container" ng-if="aux.calltoaction_evidence_info">
@@ -38,27 +56,6 @@
     </div>
   </div>
 </div>
-
-
-<%# if braun_ic_contest_identitycollection_active? %>
-  <%#
-  <a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
-    <div class="sub-header-container">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-5 sub-header-container__img-col hidden-xs">
-            <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
-          </div>
-          <div class="col-sm-7">
-            <div ng-bind-html="aux.assets.extra_fields.sub_header_description"></div>
-            <span class="sub-header-container__arrow fa fa-angle-right"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </a>
-  %>
-<%# end %>
 
 <script type="text/javascript">
   $(document).ready(function() {

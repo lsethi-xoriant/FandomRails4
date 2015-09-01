@@ -250,6 +250,9 @@ p {
   background-color: #e0e1e2; 
   border-top: 1px solid #ccc; 
   border-bottom: 1px solid #ccc;
+  .profile-container__badge { 
+    cursor: pointer;
+  }
 }
 
 .profile-container__row {

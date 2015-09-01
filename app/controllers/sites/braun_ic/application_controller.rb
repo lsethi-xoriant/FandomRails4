@@ -172,7 +172,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
     response = {
       calltoaction_info: build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
-      badge: adjust_braun_ic_reward(inactive_reward, true, cta.activated_at)
+      badge: adjust_braun_ic_reward(inactive_reward, true, cta.activated_at, cta.name)
     }
 
     respond_to do |format|
@@ -242,7 +242,10 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         inactive = true
       end
 
-      badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, get_parent_cta(cta_info)["calltoaction"]["activated_at"])
+      parent_cta_info = get_parent_cta(cta_info)
+      activated_at = parent_cta_info["calltoaction"]["activated_at"]
+      name = parent_cta_info["calltoaction"]["name"]
+      badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, activated_at, name)
     end
 
     product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
