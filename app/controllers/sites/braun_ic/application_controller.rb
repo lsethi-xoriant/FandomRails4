@@ -309,6 +309,17 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     }
   end
 
+  def index_tips
+    tip_info_list, has_more_tips = get_ctas_for_stream("tip", params, 6)
+    
+    @aux_other_params = { 
+      tips: {
+        tip_info_list: tip_info_list,
+        has_more: has_more_tips
+      }
+    }
+  end
+
   def append_tips
     params[:page_elements] = ["share"]
     calltoaction_info_list, has_more = get_ctas_for_stream(params[:tag_name], params, 3)

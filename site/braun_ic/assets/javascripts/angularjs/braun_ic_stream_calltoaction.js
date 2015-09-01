@@ -83,6 +83,14 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     if($scope.aux.anchor_to) {
       window.location.href = "#" + $scope.aux.anchor_to;
     }
+
+    if(window.location.hash && $window.innerWidth < 720) {
+      $timeout(function() { 
+        $('html, body').animate({
+          scrollTop: ($(window.location.hash).offset().top - 50)
+        }, 0);
+      }, 500);
+    }
   };
 
   $scope.buildbadgeArray = function() {
