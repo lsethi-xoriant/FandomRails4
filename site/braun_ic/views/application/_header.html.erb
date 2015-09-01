@@ -1,9 +1,15 @@
 <%= render partial: "/application/navbar" %>
 
-<div class="header-container hidden-xs">
-  <h1>
-    <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
-  </h1>
+<div class="header-container hidden-xs" ng-click="scrollTo('#tests')">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>
+          <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img.url}}" alt="Wellness machine">
+        </h1>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="header-container visible-xs">
@@ -27,3 +33,7 @@
     </div>
   </div>
 </a>
+
+Sostituire site/orzoro/easyadmin/user_controller.rb, riga 77 con:
+
+      cups_redeemed = user.aux["cup_redeem"] rescue nil
