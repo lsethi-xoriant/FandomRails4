@@ -1,11 +1,11 @@
 module BraunIcHelper
 
-  def braun_ic_birth_date_valid?
+  def braun_ic_iw_user_valid?()
     if current_user
       if current_user.birth_date
         contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
         birth_date = Time.parse(current_user.birth_date.to_s)
-        (contest_start_date - birth_date) / 1.year >= 18
+        birth_date_valid_for_contest?(contest_start_date, birth_date)
       else
         true
       end

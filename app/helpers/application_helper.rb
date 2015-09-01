@@ -599,7 +599,7 @@ module ApplicationHelper
               contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
               birth_date = Time.parse(current_user[name].to_s)
 
-              if (contest_start_date - birth_date) / 1.year < 18
+              if !birth_date_valid_for_contest?(contest_start_date, birth_date)
                 result = false
                 break
               end
@@ -658,7 +658,7 @@ module ApplicationHelper
                 contest_start_date = Time.parse(CONTEST_BRAUN_IW_START_DATE)
                 birth_date = Time.parse("#{params["year_of_birth"]}/#{params["month_of_birth"]}/#{params["day_of_birth"]}")
 
-                if (contest_start_date - birth_date) / 1.year < 18
+                if !birth_date_valid_for_contest?(contest_start_date, birth_date)
                   errors << "All'inizio del concorso (3 settembre 2015) devi avere compiuto 18 anni"
                 end
               end
@@ -953,6 +953,7 @@ module ApplicationHelper
     @aux = {
       "site" => $site,
       "tenant" => $site.id,
+      "kaltura" => get_deploy_setting("sites/#{request.site.id}/kaltura", nil),
       "context_root" => $context_root,
       "free_provider_share" => $site.free_provider_share,
       "property_info" => property_info,

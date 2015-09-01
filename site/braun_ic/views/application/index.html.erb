@@ -1,3 +1,59 @@
+<% content_for :extra_script do %>
+  <!-- Code for Action: Wellness Machine - Home Page -->
+  <!-- Begin Rocket Fuel Conversion Action Tracking Code Version 9 -->
+  <script type='text/javascript'>
+  (function() {
+  var w = window, d = document;
+  var s = d.createElement('script');
+  s.setAttribute('async', 'true');
+  s.setAttribute('type', 'text/javascript');
+  s.setAttribute('src', '//c1.rfihub.net/js/tc.min.js');
+  var f = d.getElementsByTagName('script')[0];
+  f.parentNode.insertBefore(s, f);
+  if (typeof w['_rfi'] !== 'function') {
+    w['_rfi']=function() {
+     w['_rfi'].commands = w['_rfi'].commands || [];
+     w['_rfi'].commands.push(arguments);
+    };
+  }
+  _rfi('setArgs', 'ver', '9');
+  _rfi('setArgs', 'rb', '20851');
+  _rfi('setArgs', 'ca', '20685497');
+  _rfi('track');
+  })();
+  </script>
+  <noscript>
+    <iframe src='//20685497p.rfihub.com/ca.html?rb=20851&ca=20685497&ra=YOUR_CUSTOM_CACHE_BUSTER' style='display:none;padding:0;margin:0' width='0' height='0'>
+  </iframe>
+  </noscript>
+  <!-- End Rocket Fuel Conversion Action Tracking Code Version 9 -->
+
+  <script type='text/javascript'>
+  // Conversion Name: Wellness Machine - Home Page
+  // INSTRUCTIONS 
+  // The Conversion Tags should be placed at the top of the <BODY> section of the HTML page. 
+  // In case you want to ensure that the full page loads as a prerequisite for a conversion 
+  // being recorded, place the tag at the bottom of the page. Note, however, that this may 
+  // skew the data in the case of slow-loading pages and in general not recommended. 
+  //
+  // NOTE: It is possible to test if the tags are working correctly before campaign launch 
+  // as follows:  Browse to http://bs.serving-sys.com/Serving/adServer.bs?cn=at, which is 
+  // a page that lets you set your local machine to 'testing' mode.  In this mode, when 
+  // visiting a page that includes an conversion tag, a new window will open, showing you 
+  // the data sent by the conversion tag to the MediaMind servers. 
+  // 
+  // END of instructions (These instruction lines can be deleted from the actual HTML)
+  var ebRand = Math.random()+'';
+  ebRand = ebRand * 1000000;
+  //<![CDATA[ 
+  document.write('<scr'+'ipt src="HTTP://bs.serving-sys.com/Serving/ActivityServer.bs?cn=as&amp;ActivityID=657644&amp;rnd=' + ebRand + '"></scr' + 'ipt>');
+  //]]>
+  </script>
+  <noscript>
+  <img width="1" height="1" style="border:0" src="HTTP://bs.serving-sys.com/Serving/ActivityServer.bs?cn=as&amp;ActivityID=657644&amp;ns=1"/>
+  </noscript>
+<% end %>
+
 <%= render partial: "/application/header" %>
 <%= render partial: "/call_to_action/user_bar" %>
 <%= render partial: "/call_to_action/tests" %>
@@ -12,7 +68,7 @@
         <span class="glyphicon glyphicon-ok"></span>
       </div>
       <p class="interaction-feedback-text">Complimenti!</p> 
-      <p class="interaction-feedback-description">Hai guadagnato +1 ticket.</p>
+      <p class="interaction-feedback-description">Hai guadagnato +1 biglietto.</p>
     </div> 
   </div>
 </div>
