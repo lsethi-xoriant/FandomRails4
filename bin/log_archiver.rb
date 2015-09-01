@@ -3,6 +3,9 @@ require 'logger'
 require 'pg'
 require 'set'
 
+require_relative "../lib/cli_utils"
+include CliUtils
+
 SOURCE_DB_EVENT_CHUNK_SIZE = 10000
 DEST_DB_INSERT_CHUNK_SIZE = 1000
 
@@ -82,23 +85,6 @@ def main
   rescue Exception => exception
     logger.error("toplevel exception: #{exception} - #{exception.backtrace}")
   end
-end
-
-def db_connect(config)
-  field_map = {
-    host: 'host',
-    dbname: 'database',
-    user: 'username',
-    password: 'password',
-    port: 'port'
-  }
-  pg_config = {}
-  field_map.each do |k, v|
-    if config.key? v
-      pg_config[k] = config[v]
-    end
-  end
-  PG::Connection.new(pg_config)
 end
 
 def get_tenants(db_conn)
