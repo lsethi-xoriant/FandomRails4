@@ -5,8 +5,35 @@ body {
   background-color: whitesmoke;
 }
 
+/*
 #registration-modal .modal-content {
   background-color: #efefef;
+}
+*/
+
+.iw_registration {
+  .modal-title {
+    padding-top: 5px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .modal-header {
+    border-bottom: none;
+  }
+  .modal-body {
+    padding: 0 30px 30px 30px;
+  }
+  .iw_registration_subtitle {
+    font-size: 16px;
+  }
+  .control-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .iw_registration_img {
+    width: 100%;
+    padding-top: 25px;
+  }
 }
 
 #cookies-bar {
@@ -400,6 +427,33 @@ p {
 }
 
 @media (max-width: $screen-xs) {
+  .iw_registration {
+    .modal-title {
+      padding-top: 5px;
+      font-size: 22px;
+      font-weight: bold;
+      color: $green;
+      line-height: 26px;
+    }
+    .modal-body {
+      padding: 0 15px 15px 15px;
+    }
+    .iw_registration_subtitle {
+      font-size: 14px;
+    }
+    .control-label {
+      padding-left: 15px;
+    }
+    .iw_registration_img {
+      width: 100%;
+      padding-top: 25px;
+    }
+  }
+
+  .margin-top-mobile {
+    margin-top: 10px;
+  }
+
   .devise-next-title {
     font-size: 22px;
     margin-bottom: 0;
