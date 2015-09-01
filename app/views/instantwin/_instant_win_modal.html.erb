@@ -44,18 +44,18 @@
           <div class="col-sm-12">
             <div class="panel panel-default iw_panel">
               <div class="panel-body">
+                <div class="col-sm-6">
+                  <img id="iw_slot" class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" ng-src="{{aux.assets.extra_fields.iw_cover.url}}">
+                </div>
+                <div class="col-sm-3">
+                  <button class="btn btn-green btn-block iw_btn" ng-disabled="disableIWButton()" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
+                </div>
                 <div class="col-sm-3 text-center">
                   <p class="iw_t1 hidden-xs">Hai</p>
                   <p class="iw-credits_label_yellow__container"><span class="label iw-credits_label_yellow">
                     +{{current_user.instantwin_tickets_counter}} <span class="fa fa-ticket"></span>
                   </span></p>
                   <p class="iw_t2 hidden-xs">biglietti</p> 
-                </div>
-                <div class="col-sm-6">
-                  <img id="iw_slot" class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" ng-src="{{aux.assets.extra_fields.iw_cover.url}}">
-                </div>
-                <div class="col-sm-3">
-                  <button class="btn btn-green btn-block iw_btn" ng-disabled="disableIWButton()" ng-click="playInstantWin();">GIOCA UN BIGLIETTO</button>
                 </div>
                 <div class="col-sm-6 col-sm-offset-3">
                   <div class="iw_popover iw_popover-red popover bottom in" ng-class="{'show': iwNotWin() && !aux.instant_win_info.in_progress}">

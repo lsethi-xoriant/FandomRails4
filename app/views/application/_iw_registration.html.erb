@@ -1,0 +1,94 @@
+<div class="modal fade iw_registration" id="<%= iw_id %>" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Completa i dati per partecipare!</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1 text-center">
+            <p class="iw_registration_subtitle">Per provare a vincere un {{aux.instant_win_info.reward_info.title}} al giorno completa i dati qui sotto e scopri subito se sei tra i fortunati vincitori.
+            </p>
+          </div>
+          <div class="col-sm-12">
+            <form class="form-horizontal" onsubmit="return false;" ng-submit="processRegistrationForm()" method="post" action="" accept-charset="UTF-8">
+              <div ng-if="form_data.current_user.errors" class="row iw-errors" >
+                <div class="col-md-12">
+                  <p>Errori nell'inserimento dei dati:</p>
+                  <ul>
+                    <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-3">
+                  <img class="iw_registration_img hidden-xs" ng-src="{{aux.assets.extra_fields.minipimer.url}}">
+                </div>
+                <div class="col-sm-9">
+                  <hr>
+
+                  <div class="row" ng-if="aux.instant_win_info.form_extra_fields">
+                    <div class="col-sm-12" ng-repeat="field in aux.instant_win_info.form_extra_fields">
+
+                      <div class="form-group" ng-if="field.type == 'checkbox'">
+                        <div class="col-sm-offset-3 col-sm-9">
+                          <div class="checkbox">
+                            <label>
+                              <input id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="checkbox" value="1" ng-model="form_data.current_user[field.name]">{{field.label}}<span ng-if="field.required">*</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- TEXTFIELD -->
+                      <div class="form-group" ng-if="field.type == 'textfield'">
+                        <label class="col-sm-3 control-label">{{field.label}}<span ng-if="field.required">*</span></label>
+                        <div class="col-sm-9">
+                          <input class="form-control" id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="textfield" value="1" ng-model="form_data.current_user[field.name]" ng-readonly="field.readonly">
+                        </div>
+                      </div>
+
+                      <!-- DATE -->
+                      <div class="form-group" ng-if="field.type == 'date'">
+                        <label class="col-sm-3 control-label">{{field.label}}<span ng-if="field.required">*</span></label>
+                        <div class="col-sm-9">
+                          <div class="row">
+                            <div class="col-sm-4 birth_div">
+                              <% date_array = (1..31).map { |date| [date, date] } %>
+                              <% date_array.unshift ["Giorno", ""] %>
+                              <%= select_tag(:day_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.day_of_birth", name: "extra_fields_age_{{field.name}}_day", disabled: current_user && current_user.birth_date.present?) %>
+                            </div>
+                            <div class="col-sm-4 birth_div margin-top-mobile">
+                              <% date_array = (1..12).map { |date| [date, date] } %>
+                              <% date_array.unshift ["Mese", ""] %>
+                              <%= select_tag(:month_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.month_of_birth", name: "extra_fields_age_{{field.name}}_month", disabled: current_user && current_user.birth_date.present?) %>
+                            </div>
+                            <div class="col-sm-4 birth_div margin-top-mobile">
+                              <% date_array = (1900..2020).map { |date| [date, date] } %>
+                              <% date_array.unshift ["Anno", ""] %>
+                              <%= select_tag(:year_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.year_of_birth", name: "extra_fields_age_{{field.name}}_year", disabled: current_user && current_user.birth_date.present?) %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12 text-center">
+                  <button type="submit" class="btn btn-green btn-lg">Scopri subito se hai vinto</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
