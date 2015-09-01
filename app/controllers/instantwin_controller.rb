@@ -19,33 +19,38 @@ class InstantwinController < ApplicationController
   end
 
   def play_ticket
+
     response = {}
+
     if current_user
 
       interaction = Interaction.find(params[:interaction_id])
       if has_tickets() && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
+        log_synced("instant win attempted", { "interaction_id" => interaction.id })
         instantwin, prize = check_win(interaction, time)
         if instantwin.nil?
           response[:win] = false
           response["message"] = "Non hai vinto, gioca ancora."
           aux = { "instant_win_id" => nil, "reward_id" => nil }
+          log_synced("instant loss", { "interaction_id" => interaction.id })
         else
           response[:win] = true
           response["message"] = prize.title
           aux = { "instant_win_id" => instantwin.id, "reward_id" => prize.id }
           assign_reward(current_user, prize.name, 1, request.site)
           send_winner_email(instantwin.reward_info["prize_code"], prize)
-
-          log_synced("assigning instant win to user", { "instantwin_id" => instantwin.id })
+          log_synced("assigning instant win to user", { "interaction_id" => interaction.id, "instantwin_id" => instantwin.id })
         end
         deduct_ticket()
         create_or_update_interaction(current_user, interaction, nil, nil, aux.to_json)
         response["prize"] = prize
       elsif !has_tickets()
+        log_synced("instant win error: no tickets", { "interaction_id" => interaction.id })
         response["message"] = "Hai esaurito i biglietti"
         response[:win] = false
       else
+        log_synced("instant win error: already won", { "interaction_id" => interaction.id })
         response["message"] = "Hai già vinto un premio"
         response[:win] = false
       end
