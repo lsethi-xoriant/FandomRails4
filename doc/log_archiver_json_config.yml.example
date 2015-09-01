@@ -1,0 +1,11 @@
+events_database:
+ adapter: postgresql
+ database: XXX
+
+s3_settings:
+  :access_key_id: "XXX"
+  :secret_access_key: "XXX"
+  :s3_endpoint: "r1-it.storage.cloud.it"
+  :bucket: "XXX"
+
+tenant: XXX

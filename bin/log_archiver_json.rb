@@ -42,6 +42,8 @@ def main
       buffer = StringIO.new
       new_timestamp = events[0]['timestamp']
       new_timestamp_file_postfix = new_timestamp.gsub(' ', '__').gsub(':', '-').gsub('.', '__')
+      dir = new_timestamp.split(" ")[0]
+            
       count = 0 
       events.each do |event|
         if event['tenant'] == tenant
@@ -52,7 +54,7 @@ def main
         end
       end
       
-      bucket.objects["log__#{new_timestamp_file_postfix}.gz"].write(gzip_string(buffer.string), :sigle_request => true)
+      bucket.objects["#{dir}/log__#{new_timestamp_file_postfix}.gz"].write(gzip_string(buffer.string), :sigle_request => true)
       bucket.objects["last_timestamp"].write(new_timestamp, :sigle_request => true)
       logger.info("archived #{count} events.")
     end
