@@ -1,5 +1,6 @@
 <%= render partial: "/application/navbar" %>
 
+<%# 
 <div class="header-container hidden-xs" ng-click="scrollTo('#tests')">
   <div class="container">
     <div class="row">
@@ -17,8 +18,30 @@
     <img style="width: 100%;" ng-src="{{aux.assets.extra_fields.header_img_mobile.url}}" alt="Wellness machine">
   </h1>
 </div>
+%>
 
-<% if braun_ic_contest_identitycollection_active? %>
+<div class="header-container" ng-if="aux.calltoaction_evidence_info">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 ctas__flexslider__container">
+        <div class="flexslider ctas__flexslider">
+          <ul class="slides">
+            <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
+              <a href="{{calltoaction.extra_fields.url}}">
+                <img class="hidden-xs" ng-src="{{calltoaction.extra_fields.desktop_img.url}}">
+                <img class="visible-xs" ng-src="{{calltoaction.extra_fields.mobile_img.url}}">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%# if braun_ic_contest_identitycollection_active? %>
+  <%#
   <a class="hidden-xs hidden-sm" href="/concorso_identitycollection">
     <div class="sub-header-container">
       <div class="container">
@@ -27,11 +50,28 @@
             <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
           </div>
           <div class="col-sm-7">
-            <p class="sub-header-container__description">Hai acquistato un prodotto della <span class="sub-header-container__description--green">IdentityCollection</span>?<br><span class="sub-header-container__description--bold">Scopri se hai vinto la collezione completa!</span></p>
+            <div ng-bind-html="aux.assets.extra_fields.sub_header_description"></div>
             <span class="sub-header-container__arrow fa fa-angle-right"></span>
           </div>
         </div>
       </div>
     </div>
   </a>
-<% end %>
+  %>
+<%# end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.ctas__flexslider').flexslider({
+      animation: "fade",
+      slideshow: false,
+      animationLoop: true,
+      touch: true,
+      itemWidth: "100%",
+      itemMargin: 0,
+      controlNav: true,
+      prevText: "",
+      nextText: ""
+    });
+  });
+</script>

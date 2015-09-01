@@ -174,8 +174,8 @@ module ApplicationHelper
     result + name_to_element.values
   end
 
-  def get_highlight_ctas(property = nil)
-    highlight_tag = get_tag_from_params("highlight")
+  def get_highlight_ctas(property = nil, evidence_tag_name = "highlight")
+    highlight_tag = Tag.find(evidence_tag_name) rescue nil
 
     if property.present?
       highlight_tag = get_tags_with_tags_in_and([highlight_tag.id, property.id]).first
@@ -184,18 +184,19 @@ module ApplicationHelper
     if highlight_tag
       highlight_ctas = get_ctas(highlight_tag)
       if highlight_ctas
-        order_elements(highlight_tag, highlight_ctas)
+        [order_elements(highlight_tag, highlight_ctas), highlight_tag]
       else
-        []
+        [[], highlight_tag]
       end
     else
-      []
+      [[], highlight_tag]
     end
 
   end
 
   def get_highlight_calltoactions(property = nil)
-    get_highlight_ctas(property)
+    highlight_ctas, tag = get_highlight_ctas(property)
+    highlight_ctas
   end
 
   def get_intesa_expo_highlight_calltoactions()
@@ -797,7 +798,8 @@ module ApplicationHelper
       "description" => cta.description,
       "flag" => build_grafitag_for_calltoaction(cta, "flag"),
       "miniformat" => build_grafitag_for_calltoaction(cta, "miniformat"),
-      "interaction_ids" => interaction_ids
+      "interaction_ids" => interaction_ids,
+      "extra_fields" => get_extra_fields!(cta)
     }
 
   end
@@ -832,21 +834,33 @@ module ApplicationHelper
     cta_info_list
   end
 
-  def build_evidence_cta_info_list(property)
-    cache_key = property.present? ? "in_#{property.name}" : "without_property"
+  def extra_field_true?(tag, extra_field_name)
+    begin
+      tag.blank? || (tag.present? && tag.extra_fields[extra_field_name].value)
+    rescue Exception => e
+      false
+    end
+  end
+
+  def build_evidence_cta_info_list(property, evidence_tag_name = "highlight")
+    cache_key = property.present? ? "#{evidence_tag_name}_in_#{property.name}" : "#{evidence_tag_name}_without_property"
+
     cache_timestamp = get_cta_max_updated_at()
     
     evidence_ctas_info_list = cache_forever(get_evidence_ctas_cache_key(cache_key, cache_timestamp)) do
-      highlight_ctas = get_highlight_ctas(property)
+      highlight_ctas, highlight_tag = get_highlight_ctas(property, evidence_tag_name)
       ctas = get_ctas(property)
 
-      # TODO: remove 3 hardcoded
-      if highlight_ctas.any?
-        highlight_cta_ids = highlight_ctas.map { |cta| cta.id }
-        evidence_ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_cta_ids).limit(3).to_a
-        evidence_ctas = evidence_ctas + highlight_ctas
+      if extra_field_true?(highlight_tag, "recent")
+        if highlight_ctas.any?
+          highlight_cta_ids = highlight_ctas.map { |cta| cta.id }
+          evidence_ctas = ctas.where("call_to_actions.id NOT IN (?)", highlight_cta_ids).limit(3).to_a
+          evidence_ctas = evidence_ctas + highlight_ctas
+        else
+          evidence_ctas = ctas.limit(3).to_a
+        end
       else
-        evidence_ctas = ctas.limit(3).to_a
+        evidence_ctas = highlight_ctas
       end
 
       evidence_ctas_info_list = []
@@ -868,6 +882,7 @@ module ApplicationHelper
     end
 
     adjust_thumb_ctas(evidence_ctas_info_list)
+    evidence_ctas_info_list
   end
 
   def init_aux(other, calltoaction_info_list = nil)
@@ -896,7 +911,7 @@ module ApplicationHelper
     end
 
     if other && other.has_key?(:calltoaction_evidence_info)
-      evidence_ctas_info_list = build_evidence_cta_info_list(property)
+      evidence_ctas_info_list = build_evidence_cta_info_list(property, "highlight")
     else
       evidence_ctas_info_list = nil
     end

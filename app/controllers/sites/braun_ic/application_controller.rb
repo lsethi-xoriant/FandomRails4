@@ -295,6 +295,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
     @aux_other_params = { 
       anchor_to: anchor_to,
+      calltoaction_evidence_info: true,
       exclude_cta_with_ids: exclude_cta_with_ids,
       tag_menu_item: "home",
       badges: badges,

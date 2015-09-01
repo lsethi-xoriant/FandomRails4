@@ -1,5 +1,6 @@
 .navbar-default__container {
   z-index: 1030;
+  padding: 0;
 }
 
 .navbar-default {
@@ -10,7 +11,7 @@
   margin-bottom: 0 !important;
 }
 
-/*
+/* last element green
 .navbar-nav li:last-child a {
   background-color: #72bf44;
   color: #000;
@@ -31,7 +32,7 @@
   }
 }
 
-@media (min-width: $screen-md) { 
+@media (min-width: $screen-sm) { 
   .navbar-header {
     position: relative;
     left: 15px;
