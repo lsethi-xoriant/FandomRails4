@@ -74,7 +74,7 @@ class Sites::Orzoro::Easyadmin::UserController < Easyadmin::EasyadminController
     request_list = []
     users = where_conditions.blank? ? User.all : User.where(where_conditions)
     users.each do |user|
-      cups_redeemed = JSON.parse(user.aux)["cup_redeem"] rescue nil
+      cups_redeemed = user.aux["cup_redeem"] rescue nil
       if cups_redeemed.present?
         cups_redeemed.each do |request|
           if request["receipt"] && request_timestamp_between_dates(request["request_timestamp"], from_date, to_date)
