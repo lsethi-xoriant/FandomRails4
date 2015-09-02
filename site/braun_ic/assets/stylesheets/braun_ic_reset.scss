@@ -5,6 +5,10 @@ body {
   background-color: whitesmoke;
 }
 
+.add-margin {
+  margin-top: 30px;
+}
+
 /*
 #registration-modal .modal-content {
   background-color: #efefef;
@@ -383,6 +387,22 @@ p {
   padding-right: 15px;
 }
 
+.profile-container__unlogged-subtitle {
+  padding-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn-green-userbar-line {
+  position: absolute;
+  left: -25px;
+  width: 2px;
+  top: -15px;
+  bottom: -15px;
+  background-color: #ccc; 
+  border-right: 1px solid whitesmoke;
+}
+
 @media (max-width: $screen-md-min) {
   .sub-header-container__description {
     margin-top: 55px;
@@ -428,6 +448,31 @@ p {
 }
 
 @media (max-width: $screen-xs-max) {
+  .profile-container__unlogged {
+    height: 92px;
+    background-color: #f1f2f3;
+  }
+
+  .profile-container__unlogged-avatar {
+    padding-left: 15px !important;
+  }
+
+  .profile-container__unlogged-btn {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 20px;
+  }
+
+  .profile-container__unlogged-subtitle {
+    padding-top: 5px;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .add-margin {
+    margin-top: 0;
+  }
+
   .iw_btn {
     height: auto;
     font-size: 14px;

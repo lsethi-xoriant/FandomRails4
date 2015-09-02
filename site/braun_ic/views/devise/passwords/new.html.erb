@@ -1,0 +1,47 @@
+<% content_for :body_class, "small-body" %>
+
+<div class="small-container">
+  <%= render partial: "/application/navbar" %>
+</div>
+<div class="small-container">
+  <div class="container form-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 class="devise-title">Invia le istruzioni per impostare la nuova password</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1">
+        <hr class="devise-title-hr" style="margin-bottom: 25px;">
+      </div>
+    </div>
+    <div class="row">
+      <% if resource.errors.any? %>
+        <div class="col-sm-10 col-sm-offset-1 devise-errors">
+          <p style="font-size: 16px; color: red;">Errori nella compilazione del modulo:</p>
+          <ul style="color: red;">
+            <% resource.errors.full_messages.each do |error| %>
+              <li><%= error %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-4">
+            <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
+              <div class="form-group">
+                <%= f.text_field :email, :class => "form-control", placeholder: "Email" %>
+              </div>
+              <button style="margin-top: 25px;" type="submit" class="btn btn-green btn-block">Invia</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+

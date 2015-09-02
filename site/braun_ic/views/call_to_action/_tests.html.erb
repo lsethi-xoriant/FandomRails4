@@ -122,7 +122,6 @@
                 <div class="col-sm-8">
                   <div class="row">
                     <div class="col-sm-12">
-                      <p class="cta_cover-end_container-pre-title hidden-xs">Il tuo livello è:</p>
                       <p class="cta_cover-end_container-title">{{calltoaction_info.calltoaction.extra_fields.linked_result_title}}</p>
                       <p class="cta_cover-end_container-description">{{calltoaction_info.calltoaction.extra_fields.linked_result_description}}</p>
                     </div>
@@ -132,21 +131,30 @@
                     </div>
 
                     <div class="col-sm-11">
-                      <div class="row cta_cover-end_container-btn_container">
+                      <div class="row">
 
-                        <div class="col-sm-12 text-center cta_cover-end_container-btn_container-btn_col">
-                          <img class="cta_cover-end_container-btn_container-img hidden-xs" ng-src="{{aux.assets.extra_fields.minipimer.url}}">
-                          <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()">
-                            GIOCA E VINCI
-                          </button>
-                          <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
-                            GIOCA E VINCI
-                          </button>
-                          <a ng-if="isAnonymousUser()" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw btn-block">
-                            GIOCA E VINCI
-                          </a>
-                          <p class="cta_cover-end_container-iw-title hidden-xs"><span>In palio ogni giorno 1 {{aux.instant_win_info.reward_info.title}}</span></p>
+                        <div class="cta_cover-end_container-btn_container">
+
+                          <div class="col-sm-3">
+                            <img class="cta_cover-end_container-btn_container-img hidden-xs" ng-src="{{aux.assets.extra_fields.minipimer.url}}">
+                          </div>
+                          <div class="col-sm-9 text-center cta_cover-end_container-btn_container-btn_col">
+                            <p ng-if="ctaHasFeedback(calltoaction_info)" class="cta_cover-end_container-btn_container-subtitle">Complimenti! Hai guadagnato un biglietto</p>
+                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()" ng-class="{'add-margin': !ctaHasFeedback(calltoaction_info)}">
+                              SCOPRI SE HAI VINTO
+                            </button>
+                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)" ng-class="{'add-margin': !ctaHasFeedback(calltoaction_info)}">
+                              SCOPRI SE HAI VINTO
+                            </button>
+                            <a ng-if="isAnonymousUser()" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw btn-block" ng-class="{'add-margin': !calltoaction_info.feedback}">
+                              SCOPRI SE HAI VINTO
+                            </a>
+                            <p class="cta_cover-end_container-iw-title hidden-xs"><span>In palio ogni giorno 1 {{aux.instant_win_info.reward_info.title}}</span></p>
+                          </div>
+
                         </div>
+
+
                       </div>
                     </div>
 

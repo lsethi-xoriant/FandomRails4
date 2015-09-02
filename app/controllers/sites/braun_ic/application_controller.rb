@@ -145,6 +145,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       if current_user_update_status
         SystemMailer.braun_recipe_mail(current_user, product_hash).deliver
         flash[:notice] = "Dati salvati correttamente"
+
+        log_audit("contest_identitycollection", { 'form_data' => user_params, 'user_id' => current_user.id })
         redirect_to "/concorso_identitycollection_success#contest_identitycollection_success"
       else
         flash[:error] = "Errore nel salvataggio dei dati. Scrivi a support@shado.tv"

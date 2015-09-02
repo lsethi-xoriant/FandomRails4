@@ -73,16 +73,6 @@ fieldset[disabled] .btn-facebook.active {
 .open .dropdown-toggle.btn-facebook-default { 
   background-image: none; 
 } 
-
-.btn-facebook-default-userbar {
-  margin-top: 20px; 
-  padding-left: 30px;
-  .fa-facebook {
-    position: absolute; 
-    left: 30px; 
-    font-size: 24px;
-  }
-}
  
 .btn-facebook-default.disabled, 
 .btn-facebook-default[disabled], 
@@ -106,14 +96,4 @@ fieldset[disabled] .btn-facebook-default.active {
 .btn-facebook-default .badge { 
   color: #364E89; 
   background-color: #ffffff; 
-}
-
-@media (max-width: $screen-md-min) {
-  .btn-facebook-default-userbar {
-    font-size: 15px;
-    margin-top: 27px;
-    .fa-facebook {
-      font-size: 20px;
-    }
-  }
 }

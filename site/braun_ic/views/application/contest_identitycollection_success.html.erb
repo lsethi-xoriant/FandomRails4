@@ -14,7 +14,7 @@
         <img class="contest-img visible-xs" ng-src="{{aux.assets.extra_fields.contest_section_2_mobile_img.url}}">
       </div>
       <div class="col-sm-6 col-sm-offset-3 text-center">
-        <p class="contest-description">{{aux.assets.extra_fields.contest_section_2_description}}</p>
+        <p class="contest-description" ng-bind-html="aux.assets.extra_fields.contest_section_2_description"></p>
       </div>
     </div>
   </div>

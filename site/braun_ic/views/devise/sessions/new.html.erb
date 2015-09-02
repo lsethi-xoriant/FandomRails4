@@ -44,7 +44,7 @@
               <div class="checkbox text-left">
                 <label> <input type="checkbox" name="user[remember_me]" value="1" /> Ricordati di me</label>
               </div>
-
+              <p><%= link_to new_password_path(:user) do %>Ho dimenticato la password<% end %></p>
               <button style="margin-top: 25px;" type="submit" class="btn btn-green btn-lg btn-block">Entra</button>
             <% end %>
           </div>

@@ -61,7 +61,7 @@
 <%= render partial: "/call_to_action/products" %>
 <%= render partial: "/application/footer" %>
 
-<div class="container interaction-feedback-container" ng-if="feedback">
+<div class="container interaction-feedback-container" ng-if="ctaHasFeedback(calltoaction_info)" ng-repeat="calltoaction_info in calltoactions">
   <div class="row">
     <div class="col-sm-12 interaction-feedback-main-child">
       <div class="interaction-feedback-circle text-center">

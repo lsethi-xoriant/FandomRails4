@@ -74,6 +74,7 @@
         </div>
       </div>
     </div>
+
     <!-- USER UNLOGGED -->
     <div class="row profile-container__row" ng-if="isAnonymousUser()">
       <div class="col-sm-8 profile-container__user profile-container__user_unlogged">  
@@ -92,9 +93,12 @@
         <p class="unlogged-title">Hai le giuste abitudini alimentari?</p>
         <p class="unlogged-description">Fai il test, misura il tuo benessere e vinci Braun.</p>
       </div>
-      <div class="col-sm-4">
-        <a href="/auth/facebook_<%= request.site.id %>" class="btn btn-facebook-default btn-facebook-default-userbar btn-block btn-lg"><span class="fa fa-facebook"></span>ENTRA CON FACEBOOK</a>
-        <a style="margin-top: 15px;" href="/users/sign_up" class="btn btn-green btn-green-userbar btn-block btn-lg">REGISTRATI VIA EMAIL</a>
+      <div class="col-sm-4 text-center">
+        <div class="btn-green-userbar-container">
+          <div class="btn-green-userbar-line"></div>
+          <a href="/users/sign_up" class="btn btn-green btn-green-userbar btn-block btn-lg">PROVA A VINCERE SUBITO</a>
+          <p class="profile-container__unlogged-subtitle">In palio un Minipimer al giorno</p>
+        </div>
       </div>
     </div>
   </div>
@@ -104,7 +108,7 @@
 <div class="profile-container visible-xs">
   <div class="container">
     <div class="row">
-      <div class="col-xs-3 profile-container__badge text-center">  
+      <div class="col-xs-3 profile-container__badge text-center" ng-class="{'profile-container__unlogged-avatar': isAnonymousUser()}">  
         <div class="profile-container__badge-block">  
           <a ng-if="!isAnonymousUser()" ng-click="openEditUserModal()">
             <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
@@ -132,7 +136,11 @@
           </a>
         </div>
       </div>
-      <div class="col-xs-3 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
+      <div ng-if="isAnonymousUser()" class="col-xs-9 profile-container__unlogged text-center">
+        <a class="btn btn-green profile-container__unlogged-btn btn-block" href="/users/sign_up">PROVA A VINCERE SUBITO</a>
+        <p class="profile-container__unlogged-subtitle">In palio un Minipimer al giorno</p>
+      </div>
+      <div ng-if="!isAnonymousUser()" class="col-xs-3 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
         <div class="profile-container__badge-block">
           <div class="percentage_circle small p{{getBadgeCost(badge)}}">
             <div class="percentage_circle_fix_bar"></div>
