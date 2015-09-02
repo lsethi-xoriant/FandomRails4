@@ -283,6 +283,16 @@ $cover-height: 490px;
   height: $cover-height;
 }
 
+@media (min-width: $screen-sm-min) {
+  .cta_cover-end_container-btn_container {
+    padding: 15px;
+    background-color: #000;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 15px;
+  }
+}
+
 @media (max-width: $screen-lg-min) {
   .cta_cover-img_container {
     background-size: auto 100%;
@@ -301,14 +311,6 @@ $cover-height: 490px;
 
   .cta_cover-img_container {
     background-size: auto 100%;
-  }
-
-  .cta_cover-end_container-btn_container {
-    padding: 15px;
-    background-color: #000;
-    border-radius: 5px;
-    display: inline-block;
-    margin-left: 15px;
   }
 
   .cta_cover-end_container-iw-title {
