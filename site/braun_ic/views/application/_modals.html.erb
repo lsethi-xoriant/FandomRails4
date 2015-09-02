@@ -12,8 +12,8 @@
             <div class="row">
               <div class="col-sm-12">
                 <a class="needsclick" ng-click="propagateClickOnFileUploadInput()" style="position: relative; display: inline-block;">
-                  <img class="modal-update-user__avatar" ng-if="form_data.current_user._avatar[0].dataUrl != null" ng-src="{{form_data.current_user._avatar[0].dataUrl}}">
-                  <img class="modal-update-user__avatar modal-update-user__avatar--rounded" ng-if="form_data.current_user._avatar[0].dataUrl == null" ng-src="{{form_data.current_user.avatar}}">
+                  <img class="modal-update-user__avatar" ng-if="form_data.r_current_user._avatar[0].dataUrl != null" ng-src="{{form_data.r_current_user._avatar[0].dataUrl}}">
+                  <img class="modal-update-user__avatar modal-update-user__avatar--rounded" ng-if="form_data.r_current_user._avatar[0].dataUrl == null" ng-src="{{form_data.r_current_user.avatar}}">
                   <!--<span class="modal-update-user__pencil fa fa-pencil"></span>-->
                 </a>
               </div>
@@ -23,21 +23,21 @@
             </div>
           </div>
           <div class="col-sm-9">
-            <div ng-if="form_data.current_user.errors" class="iw-errors">
+            <div ng-if="form_data.r_current_user.errors" class="iw-errors">
               <p>Errori nella compilazione:</p>
               <ul>
-                <li ng-repeat="error in form_data.current_user.errors">{{error}}</li>
+                <li ng-repeat="error in form_data.r_current_user.errors">{{error}}</li>
               </ul>
             </div>
 
             <div class="form-group">
-              <input name="first_name" ng-model="form_data.current_user.first_name" class="form-control" placeholder="Nome" ng-readonly="current_user.first_name"></input>
+              <input name="first_name" ng-model="form_data.r_current_user.first_name" class="form-control" placeholder="Nome" ng-readonly="current_user.first_name"></input>
             </div>
             <div class="form-group">
-              <input name="last_name" ng-model="form_data.current_user.last_name" class="form-control" placeholder="Cognome"ng-readonly="current_user.last_name"></input>
+              <input name="last_name" ng-model="form_data.r_current_user.last_name" class="form-control" placeholder="Cognome"ng-readonly="current_user.last_name"></input>
             </div>
             <div class="form-group hidden">
-              <input id="upload-input" name="form_data.current_user._avatar" ng-file-select="" ng-model="form_data.current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.current_user._avatar[0])">
+              <input id="upload-input" name="form_data.r_current_user._avatar" ng-file-select="" ng-model="form_data.r_current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.r_current_user._avatar[0])">
             </div>
             <button class="btn btn-green modal-update-user__btn" ng-click="updateUserWithAvatar()">AGGIORNA</button>
           </div>    

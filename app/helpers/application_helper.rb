@@ -940,6 +940,7 @@ module ApplicationHelper
           form_extra_fields = JSON.parse(iw_cta.extra_fields["instantwin_form_attributes"])
         end
         iw_info = {
+          "user" => user_for_registation_form(),
           "interaction" => { id: iw_interaction.id },
           "form_extra_fields" => form_extra_fields,
           "active" => true,
