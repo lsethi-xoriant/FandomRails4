@@ -48,8 +48,16 @@ fieldset[disabled] .btn-green.active {
   background-color: #FFFFFF; 
 }
 
+.btn-green-userbar-container {
+  display: inline-block;
+  margin-top: 35px;
+  position: relative;
+}
+
 @media (max-width: $screen-md-min) {
   .btn-green-userbar {
     font-size: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
