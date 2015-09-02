@@ -54,6 +54,8 @@
     margin-right: 15px;
     margin-top: 8px;
     position: relative;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
 
   .iw_btn-navbar__tk {
@@ -86,5 +88,11 @@
       margin-top: 10px;
       margin-left: 15px;
     }
+  }
+}
+
+@media (max-width: $screen-xs) { 
+  .navbar-default .navbar-nav > li > a {
+    font-size: 16px;
   }
 }

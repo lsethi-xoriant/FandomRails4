@@ -315,6 +315,19 @@ $cover-height: 490px;
 }
 
 @media (max-width: $screen-xs) {
+  .cta_tip-rule {
+    font-size: 18px;
+  }
+
+  .cta_tip-section_2_header {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .btn-tip-append, .product-btn {
+    font-size: 12px !important;
+  }
+
   .cta_cover-end_container-share_container {
     padding-top: 15px;
     padding-bottom: 15px;

@@ -65,6 +65,10 @@
 }
 
 @media (max-width: $screen-xs) { 
+  .footer-item-description {
+    margin-bottom: 25px;
+  }
+
   .footer-container {
     padding-bottom: 30px;
   }
