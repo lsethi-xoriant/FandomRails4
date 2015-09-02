@@ -143,7 +143,7 @@ class BrowseController < ApplicationController
     }
     content_preview_list = get_content_previews(category.name, get_index_category_load_more_tags(category, selected_tags), params, DEFAULT_VIEW_ALL_ELEMENTS)
     contents = content_preview_list.contents
-    
+
     respond_to do |format|
       format.json { render :json => contents.to_json }
     end

@@ -172,14 +172,15 @@ module BrowseHelper
   def get_content_previews_by_tags_with_ordering(category, tags, carousel_elements, params = {})
     extra_fields = get_extra_fields!(category)
     contents = get_contents_from_ordering(category)
-    
+
+    unless params.key? :limit
+      params[:limit] = {
+        perpage: carousel_elements,
+        offset: 0
+      }
+    end
+
     if contents.count < carousel_elements
-      unless params.key? :limit
-        params[:limit] = {
-          perpage: carousel_elements,
-          offset: 0
-        }
-      end
       exclude_tag_ids = []
       exclude_cta_ids = []
       contents.each do |content|
@@ -206,12 +207,13 @@ module BrowseHelper
       end
       extra_contents, has_more = get_content_previews_with_tags([category] + tags, params)  
     end
-    
+
     if extra_contents
       has_more = (contents.count + extra_contents.count) > carousel_elements
       contents = contents + extra_contents.slice(0, carousel_elements - contents.count)
     else
-      has_more = contents.count > carousel_elements
+      has_more = (contents.count - params[:limit][:offset]) > carousel_elements
+      contents = contents.slice(params[:limit][:offset], carousel_elements)
     end
 
     browse_section = ContentSection.new({
