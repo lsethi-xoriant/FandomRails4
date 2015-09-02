@@ -12,6 +12,10 @@ $cover-height: 490px;
   box-shadow: none;
 }
 
+.cta_cover-end_container-btn_container-btn_col {
+  padding-left: 115px;
+}
+
 .tip-container__row {
   padding-top: 15px;
 }
@@ -36,6 +40,7 @@ $cover-height: 490px;
   background-size: auto 100% !important;
   background-repeat: no-repeat;
   background-position: center;
+  overflow: hidden;
 }
 
 .cta_cover-end_container-percentage_container {
@@ -89,8 +94,8 @@ $cover-height: 490px;
 }
 
 .cta_cover-end_container-iw-title {
-  font-size: 16px;
-  padding-left: 85px;
+  font-size: 12px;
+  margin-top: 10px;
   span {
     color: $green;
   }
@@ -314,7 +319,15 @@ $cover-height: 490px;
   }
 }
 
-@media (max-width: $screen-xs) {
+@media (max-width: $screen-sm) {
+  .cta_cover-end_container-mtxt {
+    text-align: left;
+    font-size: 24px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 5px;
+  }
+
   .cta_tip-rule {
     font-size: 18px;
   }
@@ -334,11 +347,16 @@ $cover-height: 490px;
   }
 
   .cta_cover-end_container-btn_container-btn_col {
-    text-align: left !important; 
+    padding: 15px !important;
+    margin-top: -15px;
+    border: 1px solid #fff;
+    .btn-green-iw {
+      width: 100%;
+    }
   }
 
   .cta_cover-end_container-redo {
-    bottom: -5px;
+    top: 5px;
     right: 15px;
     z-index: 10;
   }

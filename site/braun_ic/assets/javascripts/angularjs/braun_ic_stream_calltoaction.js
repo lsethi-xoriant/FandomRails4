@@ -20,7 +20,7 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     if($scope.isIE() && $scope.isIE() < 10) {
       return '#333';
     } else {
-      return 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + parent_cta_info.calltoaction.thumbnail_url + ')';
+      return 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(' + parent_cta_info.calltoaction.thumbnail_url + ')';
     }
   };
 

@@ -94,7 +94,7 @@ $filters-item-margin-right: 15px;
     margin-bottom: 15px;
 }
 
-@media (min-width: $screen-xs) { 
+@media (min-width: $screen-sm) { 
     .filters__flexslider-image {
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -142,7 +142,7 @@ $filters-item-margin-right: 15px;
     }
 }
 
-@media (max-width: $screen-xs) { 
+@media (max-width: $screen-sm) { 
     .filters__title {
         top: 62px;
     }

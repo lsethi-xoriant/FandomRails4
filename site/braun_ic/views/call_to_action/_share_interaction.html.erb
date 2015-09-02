@@ -1,6 +1,7 @@
 <% enable_linked_share = false if local_assigns[:enable_linked_share].nil? %>
+<% title_class = false if local_assigns[:title_class].nil? %>
 
-<span class="share-title">Condividi</span>
+<span class="share-title <%= title_class %>">Condividi</span>
 
 <!-- FACEBOOK -->   
 <button ng-if="interaction_info.interaction.resource.providers.facebook" class="btn btn-facebook" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook', <%= enable_linked_share %>)"><i class="fa fa-facebook"></i></button>

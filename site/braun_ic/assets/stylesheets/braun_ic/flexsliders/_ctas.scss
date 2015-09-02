@@ -111,7 +111,7 @@
     }
 }
 
-@media (min-width: $screen-xs) { 
+@media (min-width: $screen-sm) { 
   .ctas__flexslider {
 
     .filters__flexslider-item {
@@ -154,7 +154,7 @@
   }
 }
 
-@media (max-width: $screen-xs) { 
+@media (max-width: $screen-sm) { 
 
     .ctas__info {
         padding-left: 15px; 
