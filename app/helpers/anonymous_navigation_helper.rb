@@ -1,3 +1,5 @@
+require 'fandom_utils'
+
 module AnonymousNavigationHelper
 
   def anonymous_user
@@ -52,6 +54,7 @@ module AnonymousNavigationHelper
     while !user.save
       user = new_stored_anonymous_user()
     end
+    change_global_user_id(user.id)
     sign_in(user)
     user
   end
