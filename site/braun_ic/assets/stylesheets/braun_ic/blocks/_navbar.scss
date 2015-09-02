@@ -32,7 +32,7 @@
   }
 }
 
-@media (min-width: $screen-sm) { 
+@media (min-width: $screen-sm-min) { 
   .navbar-header {
     position: relative;
     left: 15px;
@@ -48,7 +48,11 @@
   }
 }
 
-@media (max-width: $screen-sm) { 
+@media (max-width: $screen-xs-max) { 
+  .navbar-default .navbar-nav > li > a {
+    font-size: 16px;
+  }
+
   .iw_btn-navbar {
     float: right;
     margin-right: 15px;
@@ -88,11 +92,5 @@
       margin-top: 10px;
       margin-left: 15px;
     }
-  }
-}
-
-@media (max-width: $screen-sm) { 
-  .navbar-default .navbar-nav > li > a {
-    font-size: 16px;
   }
 }
