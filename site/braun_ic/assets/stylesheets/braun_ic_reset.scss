@@ -5,6 +5,10 @@ body {
   background-color: whitesmoke;
 }
 
+.add-margin {
+  margin-top: 35px;
+}
+
 /*
 #registration-modal .modal-content {
   background-color: #efefef;
@@ -428,6 +432,10 @@ p {
 }
 
 @media (max-width: $screen-xs-max) {
+  .add-margin {
+    margin-top: 0;
+  }
+
   .iw_btn {
     height: auto;
     font-size: 14px;

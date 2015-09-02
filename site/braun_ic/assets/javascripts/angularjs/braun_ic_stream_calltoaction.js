@@ -37,8 +37,14 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
   };
 
   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
-    $scope.feedback = (data.user_interaction.outcome.reward_name_to_counter.credit == 1);
+    parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
+    parent_cta_info.feedback = (data.user_interaction.outcome.reward_name_to_counter.credit == 1);
   };
+
+  $scope.ctaHasFeedback = function(cta_info) {
+    parent_cta_info = $scope.getParentCtaInfo(cta_info);
+    return (parent_cta_info.feedback == true);
+  }
 
   $scope.computeShareFreeCallToActionUrl = function(parent_cta_info, cta_info, enable_linked_share) {
     url = $scope.aux.root_url + "call_to_action/" + parent_cta_info.calltoaction.slug;

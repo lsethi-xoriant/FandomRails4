@@ -2024,8 +2024,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
     }
 
-    $scope.updateAnswerAjaxSuccessCtaStatuses(calltoaction_info, interaction_info, data);
-
     if(data.answers) {
       updateAnswersInInteractionInfo(interaction_info, data.answers);
     }
@@ -2143,6 +2141,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             updateInteractionsHistory(data.user_interaction.id);
 
             $scope.replaceCallToActionInCallToActionInfoList(calltoaction_info, data.next_call_to_action_info);
+
+            calltoaction_info = getCallToActionInfo(data.next_call_to_action_info.calltoaction.id);
+            $scope.updateAnswerAjaxSuccessCtaStatuses(calltoaction_info, interaction_info, data);
+
             initializeVideoAfterPageRender();
             if($scope.calltoaction_info) {
               $scope.calltoaction_info.class = "trivia-interaction__update-answer--hide";
@@ -2153,6 +2155,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           }, timeout_time);
         }
       }
+    } else {
+      $scope.updateAnswerAjaxSuccessCtaStatuses(calltoaction_info, interaction_info, data);
     }
 
     // Next call to action for random interaction

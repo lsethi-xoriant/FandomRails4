@@ -13,7 +13,6 @@ $cover-height: 490px;
 }
 
 .cta_cover-end_container-btn_container-btn_col {
-  padding-left: 115px;
 }
 
 .tip-container__row {
@@ -43,6 +42,12 @@ $cover-height: 490px;
   overflow: hidden;
 }
 
+.cta_cover-end_container-btn_container-subtitle {
+  font-size: 18px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
 .cta_cover-end_container-percentage_container {
   display: inline-block; 
   padding-top: 60px;
@@ -55,7 +60,7 @@ $cover-height: 490px;
 
 .cta_cover-end_container-title {
   font-size: 26px; 
-  padding-top: 15px;
+  padding-top: 5px;
 }
 
 .cta_cover-end_container-description {
@@ -72,14 +77,15 @@ $cover-height: 490px;
 }
 
 .cta_cover-end_container-share_container {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .cta_cover-end_container-btn_container {
   padding: 20px;
   background-color: #000;
   border-radius: 5px;
+  border: 1px solid #fff;
   .btn-green-iw {
     padding-left: 20px;
     padding-right: 20px;
@@ -87,10 +93,7 @@ $cover-height: 490px;
 }
 
 .cta_cover-end_container-btn_container-img {
-  width: 100px;
-  position: absolute;
-  left: -10px;
-  top: -40px;
+  width: 100%;
 }
 
 .cta_cover-end_container-iw-title {
@@ -306,20 +309,17 @@ $cover-height: 490px;
     border-radius: 5px;
   }
 
-  .cta_cover-end_container-btn_container-img {
-    width: 85px;
-    position: absolute;
-    left: 0;
-    top: -35px;
-  }
-
   .cta_cover-end_container-iw-title {
-    font-size: 12px;
+    font-size: 10px;
     padding-top: 3px;
   }
 }
 
 @media (max-width: $screen-xs-max) {
+  .cta_cover-end_container-btn_container {
+    border: none;
+  }
+
   .cta_cover-end_container-mtxt {
     text-align: left;
     font-size: 24px;
