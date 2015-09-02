@@ -3,7 +3,7 @@ module Fandom
     register_fandom_site(
       id: 'braun_ic',
       title: 'BraunIc',
-      domains: ['braun-ic.fandom.localdomain', 'braun-ic.stage.fandomlab.com', 'braun-ic.dev.fandomlab.com', 'braun-ic.live.fandomlab.com', 'www.braun-ic.live.fandomlab.com'],
+      domains: ['braun-ic.fandom.localdomain', 'braun-ic.stage.fandomlab.com', 'braun-ic.dev.fandomlab.com', 'braun-ic.live.fandomlab.com', 'www.braun-ic.live.fandomlab.com', 'www.wellnessmachine.it'],
       assets_precompile: ['braun_ic_application.css', 'braun_ic_application.js', 'FileAPI.js'],
       required_attrs: ["privacy"],
       free_provider_share: true,
