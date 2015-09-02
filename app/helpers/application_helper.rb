@@ -941,7 +941,7 @@ module ApplicationHelper
         end
         iw_info = {
           "user" => user_for_registation_form(),
-          "interaction" => { id: iw_interaction.id },
+          "interaction_id" => iw_interaction.id,
           "form_extra_fields" => form_extra_fields,
           "active" => true,
           "win" => iw_user_info[:win],

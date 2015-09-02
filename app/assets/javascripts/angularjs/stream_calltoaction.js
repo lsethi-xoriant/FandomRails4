@@ -541,7 +541,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
     $scope.aux.instant_win_info.in_progress = true;
     delete $scope.aux.instant_win_info.win;
-    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction.id })
+    $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
       .success(function(data) { 
         
         if(data.win == true) {
@@ -622,7 +622,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.processRegistrationForm = function() {
     delete $scope.form_data.current_user.errors;
-    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction.id };
+    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction_id };
     $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
       .success(function(data) {
         if(data.errors) {
