@@ -72,7 +72,7 @@
         <img class="contest-img visible-xs" ng-src="{{aux.assets.extra_fields.contest_section_1_mobile_img.url}}">
       </div>
       <div class="col-sm-6 col-sm-offset-3 text-center">
-        <p class="contest-description">{{aux.assets.extra_fields.contest_section_1_description}}</p>
+        <p class="contest-description" ng-bind-html="aux.assets.extra_fields.contest_section_1_description"></p>
       </div>
       <div class="col-sm-6 col-sm-offset-3 text-center">
         <a class="btn btn-green btn-lg contest-btn" href="/users/sign_up">REGISTRATI E FAI IL TEST</a>
@@ -92,7 +92,7 @@
         <img class="contest-img visible-xs" ng-src="{{aux.assets.extra_fields.contest_section_2_mobile_img.url}}">
       </div>
       <div class="col-sm-6 col-sm-offset-3 text-center">
-        <p class="contest-description">{{aux.assets.extra_fields.contest_section_2_description}}</p>
+        <p class="contest-description" ng-bind-html="aux.assets.extra_fields.contest_section_2_description"></p>
       </div>
       <% if braun_ic_contest_identitycollection_active? %>
         <div class="col-sm-6 col-sm-offset-3 text-center">
