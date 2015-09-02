@@ -8,6 +8,7 @@ module Fandom
       interactions_for_anonymous: ["quiz", "check", "play", "share", "vote", "like", 'pin', 'comment'],
       #interactions_for_anonymous_limit: 5,
       free_provider_share: true,
+      instantwin_ticket_name: "credit",
       default_property: "all",
       aws_transcoding: true,
       allowed_context_roots: ["all", "sport", "series", "talent", "music", "branded"],
