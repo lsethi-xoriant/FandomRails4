@@ -44,7 +44,9 @@ class RegistrationsController < Devise::RegistrationsController
         cookies[:from_registration] = true 
         set_account_up()
 
-        log_audit("registration", { 'form_data' => sign_up_params, 'user_id' => current_user.id })
+        sign_up_params_for_logging = sign_up_params.clone
+        sign_up_params_for_logging.delete('password')
+        log_audit("registration", { 'form_data' => sign_up_params_for_logging, 'user_id' => current_user.id })
         respond_with resource, :location => after_sign_up_path_for(resource)
       else
         set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}"
