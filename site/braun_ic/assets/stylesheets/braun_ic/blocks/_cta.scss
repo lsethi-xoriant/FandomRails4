@@ -322,7 +322,14 @@ $cover-height: 490px;
 
 @media (max-width: $screen-xs-max) {
   .cta_cover-end_container-btn_container {
+    padding: 15px !important;
     border: none;
+  }
+
+  .cta_cover-end_container-btn_container-subtitle {
+    font-size: 12px;
+    margin-bottom: 10px;
+    margin-top: 0px;
   }
 
   .cta_cover-end_container-mtxt {
