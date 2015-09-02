@@ -5,7 +5,7 @@
     <div class="row profile-container__row" ng-if="!isAnonymousUser()">
       
       <div class="col-sm-3 hidden-sm profile-container__user">    
-        <a data-toggle="modal" data-target="#modal-update-user">
+        <a ng-click="openEditUserModal()">
           <div class="percentage_circle percentage_circle_profile p{{getUserBadgesPercent()}}">
             <div class="percentage_circle_fix_bar"></div>
             <span class="percentage_circle_value percentage_circle_value_profile">
@@ -18,7 +18,7 @@
           </div>
         </a>
         <p style="margin-top: 50px; font-weight: bold;">Ciao {{current_user.first_name}}</p>
-        <p style="font-size: 9px; color: #999; margin-top: 5px;"><a style="color: #999;" data-toggle="modal" data-target="#modal-update-user">MODIFICA</a> - <a style="color: #999;" href="/users/sign_out">LOGOUT</a></p>
+        <p style="font-size: 9px; color: #999; margin-top: 5px;"><a style="color: #999;" ng-click="openEditUserModal()">MODIFICA</a> - <a style="color: #999;" href="/users/sign_out">LOGOUT</a></p>
       </div>
 
       <div class="col-sm-3 visible-sm profile-container__badge text-center">  
@@ -54,11 +54,11 @@
       </div>
 
       <div class="col-sm-3 text-center profile-container__iw">
-        <p class="profile-container__iw-text">Hai
+        <p class="profile-container__iw-text"><span class="hidden-sm">Hai</span>
           <span class="label cta_cover-credits_label_yellow">
             +{{current_user.instantwin_tickets_counter}} <span class="fa fa-ticket"></span>
           </span> 
-          biglietti
+          <span class="hidden-sm">biglietti</span>
         </p> 
         <div ng-if="aux.instant_win_info.active" class="profile-container__iw-btn__container">
           <div ng-if="current_user.registration_fully_completed">
@@ -106,7 +106,7 @@
     <div class="row">
       <div class="col-xs-3 profile-container__badge text-center">  
         <div class="profile-container__badge-block">  
-          <a ng-if="!isAnonymousUser()" data-toggle="modal" data-target="#modal-update-user">
+          <a ng-if="!isAnonymousUser()" ng-click="openEditUserModal()">
             <div class="percentage_circle small percentage_circle_profile p{{getUserBadgesPercent()}}">
               <div class="percentage_circle_fix_bar"></div>
               <span class="percentage_circle_value percentage_circle_value_profile">

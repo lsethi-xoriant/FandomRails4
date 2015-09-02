@@ -72,7 +72,7 @@
   border: 4px solid #1478e8;
 }
 
-@media (min-width: $screen-sm) { 
+@media (min-width: $screen-xs-max) { 
 
     .avatars__flexslider { 
         padding-top: 10px;
@@ -98,7 +98,7 @@
     }
 }
 
-@media (max-width: $screen-sm) { 
+@media (max-width: $screen-xs-max) { 
     .avatars__flexslider {
         padding-left: 0!important;
         padding-right: 0 !important;

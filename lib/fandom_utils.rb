@@ -22,6 +22,11 @@ module FandomUtils
     $view_time = nil
     $context_root = nil
   end
+  
+  # This method change the user_id stored in a global variable, especially useful for the logging system
+  def change_global_user_id(user_id)
+    $user_id = user_id
+  end
 
   # Deprecated: tenant information can now be obtained by the global variable $site
   def get_site_from_request(request)

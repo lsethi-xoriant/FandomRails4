@@ -140,15 +140,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.updateUserWithAvatar = function () {
-    delete $scope.form_data.current_user.errors;
+    delete $scope.form_data.r_current_user.errors;
 
     ajax_url = "/profile/update_user";
 
-    if($scope.form_data.current_user._avatar) {
+    if($scope.form_data.r_current_user._avatar) {
       $upload.upload({
           url: ajax_url,
-          fields: { obj: $scope.form_data.current_user },
-          file: $scope.form_data.current_user._avatar[0],
+          fields: { obj: $scope.form_data.r_current_user },
+          file: $scope.form_data.r_current_user._avatar[0],
           fileFormDataName: ["avatar"]
         }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
@@ -156,24 +156,24 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
               $scope.form_data.progress = progressPercentage; // evt.config.file[0].progress
         }).success(function (data, status, headers, config) {
             if(data.errors) {
-              $scope.form_data.current_user.errors = data.errors;
+              $scope.form_data.r_current_user.errors = data.errors;
             } else {
               updateUserWithAvatarSuccess(data);
             }
             delete $scope.form_data.progress;
         }).error(function (data, status, headers, config) {
           if(status == "413") { //413 (Request Entity Too Large)
-            $scope.form_data.current_user.errors = "Ricorda che il tuo file non deve pesare più di 100MB";
+            $scope.form_data.r_current_user.errors = "Ricorda che il tuo file non deve pesare più di 100MB";
           } else {
-            $scope.form_data.current_user.errors = status;
+            $scope.form_data.r_current_user.errors = status;
           }
           delete $scope.form_data.progress;
         });
     } else {
-      $http({ method: 'POST', url: ajax_url, data: { obj: $scope.form_data.current_user } })
+      $http({ method: 'POST', url: ajax_url, data: { obj: $scope.form_data.r_current_user } })
         .success(function(data) {
           if(data.errors) {
-            $scope.form_data.current_user.errors = data.errors;
+            $scope.form_data.r_current_user.errors = data.errors;
           } else {
             updateUserWithAvatarSuccess(data);
           }
@@ -474,7 +474,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.youtube_api_ready = false;
 
     if($scope.aux.from_registration) {
-      $("#registration-modal").modal("show");
+      $scope.welcomeFeedback();
       update_ga_event("Registration", "Registration", "Registration", 1);
     }
     
@@ -495,6 +495,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $scope.extraInit();
 
+  };
+
+  $scope.welcomeFeedback = function() {
+    $("#registration-modal").modal("show");
   };
 
   $scope.extraInit = function() {
@@ -611,8 +615,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $("#upload-input").click();
   }
 
-  $scope.openRegistrationModalForInstantWin = function(user) {
-    $scope.form_data.current_user = user;
+  $scope.openRegistrationModalForInstantWin = function() {
+    $scope.form_data.current_user = $scope.aux.instant_win_info.user;
     $("#modal-interaction-instant-win-registration").modal("show");
   };
 

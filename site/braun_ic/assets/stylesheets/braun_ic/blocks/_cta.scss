@@ -319,7 +319,7 @@ $cover-height: 490px;
   }
 }
 
-@media (max-width: $screen-sm) {
+@media (max-width: $screen-xs-max) {
   .cta_cover-end_container-mtxt {
     text-align: left;
     font-size: 24px;

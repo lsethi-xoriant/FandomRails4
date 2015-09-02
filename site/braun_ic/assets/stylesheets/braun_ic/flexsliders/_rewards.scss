@@ -40,7 +40,7 @@
 }
 
 
-@media (min-width: $screen-sm) { 
+@media (min-width: $screen-xs-max) { 
   .ctas__flexslider {
     .flex-direction-nav a {
         margin: -15px 0 0 !important;
@@ -99,7 +99,7 @@
   }
 }
 
-@media (max-width: $screen-sm) { 
+@media (max-width: $screen-xs-max) { 
 
     .ctas__info {
         padding-left: 15px; 

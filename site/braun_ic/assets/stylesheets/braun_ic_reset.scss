@@ -427,13 +427,7 @@ p {
   }
 }
 
-@media (max-width: $screen-sm) {
-  body {
-    padding-top: 50px;
-  }
-}
-
-@media (max-width: $screen-sm) {
+@media (max-width: $screen-xs-max) {
   .iw_btn {
     height: auto;
     font-size: 14px;

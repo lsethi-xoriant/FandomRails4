@@ -15,6 +15,10 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || ($scope.current_user && $scope.current_user.instantwin_tickets_counter < 1));
   };
 
+  $scope.welcomeFeedback = function() {
+    $scope.openRegistrationModalForInstantWin();
+  };
+
   $scope.thumbWithGradient = function(calltoaction_info) {
     parent_cta_info = $scope.getParentCtaInfo(calltoaction_info);
     if($scope.isIE() && $scope.isIE() < 10) {
@@ -68,17 +72,20 @@ function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interv
     }
   };
 
-  $scope.extraInit = function() {
-    $scope.covers = {};
-    $scope.buildbadgeArray();
-
+  $scope.openEditUserModal = function() {
     if($scope.current_user) {
-      $scope.form_data.current_user = {
+      $scope.form_data.r_current_user = {
         first_name: $scope.current_user.first_name,
         last_name: $scope.current_user.last_name,
         avatar: $scope.current_user.avatar
       }
+      $("#modal-update-user").modal("show");
     }
+  };
+
+  $scope.extraInit = function() {
+    $scope.covers = {};
+    $scope.buildbadgeArray();
     
     if($scope.aux.anchor_to) {
       window.location.href = "#" + $scope.aux.anchor_to;
