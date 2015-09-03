@@ -16,7 +16,10 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   conn = PG::Connection.open(config["db"])
-  conn.exec("SET search_path TO '#{config['tenant']}';") if config["tenant"]
+  tenant = config["tenant"]
+  events_is_tenant_specific = config["events_is_tenant_specific"]
+
+  conn.exec("SET search_path TO '#{tenant}';") if (tenant && events_is_tenant_specific)
 
   rails_app_dir = config["rails_app_dir"]
   ses, mail_from = configure_ses(rails_app_dir)
@@ -27,7 +30,7 @@ def main
 
   today = DateTime.now.utc
 
-  instantwins = conn.exec("SELECT * FROM instantwins WHERE valid_from <= '#{today}';")
+  instantwins = exec_query(conn, tenant, events_is_tenant_specific, "SELECT * FROM instantwins WHERE valid_from <= '#{today}';")
   instantwins_map = {}
   instantwins.each do |instantwin|
     instantwins_map[instantwin["id"]] = instantwin
@@ -40,14 +43,15 @@ def main
 
   instantwins_map.each do |instantwin_id, instantwin|
 
-    interaction_id = conn.exec("SELECT id FROM interactions WHERE resource_type = 'InstantwinInteraction' AND resource_id IN (
+    interaction_id = exec_query(conn, tenant, events_is_tenant_specific, "SELECT id FROM interactions WHERE resource_type = 'InstantwinInteraction' AND resource_id IN (
       SELECT instantwin_interaction_id FROM instantwins where id = #{instantwin_id});").first["id"].to_i
 
     instantwin_valid_from = DateTime.parse(instantwin["valid_from"])
     instantwin_valid_to = DateTime.parse(instantwin["valid_to"])
 
     # Check that the right user won instantwin when he tried, if any
-    user_that_should_have_won = conn.exec("SELECT * FROM events 
+    user_that_should_have_won = exec_query(conn, tenant, events_is_tenant_specific, 
+      "SELECT * FROM events 
       WHERE timestamp >= '#{instantwin["valid_from"]}' 
       AND message = 'instant win attempted' 
       AND (data::json->>'interaction_id')::int = #{interaction_id} 
@@ -57,7 +61,8 @@ def main
     if user_that_should_have_won
       user_id_that_should_have_won = user_that_should_have_won["user_id"]
 
-      win_entry_event = conn.exec("SELECT * FROM events 
+      win_entry_event = exec_query(conn, tenant, events_is_tenant_specific, 
+        "SELECT * FROM events 
         WHERE timestamp >= '#{instantwin["valid_from"]}' 
         AND timestamp <= '#{instantwin["valid_to"]}' 
         AND message = 'assigning instant win to user' 
@@ -82,13 +87,15 @@ def main
 
   if config["tenant"] == "braun_ic"
 
-    credits_assigned = conn.exec("SELECT user_id, COUNT(*) FROM events WHERE 
+    credits_assigned = exec_query(conn, tenant, events_is_tenant_specific, 
+      "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
 
-    credits_assigned_today = conn.exec("SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
+    credits_assigned_today = exec_query(conn, tenant, events_is_tenant_specific, 
+      "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
       WHERE timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
       AND message = 'assigning reward to user' 
@@ -112,7 +119,7 @@ def main
     # Check that users have not played more than they could afford
     puts "\n#{Time.now} - Check that number of attempts is less or equal credits gained"
 
-    instantwin_attempts = conn.exec(
+    instantwin_attempts = exec_query(conn, tenant, events_is_tenant_specific, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'instant win attempted' 
       GROUP BY user_id;"
@@ -137,9 +144,9 @@ def main
     # Check that there is one win for day
     puts "\n#{Time.now} - Check that there is one win for day"
 
-    instantwin = conn.exec(
+    instantwin = exec_query(conn, tenant, events_is_tenant_specific, 
       "SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
-      SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
+        SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
       );"
     ).first
     instantwin_start_date = DateTime.parse(instantwin["valid_from"])
@@ -147,7 +154,8 @@ def main
 
     from = instantwin_start_date.beginning_of_day
     while from < [instantwin_end_date, DateTime.now.utc].min
-      wins = conn.exec("SELECT COUNT(*) FROM events WHERE
+      wins = exec_query(conn, tenant, events_is_tenant_specific, 
+        "SELECT COUNT(*) FROM events WHERE
         timestamp BETWEEN '#{from}' AND '#{from.end_of_day}' 
         AND message = 'assigning instant win to user';"
       ).first["count"].to_i
@@ -161,7 +169,9 @@ def main
       from = from + 1.day
     end
 
-    win_events = conn.exec("SELECT * FROM events WHERE message = 'assigning instant win to user';").to_a
+    win_events = exec_query(conn, tenant, events_is_tenant_specific, 
+      "SELECT * FROM events WHERE message = 'assigning instant win to user';"
+      ).to_a
 
     # Check that every instantwin has been won at most once
     puts "\n#{Time.now} - Check that every instantwin has been won at most once"
@@ -187,7 +197,9 @@ def main
       users_winning_ids << win_event["user_id"].to_i
     end
     if users_winning_ids.any?
-      winners = conn.exec("SELECT * FROM users WHERE id IN (#{users_winning_ids.to_a.join(',')}) ORDER BY birth_date DESC")
+      winners = exec_query(conn, tenant, events_is_tenant_specific, 
+        "SELECT * FROM users WHERE id IN (#{users_winning_ids.to_a.join(',')}) ORDER BY birth_date DESC"
+      )
       winners.each do |winner|
         if winner["birth_date"]
           if DateTime.parse(winner["birth_date"]) + 18.years > instantwin_start_date
@@ -207,7 +219,9 @@ def main
 
       win_events.each do |win|
         instantwin_id = JSON.parse(win["data"])["instantwin_id"]
-        instantwin = conn.exec("SELECT valid_from FROM instantwins WHERE id = #{instantwin_id};").first
+        instantwin = exec_query(conn, tenant, events_is_tenant_specific, 
+          "SELECT valid_from FROM instantwins WHERE id = #{instantwin_id};"
+        ).first
         if instantwin
           valid_from = instantwin["valid_from"]
           if DateTime.parse(win["timestamp"]) < DateTime.parse(valid_from)
@@ -249,6 +263,19 @@ def send_email(ses, from, to, subject, body)
     :subject   => subject,
     :html_body => body
   )
+end
+
+def exec_query(conn, tenant, events_is_tenant_specific, query)
+  if events_is_tenant_specific
+    conn.exec(query)
+  else
+    where_index = query =~ /where/i
+    if where_index
+      conn.exec(query.insert(where_index + 5, " tenant = '#{tenant}' AND"))
+    else
+      conn.exec(query.gsub(";", "") + "WHERE tenant = '#{tenant}';")
+    end
+  end
 end
 
 main()
