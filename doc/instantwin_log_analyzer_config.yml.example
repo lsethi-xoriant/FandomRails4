@@ -1,0 +1,15 @@
+db: 
+  dbname: fandom
+  host:
+  user:
+
+tenant: fandom
+
+# Useful to find deploy_settings file
+rails_app_dir: dir
+
+# Email addresses to send errors
+to: example@example.com
+
+# Email subject
+subject: Instantwin log errors
