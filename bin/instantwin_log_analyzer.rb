@@ -124,10 +124,13 @@ def main
     end
 
     credits_assigned.each do |assigned|
-      if assigned["count"].to_i < instantwin_attempts_map[assigned["user_id"]].to_i
-        message = "ERROR: user #{assigned["user_id"]} gained #{assigned["count"]} credits, but played #{instantwin_attempts_map[assigned["user_id"]]} times"
-        puts message
-        errors << message
+      number_of_attempts = instantwin_attempts_map[assigned["user_id"].to_i].to_i
+      if number_of_attempts
+        if assigned["count"].to_i < number_of_attempts
+          message = "ERROR: user #{assigned["user_id"]} gained #{assigned["count"]} credits, but played #{number_of_attempts} times"
+          puts message
+          errors << message
+        end
       end
     end
 
@@ -151,7 +154,7 @@ def main
       if wins == 0
         puts "ALERT: there are no winnings for day #{from.strftime('%d/%m/%Y')}"
       elsif wins > 1
-        message "ERROR: there are #{wins} winnings for day #{from.strftime('%d/%m/%Y')}"
+        message = "ERROR: there are #{wins} winnings for day #{from.strftime('%d/%m/%Y')}"
         puts message
         errors << message
       end
@@ -159,6 +162,22 @@ def main
     end
 
     win_events = conn.exec("SELECT * FROM events WHERE message = 'assigning instant win to user';").to_a
+
+    # Check that every instantwin has been won at most once
+    puts "\n#{Time.now} - Check that every instantwin has been won at most once"
+
+    instantwin_id_won_times_map = {}
+    win_events.each do |win_event|
+      data = JSON.parse(win_event["data"])
+      instantwin_id_won_times_map[data["instantwin_id"].to_i] = (instantwin_id_won_times_map[data["instantwin_id"].to_i].to_i || 0) + 1
+    end
+    instantwin_id_won_times_map.each do |instantwin_id, won_times|
+      if won_times > 1
+        message = "ERROR: instantwin #{instantwin_id} has been won #{won_times} times"
+        puts message
+        errors << message
+      end
+    end
 
     # Check that winners are major
     puts "\n#{Time.now} - Check winners' age"
