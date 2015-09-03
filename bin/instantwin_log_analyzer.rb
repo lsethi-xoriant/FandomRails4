@@ -19,9 +19,9 @@ def main
   conn.exec("SET search_path TO '#{config['tenant']}';") if config["tenant"]
 
   rails_app_dir = config["rails_app_dir"]
-  ses, from = configure_ses(rails_app_dir)
-  to = config["to"]
-  subject = config["subject"]
+  ses, mail_from = configure_ses(rails_app_dir)
+  mail_to = config["to"]
+  mail_subject = config["subject"]
 
   errors = []
 
@@ -45,12 +45,6 @@ def main
 
     instantwin_valid_from = DateTime.parse(instantwin["valid_from"])
     instantwin_valid_to = DateTime.parse(instantwin["valid_to"])
-
-    events = conn.exec("SELECT * FROM events 
-      WHERE timestamp BETWEEN '#{instantwin_valid_from.beginning_of_day}' AND '#{instantwin_valid_to}' 
-      AND (data::json->>'interaction_id')::int = #{interaction_id} 
-      ORDER BY timestamp;"
-    )
 
     # Check that the right user won instantwin when he tried, if any
     user_that_should_have_won = conn.exec("SELECT * FROM events 
@@ -94,11 +88,12 @@ def main
       GROUP BY user_id;"
     ).to_a
 
-    credits_assigned_today = conn.exec("SELECT user_id, COUNT(*) FROM events WHERE 
-      timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
+    credits_assigned_today = conn.exec("SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
+      FROM events 
+      WHERE timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
       AND message = 'assigning reward to user' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
-      GROUP BY user_id;"
+      GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
 
     # Check that no one got more than one credit today
@@ -106,9 +101,9 @@ def main
 
     more_than_one_credit_assigned = credits_assigned_today.to_a.select { |credits| credits["count"].to_i > 1 }
     if more_than_one_credit_assigned.any?
-      message = "ERROR: more than one credit assigned to following users:"
+      message = "ERROR: On day #{today.strftime("%Y-%m-%d")} more than one credit has been assigned to the following users:"
       more_than_one_credit_assigned.each do |assigned|
-        message += "\nuser #{assigned["user_id"]} got #{assigned["count"]} credits"
+        message += "\n user #{assigned["user_id"]} got #{assigned["count"]} credits"
       end
       puts message
       errors << message
@@ -209,7 +204,10 @@ def main
 
   end
 
-  send_email(ses, from, to, subject)
+  if errors.any?
+    body = "<ul><li>" + errors.map {|s| s.gsub("\n", "<br>\n")}.join("\n</li><li>")  + "</li></ul>"
+    send_email(ses, mail_from, mail_to, mail_subject, body) 
+  end
 
   puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds"
 
