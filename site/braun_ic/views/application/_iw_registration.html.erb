@@ -54,17 +54,17 @@
                         <label class="col-sm-3 control-label">{{field.label}}<span ng-if="field.required">*</span></label>
                         <div class="col-sm-9">
                           <div class="row">
-                            <div class="col-sm-4 birth_div">
+                            <div class="col-xs-4 birth_div">
                               <% date_array = (1..31).map { |date| [date, date] } %>
                               <% date_array.unshift ["Giorno", ""] %>
                               <%= select_tag(:day_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.day_of_birth", name: "extra_fields_age_{{field.name}}_day", disabled: current_user && current_user.birth_date.present?) %>
                             </div>
-                            <div class="col-sm-4 birth_div margin-top-mobile">
+                            <div class="col-xs-4 birth_div">
                               <% date_array = (1..12).map { |date| [date, date] } %>
                               <% date_array.unshift ["Mese", ""] %>
                               <%= select_tag(:month_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.month_of_birth", name: "extra_fields_age_{{field.name}}_month", disabled: current_user && current_user.birth_date.present?) %>
                             </div>
-                            <div class="col-sm-4 birth_div margin-top-mobile">
+                            <div class="col-xs-4 birth_div">
                               <% date_array = (1900..2020).map { |date| [date, date] } %>
                               <% date_array.unshift ["Anno", ""] %>
                               <%= select_tag(:year_of_birth, options_for_select(date_array), class: "form-control", "ng-model" => "form_data.current_user.year_of_birth", name: "extra_fields_age_{{field.name}}_year", disabled: current_user && current_user.birth_date.present?) %>
