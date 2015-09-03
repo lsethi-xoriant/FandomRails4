@@ -61,7 +61,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_account_up    
     create_user_interaction_for_registration()
-    SystemMailer.welcome_mail(current_user).deliver
+    SystemMailer.welcome_mail(current_user).deliver_now
   end
 
   protected

@@ -18,6 +18,7 @@ class SystemMailer < ActionMailer::Base
   end
 
   def welcome_mail_braun(user)
+    debugger
     mail(to: user.email, subject: "Benvenuto!")
   end
 

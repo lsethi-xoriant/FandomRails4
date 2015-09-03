@@ -53,7 +53,6 @@ module SeoHelper
     else
       seo_value_from_settings = get_seo_value_from_settings(value)
     end
-    debugger
 
     if @seo_info && @seo_info[value]
       seo_value = "#{@seo_info[value]}"
