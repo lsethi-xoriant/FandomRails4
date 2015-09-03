@@ -49,7 +49,7 @@
                 <img class="hidden-xs" ng-src="{{calltoaction.extra_fields.desktop_img.url}}">
                 <img class="visible-xs" ng-src="{{calltoaction.extra_fields.mobile_img.url}}">
               </a>
-              <a ng-if="!isAnchor(item.extra_fields.url)" href="{{item.extra_fields.url}}">
+              <a ng-if="!isAnchor(calltoaction.extra_fields.url)" href="{{calltoaction.extra_fields.url}}">
                 <img class="hidden-xs" ng-src="{{calltoaction.extra_fields.desktop_img.url}}">
                 <img class="visible-xs" ng-src="{{calltoaction.extra_fields.mobile_img.url}}">
               </a>
