@@ -9,6 +9,7 @@ def main
   if ARGV.size != 1
     puts <<-EOF
       Usage: #{$0} <config.yml>
+      config.yml file must define "db", "tenant", "rails_app_dir", "to" and "subject" values
     EOF
     exit
   end
@@ -34,7 +35,7 @@ def main
 
   start_time = Time.now
 
-  puts "#{Time.now} - #{instantwins.count} total instantwins to analyze"
+  puts "#{Time.now} - Instantwin log analyzer starting. #{instantwins.count} total instantwins to analyze"
   puts "\n#{Time.now} - Check that the right user won instantwin when he tried, if any"
 
   instantwins_map.each do |instantwin_id, instantwin|
@@ -64,7 +65,7 @@ def main
 
       win_entry_event = conn.exec("SELECT * FROM events 
         WHERE timestamp >= '#{instantwin["valid_from"]}' 
-        AND timestamp <= '#{instantwin["valid_to"]}'
+        AND timestamp <= '#{instantwin["valid_to"]}' 
         AND message = 'assigning instant win to user' 
         AND (data::json->>'interaction_id')::int = #{interaction_id};"
       ).first
@@ -75,7 +76,7 @@ def main
         errors << message
       elsif win_entry_event["user_id"] != user_id_that_should_have_won
         message = "ERROR: first user playing for interaction #{interaction_id} is user #{user_id_that_should_have_won}; 
-              he should have won instantwin #{instantwin_id}, but he did not.\nUser that won is #{win_entry_event["user_id"]}"
+                    he should have won instantwin #{instantwin_id}, but he did not.\nUser that won is #{win_entry_event["user_id"]}"
         puts message
         errors << message
       end
@@ -116,7 +117,8 @@ def main
     # Check that users have not played more than they could afford
     puts "\n#{Time.now} - Check that number of attempts is less or equal credits gained"
 
-    instantwin_attempts = conn.exec("SELECT user_id, COUNT(*) FROM events WHERE 
+    instantwin_attempts = conn.exec(
+      "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'instant win attempted' 
       GROUP BY user_id;"
     )
@@ -137,8 +139,9 @@ def main
     # Check that there is one win for day
     puts "\n#{Time.now} - Check that there is one win for day"
 
-    instantwin = conn.exec("SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
-        SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
+    instantwin = conn.exec(
+      "SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
+      SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
       );"
     ).first
     instantwin_start_date = DateTime.parse(instantwin["valid_from"])
@@ -208,7 +211,7 @@ def main
 
   send_email(ses, from, to, subject)
 
-  puts "\nLog analyzer ended in #{Time.now - start_time} seconds"
+  puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds"
 
 end
 
@@ -218,15 +221,16 @@ def configure_ses(rails_app_dir)
     :access_key_id     => deploy_settings['mailer']['ses'][:access_key_id], 
     :secret_access_key => deploy_settings['mailer']['ses'][:secret_access_key]
   )
+
   [ses, deploy_settings['mailer']['default_from']]
 end
 
 def send_email(ses, from, to, subject, body)
   ses.send_email(
-   :to        => to.split(','),
-   :source    => from,
-   :subject   => subject,
-   :html_body => body
+    :to        => to.split(','),
+    :source    => from,
+    :subject   => subject,
+    :html_body => body
   )
 end
 
