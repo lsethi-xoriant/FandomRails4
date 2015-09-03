@@ -45,7 +45,11 @@
         <div class="flexslider ctas__flexslider">
           <ul class="slides">
             <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-              <a href="{{calltoaction.extra_fields.url}}">
+              <a ng-if="isAnchor(calltoaction.extra_fields.url)" href="javascript: void(0)" ng-click="scrollTo(calltoaction.extra_fields.url)">
+                <img class="hidden-xs" ng-src="{{calltoaction.extra_fields.desktop_img.url}}">
+                <img class="visible-xs" ng-src="{{calltoaction.extra_fields.mobile_img.url}}">
+              </a>
+              <a ng-if="!isAnchor(item.extra_fields.url)" href="{{item.extra_fields.url}}">
                 <img class="hidden-xs" ng-src="{{calltoaction.extra_fields.desktop_img.url}}">
                 <img class="visible-xs" ng-src="{{calltoaction.extra_fields.mobile_img.url}}">
               </a>
