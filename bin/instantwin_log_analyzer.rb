@@ -9,7 +9,7 @@ def main
   if ARGV.size != 1
     puts <<-EOF
       Usage: #{$0} <config.yml>
-      config.yml file must define "db", "tenant", "rails_app_dir", "to" and "subject" values
+      config.yml file must define "db", "tenant", "events_is_tenant_specific", "rails_app_dir", "to" and "subject" values
     EOF
     exit
   end
@@ -273,7 +273,7 @@ def exec_query(conn, tenant, events_is_tenant_specific, query)
     if where_index
       conn.exec(query.insert(where_index + 5, " tenant = '#{tenant}' AND"))
     else
-      conn.exec(query.gsub(";", "") + "WHERE tenant = '#{tenant}';")
+      conn.exec(query.gsub(";", "") + " WHERE tenant = '#{tenant}';")
     end
   end
 end
