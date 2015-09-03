@@ -61,6 +61,22 @@
   </div>
 </div>
 
+<a class="hidden-xs" href="/concorso#identitycollection">
+  <div class="sub-header-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 sub-header-container__img-col hidden-xs">
+          <img class="sub-header-container__img" ng-src="{{aux.assets.extra_fields.sub_header_img.url}}">
+        </div>
+        <div class="col-sm-7">
+          <div ng-bind-html="aux.assets.extra_fields.sub_header_description"></div>
+          <span class="sub-header-container__arrow fa fa-angle-right"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+
 <script type="text/javascript">
   $(document).ready(function() {
     $('.ctas__flexslider').flexslider({
