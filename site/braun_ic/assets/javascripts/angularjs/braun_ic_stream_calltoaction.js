@@ -11,6 +11,12 @@ braunIcStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function BraunIcStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document, $upload));
 
+  $scope.ctaGaEvent = function(cta_info) {
+    parent_cta_info = $scope.getParentCtaInfo(cta_info);
+    category = 'Test ' + parent_cta_info.calltoaction.name;
+    $scope.update_ga_event(category, 'Risultato test', 'Scopri se hai vinto', 1)
+  };
+
   $scope.disableIWButton = function() {
     return ($scope.aux.instant_win_info.in_progress || $scope.aux.instant_win_info.win || ($scope.current_user && $scope.current_user.instantwin_tickets_counter < 1));
   };

@@ -475,7 +475,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     if($scope.aux.from_registration) {
       $scope.welcomeFeedback();
-      update_ga_event("Registration", "Registration", "Registration", 1);
+      $scope.update_ga_event("Registration", "Registration", "Registration", 1);
     }
     
     loadYTApi();
@@ -538,7 +538,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.playInstantWin = function() {
-    update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
+    $scope.update_ga_event("PlayInstantWin", "PlayInstantWin", "PlayInstantWin", 1);
     $scope.aux.instant_win_info.in_progress = true;
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
@@ -1080,7 +1080,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (interaction_info.interaction.resource_type != "vote");
   };
 
-  $window.update_ga_event = function(category, action, label, value) {
+  $scope.update_ga_event = function(category, action, label, value) {
     if($scope.aux.property_path_name) {
       category = $scope.aux.property_path_name + "_" + category;
     }
@@ -1778,9 +1778,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       
             // GOOGLE ANALYTICS
             if(data.ga) {
-              update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+              $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
               angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+                $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
               });
             }
 
@@ -1931,9 +1931,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           $("#modal-interaction-" + interaction_id + "-" + provider).modal("hide");
 
           if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label);
+            $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label);
             angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
             });
           }
 
@@ -2018,9 +2018,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     // Google analytics.
     if(data.ga) {
-      update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+      $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
       angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-        update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+        $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
       });
     }
 
@@ -2558,7 +2558,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           // GOOGLE ANALYTICS
           if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+            $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
           }
 
         } else {
@@ -2576,7 +2576,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           // GOOGLE ANALYTICS
           if(data.ga) {
-            update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
+            $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
           }
 
         }

@@ -96,7 +96,7 @@
       <div class="col-sm-4 text-center">
         <div class="btn-green-userbar-container">
           <div class="btn-green-userbar-line"></div>
-          <a href="/users/sign_up" class="btn btn-green btn-green-userbar btn-block btn-lg">PROVA A VINCERE SUBITO</a>
+          <a href="/users/sign_up" ng-click="update_ga_event('Homepage', 'Registrazione', 'Prova a vincere subito', 1)" class="btn btn-green btn-green-userbar btn-block btn-lg">PROVA A VINCERE SUBITO</a>
           <p class="profile-container__unlogged-subtitle">In palio un Minipimer al giorno</p>
         </div>
       </div>
@@ -137,7 +137,7 @@
         </div>
       </div>
       <div ng-if="isAnonymousUser()" class="col-xs-9 profile-container__unlogged text-center">
-        <a class="btn btn-green profile-container__unlogged-btn btn-block" href="/users/sign_up">PROVA A VINCERE SUBITO</a>
+        <a ng-click="update_ga_event('Homepage', 'Registrazione', 'Prova a vincere subito', 1)" class="btn btn-green profile-container__unlogged-btn btn-block" href="/users/sign_up">PROVA A VINCERE SUBITO</a>
         <p class="profile-container__unlogged-subtitle">In palio un Minipimer al giorno</p>
       </div>
       <div ng-if="!isAnonymousUser()" class="col-xs-3 profile-container__badge text-center" ng-repeat="badge in aux.badge_array | limitTo:3 |  orderBy:orderBadgesByCtas:true">
