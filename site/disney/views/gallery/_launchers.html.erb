@@ -2,16 +2,14 @@
   <div class="flexslider filters__flexslider-desktop hidden-xs">
     <div class="flex-viewport-shadow"></div>
     <ul class="slides">
-      <% galleries.each do |gallery| %>
-        <li class="text-center filters__flexslider-desktop-item" id="<%= gallery[:cta].id%>">
-          <%= light_link_to("/gallery/#{gallery[:cta].slug}", class: "filters__flexslider-a") do %>
-            <img class="filters__flexslider-image <%= "filters__flexslider-image--active" if current_gallery_id && gallery[:cta].id == current_gallery_id %>" src="<%= gallery[:cta].thumbnail(:medium) %>">  
-            <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-            <p class="filters__title--gallery-counter"><%= gallery[:count] %> contenuti</p>
-          <% end %>
-          </li>
+      <li class="text-center filters__flexslider-desktop-item" id="{{gallery.cta.id}}" ng-repeat="gallery in aux.gallery_ctas">
+        <%= light_link_to("/gallery/{{gallery.cta.slug}}", class: "filters__flexslider-a") do %>
+          <img class="filters__flexslider-image" ng-class="{'filters__flexslider-image--active': aux.current_gallery_id == gallery.cta.id}" ng-src="{{gallery.cta.thumbnail_medium}}">  
+          <p class="filters__title--gallery">{{gallery.cta.title}}</p>
+          <p class="filters__title--gallery-counter">{{gallery.count}} contenuti</p>
         <% end %>
-        <li class="text-center filters__flexslider-desktop-item">
+      </li>
+      <li class="text-center filters__flexslider-desktop-item">
           <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg">  
           <p class="filters__title--gallery">Coming soon</p> 
       </li>
@@ -28,16 +26,14 @@
 
   <div class="flexslider filters__flexslider-mobile filters__flexslider-mobile--gallery visible-xs">
     <ul class="slides">
-      <% galleries.each do |gallery| %>
-        <li class="text-center filters__flexslider-mobile-item" id="<%= gallery[:cta].id%>">
-          <%= light_link_to("/gallery/#{gallery[:cta].slug}") do %>
-            <div class="filters__gallery-item" style="background-image: url('<%= gallery[:cta].thumbnail(:medium) %>')">
-              <p class="filters__title--gallery"><%= gallery[:cta].title %></p>
-              <p class="filters__title--gallery-counter"><%= gallery[:couns] %> contenuti</p>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
+      <li class="text-center filters__flexslider-mobile-item" id="{{gallery.cta.id}}" ng-repeat="gallery in aux.gallery_ctas">
+        <%= light_link_to("/gallery/{{gallery.cta.slug}}") do %>
+          <div class="filters__gallery-item" ng-style="{'background-image': 'url(' + gallery.cta.thumbnail_medium + ')'}">
+            <p class="filters__title--gallery">{{gallery.cta.title}}</p>
+            <p class="filters__title--gallery-counter">{{gallery.count}} contenuti</p>
+          </div>
+        <% end %>
+      </li>
       <li class="text-center filters__flexslider-mobile-item">
         <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg')">
           <p class="filters__title--gallery">Coming soon</p>

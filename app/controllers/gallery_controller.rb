@@ -33,7 +33,7 @@ class GalleryController < ApplicationController
   end
 
   def index
-    @galleries_cta = get_gallery_ctas_carousel
+    @galleries_cta
 
     params = adjust_params_for_gallery(params)
 
@@ -47,14 +47,15 @@ class GalleryController < ApplicationController
       "gallery" => true, 
       "gallery_index" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user]
+      "gallery_user" => params[:user],
+      "gallery_ctas" => get_gallery_ctas_carousel
     }
 
   end
   
   def take_current_gallery_to_first_position(gallery_slug, galleries)
     gallery_id = CallToAction.find(gallery_slug).id
-    index = galleries.index{ |gal| gal[:cta].id == gallery_id.to_i}
+    index = galleries.index{ |gal| gal[:cta][:id] == gallery_id.to_i}
     current_gallery = galleries[index]
     galleries.delete_at(index)
     galleries.unshift(current_gallery)
@@ -95,7 +96,9 @@ class GalleryController < ApplicationController
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
       "gallery_user" => params[:user],
-      gallery_tag: gallery_tag_adjust_for_view
+      gallery_tag: gallery_tag_adjust_for_view,
+      "gallery_ctas" => get_gallery_ctas_carousel,
+      "current_gallery_id" => cta.id
     }
   end
 
@@ -120,7 +123,13 @@ class GalleryController < ApplicationController
     galleries.each do |gallery|
       gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
       galleries_info << {
-        cta: gallery,
+        cta: {
+          name: gallery.name,
+          id: gallery.id,
+          thumbnail_medium: gallery.thumbnail(:medium),
+          slug: gallery.slug,
+          title: gallery.title
+        },
         count: ugc_number_in_gallery_map[gallery_tag.id]
       }
     end
