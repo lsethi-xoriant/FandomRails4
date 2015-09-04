@@ -18,6 +18,7 @@ def main
   conn = PG::Connection.open(config["db"])
   tenant = config["tenant"]
   events_is_tenant_specific = config["events_is_tenant_specific"]
+  day_to_analyze = config["day_to_analyze"]
 
   conn.exec("SET search_path TO '#{tenant}';") if (tenant && events_is_tenant_specific)
 
@@ -28,7 +29,11 @@ def main
 
   errors = []
 
-  today = DateTime.now.utc
+  if day_to_analyze
+    today = DateTime.parse(day_to_analyze).at_end_of_day
+  else
+    today = DateTime.now.utc
+  end
 
   instantwins = exec_query(conn, tenant, events_is_tenant_specific, "SELECT * FROM instantwins WHERE valid_from <= '#{today}';")
   instantwins_map = {}
