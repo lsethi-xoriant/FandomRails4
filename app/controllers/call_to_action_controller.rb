@@ -269,8 +269,13 @@ class CallToActionController < ApplicationController
   end
 
   def update_interaction
-    response = update_interaction_computation(params)
-    
+    begin
+      response = update_interaction_computation(params)
+    rescue SessionIdEmptyError => e
+      debugger
+      response = { session_empty: true }
+    end
+
     respond_to do |format|
       format.json { render :json => response.to_json }
     end

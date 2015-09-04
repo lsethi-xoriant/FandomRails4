@@ -50,6 +50,10 @@ module AnonymousNavigationHelper
   end
 
   def create_and_sign_in_stored_anonymous_user()
+    if session.id.blank?
+      raise SessionIdEmptyError.new 
+    end
+
     user = new_stored_anonymous_user()
     while !user.save
       user = new_stored_anonymous_user()
