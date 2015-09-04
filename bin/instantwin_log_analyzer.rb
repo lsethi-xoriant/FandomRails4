@@ -140,7 +140,9 @@ def main
 
     instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
-      message = 'instant win attempted' 
+      timestamp >= '#{instantwin["valid_from"]}' 
+      AND timestamp <= '#{instantwin["valid_to"]}' 
+      AND message = 'instant win attempted' 
       GROUP BY user_id;"
     )
 
