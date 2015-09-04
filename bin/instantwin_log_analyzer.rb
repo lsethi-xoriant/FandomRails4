@@ -276,9 +276,9 @@ def send_email(ses, from, to, subject, body)
 end
 
 def exec_query(conn, tenant, events_is_tenant_specific, is_db_production, query)
-  if events_is_tenant_specific
+  if events_is_tenant_specific || is_db_production
     conn.exec(query)
-  elsif !is_db_production
+  else
     where_index = query =~ /where/i
     if where_index
       conn.exec(query.insert(where_index + 5, " tenant = '#{tenant}' AND"))
