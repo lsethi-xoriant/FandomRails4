@@ -284,11 +284,11 @@ def exec_query(conn, tenant, events_is_tenant_specific, is_db_production, query)
     if where_index
       query = query.insert(where_index + 5, " tenant = '#{tenant}' AND")
       puts query
-      conn.exec()
+      conn.exec(query)
     else
       query = query.gsub(";", "") + " WHERE tenant = '#{tenant}';"
       puts query
-      conn.exec()
+      conn.exec(query)
     end
   end
 end
