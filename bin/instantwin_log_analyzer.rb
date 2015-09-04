@@ -109,7 +109,7 @@ def main
     credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
-      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}'
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
@@ -118,6 +118,7 @@ def main
       "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
       WHERE message = 'assigning reward to user' 
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
@@ -183,7 +184,9 @@ def main
     end
 
     win_events = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
-      "SELECT * FROM events WHERE message = 'assigning instant win to user';"
+      "SELECT * FROM events 
+      WHERE message = 'assigning instant win to user'
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}';"
       ).to_a
 
     # Check that every instantwin has been won at most once
