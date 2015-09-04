@@ -1991,7 +1991,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       });
   };
 
-   $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
+  $scope.updateAnswerAjaxSuccessCtaStatuses = function(calltoaction_info, interaction_info, data) {
     calltoaction_info.status = data.calltoaction_status;
 
     calltoaction_id = calltoaction_info.calltoaction.id;
@@ -2000,6 +2000,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
+    if(data.session_empty) {
+      alert("Per funzionare correttamente il sito necessita l'abilitazione dei cookie");
+      $scope.answer_in_progress = false;
+      return
+    } 
+
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
 

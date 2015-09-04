@@ -1,0 +1,2 @@
+class SessionIdEmptyError < StandardError
+end

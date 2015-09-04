@@ -2,8 +2,8 @@ module SeoHelper
   
   def set_seo_info(title, meta_description, keywords, meta_image)
     @seo_info = {
-      "title" => strip_tags(title),
-      "meta_description" => strip_tags(meta_description),
+      "title" => CGI.unescapeHTML(strip_tags(title)),
+      "meta_description" => CGI.unescapeHTML(strip_tags(meta_description)),
       "meta_image" => meta_image,
       "keywords" => keywords
     }

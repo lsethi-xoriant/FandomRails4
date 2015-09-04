@@ -87,12 +87,12 @@ class SessionsController < Devise::SessionsController
     if user.errors.any?
       redirect_to_registration_page(user)
     else
+      change_global_user_id(user.id)
       sign_in(user)
       fandom_play_login(user)
     
-      log_audit("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
-
       if from_registration
+        log_audit("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
         set_account_up()
         cookies[:from_registration] = true 
       end
