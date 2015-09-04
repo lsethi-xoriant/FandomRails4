@@ -13,10 +13,13 @@ module CallToActionHelper
   end
 
   def get_sidebar_info(sidebar_tag_name, property)
-    # Property can be the gallery section
-
-    property_tag = property.present? ? [property] : []
-    sidebar_content_previews = get_content_previews(sidebar_tag_name, property_tag)
+    if property.present?
+      property_sidebar_tag = Tag.find_by_name("sidebar-#{property.name}")
+      property_sidebar_tag = property_sidebar_tag.present? ? [property_sidebar_tag] : []
+    else
+      property_sidebar_tag = []
+    end
+    sidebar_content_previews = get_content_previews(sidebar_tag_name, property_sidebar_tag)
     
     sidebar_content_previews.contents.each do |content|
       case content.title
