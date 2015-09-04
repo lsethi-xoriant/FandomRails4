@@ -45,7 +45,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
   end
 
   def contest_identitycollection_update
-    user_params = params[:sites_braun_ic_application_controller_contest_identity_collection_user]
+    user_params = params[:contest_identity_collection_user]
 
     user_params[:first_name] = current_user.first_name if current_user.first_name.present?
     user_params[:last_name] = current_user.last_name if current_user.last_name.present?
