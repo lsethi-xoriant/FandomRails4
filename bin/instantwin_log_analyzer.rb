@@ -114,11 +114,10 @@ def main
       GROUP BY user_id;"
     ).to_a
 
-    credits_assigned_today = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
+    credits_assigned_by_interaction = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
-      WHERE timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
-      AND message = 'assigning reward to user' 
+      WHERE message = 'assigning reward to user' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
@@ -126,11 +125,11 @@ def main
     # Check that no one got more than one credit today
     puts "\n#{Time.now} - Check credits assignment"
 
-    more_than_one_credit_assigned = credits_assigned_today.to_a.select { |credits| credits["count"].to_i > 1 }
+    more_than_one_credit_assigned = credits_assigned_by_interaction.to_a.select { |credits| credits["count"].to_i > 1 }
     if more_than_one_credit_assigned.any?
-      message = "ERROR: On day #{today.strftime("%Y-%m-%d")} more than one credit has been assigned to the following users:"
+      message = "ERROR: More than one credit for same interaction has been assigned to the following users:"
       more_than_one_credit_assigned.each do |assigned|
-        message += "\n user #{assigned["user_id"]} got #{assigned["count"]} credits"
+        message += "\n user #{assigned["user_id"]} got #{assigned["count"]} credits for interaction #{assigned["interaction"]}"
       end
       puts message
       errors << message
