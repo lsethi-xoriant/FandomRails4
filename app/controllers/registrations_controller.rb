@@ -39,6 +39,7 @@ class RegistrationsController < Devise::RegistrationsController
       yield resource if block_given?
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up
+        change_global_user_id(resource.id)
         sign_up(resource_name, resource)
 
         cookies[:from_registration] = true 

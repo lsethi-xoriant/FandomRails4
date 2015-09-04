@@ -87,6 +87,7 @@ class SessionsController < Devise::SessionsController
     if user.errors.any?
       redirect_to_registration_page(user)
     else
+      change_global_user_id(resource.id)
       sign_in(user)
       fandom_play_login(user)
     
