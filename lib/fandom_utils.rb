@@ -45,6 +45,11 @@ module FandomUtils
       render template: 'application/url_mistyped'
       return
     end
+
+    # if request.present? && request.referrer.present? && request.referrer.include?("https://www.facebook.com")
+    #   session[:from_facebook] = true
+    # end
+
     unless $site.x_frame_options_header.nil?
       response.headers['X-Frame-Options'] = $site.x_frame_options_header
     end

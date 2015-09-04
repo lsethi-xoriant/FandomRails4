@@ -44,6 +44,11 @@ module ApplicationHelper
     TextHelperNamespace.new.truncate(*args)
   end
 
+  def get_top_slide_show_speed()
+    assets = Tag.find("assets")
+    assets.extra_fields["top_slide_show_speed"] || 4000
+  end
+
   def adjust_link_with_https(link)
     link.include?("https://") ? link : link.gsub("//", "https://")
   end
