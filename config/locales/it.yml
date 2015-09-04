@@ -215,6 +215,17 @@ it:
         even: "deve essere pari"
         not_saved: "Dati non salvati"
 
+  activemodel:
+    attributes:
+      contest_identity_collection_user:
+        receipt_number: "Numero di scontrino"
+        product_code: "Codice prodotto"
+        receipt_amount: "Importo"
+        birth_date: "Data di nascita"
+        date_of_emission: "Data di emissione"
+        time_of_emission: "Ora di emissione"
+        
+
   activerecord:
     errors:
       template:
@@ -284,6 +295,7 @@ it:
         number: "Numero"
         province: "Provincia"
         phone: "Telefono" 
+        birth_date: "Data di nascita"
   will_paginate:
     page_gap: "&hellip;"
 
