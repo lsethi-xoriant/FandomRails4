@@ -15,10 +15,16 @@ def main
   end
 
   config = YAML.load_file(ARGV[0].to_s)
-  conn = PG::Connection.open(config["db"])
   tenant = config["tenant"]
   events_is_tenant_specific = config["events_is_tenant_specific"]
   day_to_analyze = config["day_to_analyze"]
+
+  conn = PG::Connection.open(config["production_db"])
+  if events_is_tenant_specific
+    events_conn = conn
+  else
+    events_conn = PG::Connection.open(config["events_db"])
+  end
 
   conn.exec("SET search_path TO '#{tenant}';") if (tenant && events_is_tenant_specific)
 
@@ -55,7 +61,7 @@ def main
     instantwin_valid_to = DateTime.parse(instantwin["valid_to"])
 
     # Check that the right user won instantwin when he tried, if any
-    user_that_should_have_won = exec_query(conn, tenant, events_is_tenant_specific, 
+    user_that_should_have_won = exec_query(events_conn, tenant, events_is_tenant_specific, 
       "SELECT * FROM events 
       WHERE timestamp >= '#{instantwin["valid_from"]}' 
       AND message = 'instant win attempted' 
@@ -66,7 +72,7 @@ def main
     if user_that_should_have_won
       user_id_that_should_have_won = user_that_should_have_won["user_id"]
 
-      win_entry_event = exec_query(conn, tenant, events_is_tenant_specific, 
+      win_entry_event = exec_query(events_conn, tenant, events_is_tenant_specific, 
         "SELECT * FROM events 
         WHERE timestamp >= '#{instantwin["valid_from"]}' 
         AND timestamp <= '#{instantwin["valid_to"]}' 
@@ -92,14 +98,14 @@ def main
 
   if config["tenant"] == "braun_ic"
 
-    credits_assigned = exec_query(conn, tenant, events_is_tenant_specific, 
+    credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
 
-    credits_assigned_today = exec_query(conn, tenant, events_is_tenant_specific, 
+    credits_assigned_today = exec_query(events_conn, tenant, events_is_tenant_specific, 
       "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
       WHERE timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
@@ -124,7 +130,7 @@ def main
     # Check that users have not played more than they could afford
     puts "\n#{Time.now} - Check that number of attempts is less or equal credits gained"
 
-    instantwin_attempts = exec_query(conn, tenant, events_is_tenant_specific, 
+    instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'instant win attempted' 
       GROUP BY user_id;"
@@ -159,7 +165,7 @@ def main
 
     from = instantwin_start_date.beginning_of_day
     while from < [instantwin_end_date, DateTime.now.utc].min
-      wins = exec_query(conn, tenant, events_is_tenant_specific, 
+      wins = exec_query(events_conn, tenant, events_is_tenant_specific, 
         "SELECT COUNT(*) FROM events WHERE
         timestamp BETWEEN '#{from}' AND '#{from.end_of_day}' 
         AND message = 'assigning instant win to user';"
@@ -174,7 +180,7 @@ def main
       from = from + 1.day
     end
 
-    win_events = exec_query(conn, tenant, events_is_tenant_specific, 
+    win_events = exec_query(events_conn, tenant, events_is_tenant_specific, 
       "SELECT * FROM events WHERE message = 'assigning instant win to user';"
       ).to_a
 
