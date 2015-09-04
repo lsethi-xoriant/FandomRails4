@@ -173,7 +173,8 @@ module TagHelper
       tag_ids_to_exclude = exclude_tag_ids ? hidden_tags_ids + exclude_tag_ids : hidden_tags_ids
       tags = tags.where("tags.id not in (#{tag_ids_to_exclude.join(",")})")
     elsif hidden_tags_ids.any? && !tag_ids.empty?
-      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{(hidden_tags_ids + exclude_tag_ids).join(",")}) )" }.join(' INTERSECT ')
+      hidden_tags_ids = hidden_tags_ids + exclude_tag_ids if exclude_tag_ids.present?
+      tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id} AND tag_id not in (#{hidden_tags_ids.join(",")}))" }.join(' INTERSECT ')
       tags = tags.where("tags.id in (#{tag_ids_subselect})")
     elsif hidden_tags_ids.empty? && !tag_ids.empty?
       tag_ids_subselect = tag_ids.map { |tag_id| "(select tag_id from tags_tags where other_tag_id = #{tag_id})" }.join(' INTERSECT ')
