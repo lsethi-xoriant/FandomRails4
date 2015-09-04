@@ -122,12 +122,12 @@ def main
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
 
-    # Check that no one got more than one credit today
+    # Check that no one got more than one credit for the same interaction
     puts "\n#{Time.now} - Check credits assignment"
 
     more_than_one_credit_assigned = credits_assigned_by_interaction.to_a.select { |credits| credits["count"].to_i > 1 }
     if more_than_one_credit_assigned.any?
-      message = "ERROR: More than one credit for same interaction has been assigned to the following users:"
+      message = "ERROR: More than one credit for the same interaction has been assigned to the following users:"
       more_than_one_credit_assigned.each do |assigned|
         message += "\n user #{assigned["user_id"]} got #{assigned["count"]} credits for interaction #{assigned["interaction"]}"
       end
