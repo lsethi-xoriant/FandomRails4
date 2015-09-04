@@ -98,9 +98,18 @@ def main
 
   if config["tenant"] == "braun_ic"
 
+    instantwin = exec_query(conn, tenant, events_is_tenant_specific, true, 
+      "SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
+        SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
+      );"
+    ).first
+    instantwin_start_date = DateTime.parse(instantwin["valid_from"])
+    instantwin_end_date = DateTime.parse(instantwin["valid_to"])
+
     credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}'
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
@@ -154,14 +163,6 @@ def main
 
     # Check that there is one win for day
     puts "\n#{Time.now} - Check that there is one win for day"
-
-    instantwin = exec_query(conn, tenant, events_is_tenant_specific, true, 
-      "SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
-        SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
-      );"
-    ).first
-    instantwin_start_date = DateTime.parse(instantwin["valid_from"])
-    instantwin_end_date = DateTime.parse(instantwin["valid_to"])
 
     from = instantwin_start_date.beginning_of_day
     while from < [instantwin_end_date, DateTime.now.utc].min
@@ -250,7 +251,7 @@ def main
 
   if errors.any?
     body = "<ul><li>" + errors.map {|s| s.gsub("\n", "<br>\n")}.join("\n</li><li>")  + "</li></ul>"
-    send_email(ses, mail_from, mail_to, mail_subject, body) 
+    #send_email(ses, mail_from, mail_to, mail_subject, body) 
   end
 
   puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds"
