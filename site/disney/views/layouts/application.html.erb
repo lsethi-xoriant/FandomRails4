@@ -10,8 +10,8 @@
   <meta name="description" content="<%= @seo_info["meta_description"].html_safe rescue "Scopri Disney Channel Community, il luogo dove seguire le serie Disney, guardare i video dei momenti più divertenti, giocare, commentare e scoprire tanti contenuti esclusivi in anteprima!" %>">
   <meta name="keywords" content="<%= @seo_info["keywords"] rescue get_default_keywords() %>">
 
-  <meta property="og:title" content="<%= "#{@seo_info["title"]} | #{aux["current_property_info"]["title"]} Community" rescue "#{aux["current_property_info"]["title"]} Community" %>" /> 
-  <meta property="og:description" content="<%= @seo_info["meta_description"] rescue "Scopri Disney Channel Community, il luogo dove seguire le serie Disney, guardare i video dei momenti più divertenti, giocare, commentare e scoprire tanti contenuti esclusivi in anteprima!" %>" />  
+  <meta property="og:title" content="<%= "#{@seo_info["title"]} | #{aux["current_property_info"]["title"]} Community".html_safe rescue "#{aux["current_property_info"]["title"]} Community" %>".html_safe /> 
+  <meta property="og:description" content="<%= @seo_info["meta_description"].html_safe rescue "Scopri Disney Channel Community, il luogo dove seguire le serie Disney, guardare i video dei momenti più divertenti, giocare, commentare e scoprire tanti contenuti esclusivi in anteprima!" %>" />  
   <meta property="og:image" content="<%= @seo_info["meta_image"] rescue "https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/share/facebook.jpg" %>" />
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
