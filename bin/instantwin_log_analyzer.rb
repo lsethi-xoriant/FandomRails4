@@ -26,7 +26,7 @@ def main
     events_conn = PG::Connection.open(config["events_db"])
   end
 
-  conn.exec("SET search_path TO '#{tenant}';") if (tenant && events_is_tenant_specific)
+  conn.exec("SET search_path TO '#{tenant}';") if tenant
 
   rails_app_dir = config["rails_app_dir"]
   ses, mail_from = configure_ses(rails_app_dir, config)
@@ -41,7 +41,7 @@ def main
     today = DateTime.now.utc
   end
 
-  instantwins = exec_query(conn, tenant, events_is_tenant_specific, "SELECT * FROM instantwins WHERE valid_from <= '#{today}';")
+  instantwins = exec_query(conn, tenant, events_is_tenant_specific, true, "SELECT * FROM instantwins WHERE valid_from <= '#{today}';")
   instantwins_map = {}
   instantwins.each do |instantwin|
     instantwins_map[instantwin["id"]] = instantwin
@@ -54,14 +54,14 @@ def main
 
   instantwins_map.each do |instantwin_id, instantwin|
 
-    interaction_id = exec_query(conn, tenant, events_is_tenant_specific, "SELECT id FROM interactions WHERE resource_type = 'InstantwinInteraction' AND resource_id IN (
+    interaction_id = exec_query(conn, tenant, events_is_tenant_specific, true, "SELECT id FROM interactions WHERE resource_type = 'InstantwinInteraction' AND resource_id IN (
       SELECT instantwin_interaction_id FROM instantwins where id = #{instantwin_id});").first["id"].to_i
 
     instantwin_valid_from = DateTime.parse(instantwin["valid_from"])
     instantwin_valid_to = DateTime.parse(instantwin["valid_to"])
 
     # Check that the right user won instantwin when he tried, if any
-    user_that_should_have_won = exec_query(events_conn, tenant, events_is_tenant_specific, 
+    user_that_should_have_won = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT * FROM events 
       WHERE timestamp >= '#{instantwin["valid_from"]}' 
       AND message = 'instant win attempted' 
@@ -72,7 +72,7 @@ def main
     if user_that_should_have_won
       user_id_that_should_have_won = user_that_should_have_won["user_id"]
 
-      win_entry_event = exec_query(events_conn, tenant, events_is_tenant_specific, 
+      win_entry_event = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
         "SELECT * FROM events 
         WHERE timestamp >= '#{instantwin["valid_from"]}' 
         AND timestamp <= '#{instantwin["valid_to"]}' 
@@ -98,14 +98,14 @@ def main
 
   if config["tenant"] == "braun_ic"
 
-    credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, 
+    credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
 
-    credits_assigned_today = exec_query(events_conn, tenant, events_is_tenant_specific, 
+    credits_assigned_today = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
       WHERE timestamp BETWEEN '#{today.beginning_of_day}' AND '#{today.end_of_day}' 
@@ -130,7 +130,7 @@ def main
     # Check that users have not played more than they could afford
     puts "\n#{Time.now} - Check that number of attempts is less or equal credits gained"
 
-    instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, 
+    instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'instant win attempted' 
       GROUP BY user_id;"
@@ -155,7 +155,7 @@ def main
     # Check that there is one win for day
     puts "\n#{Time.now} - Check that there is one win for day"
 
-    instantwin = exec_query(conn, tenant, events_is_tenant_specific, 
+    instantwin = exec_query(conn, tenant, events_is_tenant_specific, true, 
       "SELECT valid_from, valid_to FROM call_to_actions WHERE id IN (
         SELECT call_to_action_id FROM interactions WHERE resource_type = 'InstantwinInteraction'
       );"
@@ -165,7 +165,7 @@ def main
 
     from = instantwin_start_date.beginning_of_day
     while from < [instantwin_end_date, DateTime.now.utc].min
-      wins = exec_query(events_conn, tenant, events_is_tenant_specific, 
+      wins = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
         "SELECT COUNT(*) FROM events WHERE
         timestamp BETWEEN '#{from}' AND '#{from.end_of_day}' 
         AND message = 'assigning instant win to user';"
@@ -180,7 +180,7 @@ def main
       from = from + 1.day
     end
 
-    win_events = exec_query(events_conn, tenant, events_is_tenant_specific, 
+    win_events = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT * FROM events WHERE message = 'assigning instant win to user';"
       ).to_a
 
@@ -208,7 +208,7 @@ def main
       users_winning_ids << win_event["user_id"].to_i
     end
     if users_winning_ids.any?
-      winners = exec_query(conn, tenant, events_is_tenant_specific, 
+      winners = exec_query(conn, tenant, events_is_tenant_specific, true, 
         "SELECT * FROM users WHERE id IN (#{users_winning_ids.to_a.join(',')}) ORDER BY birth_date DESC"
       )
       winners.each do |winner|
@@ -230,7 +230,7 @@ def main
 
       win_events.each do |win|
         instantwin_id = JSON.parse(win["data"])["instantwin_id"]
-        instantwin = exec_query(conn, tenant, events_is_tenant_specific, 
+        instantwin = exec_query(conn, tenant, events_is_tenant_specific, true, 
           "SELECT valid_from FROM instantwins WHERE id = #{instantwin_id};"
         ).first
         if instantwin
@@ -275,10 +275,10 @@ def send_email(ses, from, to, subject, body)
   )
 end
 
-def exec_query(conn, tenant, events_is_tenant_specific, query)
+def exec_query(conn, tenant, events_is_tenant_specific, is_db_production, query)
   if events_is_tenant_specific
     conn.exec(query)
-  else
+  elsif !is_db_production
     where_index = query =~ /where/i
     if where_index
       conn.exec(query.insert(where_index + 5, " tenant = '#{tenant}' AND"))
