@@ -23,7 +23,7 @@ def main
   conn.exec("SET search_path TO '#{tenant}';") if (tenant && events_is_tenant_specific)
 
   rails_app_dir = config["rails_app_dir"]
-  ses, mail_from = configure_ses(rails_app_dir)
+  ses, mail_from = configure_ses(rails_app_dir, config)
   mail_to = config["to"]
   mail_subject = config["subject"]
 
@@ -251,14 +251,13 @@ def main
 
 end
 
-def configure_ses(rails_app_dir)
-  deploy_settings = YAML.load_file("#{rails_app_dir}/config/deploy_settings.yml")
+def configure_ses(rails_app_dir, config)
   ses = AWS::SES::Base.new(
-    :access_key_id     => deploy_settings['mailer']['ses'][:access_key_id], 
-    :secret_access_key => deploy_settings['mailer']['ses'][:secret_access_key]
+    :access_key_id     => config['ses'][:access_key_id], 
+    :secret_access_key => config['ses'][:secret_access_key]
   )
 
-  [ses, deploy_settings['mailer']['default_from']]
+  [ses, config['default_from']]
 end
 
 def send_email(ses, from, to, subject, body)
