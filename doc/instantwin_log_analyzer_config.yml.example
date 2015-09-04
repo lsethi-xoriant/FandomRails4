@@ -13,3 +13,6 @@ to: example@example.com
 
 # Email subject
 subject: Instantwin log errors
+
+# Specific day to analyze
+# day_to_analyze: 2015-01-01
