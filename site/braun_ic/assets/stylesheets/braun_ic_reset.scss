@@ -15,6 +15,12 @@ body {
 }
 */
 
+.ctas__flexslider .flex-direction-nav .flex-prev,
+.ctas__flexslider .flex-direction-nav .flex-next {
+  opacity: 1 !important;
+  color: #fff !important;
+}
+
 .iw_registration {
   .modal-title {
     padding-top: 5px;
