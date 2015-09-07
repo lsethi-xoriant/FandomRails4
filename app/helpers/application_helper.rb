@@ -726,10 +726,9 @@ module ApplicationHelper
     $context_root ? "#{$context_root}-#{$site.main_reward_name}" : $site.main_reward_name
   end
   
-  def get_hidden_tag_ids
-    cache_short(get_hidden_tags_cache_key) do
-      Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? ", "hide-tag").references(:other_tags_tags_tags).map{|t| t.id}
-    end
+  def get_hidden_tag_ids(other_tag_names = [])
+    tag_names = ["hide-tag"] + other_tag_names
+    Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name IN (?)", tag_names).references(:other_tags_tags_tags).map{|t| t.id}
   end
 
   def is_ugc?(cta)

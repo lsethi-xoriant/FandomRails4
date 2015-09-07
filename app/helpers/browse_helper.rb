@@ -370,7 +370,10 @@ module BrowseHelper
   end
 
   def add_content_tags(tags, element)
-    hidden_tags_ids = get_hidden_tag_ids
+    tag_names = tags.map { |tag| tag.name }
+    remove_tags = tag_names.include?("widget") ? [] : ["widget"]
+
+    hidden_tags_ids = get_hidden_tag_ids(remove_tags)
     element.tags.each do |k, t|
       if !tags.has_key?(t) && !hidden_tags_ids.include?(t)
         tags[t] = Tag.find(t)
@@ -381,7 +384,7 @@ module BrowseHelper
 
   def get_category_tag_ids
     cache_short("category_tag_ids") do
-      hidden_tags_ids = get_hidden_tag_ids
+      hidden_tags_ids = get_hidden_tag_ids(["widget"])
       if hidden_tags_ids.any?
         Tag.where("extra_fields->>'thumbnail' <> '' and extra_fields->>'header_image' <> '' AND id not in (?)", hidden_tags_ids).map{|t| t.id}
       else

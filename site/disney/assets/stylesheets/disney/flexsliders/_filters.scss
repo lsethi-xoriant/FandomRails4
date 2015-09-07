@@ -6,6 +6,10 @@ $filters-item-margin-right: 15px;
     min-height: 30px;
 }
 
+.filters__flexslider-main-row-sp {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 .filters__flexslider-desktop, .filters__flexslider-mobile {
     background: none !important;
     border: none !important;

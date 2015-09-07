@@ -38,6 +38,31 @@ module GalleryHelper
       construct_cta_gallery_info(galleries, gallery_tag_ids)
     end
   end
+
+  def get_ugc_number_gallery_map(tag_ids)
+    gallery_calltoaction_id = "all"
+    cta_active_ids = get_ctas(nil, gallery_calltoaction_id).pluck(:id)
+    CallToActionTag.where(tag_id: tag_ids, call_to_action_id: cta_active_ids).group(:tag_id).count
+  end
+
+  def construct_cta_gallery_info(galleries, gallery_tag_ids)
+    ugc_number_in_gallery_map = get_ugc_number_gallery_map(gallery_tag_ids)
+    galleries_info = []
+    galleries.each do |gallery|
+      gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
+      galleries_info << {
+        cta: {
+          name: gallery.name,
+          id: gallery.id,
+          thumbnail_medium: gallery.thumbnail(:medium),
+          slug: gallery.slug,
+          title: gallery.title
+        },
+        count: ugc_number_in_gallery_map[gallery_tag.id]
+      }
+    end
+    galleries_info
+  end
   
   # this function is almost a duplicate of get_gallery_ctas_carousel, i leave previous function for retrocompatibility
   # after refactoring of gallery page gallery carousel will return a list of content preview instead of a custom data structure
