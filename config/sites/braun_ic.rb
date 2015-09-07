@@ -11,7 +11,7 @@ module Fandom
       init_ctas: 3,
       main_reward_name: "credit",
       instantwin_ticket_name: "credit",
-      periodicity_kinds: [],
+      periodicity_kinds: [PERIOD_KIND_DAILY],
       environment: { 'EMAIL_ADDRESS' => 'noreply@shado.tv' }
     )
   end
