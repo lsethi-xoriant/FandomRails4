@@ -33,6 +33,9 @@ def main
       conn.exec("DELETE FROM #{tenant}.easyadmin_stats where date >= '#{starting_date_string}'")
     end
   end
+
+  reward_cta_ids = conn.exec("SELECT id FROM #{tenant}.rewards WHERE call_to_action_id IS NOT NULL").field_values("id").map(&:to_i)
+
   starting_date = Date.parse(starting_date_string)
 
   puts "Starting date: #{starting_date}. \n#{(today - starting_date).to_i} days to iterate. \n"
@@ -49,8 +52,6 @@ def main
     violetta_cta_ids = conn.exec("SELECT call_to_action_id FROM #{tenant}.call_to_action_tags WHERE tag_id = #{violetta_property_tag_id}").field_values("call_to_action_id").map(&:to_i)
     violetta_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
     dc_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id NOT IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
-
-    reward_cta_ids = conn.exec("SELECT id FROM #{tenant}.rewards WHERE call_to_action_id IS NOT NULL").field_values("id").map(&:to_i)
 
     trivia_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'TRIVIA'").field_values("id").map(&:to_i)
     versus_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'VERSUS'").field_values("id").map(&:to_i)
@@ -93,32 +94,29 @@ def main
 
   else
 
-    create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date)
+    create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date, reward_cta_ids)
 
   end
 
 end
 
-def create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date)
+def create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date, reward_cta_ids)
 
   return if starting_date >= today
   iteration_time = Time.now
 
-  if ending_date.nil?
-    date_condition = "created_at > '#{starting_date}' AND created_at < '#{starting_date + 1}'"
-    puts "Creating entry for #{starting_date}... \n"
-  else
-    date_condition = "created_at > '#{starting_date}' AND created_at < '#{ending_date + 1}'"
-  end
+  date_condition = "created_at > '#{starting_date}' AND created_at < '#{starting_date + 1}'"
+  puts "Creating entry for #{starting_date}... \n"
   STDOUT.flush
 
-  period_ids = ending_date ? nil : conn.exec("SELECT id FROM #{tenant}.periods WHERE start_datetime > '#{starting_date - 1}' 
-                                                AND end_datetime < '#{starting_date + 2}' AND kind = 'daily'").field_values("id").map(&:to_i)
+  period_ids = conn.exec(
+    "SELECT id FROM #{tenant}.periods WHERE start_datetime > '#{starting_date - 1}' AND end_datetime < '#{starting_date + 2}' AND kind = 'daily'"
+  ).field_values("id").map(&:to_i)
 
   values = {} # set here specific project values
-  values = create_values_entry(conn, tenant, property_tags, period_ids, values)
+  values = create_values_entry(conn, tenant, property_tags, date_condition, period_ids, reward_cta_ids, values)
 
-  conn.exec("INSERT INTO #{tenant}.easyadmin_stats (date, values, created_at, updated_at) VALUES ('#{ending_date || starting_date}', '#{values.to_json}', now(), now())")
+  conn.exec("INSERT INTO #{tenant}.easyadmin_stats (date, values, created_at, updated_at) VALUES ('#{starting_date}', '#{values.to_json}', now(), now())")
 
   puts "Values for #{starting_date} created in #{Time.now - iteration_time}"
   starting_date += 1
@@ -126,7 +124,7 @@ def create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_
     puts "Values for #{starting_date.month - 1}-#{(starting_date - 1).year} created. \n"
     STDOUT.flush
   end
-  create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date) if (today - starting_date) > 0
+  create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date, reward_cta_ids) if (today - starting_date) > 0
 
 end
 
@@ -147,7 +145,7 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
   period_ids = ending_date ? nil : conn.exec("SELECT id FROM #{tenant}.periods WHERE start_datetime > '#{starting_date - 1}' 
                                                 AND end_datetime < '#{starting_date + 2}' AND kind = 'daily'").field_values("id").map(&:to_i)
 
-  users = conn.exec("SELECT id FROM #{tenant}.users WHERE #{date_condition}")
+  users = conn.exec("SELECT id FROM #{tenant}.users WHERE #{date_condition} AND anonymous_id IS NULL")
   total_users = users.count
   users_ids = users.field_values("id").map(&:to_i)
   social_reg_users = users_ids.empty? ? 0 : conn.exec("SELECT id FROM #{tenant}.authentications WHERE user_id IN (#{users_ids.join(', ')})").count
@@ -167,7 +165,7 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
     "social-reg-users" => social_reg_users, 
     "rewards" => rewards,
     "total-comments" => total_comments, 
-    "approved-comments" => approved_comments, 
+    "approved-comments" => approved_comments
   }
 
   if ending_date
@@ -204,7 +202,7 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
     })
   else
 
-    values = create_values_entry(conn, tenant, property_tags, period_ids, values)
+    values = create_values_entry(conn, tenant, property_tags, date_condition, period_ids, reward_cta_ids, values)
 
   end
 
@@ -229,6 +227,7 @@ def create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc
 end
 
 def count_rewards(conn, tenant, reward_cta_ids, date_condition, period_ids)
+  return 0 if reward_cta_ids.empty?
   if period_ids
     if period_ids.any?
       return conn.exec("SELECT id FROM #{tenant}.user_rewards WHERE reward_id IN (#{reward_cta_ids.join(', ')}) AND period_id in(#{period_ids.join(', ')})").count
@@ -291,16 +290,47 @@ def count_assigned_levels_and_badges(conn, tenant, date_condition, period_ids, p
   end
 end
 
-def create_values_entry(conn, tenant, property_tags, period_ids, values)
-  property_values_hash = {}
-  property_tags.each do |property_tag|
-    counter_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "counter"])
-    badge_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "badge"])
-    level_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "level"])
-    
+def create_values_entry(conn, tenant, property_tags, date_condition, period_ids, reward_cta_ids, values)
+  users = conn.exec("SELECT id FROM #{tenant}.users WHERE #{date_condition} AND anonymous_id IS NULL")
+  total_users = users.count
+  users_ids = users.field_values("id").map(&:to_i)
+  social_reg_users = users_ids.empty? ? 0 : conn.exec("SELECT id FROM #{tenant}.authentications WHERE user_id IN (#{users_ids.join(', ')})").count
+
+  total_comments = conn.exec("SELECT id FROM #{tenant}.user_comment_interactions WHERE #{date_condition}").count
+  approved_comments = conn.exec("SELECT id FROM #{tenant}.user_comment_interactions WHERE #{date_condition} AND approved = true").count
+
+  rewards = count_rewards(conn, tenant, reward_cta_ids, date_condition, period_ids)
+
+  property_values_hash = {
+    "total-users" => total_users, 
+    "social-reg-users" => social_reg_users, 
+    "rewards" => rewards,
+    "total-comments" => total_comments, 
+    "approved-comments" => approved_comments
+  }
+
+  if property_tags.any?
+
+    property_tags.each do |property_tag|
+      counter_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "counter"])
+      badge_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "badge"])
+      level_rewards = get_rewards_with_tags(conn, tenant, [property_tag["name"], "level"])
+
+      property_values_hash.merge!({ 
+        property_tag["name"] => get_property_counters_levels_badges_by_periods(conn, tenant, property_tag["name"], counter_rewards, badge_rewards, level_rewards, period_ids) 
+      })
+    end
+
+  else
+
+    counter_rewards = get_rewards_with_tags(conn, tenant, ["counter"])
+    badge_rewards = get_rewards_with_tags(conn, tenant, ["badge"])
+    level_rewards = get_rewards_with_tags(conn, tenant, ["level"])
+
     property_values_hash.merge!({ 
-      property_tag["name"] => get_property_counters_levels_badges_by_periods(conn, tenant, property_tag["name"], counter_rewards, badge_rewards, level_rewards, period_ids) 
+      "general" => get_property_counters_levels_badges_by_periods(conn, tenant, "general", counter_rewards, badge_rewards, level_rewards, period_ids) 
     })
+
   end
 
   values.merge(property_values_hash)
@@ -331,25 +361,32 @@ def get_property_counters_levels_badges_by_periods(conn, tenant, property, prope
     value = 0
     period_id_condition = ""
   end
-  conn.exec("SELECT rewards.name, #{value} AS value 
-    FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
-    WHERE #{period_id_condition} rewards.id IN (#{property_counter_reward_ids.join(', ')}) 
-    GROUP BY rewards.name").to_a.each do |res| counters_hash.merge!({ res["name"] => res["value"].to_i }) end
 
-  assigned_badges = 0
-  assigned_prefix = property == "disney-channel" ? "" : "#{property}-"
-  conn.exec("SELECT #{value} AS value 
-    FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
-    WHERE #{period_id_condition} rewards.id IN (#{property_badge_reward_ids.join(', ')}) 
-    GROUP BY rewards.name").to_a.each do |res| assigned_badges += res["value"].to_i end
-  counters_hash.merge!({ "#{assigned_prefix}assigned-badges" => assigned_badges })
+  if property_counter_reward_ids.any?
+    conn.exec("SELECT rewards.name, #{value} AS value 
+      FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
+      WHERE #{period_id_condition} rewards.id IN (#{property_counter_reward_ids.join(', ')}) 
+      GROUP BY rewards.name").to_a.each do |res| counters_hash.merge!({ res["name"] => res["value"].to_i }) end
+  end
 
-  assigned_levels = 0
-  conn.exec("SELECT #{value} AS value 
-    FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
-    WHERE #{period_id_condition} rewards.id IN (#{property_level_reward_ids.join(', ')}) 
-    GROUP BY rewards.name").to_a.each do |res| assigned_levels += res["value"].to_i end
-  counters_hash.merge!({ "#{assigned_prefix}assigned-levels" => assigned_levels })
+  if property_badge_reward_ids.any?
+    assigned_badges = 0
+    assigned_prefix = ["disney-channel", "general"].include?(property) ? "" : "#{property}-"
+    conn.exec("SELECT #{value} AS value 
+      FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
+      WHERE #{period_id_condition} rewards.id IN (#{property_badge_reward_ids.join(', ')}) 
+      GROUP BY rewards.name").to_a.each do |res| assigned_badges += res["value"].to_i end
+    counters_hash.merge!({ "#{assigned_prefix}assigned-badges" => assigned_badges })
+  end
+
+  if property_level_reward_ids.any?
+    assigned_levels = 0
+    conn.exec("SELECT #{value} AS value 
+      FROM #{tenant}.user_rewards RIGHT OUTER JOIN #{tenant}.rewards ON reward_id = rewards.id 
+      WHERE #{period_id_condition} rewards.id IN (#{property_level_reward_ids.join(', ')}) 
+      GROUP BY rewards.name").to_a.each do |res| assigned_levels += res["value"].to_i end
+    counters_hash.merge!({ "#{assigned_prefix}assigned-levels" => assigned_levels })
+  end
 
   counters_hash
 end

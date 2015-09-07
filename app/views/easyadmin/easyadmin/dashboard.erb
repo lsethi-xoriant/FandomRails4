@@ -89,7 +89,7 @@
           <div class="dashboard-stat primary" style="background-color: #E5412D;">
             <div class="details">
               <span class="content"> UTENTI REGISTRATI <br/> <%= "DAL #{@from_date_string} AL #{@to_date_string}" %> </span>
-              <span class="value-sm"><%= @total_users %>/<%= User.count %></span>
+              <span class="value-sm"><%= @total_users %>/<%= User.where(:anonymous_id => nil).count %></span>
             </div>
             <div class="visual">
               <i class="fa fa-user" style="color: #FFF"></i>
@@ -122,23 +122,28 @@
 
       <hr/>
 
-      <div id="property-stats" class="row">
-        <div class="col-md-3">
-          <h3>Statistiche per property</h3>
+      <% if @multiproperty %>
+
+        <div id="property-stats" class="row">
+          <div class="col-md-3">
+            <h3>Statistiche per property</h3>
+          </div>
         </div>
-      </div>
 
-      <hr/>
+        <hr/>
 
-      <ul id="property-selectors" class="nav nav-tabs">
-        <% @properties.each do |p| %>
-          <li>
-            <input class="btn btn-default" name="commit" type="submit" value="<%= p.upcase %>">
-          </li>
-        <% end %>
-      </ul>
+        <ul id="property-selectors" class="nav nav-tabs">
+          <% @properties.each do |p| %>
+            <li>
+              <input class="btn btn-default" name="commit" type="submit" value="<%= p.upcase %>">
+            </li>
+          <% end %>
+        </ul>
 
-      <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
+        <%= hidden_field_tag :property, @property_tag_name || $site.default_property.gsub("-", " ").split.map(&:capitalize).join(' ') %>
+
+      <% end %>
+
     <% end %> <!-- form-post -->
 
     <% if @property_values %>
@@ -167,20 +172,16 @@
 
   var total_users = <%= @total_users %>;
   var social_reg_users = <%= @social_reg_users %>;
-  // var property_trivia = <%= @property_trivia_answers %>
-  // var property_correct_trivia = <%= @property_trivia_correct_answers %>
 
   $(document).ready(function() {
-    // buildDonut();
     buildLine();
 
-    // $(window).resize(App.debounce(buildDonut, 325));
     $(window).resize(App.debounce(buildLine, 325));
 
     var commit = '<%= params['commit'] %>';
     if(commit != "APPLICA FILTRO") {
       if(commit == '')
-        selectedProperty = '<%= $site.default_property.upcase %>';
+        selectedProperty = '<%= ($site.default_property || "").upcase %>';
       else
         selectedProperty = commit
 
@@ -223,22 +224,6 @@
     });
 
   }
-
-  // function buildDonut() {
-  //   $('#trivia-donut-chart').empty();
-  //   if(property_trivia > 0) {
-  //     Morris.Donut({
-  //     element: 'trivia-donut-chart',
-  //           data: [
-  //               { label: 'Trivia risposti correttamente', value: Math.round(((property_correct_trivia * 100)/property_trivia)) },
-  //               { label: 'Trivia risposti erroneamente', value: Math.round((((property_trivia - property_correct_trivia) * 100)/property_trivia)) }
-  //           ],
-  //           hideHover: true,
-  //           colors: ["#f18c09", "#0b62a4"],
-  //           formatter: function (y) { return y + "%" }
-  //     });
-  //    }
-  // }
 
   $(function() {
     $("#datepicker_from_date").datepicker();

@@ -46,6 +46,9 @@ class Easyadmin::EasyadminController < ApplicationController
     authorize! :access, :dashboard
 
     if User.any? 
+
+      @multiproperty = get_property().present?
+
       if (params[:datepicker_from_date].blank? || params[:commit] == "Reset") 
         @from_date_string = (Time.now - 1.week).strftime('%m/%d/%Y')
       else
@@ -59,13 +62,16 @@ class Easyadmin::EasyadminController < ApplicationController
       @to_date = DateTime.strptime("#{@to_date_string} 23:59:59", '%m/%d/%Y %H:%M:%S')
 
       @properties = []
-      property_tag = Tag.find_by_name("property")
-      ((property_tag.extra_fields["ordering"] || "") rescue "").split(",").each do |ordered_property_name|
-        @properties << ordered_property_name
-      end
-      TagsTag.where(:other_tag_id => property_tag.id).pluck(:tag_id).each do |tag_id|
-        tag_name = Tag.find(tag_id).name
-        @properties << tag_name unless @properties.include?(tag_name)
+
+      if @multiproperty
+        property_tag = Tag.find_by_name("property")
+        ((property_tag.extra_fields["ordering"] || "") rescue "").split(",").each do |ordered_property_name|
+          @properties << ordered_property_name
+        end
+        TagsTag.where(:other_tag_id => property_tag.id).pluck(:tag_id).each do |tag_id|
+          tag_name = Tag.find(tag_id).name
+          @properties << tag_name unless @properties.include?(tag_name)
+        end
       end
 
       counters_hashes = get_counters_hashes(@from_date, @to_date, @properties)
@@ -97,12 +103,20 @@ class Easyadmin::EasyadminController < ApplicationController
 
       # Property values
       if !params[:commit]
-        @property_tag_name = @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
-        @property_values = @values[@properties.first] || {}
+        if @multiproperty
+          @property_tag_name = @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
+          @property_values = @values[@properties.first] || {}
+        else
+          @property_values = @values["general"]
+        end
       elsif params[:commit] == "APPLICA FILTRO"
-        @property_tag_name = params[:property] || @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
-        @property_values = @property_values || @values[@properties.first]
-      else
+        if @multiproperty
+          @property_tag_name = params[:property] || @properties.first.gsub("-", " ").split.map(&:capitalize).join(" ")
+          @property_values = @property_values || @values[@properties.first]
+        else
+          @property_values = @property_values || @values["general"]
+        end
+      else # property selected
         @property_tag_name = params[:commit].downcase.split.map(&:capitalize).join(" ") || ""
         @property_values = @values[params[:commit].downcase] || {}
       end
@@ -111,12 +125,12 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def get_counters_hashes(from_date, to_date, properties)
-    first_user_reward = UserReward.where("period_id IS NOT NULL").minimum(:created_at)
+    first_user_reward = UserReward.where("period_id IS NOT NULL").minimum(:created_at) || UserReward.minimum(:created_at)
     if first_user_reward
       migration_date = first_user_reward.to_date
       counter_values_hash = {}
       if to_date > migration_date
-        from_date = migration_date if from_date < migration_date
+        from_date = migration_date if from_date < migration_date && $site.id == "disney"
         EasyadminStats.where("date >= '#{from_date}' AND date <= '#{to_date}'").each_with_index do |stats, i|
           next_values_hash = stats.values
           counter_values_hash = i == 0 ? next_values_hash : sum_hashes_values(counter_values_hash, next_values_hash)
@@ -132,10 +146,15 @@ class Easyadmin::EasyadminController < ApplicationController
       # For levels and badges total count
       levels_extra_fields = Tag.find_by_name("level").extra_fields || {}
       badges_extra_fields = Tag.find_by_name("badge").extra_fields || {}
-      properties.each do |property|
-        assigned_prefix = property == $site.default_property ? "" : "#{property}-"
-        counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
-        counter_extra_fields_hash["#{assigned_prefix}assigned-badges"] = badges_extra_fields
+      if properties.any?
+        properties.each do |property|
+          assigned_prefix = property == $site.default_property ? "" : "#{property}-"
+          counter_extra_fields_hash["#{assigned_prefix}assigned-levels"] = levels_extra_fields
+          counter_extra_fields_hash["#{assigned_prefix}assigned-badges"] = badges_extra_fields
+        end
+      else
+        counter_extra_fields_hash["assigned-levels"] = levels_extra_fields
+        counter_extra_fields_hash["assigned-badges"] = badges_extra_fields
       end
 
       return counter_values_hash, counter_extra_fields_hash
@@ -155,7 +174,7 @@ class Easyadmin::EasyadminController < ApplicationController
       total_users += (hash_total_users[from_date] || 0).to_i
       social_reg_users += (hash_social_reg_users[from_date] || 0).to_i
       if (from - starting_date).to_i % days_interval == 0
-        user_week_list["#{ from_date }"] = { "tot" => total_users, "simple" => social_reg_users }
+        user_week_list["#{from_date}"] = { "tot" => total_users, "simple" => social_reg_users }
       end
       from = from + 1.day
     end
@@ -164,7 +183,7 @@ class Easyadmin::EasyadminController < ApplicationController
     to_date = to.in_time_zone(USER_TIME_ZONE_ABBREVIATION).strftime("%Y-%m-%d")
     total_users += (hash_total_users[to_date] || 0).to_i
     social_reg_users += (hash_social_reg_users[to_date] || 0).to_i
-    user_week_list["#{ from_date }"] = { "tot" => total_users, "simple" => social_reg_users }
+    user_week_list["#{from_date}"] = { "tot" => total_users, "simple" => social_reg_users }
 
     user_week_list
   end
@@ -174,6 +193,7 @@ class Easyadmin::EasyadminController < ApplicationController
       hash_total_users = {}
       User
         .select(["COUNT(*) AS total_users", "to_char(created_at, 'YYYY-MM-DD') AS date"])
+        .where("anonymous_id IS NULL")
         .group("to_char(created_at, 'YYYY-MM-DD')")
         .each do |values| 
           hash_total_users[values.date] = values.total_users
@@ -188,7 +208,7 @@ class Easyadmin::EasyadminController < ApplicationController
       User
         .select(["COUNT(users.id) AS social_reg_users", "to_char(users.created_at, 'YYYY-MM-DD') AS date"])
         .joins("LEFT OUTER JOIN authentications ON authentications.user_id = users.id")
-        .where("authentications.user_id IS NULL")
+        .where("anonymous_id IS NULL AND authentications.user_id IS NULL")
         .group("to_char(users.created_at, 'YYYY-MM-DD')")
         .each do |values|
           hash_social_reg_users[values.date] = values.social_reg_users
