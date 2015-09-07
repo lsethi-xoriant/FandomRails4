@@ -48,46 +48,67 @@ function SearchCtrl($scope, $window, $filter, $http, $sce) {
 	$scope.getColumnIndexElement = function(col, elem){
 		return ((elem - 1) * $scope.column_number) + col;
 	};
+
+	$scope.getUsers = function(val) {	
+		api_path = $scope.updatePathWithProperty("/users/autocomplete_search");
+    return $http.get(api_path, {
+      params: {
+        q: val,
+        sensor: false
+      }
+    }).then(function(response){
+      return response.data.map(function(item) {
+      	item.path = getUserPathForGallery(item);
+        return item;
+      });
+    });
+	};
+
+	function getUserPathForGallery(item) {
+		if($scope.aux.gallery_show) {
+			return "/gallery/" + $scope.aux.gallery_calltoaction.calltoaction.slug + "?user=" + item.id;
+		} else {
+			return "/gallery?user=" + item.id;
+		}
+	}
 	
 	$scope.getResults = function(val) {
-		
 		api_path = $scope.updatePathWithProperty("/browse/autocomplete_search");
-
-	    return $http.get(api_path, {
-	      params: {
-	        q: val,
-	        sensor: false
-	      }
-	    }).then(function(response){
-	      return response.data.map(function(item){
-	        return item;
-	      });
-	    });
-  	};
-  	
-  	$scope.load_more = function(offset){
-  		$http.get("/browse/full_search_load_more.json", {
-	      params: {
-	        offset: offset,
-	        query: $scope.query
-	      }
-	    }).then(function(response){
-	      $scope.contents = $scope.contents.concat(response.data);
-	      $scope.offset = offset + 12;
-	    });
-  	};
-  	
-  	$scope.load_more_recent = function(offset){
-  		$http.get("/browse/view_recent/load_more.json", {
-	      params: {
-	        offset: offset,
-	        per_page: $scope.per_page
-	      }
-	    }).then(function(response){
-	      $scope.contents = $scope.contents.concat(response.data.contents);
-	      $scope.offset = parseInt(offset) + 12;
-	      $scope.hasmore = response.data.has_more;
-	    });
-  	};
+    return $http.get(api_path, {
+      params: {
+        q: val,
+        sensor: false
+      }
+    }).then(function(response){
+      return response.data.map(function(item){
+        return item;
+      });
+    });
+	};
+	
+	$scope.load_more = function(offset){
+		$http.get("/browse/full_search_load_more.json", {
+      params: {
+        offset: offset,
+        query: $scope.query
+      }
+    }).then(function(response){
+      $scope.contents = $scope.contents.concat(response.data);
+      $scope.offset = offset + 12;
+    });
+	};
+	
+	$scope.load_more_recent = function(offset){
+		$http.get("/browse/view_recent/load_more.json", {
+      params: {
+        offset: offset,
+        per_page: $scope.per_page
+      }
+    }).then(function(response){
+      $scope.contents = $scope.contents.concat(response.data.contents);
+      $scope.offset = parseInt(offset) + 12;
+      $scope.hasmore = response.data.has_more;
+    });
+	};
 	
 }

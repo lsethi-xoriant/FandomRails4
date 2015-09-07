@@ -136,6 +136,8 @@ module DisneyHelper
         main_related_tag = get_tag_with_tag_about_call_to_action(calltoaction, "gallery").first
         gallery_tag = main_related_tag
 
+        gallery_ctas = get_gallery_ctas_carousel()
+
         if main_related_tag.present?
           params = {
             conditions: { 
@@ -279,9 +281,11 @@ module DisneyHelper
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "sidebar_info" => sidebar_info,
-      "gallery_calltoaction" => gallery_calltoaction_adjust_for_view,
       "gallery_tag" => gallery_tag_adjust_for_view
     }
+
+    aux["gallery_calltoaction"] = gallery_calltoaction_adjust_for_view if gallery_calltoaction_adjust_for_view.present?
+    aux["gallery_ctas"] = gallery_ctas if gallery_ctas.present?
 
     if other
       other.each do |key, value|

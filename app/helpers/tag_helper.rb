@@ -155,8 +155,10 @@ module TagHelper
   end
 
   def get_tags_with_tags(tag_ids, params = {})
+    tag_names = Tag.where(id: tag_ids).map { |tag| tag.name }
+    remove_tags = tag_names.include?("widget") ? [] : ["widget"]
 
-    hidden_tags_ids = get_hidden_tag_ids
+    hidden_tags_ids = get_hidden_tag_ids(remove_tags)
     if params[:conditions]
       exclude_tag_ids = params[:conditions][:exclude_tag_ids]
     end
@@ -236,7 +238,7 @@ module TagHelper
 
   def get_tags_with_tag(tag_name)
     cache_short get_tags_with_tag_cache_key(tag_name) do
-      hidden_tags_ids = get_hidden_tag_ids
+      hidden_tags_ids = get_hidden_tag_ids(["widget"])
       if hidden_tags_ids.any?
         Tag.joins(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND tags.id not in (?)", tag_name, hidden_tags_ids).to_a
       else
@@ -249,7 +251,7 @@ module TagHelper
     conditions = construct_conditions_from_query(query, "tags.title")
     category_tag_ids = get_category_tag_ids()
     if conditions.empty?
-      tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").references(:tags_tags).to_a
+      tags = Tag.includes(:tags_tags => :other_tag ).where("tags.id in (?)", category_tag_ids).where("other_tags_tags_tags.name = ?", tag_name).order("tags.created_at DESC").references(:tags_tags).to_a
     else
       tags = Tag.includes(:tags_tags => :other_tag ).where("other_tags_tags_tags.name = ? AND (#{conditions}) AND (tags.id in (?))", tag_name, category_tag_ids).references(:tags_tags).order("tags.created_at DESC").to_a
     end

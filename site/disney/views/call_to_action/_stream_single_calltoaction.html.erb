@@ -1,3 +1,7 @@
+<div class="row main-row filters__flexslider-main-row filters__flexslider-main-row-sp" ng-if="calltoaction_info.calltoaction.user">
+  <%= render partial: "/gallery/launchers" %>    
+</div>
+
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user == null">
   <div class="col-xs-6 cta__miniformat-col">
     <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
@@ -26,9 +30,11 @@
   </div>
 </div>
 
+<!--
 <div class="back-to-gallery__container hidden-xs" ng-if="calltoaction_info.calltoaction.user">
   <a class="back-to-gallery__container-a" href="/gallery/{{aux.gallery_calltoaction.slug}}" ng-style="{'color': aux.gallery_calltoaction.extra_fields.back_color}"><span class="glyphicon glyphicon-chevron-left"></span>Torna alla Gallery</a>
 </div>
+-->
 
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user != null">
   <div class="col-xs-12">
@@ -76,7 +82,9 @@
   </div>
 </div>
 
-<%= render partial: "/gallery/gallery_description" %>
+<div style="margin-bottom: 30px;">
+  <%= render partial: "/gallery/gallery_description" %>
+</div>
 
 <div class="row main-row">
   <div class="col-md-7 cta_left-col">

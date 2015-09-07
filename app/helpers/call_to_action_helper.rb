@@ -13,12 +13,9 @@ module CallToActionHelper
   end
 
   def get_sidebar_info(sidebar_tag_name, property)
-    if property.present?
-      property_sidebar_tag = Tag.find_by_name("sidebar-#{property.name}")
-      property_sidebar_tag = property_sidebar_tag.present? ? [property_sidebar_tag] : []
-    else
-      property_sidebar_tag = []
-    end
+    widget_tag = Tag.find("widget")
+    property_sidebar_tag = property.present? ? [property, widget_tag] : [widget_tag]
+
     sidebar_content_previews = get_content_previews(sidebar_tag_name, property_sidebar_tag)
     
     sidebar_content_previews.contents.each do |content|

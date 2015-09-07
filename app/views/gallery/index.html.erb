@@ -2,7 +2,8 @@
   <div class="row main-row filters__flexslider-main-row">
     <%= render partial: "/gallery/launchers", locals: { current_gallery_id: nil }  %>    
   </div>
-  <div class="row main-row main-row__covers">
+  <%= render partial: "/gallery/users_filter" %>
+  <div class="row main-row main-row__covers_v2">
     <div class="col-xs-12">
       <%= render partial: "application/ordering" %>  
       <div ng-if="!ordering_in_progress" class="row">

@@ -4,22 +4,10 @@
     <ul class="slides">
       <li class="text-center filters__flexslider-desktop-item" id="{{gallery.cta.id}}" ng-repeat="gallery in aux.gallery_ctas">
         <%= light_link_to("/gallery/{{gallery.cta.slug}}", class: "filters__flexslider-a") do %>
-          <img class="filters__flexslider-image" ng-class="{'filters__flexslider-image--active': aux.current_gallery_id == gallery.cta.id}" ng-src="{{gallery.cta.thumbnail_medium}}">  
+          <img class="filters__flexslider-image" ng-class="{'filters__flexslider-image--active': aux.gallery_calltoaction.calltoaction.id == gallery.cta.id}" ng-src="{{gallery.cta.thumbnail_medium}}">  
           <p class="filters__title--gallery">{{gallery.cta.title}}</p>
           <p class="filters__title--gallery-counter">{{gallery.count}} contenuti</p>
         <% end %>
-      </li>
-      <li class="text-center filters__flexslider-desktop-item">
-          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg">  
-          <p class="filters__title--gallery">Coming soon</p> 
-      </li>
-      <li class="text-center filters__flexslider-desktop-item">
-          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon2.jpg">  
-          <p class="filters__title--gallery">Coming soon</p> 
-      </li>
-      <li class="text-center filters__flexslider-desktop-item">
-          <img class="filters__flexslider-image" src="https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon3.jpg">  
-          <p class="filters__title--gallery">Coming soon</p> 
       </li>
     </ul>
   </div>
@@ -33,21 +21,6 @@
             <p class="filters__title--gallery-counter">{{gallery.count}} contenuti</p>
           </div>
         <% end %>
-      </li>
-      <li class="text-center filters__flexslider-mobile-item">
-        <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg')">
-          <p class="filters__title--gallery">Coming soon</p>
-        </div>
-      </li>
-      <li class="text-center filters__flexslider-mobile-item">
-        <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon2.jpg')">
-          <p class="filters__title--gallery">Coming soon</p>
-        </div>
-      </li>
-      <li class="text-center filters__flexslider-mobile-item">
-        <div class="filters__gallery-item" style="background-image: url('https://s3-eu-west-1.amazonaws.com/disney.live.dc.fandomlab.com/placeholder/gallery/comingsoon1.jpg')">
-          <p class="filters__title--gallery">Coming soon</p>
-        </div>
       </li>
     </ul>
   </div>

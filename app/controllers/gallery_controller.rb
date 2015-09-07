@@ -33,21 +33,28 @@ class GalleryController < ApplicationController
   end
 
   def index
-    @galleries_cta
 
-    params = adjust_params_for_gallery(params)
+    _params = adjust_params_for_gallery(params)
+
+    if(_params[:user])
+      user = User.find(_params[:user])
+      user = {
+        id: user.id,
+        username: user.username
+      }
+    end
 
     gallery_calltoaction_id = "all"
-    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, _params[:user])
 
-    params["page_elements"] = ["like", "comment", "share"]
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+    _params["page_elements"] = ["like", "comment", "share"]
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, _params, $site.init_ctas)
 
     @aux_other_params = { 
-      "gallery" => true, 
+      "gallery_calltoaction" => true, 
       "gallery_index" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user],
+      "gallery_user" => user,
       "gallery_ctas" => get_gallery_ctas_carousel
     }
 
@@ -59,12 +66,6 @@ class GalleryController < ApplicationController
     current_gallery = galleries[index]
     galleries.delete_at(index)
     galleries.unshift(current_gallery)
-  end
-  
-  def get_ugc_number_gallery_map(tag_ids)
-    gallery_calltoaction_id = "all"
-    cta_active_ids = get_ctas(nil, gallery_calltoaction_id).pluck(:id)
-    CallToActionTag.where(tag_id: tag_ids, call_to_action_id: cta_active_ids).group(:tag_id).count
   end
   
   def show
@@ -80,25 +81,31 @@ class GalleryController < ApplicationController
 
     gallery_calltoaction_id = cta.id
 
-    params = adjust_params_for_gallery(params, gallery_calltoaction_id)
+    _params = adjust_params_for_gallery(params, gallery_calltoaction_id)
+    if(_params[:user])
+      user = User.find(_params[:user])
+      user = {
+        id: user.id,
+        username: user.username
+      }
+    end
 
-    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, _params[:user])
 
     params["page_elements"] = ["like", "comment", "share"]
     gallery_tag_name = @gallery_tag.name
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, params, $site.init_ctas)
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, _params, $site.init_ctas)
           
     gallery_tag_adjust_for_view = build_gallery_tag_for_view(@gallery_tag, cta, upload_interaction)
 
     @aux_other_params = { 
       "upload_interaction_resource" => upload_interaction.resource,
-      "gallery" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
+      "gallery_calltoaction" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user],
+      "gallery_user" => user,
       gallery_tag: gallery_tag_adjust_for_view,
-      "gallery_ctas" => get_gallery_ctas_carousel,
-      "current_gallery_id" => cta.id
+      "gallery_ctas" => get_gallery_ctas_carousel
     }
   end
 
@@ -115,25 +122,6 @@ class GalleryController < ApplicationController
     else
       get_user_ctas_with_tag(gallery.name)
     end
-  end
-  
-  def construct_cta_gallery_info(galleries, gallery_tag_ids)
-    ugc_number_in_gallery_map = get_ugc_number_gallery_map(gallery_tag_ids)
-    galleries_info = []
-    galleries.each do |gallery|
-      gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
-      galleries_info << {
-        cta: {
-          name: gallery.name,
-          id: gallery.id,
-          thumbnail_medium: gallery.thumbnail(:medium),
-          slug: gallery.slug,
-          title: gallery.title
-        },
-        count: ugc_number_in_gallery_map[gallery_tag.id]
-      }
-    end
-    galleries_info
   end
   
   def how_to

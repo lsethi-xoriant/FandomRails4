@@ -13,6 +13,38 @@ body {
   color: red;
 }
 
+.gallery_user_filter-a {
+  text-decoration: none !important;
+}
+
+.fa-chevron-down {
+  top: 0 !important;
+}
+
+.gallery_user_filter-text {
+  line-height: 75px; 
+  font-size: 18px; 
+  color: #000;
+  text-decoration: none !important;
+}
+
+.gallery_user_filter-user_active .gallery_user_filter-text, .gallery_user_filter-all_active .gallery_user_filter-text {
+  color: #fff !important;
+}
+
+.gallery_user_filter-text-left {
+  padding-left: 45px;
+}
+
+.gallery_user_filter-right {
+  padding-right: 45px;
+}
+
+.gallery_user_filter-col {
+  height: 75px; 
+  background-color: whitesmoke;
+}
+
 .disney-js-mh-footer-logo {
     background: url("http://navbar.disneyinternational.com/disney-logo-dark.png") no-repeat scroll 0 0 / contain rgba(0, 0, 0, 0) !important;
 }
@@ -61,6 +93,13 @@ p{
   background-position: left top;
   background-repeat: no-repeat;
   background-size: 100% auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-bottom: 0;
+}
+
+.main-row__covers_v2 {
+  padding-top: 25px;
+  background-color: #ffffff;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 0;
 }

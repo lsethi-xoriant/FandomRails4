@@ -324,6 +324,8 @@ Fandom::Application.routes.draw do
   post "/ugc/create/:cta_id/:interaction_id",                :to => "call_to_action#upload", defaults: { format: 'json' }
   get "/upload", :to => "call_to_action#upload"
   
+  get "/users/autocomplete_search", :to => "browse#autocomplete_user_search", defaults: { format: 'json' }
+
   get "/browse", :to => "browse#index"
   post "/browse/full_search", :to => "browse#full_search"
   get "/browse/full_search_load_more", :to => "browse#full_search_load_more"
