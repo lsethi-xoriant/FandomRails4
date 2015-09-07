@@ -16,85 +16,89 @@ def main
 
   config = YAML.load_file(ARGV[0].to_s)
   conn = PG::Connection.open(config["db"])
-  tenant = config["tenant"]
+  tenant_list = config["tenant"].gsub(" ", "").split(",")
 
-  property_tags = get_tags_with_tag(conn, tenant, "property")
+  tenant_list.each do |tenant|
 
-  if config["starting_date"]
-    starting_date_string = config["starting_date"]
-  else
-    stats_number = conn.exec("SELECT COUNT(*) FROM #{tenant}.easyadmin_stats").values[0][0].to_i
-    if stats_number == 0
-      starting_date_string = conn.exec("SELECT MIN(created_at) FROM #{tenant}.users").values[0][0]
+    property_tags = get_tags_with_tag(conn, tenant, "property")
+
+    if config["starting_date"]
+      starting_date_string = config["starting_date"]
     else
-      days_shifting = [stats_number, 6].min
-      starting_date_string = (Date.parse(conn.exec("SELECT MAX(date) FROM #{tenant}.easyadmin_stats").values[0][0]) - days_shifting).to_s
-      puts "Deleting stats since #{starting_date_string} in order to recreate them..."
-      conn.exec("DELETE FROM #{tenant}.easyadmin_stats where date >= '#{starting_date_string}'")
+      stats_number = conn.exec("SELECT COUNT(*) FROM #{tenant}.easyadmin_stats").values[0][0].to_i
+      if stats_number == 0
+        starting_date_string = conn.exec("SELECT MIN(created_at) FROM #{tenant}.users").values[0][0]
+      else
+        days_shifting = [stats_number, 6].min
+        starting_date_string = (Date.parse(conn.exec("SELECT MAX(date) FROM #{tenant}.easyadmin_stats").values[0][0]) - days_shifting).to_s
+        puts "Deleting stats for tenant \"#{tenant}\" since #{starting_date_string} in order to recreate them..."
+        conn.exec("DELETE FROM #{tenant}.easyadmin_stats where date >= '#{starting_date_string}'")
+      end
     end
-  end
 
-  reward_cta_ids = conn.exec("SELECT id FROM #{tenant}.rewards WHERE call_to_action_id IS NOT NULL").field_values("id").map(&:to_i)
+    reward_cta_ids = conn.exec("SELECT id FROM #{tenant}.rewards WHERE call_to_action_id IS NOT NULL").field_values("id").map(&:to_i)
 
-  starting_date = Date.parse(starting_date_string)
+    starting_date = Date.parse(starting_date_string)
 
-  puts "Starting date: #{starting_date}. \n#{(today - starting_date).to_i} days to iterate. \n"
+    puts "Starting date: #{starting_date}. \n#{(today - starting_date).to_i} days to iterate. \n"
 
-  if tenant == "disney"
+    if tenant == "disney"
 
-    level_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'level'").values[0][0]
-    badge_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'badge'").values[0][0]
+      level_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'level'").values[0][0]
+      badge_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'badge'").values[0][0]
 
-    level_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{level_tag_id}").field_values("reward_id").map(&:to_i)
-    badge_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{badge_tag_id}").field_values("reward_id").map(&:to_i)
-    
-    violetta_property_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'violetta'").values[0][0]
-    violetta_cta_ids = conn.exec("SELECT call_to_action_id FROM #{tenant}.call_to_action_tags WHERE tag_id = #{violetta_property_tag_id}").field_values("call_to_action_id").map(&:to_i)
-    violetta_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
-    dc_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id NOT IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
+      level_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{level_tag_id}").field_values("reward_id").map(&:to_i)
+      badge_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{badge_tag_id}").field_values("reward_id").map(&:to_i)
+      
+      violetta_property_tag_id = conn.exec("SELECT id FROM #{tenant}.tags WHERE name = 'violetta'").values[0][0]
+      violetta_cta_ids = conn.exec("SELECT call_to_action_id FROM #{tenant}.call_to_action_tags WHERE tag_id = #{violetta_property_tag_id}").field_values("call_to_action_id").map(&:to_i)
+      violetta_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
+      dc_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE call_to_action_id NOT IN (#{violetta_cta_ids.join(', ')})").field_values("id").map(&:to_i)
 
-    trivia_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'TRIVIA'").field_values("id").map(&:to_i)
-    versus_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'VERSUS'").field_values("id").map(&:to_i)
-    trivia_type_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE resource_type = 'Quiz' 
-                                              AND resource_id IN (#{trivia_ids.join(', ')})").field_values("id").map(&:to_i)
-    versus_type_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE resource_type = 'Quiz' 
-                                              AND resource_id IN (#{versus_ids.join(', ')})").field_values("id").map(&:to_i)
-    play_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Play")
-    like_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Like")
-    check_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Check")
-    share_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Share")
-    download_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Download")
-    vote_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Vote")
+      trivia_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'TRIVIA'").field_values("id").map(&:to_i)
+      versus_ids = conn.exec("SELECT id FROM #{tenant}.quizzes WHERE quiz_type = 'VERSUS'").field_values("id").map(&:to_i)
+      trivia_type_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE resource_type = 'Quiz' 
+                                                AND resource_id IN (#{trivia_ids.join(', ')})").field_values("id").map(&:to_i)
+      versus_type_interaction_ids = conn.exec("SELECT id FROM #{tenant}.interactions WHERE resource_type = 'Quiz' 
+                                                AND resource_id IN (#{versus_ids.join(', ')})").field_values("id").map(&:to_i)
+      play_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Play")
+      like_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Like")
+      check_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Check")
+      share_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Share")
+      download_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Download")
+      vote_type_interaction_ids = type_interaction_ids_array(conn, tenant, "Vote")
 
-    dc_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id <> #{violetta_property_tag_id}").field_values("reward_id").map(&:to_i)
-    violetta_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{violetta_property_tag_id}").field_values("reward_id").map(&:to_i)
+      dc_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id <> #{violetta_property_tag_id}").field_values("reward_id").map(&:to_i)
+      violetta_reward_ids = conn.exec("SELECT reward_id FROM #{tenant}.reward_tags WHERE tag_id = #{violetta_property_tag_id}").field_values("reward_id").map(&:to_i)
 
-    dc_level_reward_ids = dc_reward_ids & level_reward_ids
-    dc_badges_reward_ids = dc_reward_ids & badge_reward_ids
-    violetta_level_reward_ids = violetta_reward_ids & level_reward_ids
-    violetta_badges_reward_ids = violetta_reward_ids & badge_reward_ids
+      dc_level_reward_ids = dc_reward_ids & level_reward_ids
+      dc_badges_reward_ids = dc_reward_ids & badge_reward_ids
+      violetta_level_reward_ids = violetta_reward_ids & level_reward_ids
+      violetta_badges_reward_ids = violetta_reward_ids & badge_reward_ids
 
-    migration_date = Date.parse(conn.exec("SELECT MIN(created_at) FROM #{tenant}.user_rewards WHERE period_id IS NOT NULL").values[0][0])
+      migration_date = Date.parse(conn.exec("SELECT MIN(created_at) FROM #{tenant}.user_rewards WHERE period_id IS NOT NULL").values[0][0])
 
-    if starting_date <= migration_date
-      puts "Migration date: #{migration_date}. \nCreating values entry until migration... \n"
-      STDOUT.flush
+      if starting_date <= migration_date
+        puts "Migration date: #{migration_date}. \nCreating values entry until migration... \n"
+        STDOUT.flush
 
-      create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc_interaction_ids, violetta_interaction_ids, level_reward_ids, badge_reward_ids, reward_cta_ids, trivia_type_interaction_ids, versus_type_interaction_ids, play_type_interaction_ids, 
-        like_type_interaction_ids, check_type_interaction_ids, share_type_interaction_ids, download_type_interaction_ids, vote_type_interaction_ids, dc_level_reward_ids, dc_badges_reward_ids, violetta_level_reward_ids, violetta_badges_reward_ids, starting_date, migration_date)
-      puts "Time elapsed: #{Time.now - start_time}s"
-      STDOUT.flush
-      starting_date = migration_date
+        create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc_interaction_ids, violetta_interaction_ids, level_reward_ids, badge_reward_ids, reward_cta_ids, trivia_type_interaction_ids, versus_type_interaction_ids, play_type_interaction_ids, 
+          like_type_interaction_ids, check_type_interaction_ids, share_type_interaction_ids, download_type_interaction_ids, vote_type_interaction_ids, dc_level_reward_ids, dc_badges_reward_ids, violetta_level_reward_ids, violetta_badges_reward_ids, starting_date, migration_date)
+        puts "Time elapsed: #{Time.now - start_time}s"
+        STDOUT.flush
+        starting_date = migration_date
+      end
+        create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc_interaction_ids, violetta_interaction_ids, level_reward_ids, badge_reward_ids, reward_cta_ids, trivia_type_interaction_ids, versus_type_interaction_ids, play_type_interaction_ids, 
+          like_type_interaction_ids, check_type_interaction_ids, share_type_interaction_ids, download_type_interaction_ids, vote_type_interaction_ids, dc_level_reward_ids, dc_badges_reward_ids, violetta_level_reward_ids, violetta_badges_reward_ids, starting_date)
+
+      puts "All easyadmin_stats values created."
+      puts "Total time elapsed: #{Time.now - start_time}s"
+
+    else
+
+      create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date, reward_cta_ids)
+
     end
-      create_disney_easyadmin_stats_entries(conn, tenant, property_tags, today, dc_interaction_ids, violetta_interaction_ids, level_reward_ids, badge_reward_ids, reward_cta_ids, trivia_type_interaction_ids, versus_type_interaction_ids, play_type_interaction_ids, 
-        like_type_interaction_ids, check_type_interaction_ids, share_type_interaction_ids, download_type_interaction_ids, vote_type_interaction_ids, dc_level_reward_ids, dc_badges_reward_ids, violetta_level_reward_ids, violetta_badges_reward_ids, starting_date)
-
-    puts "All easyadmin_stats values created."
-    puts "Total time elapsed: #{Time.now - start_time}s"
-
-  else
-
-    create_easyadmin_stats_entries(conn, tenant, property_tags, today, starting_date, reward_cta_ids)
 
   end
 
