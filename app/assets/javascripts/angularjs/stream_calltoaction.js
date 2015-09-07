@@ -1236,12 +1236,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function otherParamsForGallery() {
-    if($scope.aux.gallery) {
+    if($scope.aux.gallery_calltoaction) {
       other_params = new Object();
       other_params.gallery = new Object();
-      other_params.gallery.user = $scope.aux.gallery_user;
-      if($scope.aux.gallery.calltoaction) {
-        other_params.gallery.calltoaction_id = $scope.aux.gallery.calltoaction.id;
+      other_params.gallery.user = $scope.aux.gallery_user.id;
+      if($scope.aux.gallery_calltoaction.calltoaction) {
+        other_params.gallery.calltoaction_id = $scope.aux.gallery_calltoaction.calltoaction.id;
       } else {
         other_params.gallery.calltoaction_id = "all";
       }

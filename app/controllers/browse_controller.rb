@@ -217,6 +217,23 @@ class BrowseController < ApplicationController
       format.json { render :json => results.to_a.to_json }
     end
   end
+
+  def autocomplete_user_search
+    term = params[:q]
+    log_info("autocomplete", { query: term } )
+    users = User.where("username ILIKE ?", "%#{term}%").limit(8)
+    users_for_search = []
+    users.each do |user|
+      users_for_search << {
+        id: user.id,
+        username: user.username,
+        avatar: user_avatar(user)
+      }
+    end
+    respond_to do |format|
+      format.json { render :json => users_for_search.to_json }
+    end
+  end
   
   def get_search_cache_key_params(term)
     term

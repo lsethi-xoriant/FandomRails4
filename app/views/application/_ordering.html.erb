@@ -1,26 +1,12 @@
 <div class="row">
   <div class="col-xs-6">
-    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Tutti <span style="font-size: 18px" ng-if="aux.gallery_calltoactions_count != null">- {{aux.gallery_calltoactions_count}} contenuti</span></h2>
-    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'comment'">Più commentati</h2>
-    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'view'">Più visti</h2>
+    <h2 ng-if="calltoaction_ordering == 'recent' && !aux.gallery_user" class="cta-cover__column-title">Tutti <span style="font-size: 18px" ng-if="aux.gallery_calltoactions_count != null">- {{aux.gallery_calltoactions_count}} contenuti</span></h2>
+    <h2 ng-if="calltoaction_ordering == 'recent' && aux.gallery_user" class="cta-cover__column-title" ng-if="calltoaction_ordering == 'recent'">Contenuti di {{aux.gallery_user.username}}</span></h2>
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'comment'"><span ng-if="aux.gallery_user">{{aux.gallery_user.username}} - </span>Più commentati</h2>
+    <h2 class="cta-cover__column-title" ng-if="calltoaction_ordering == 'view'"><span ng-if="aux.gallery_user">{{aux.gallery_user.username}} - </span>Più visti</h2>
   </div>
   <div class="col-xs-6 text-right">
     <div class="dropdown">
-      <% if current_user && params[:user] %>
-        <a ng-if="aux.gallery_index" class="btn btn-primary active hidden-xs" href="/gallery">
-          I MIEI CONTENUTI
-        </a>
-        <a ng-if="aux.gallery_show" class="btn btn-primary active hidden-xs" href="/gallery/{{aux.gallery.calltoaction.slug}}">
-          I MIEI CONTENUTI
-        </a>
-      <% elsif current_user && !params[:user] %>
-        <a ng-if="aux.gallery_index" class="btn btn-primary hidden-xs" href="/gallery?user=<%= current_user.id %>">
-          I MIEI CONTENUTI
-        </a>
-        <a ng-if="aux.gallery_show" class="btn btn-primary hidden-xs" href="/gallery/{{aux.gallery.calltoaction.slug}}?user=<%= current_user.id %>">
-          I MIEI CONTENUTI
-        </a>
-      <% end %>
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
         Ordina
         <span class="fa fa-chevron-down"></span>
@@ -31,25 +17,5 @@
         <li role="presentation"><a role="menuitem" href="javascript: void(0)" ng-click="updateOrdering('view')">Più visti</a></li>
       </ul>
     </div>
-  </div>
-</div>
-
-<div class="row visible-xs" style="margin-bottom: 25px;">
-  <div class="col-xs-12">
-    <% if current_user && params[:user] %>
-        <a ng-if="aux.gallery_index" class="btn btn-primary btn-block active" href="/gallery">
-          I MIEI CONTENUTI
-        </a>
-        <a ng-if="aux.gallery_show" class="btn btn-primary btn-block active" href="/gallery/{{aux.gallery.calltoaction.slug}}">
-          I MIEI CONTENUTI
-        </a>
-      <% elsif current_user && !params[:user] %>
-        <a ng-if="aux.gallery_index" class="btn btn-primary btn-block" href="/gallery?user=<%= current_user.id %>">
-          I MIEI CONTENUTI
-        </a>
-        <a ng-if="aux.gallery_show" class="btn btn-primary btn-block" href="/gallery/{{aux.gallery.calltoaction.slug}}?user=<%= current_user.id %>">
-          I MIEI CONTENUTI
-        </a>
-      <% end %>
   </div>
 </div>

@@ -1,0 +1,10 @@
+<div class="row ctas__search gallery_user_filter-right" ng-controller="SearchCtrl" ng-init="init({})">
+  <%= form_tag("", { method: "post", role: "search", id: "form-user-search" }) do %>
+    <div class="col-sm-12">
+      <input id="user-search" autocomplete="off" typeahead="result for results in getUsers($viewValue) | limitTo:8" typeahead-min-length="3" typeahead-template-url="itemTpl.html" ng-model="search.selected" name="query" type="text" class="form-control search-bar__input" placeholder="Cerca per utente" style="width: 100%;" typeahead-wait-ms="<%= AUTOCOMPLETE_DELAY %>">
+    </div>
+  <% end %> 
+  <script type="text/ng-template" id="itemTpl.html">
+    <%= render partial: "/gallery/search_template" %>
+  </script>
+</div>

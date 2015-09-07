@@ -1,0 +1,24 @@
+<div id="gallery_user_filter" class="row text-center" ng-if="aux.gallery_calltoaction">
+  <div class="col-sm-2 gallery_user_filter-col <%= "gallery_user_filter-all_active" if !(current_user && params[:user].to_i == current_user.id) %>">
+    <a class="gallery_user_filter-a" ng-if="aux.gallery_show" href="/gallery/{{aux.gallery_calltoaction.calltoaction.slug}}#gallery_user_filter">
+      <p class="gallery_user_filter-text gallery_user_filter-text-left"><i class="fa fa-th"></i> Tutti</p>
+    </a>
+    <a ng-if="aux.gallery_index" class="gallery_user_filter-a" href="/gallery#gallery_user_filter">
+      <p class="gallery_user_filter-text gallery_user_filter-text-left"><i class="fa fa-th"></i> Tutti</p>
+    </a>
+  </div>
+  <div ng-if="!isAnonymousUser()" class="col-sm-3 text-left gallery_user_filter-col <%= "gallery_user_filter-user_active" if current_user && params[:user].to_i == current_user.id  %>">
+    <a class="gallery_user_filter-a" ng-if="aux.gallery_show" href="/gallery/{{aux.gallery_calltoaction.calltoaction.slug}}<%= "?user=#{current_user.id if current_user}" %>#gallery_user_filter">
+      <p class="gallery_user_filter-text"><i class="fa fa-user"></i> I miei contenuti</p>
+    </a>
+    <a class="gallery_user_filter-a" ng-if="aux.gallery_index" class="gallery_user_filter-text" href="/gallery<%= "?user=#{current_user.id if current_user}" %>#gallery_user_filter">
+      <p class="gallery_user_filter-text"><i class="fa fa-user"></i> I miei contenuti</p>
+    </a>
+  </div>
+  <div ng-if="isAnonymousUser()" class="col-sm-3 gallery_user_filter-col" onclick="showRegistrateView()">
+    <p class="gallery_user_filter-text"><i class="fa fa-user"></i> I miei contenuti</p>
+  </div>
+  <div class="col-sm-7 gallery_user_filter-col-right">
+    <%= render partial: "/gallery/search" %>
+  </div>
+</div>

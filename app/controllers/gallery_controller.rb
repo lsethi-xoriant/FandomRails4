@@ -33,21 +33,28 @@ class GalleryController < ApplicationController
   end
 
   def index
-    @galleries_cta
 
-    params = adjust_params_for_gallery(params)
+    _params = adjust_params_for_gallery(params)
+
+    if(_params[:user])
+      user = User.find(_params[:user])
+      user = {
+        id: user.id,
+        username: user.username
+      }
+    end
 
     gallery_calltoaction_id = "all"
-    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, _params[:user])
 
-    params["page_elements"] = ["like", "comment", "share"]
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+    _params["page_elements"] = ["like", "comment", "share"]
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, _params, $site.init_ctas)
 
     @aux_other_params = { 
       "gallery_calltoaction" => true, 
       "gallery_index" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user],
+      "gallery_user" => user,
       "gallery_ctas" => get_gallery_ctas_carousel
     }
 
@@ -74,13 +81,20 @@ class GalleryController < ApplicationController
 
     gallery_calltoaction_id = cta.id
 
-    params = adjust_params_for_gallery(params, gallery_calltoaction_id)
+    _params = adjust_params_for_gallery(params, gallery_calltoaction_id)
+    if(_params[:user])
+      user = User.find(_params[:user])
+      user = {
+        id: user.id,
+        username: user.username
+      }
+    end
 
-    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, params[:user])
+    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, _params[:user])
 
     params["page_elements"] = ["like", "comment", "share"]
     gallery_tag_name = @gallery_tag.name
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, params, $site.init_ctas)
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(gallery_tag_name, _params, $site.init_ctas)
           
     gallery_tag_adjust_for_view = build_gallery_tag_for_view(@gallery_tag, cta, upload_interaction)
 
@@ -89,7 +103,7 @@ class GalleryController < ApplicationController
       "gallery_calltoaction" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,
-      "gallery_user" => params[:user],
+      "gallery_user" => user,
       gallery_tag: gallery_tag_adjust_for_view,
       "gallery_ctas" => get_gallery_ctas_carousel
     }
