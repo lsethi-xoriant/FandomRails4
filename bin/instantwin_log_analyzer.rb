@@ -50,7 +50,7 @@ def main
   start_time = Time.now
 
   puts "#{Time.now} - Instantwin log analyzer starting. #{instantwins.count} total instantwins to analyze"
-  puts "\n#{Time.now} - Check that the right user won instantwin when he tried, if any"
+  puts "#{Time.now} - Check that the right user won instantwin when he tried, if any"
 
   instantwins_map.each do |instantwin_id, instantwin|
 
@@ -124,7 +124,7 @@ def main
     ).to_a
 
     # Check that no one got more than one credit for the same interaction
-    puts "\n#{Time.now} - Check credits assignment"
+    puts "#{Time.now} - Check credits assignment"
 
     more_than_one_credit_assigned = credits_assigned_by_interaction.to_a.select { |credits| credits["count"].to_i > 1 }
     if more_than_one_credit_assigned.any?
@@ -137,7 +137,7 @@ def main
     end
 
     # Check that users have not played more than they could afford
-    puts "\n#{Time.now} - Check that number of attempts is less or equal credits gained"
+    puts "#{Time.now} - Check that number of attempts is less or equal credits gained"
 
     instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
@@ -164,7 +164,7 @@ def main
     end
 
     # Check that there is one win for day
-    puts "\n#{Time.now} - Check that there is one win for day"
+    puts "#{Time.now} - Check that there is one win for day"
 
     from = instantwin_start_date.beginning_of_day
     while from < [instantwin_end_date, DateTime.now.utc].min
@@ -190,7 +190,7 @@ def main
       ).to_a
 
     # Check that every instantwin has been won at most once
-    puts "\n#{Time.now} - Check that every instantwin has been won at most once"
+    puts "#{Time.now} - Check that every instantwin has been won at most once"
 
     instantwin_id_won_times_map = {}
     win_events.each do |win_event|
@@ -206,7 +206,7 @@ def main
     end
 
     # Check that winners are major
-    puts "\n#{Time.now} - Check winners' age"
+    puts "#{Time.now} - Check winners' age"
 
     users_winning_ids = Set.new
     win_events.each do |win_event|
@@ -231,7 +231,7 @@ def main
       end
 
       # Check that win events did not happen before instantwin valid_from
-      puts "\n#{Time.now} - Check that win events did not happen before instantwin valid_from"
+      puts "#{Time.now} - Check that win events did not happen before instantwin valid_from"
 
       win_events.each do |win|
         instantwin_id = JSON.parse(win["data"])["instantwin_id"]
