@@ -272,7 +272,6 @@ class CallToActionController < ApplicationController
     begin
       response = update_interaction_computation(params)
     rescue SessionIdEmptyError => e
-      debugger
       response = { session_empty: true }
     end
 
