@@ -587,4 +587,21 @@ module RewardHelper
     get_context()
   end
   
+  def get_last_badge_obtained
+    property = get_property()
+    if property.present?
+      property_name = property.name
+    end
+    
+    badge_tag = Tag.find_by_name("badge")
+    badges, badges_use_prop = rewards_by_tag("badge")
+    if badges && badges_use_prop
+      badges = badges[property_name]
+      if badges
+        badges = order_elements(badge_tag, badges)
+      end
+    end
+    badges.last
+  end
+  
 end
