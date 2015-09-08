@@ -13,12 +13,12 @@ body {
   color: red;
 }
 
-.gallery_user_filter-a {
-  text-decoration: none !important;
-}
-
 .fa-chevron-down {
   top: 0 !important;
+}
+
+.gallery_user_filter-a {
+  text-decoration: none !important;
 }
 
 .gallery_user_filter-text {
@@ -319,6 +319,18 @@ a{
 }
 
 @media (max-width: $screen-sm-min) { 
+  .gallery_user_filter-text-left {
+    padding-left: 0;
+  }
+
+  .gallery_user_filter-right {
+    padding-right: 0;
+  }
+
+  .gallery_user_filter-col {
+    text-align: center;
+  }
+
   .modal-body--gallery {
     margin-top: 10px !important;
     margin-bottom: 20px !important;
