@@ -46,9 +46,9 @@ module FandomUtils
       return
     end
 
-    # if request.present? && request.referrer.present? && request.referrer.include?("https://www.facebook.com")
-    #   session[:from_facebook] = true
-    # end
+    if $site.id == "disney" && request.present? && request.referrer.present? && request.referrer.include?("https://www.facebook.com")
+      session[:from_facebook] = true
+    end
 
     unless $site.x_frame_options_header.nil?
       response.headers['X-Frame-Options'] = $site.x_frame_options_header

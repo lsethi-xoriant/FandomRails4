@@ -1,0 +1,47 @@
+/********************* BTN FACEBOOK *********************/
+
+.btn-fb { 
+  color: #FFFFFF !important; 
+  background-color: #364E89; 
+  border-color: #364E89; 
+} 
+ 
+.btn-fb:hover, 
+.btn-fb:focus, 
+.btn-fb:active, 
+.btn-fb.active, 
+.open .dropdown-toggle.btn-fb { 
+  color: #FFFFFF; 
+  background-color: #4E649C; 
+  border-color: #364E89; 
+} 
+ 
+.btn-fb:active, 
+.btn-fb.active, 
+.open .dropdown-toggle.btn-fb { 
+  background-image: none; 
+} 
+ 
+.btn-fb.disabled, 
+.btn-fb[disabled], 
+fieldset[disabled] .btn-fb, 
+.btn-fb.disabled:hover, 
+.btn-fb[disabled]:hover, 
+fieldset[disabled] .btn-fb:hover, 
+.btn-fb.disabled:focus, 
+.btn-fb[disabled]:focus, 
+fieldset[disabled] .btn-fb:focus, 
+.btn-fb.disabled:active, 
+.btn-fb[disabled]:active, 
+fieldset[disabled] .btn-fb:active, 
+.btn-fb.disabled.active, 
+.btn-fb[disabled].active, 
+fieldset[disabled] .btn-fb.active { 
+  background-color: #364E89; 
+  border-color: #364E89; 
+} 
+ 
+.btn-fb .badge { 
+  color: #364E89; 
+  background-color: #FFFFFF; 
+}

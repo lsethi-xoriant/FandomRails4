@@ -1833,6 +1833,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       if(provider == "direct_url") {
         openDirectUrlModal(interaction_info.interaction.id);
+        share_url = null;
       } else {
         
         parent_cta_info = $scope.getParentCtaInfo(cta_info);
@@ -1862,10 +1863,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           case "linkedin":
             share_url = "http://www.linkedin.com/shareArticle?mini=true&url=" + cta_url + "&title=" + encodeURIComponent(message) + "&summary=" + encodeURIComponent(stripTags(calltoaction_info.calltoaction.description || ""));
             break;
+          default:
+            share_url = null;
         }
       }
 
-      if(typeof share_url !== 'undefined') window.open(share_url);
+      if(share_url != null) window.open(share_url);
  
       $http.post("/update_basic_share.json", { interaction_id: interaction_info.interaction.id, provider: provider })
         .success(function(data) {

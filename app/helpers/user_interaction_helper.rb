@@ -275,10 +275,10 @@ module UserInteractionHelper
   def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
     aux.each do |key, value|
-      user_interaction_aux[key] = value
+      if key != "providers"
+        user_interaction_aux[key] = value
+      end
     end
-    # user_interaction_aux["to_redo"] = aux["to_redo"]
-    # user_interaction_aux["next_cta_id"] = aux["next_cta_id"]
 
     case resource_type
     when "share"

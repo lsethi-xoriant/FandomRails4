@@ -264,6 +264,8 @@ module DisneyHelper
       gallery_tag_adjust_for_view = other[:gallery_tag]
     end
 
+    from_facebook = session[:from_facebook] if session.present?
+
     aux = {
       "site" => $site,
       "default_property" => $site.default_property,
@@ -281,7 +283,8 @@ module DisneyHelper
       "enable_comment_polling" => get_deploy_setting('comment_polling', true),
       "flash_notice" => flash[:notice],
       "sidebar_info" => sidebar_info,
-      "gallery_tag" => gallery_tag_adjust_for_view
+      "gallery_tag" => gallery_tag_adjust_for_view,
+      "from_facebook" => from_facebook
     }
 
     aux["gallery_calltoaction"] = gallery_calltoaction_adjust_for_view if gallery_calltoaction_adjust_for_view.present?

@@ -130,8 +130,8 @@
 
 .comment-interaction__cta__info__glyphicon-comment {
   font-size: 24px;
-  position: relative;
-  top: 3px;
+  position: relative !important;
+  top: 7px !important;
   color: #999;
 }
 

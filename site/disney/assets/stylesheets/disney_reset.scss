@@ -9,6 +9,13 @@ body {
   opacity: 1;
 }
 
+.btn-square, .comment-interaction__cta__info__button, .like-interaction__cover__info__button {
+  width: 40px;
+  padding: 0;
+  height: 40px;
+  line-height: 40px;
+}
+
 .form-error {
   color: red;
 }

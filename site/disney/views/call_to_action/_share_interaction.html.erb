@@ -2,7 +2,7 @@
 
   <!-- DIRECT URL -->   
 
-  <button ng-if="interaction_info.interaction.resource.providers.direct_url" class="btn btn-default share-interaction__cta__info__fb-button" ng-click="shareWith(calltoaction_info, interaction_info, 'direct_url')" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-mail-forward share-interaction__cover__info__glyphicon-fb"></span></button> 
+  <button ng-if="interaction_info.interaction.resource.providers.direct_url" class="btn btn-square btn-default share-interaction__cta__info__fb-button" ng-click="shareWith(calltoaction_info, interaction_info, 'direct_url')" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-mail-forward share-interaction__cover__info__glyphicon-fb"></span></button> 
 
   <div ng-if="interaction_info.interaction.resource.providers.direct_url" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-direct_url" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -30,7 +30,7 @@
   </div>
 
   <!-- EMAIL -->
-  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
+  <button ng-if="interaction_info.interaction.resource.providers.email" type="button" class="btn btn-square btn-default share-interaction__cta__info__email-button" data-toggle="modal" data-target="#modal-interaction-{{interaction_info.interaction.id}}-email" ng-class="{'disabled': animation_in_progress}">
     <span class="fa fa-envelope share-interaction__cover__info__glyphicon-envelope"></span>
   </button>
 
@@ -95,51 +95,7 @@
     </div>
   </div>
 
-  <!--
-  <button ng-if="interaction_info.interaction.resource.providers.facebook && current_user" class="btn btn-fb share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-login" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>             
-  <button ng-if="interaction_info.interaction.resource.providers.facebook && !current_user" class="btn btn-fb share-interaction__cta__info__fb-button" data-toggle="modal" data-target="#modal-login" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>
-  
-  <div ng-if="interaction_info.interaction.resource.providers.facebook" class="modal fade" id="modal-interaction-{{interaction_info.interaction.id}}-facebook" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content text-center">
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-          <div class="row">
-
-            <div class="col-md-12" style="margin-top: 10px;"> 
-              <p class="call-to-action__share__modal-title">Condividi questo contenuto con un amico</p>
-            </div>
-
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body"> 
-                  <img style="width: 100%" ng-src="{{calltoaction_info.calltoaction.thumbnail_medium_url}}">
-                </div>
-              </div>
-            </div>
-
-            <div ng-if="interaction_info.user_interaction.errors" class="col-md-12"> 
-              <p>{{interaction_info.user_interaction.errors}}</p>
-            </div>
-
-            <div ng-if="interaction_info.interaction.resource.providers.facebook && !current_user.facebook" class="col-md-6 col-md-offset-3"> 
-              <a target="_top" href="/anchor_provider_from_calltoaction/{{calltoaction_info.calltoaction.slug}}" class="btn btn-facebook btn-block"><span class="fa fa-facebook"></span> CONNETTI CON FACEBOOK</a>
-            </div>
-
-            <div class="col-md-12" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook"> 
-              <input ng-model="interaction_info.user_interaction.facebook_message" class="form-control" type="text" placeholder="Testo della condivisione" name="address">
-            </div>
-            <div class="col-md-6 col-md-offset-3" style="margin-top: 10px;" ng-if="interaction_info.interaction.resource.providers.facebook && current_user.facebook">
-              <button id="facebook-interaction-{{interaction_info.interaction.id}}" type="button" class="btn btn-facebook btn-block" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')">CONDIVIDI</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
+  <!-- FACEBOOK -->
+  <button ng-if="interaction_info.interaction.resource.providers.facebook && aux.from_facebook" class="btn btn-square btn-fb" ng-click="shareWith(calltoaction_info, interaction_info, 'facebook')" ng-class="{'disabled': animation_in_progress}"><span class="fa fa-facebook share-interaction__cover__info__glyphicon-fb"></span></button>
   
 </div>
