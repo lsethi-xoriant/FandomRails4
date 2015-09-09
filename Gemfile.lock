@@ -407,6 +407,9 @@ GEM
     paperclip-watermark (1.0.0)
       paperclip (>= 2.3.8)
     pg (0.18.2)
+    prerender_rails (1.1.2)
+      activesupport
+      rack
     protected_attributes (1.0.9)
       activemodel (>= 4.0.1, < 5.0)
     psych (2.0.13)
@@ -613,6 +616,7 @@ DEPENDENCIES
   paperclip
   paperclip-watermark
   pg
+  prerender_rails
   protected_attributes
   psych
   quiet_assets

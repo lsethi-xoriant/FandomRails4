@@ -66,4 +66,6 @@ Fandom::Application.configure do
 
   config.eager_load = true
 
+  config.middleware.use Rack::Prerender
+
 end

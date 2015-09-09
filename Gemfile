@@ -52,6 +52,8 @@ gem 'sass-globbing'
  
 gem 'ejs'
 
+gem 'prerender_rails'
+
 group :development do
   gem 'letter_opener'
   gem 'quiet_assets'
