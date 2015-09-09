@@ -523,7 +523,7 @@ module CallToActionHelper
       get_comments_query = "SELECT id FROM (select row_number() over (partition by comment_id ORDER BY updated_at DESC) as r, t.* FROM user_comment_interactions t WHERE approved = true AND comment_id IN (#{resource_ids.join(',')})) x WHERE x.r <= 5;"
       comments = ActiveRecord::Base.connection.execute(get_comments_query)
       comment_ids = comments.map { |comment| comment["id"] }
-      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC").limit(5)
+      comments = UserCommentInteraction.includes(:user).where(id: comment_ids).references(:users).order("user_comment_interactions.updated_at DESC")
     end
 
     counters = ViewCounter.where("ref_type = 'interaction' AND ref_id IN (?)", interaction_ids)
