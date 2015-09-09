@@ -39,6 +39,7 @@ def main
       AND updated_at < activated_at"
     )
     puts "#{res.cmd_tuples()} #{tenant} call to actions updated in #{Time.now - start_time} seconds"
+    sleep(1)
   end
 
   puts "All tenants call to actions updated"
