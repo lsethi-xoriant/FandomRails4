@@ -50,7 +50,7 @@ $cover-height: 490px;
 
 .cta_cover-end_container-percentage_container {
   display: inline-block; 
-  padding-top: 60px;
+  padding-top: 15px;
 }
 
 .cta_cover-end_container-pre-title {
@@ -283,6 +283,10 @@ $cover-height: 490px;
   height: $cover-height;
 }
 
+.cta_cover-end_container-mtxt {
+  font-size: 32px;
+}
+
 @media (min-width: $screen-sm-min) {
   .cta_cover-end_container-btn_container {
     padding: 15px;
@@ -290,6 +294,9 @@ $cover-height: 490px;
     border-radius: 5px;
     display: inline-block;
     margin-left: 15px;
+  }
+  .cta_cover-end_container-btn_container-subtitle {
+    min-height: 15px;
   }
 }
 

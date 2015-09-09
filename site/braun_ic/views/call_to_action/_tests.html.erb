@@ -104,6 +104,7 @@
                   </div>
                   
                   <p class="hidden-sm hidden-md hidden-lg cta_cover-end_container-mtxt" ng-style="{'color': getCtaBadge(calltoaction_info).extra_fields.color }">{{getCtaBadgeCost(calltoaction_info)}}% Wellness</p>
+                  <p class="hidden-xs cta_cover-end_container-mtxt" ng-style="{'color': getCtaBadge(calltoaction_info).extra_fields.color }">{{getCtaBadgeCost(calltoaction_info)}}%<br>Wellness</p>
                   <!--
                   <div class="cta_cover-end_container-percentage_container hidden-sm hidden-md hidden-lg">          
                     <div class="percentage_circle small p{{getCtaBadgeCost(calltoaction_info)}}">
@@ -139,14 +140,14 @@
                             <img class="cta_cover-end_container-btn_container-img hidden-xs" ng-src="{{aux.assets.extra_fields.minipimer.url}}">
                           </div>
                           <div class="col-sm-9 text-center cta_cover-end_container-btn_container-btn_col">
-                            <p ng-if="ctaHasFeedback(calltoaction_info)" class="cta_cover-end_container-btn_container-subtitle">Complimenti! Hai guadagnato un biglietto</p>
-                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()" ng-class="{'add-margin': !ctaHasFeedback(calltoaction_info)}">
+                            <p class="cta_cover-end_container-btn_container-subtitle"><span ng-if="ctaHasFeedback(calltoaction_info)">Complimenti! Hai guadagnato un biglietto</span></p>
+                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()">
                               SCOPRI SE HAI VINTO
                             </button>
-                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)" ng-class="{'add-margin': !ctaHasFeedback(calltoaction_info)}">
+                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
                               SCOPRI SE HAI VINTO
                             </button>
-                            <a ng-if="isAnonymousUser()" ng-click="ctaGaEvent(calltoaction_info)" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw btn-block" ng-class="{'add-margin': !calltoaction_info.feedback}">
+                            <a ng-if="isAnonymousUser()" ng-click="ctaGaEvent(calltoaction_info)" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw btn-block">
                               SCOPRI SE HAI VINTO
                             </a>
                             <p class="cta_cover-end_container-iw-title hidden-xs"><span>In palio ogni giorno 1 {{aux.instant_win_info.reward_info.title}}</span></p>
