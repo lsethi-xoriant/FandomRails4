@@ -9,6 +9,8 @@ Fandom::Application.routes.draw do
   get '/cookies_policy', :to => 'application#cookies_policy'
   get '/privacy_policy', :to => 'application#privacy_policy'
 
+  get '/sitemap', to: 'sitemap#index', defaults: { format: 'xml' }
+
   constraints(SiteMatcher.new('braun_ic')) do
     scope module: "sites" do
       scope module: "braun_ic" do
