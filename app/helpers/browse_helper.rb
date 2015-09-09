@@ -370,7 +370,7 @@ module BrowseHelper
   end
 
   def add_content_tags(tags, element)
-    tag_names = tags.map { |tag| tag.name }
+    tag_names = tags.map { |key, tag| tag.name }
     remove_tags = tag_names.include?("widget") ? [] : ["widget"]
 
     hidden_tags_ids = get_hidden_tag_ids(remove_tags)
