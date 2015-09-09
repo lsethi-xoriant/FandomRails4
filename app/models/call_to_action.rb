@@ -111,7 +111,7 @@ class CallToAction < ActiveRecordWithJSON
         wide: { convert_options: "-gravity north -thumbnail 1024x576^ -extent 1024x576" },
         medium: { convert_options: "-gravity north -thumbnail 524x393^ -extent 524x393" }, 
         thumb: { convert_options: "-gravity north -thumbnail 262x147^ -extent 262x147" },
-        carousel: { convert_options: "-gravity north -thumbnail 1024x320^ -extent 1024x320" }
+        carousel: { convert_options: "-gravity center -thumbnail 1024x320^ -extent 1024x320" }
       }
     },
     source_file_options:  { all: '-background transparent' }
