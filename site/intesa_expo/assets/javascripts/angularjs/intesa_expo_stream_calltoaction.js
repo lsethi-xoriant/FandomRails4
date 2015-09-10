@@ -12,6 +12,16 @@ intesaExpoStreamCalltoactionModule.config(["$httpProvider", function(provider) {
 function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document) {
   angular.extend(this, new StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $document));
 
+  $window.update_ga_event = function(category, action, label, value) {
+    if($scope.aux.property_path_name) {
+      category = $scope.aux.property_path_name + "_" + category;
+    }
+
+    if($scope.google_analytics_code.length > 0) {
+      ga('send', 'event', category, action, label, value, true);
+    }
+  };
+
   $scope.intesaExpoGa = function(el1, el2, el3, $event) {
     if (!angular.isUndefined($event)) {
       _this = $event.currentTarget;
