@@ -284,7 +284,11 @@ $cover-height: 490px;
 }
 
 .cta_cover-end_container-mtxt {
-  font-size: 32px;
+  font-size: 26px;
+  font-weight: bold;
+  span {
+    font-size: 16px;
+  }
 }
 
 @media (min-width: $screen-sm-min) {
