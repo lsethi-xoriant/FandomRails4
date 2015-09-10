@@ -991,7 +991,8 @@ module ApplicationHelper
       "emoticons" => EMOTICONS,
       "assets" => assets,
       "root_url" => root_url,
-      "from_registration" => from_registration
+      "from_registration" => from_registration,
+      "seo_title" => @seo_title
     }
 
     if other
