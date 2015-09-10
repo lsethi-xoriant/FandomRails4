@@ -1953,7 +1953,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
     var resource_type = interaction_info.interaction.resource_type;
-    if($scope.aux.assets.extra_fields && $scope.aux.assets.extra_fields.interaction_button_sound) {
+    if($scope.aux.assets && $scope.aux.assets.extra_fields && $scope.aux.assets.extra_fields.interaction_button_sound) {
       interactionButtonSound();
     }
 
