@@ -21,6 +21,11 @@ body {
   color: #fff !important;
 }
 
+.iw_extra {
+  padding-left: 0; 
+  margin-bottom: 15px;
+}
+
 .iw_registration {
   .modal-title {
     padding-top: 5px;
@@ -454,6 +459,11 @@ p {
 }
 
 @media (max-width: $screen-xs-max) {
+  .iw_extra {
+    padding-left: 15px; 
+    margin-bottom: 15px;
+  }
+
   .profile-container__unlogged {
     height: 92px;
     background-color: #f1f2f3;
