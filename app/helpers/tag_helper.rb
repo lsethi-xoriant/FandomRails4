@@ -57,16 +57,19 @@ module TagHelper
     extra_key = get_extra_key_from_params(params)
     tag_ids_subselect = tag_ids.map { |tag_id| "(select call_to_action_id from call_to_action_tags where tag_id = #{tag_id})" }.join(' INTERSECT ')
     where_clause = get_cta_where_clause_from_params(params)
-    ctas = CallToAction.includes(call_to_action_tags: :tag).references(:call_to_action_tags)
+
     if params.include?(:ical_start_datetime) || params.include?(:ical_end_datetime)
-      ctas = ctas.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
+      ctas = CallToAction.joins("JOIN interactions ON interactions.call_to_action_id = call_to_actions.id").joins("JOIN downloads ON downloads.id = interactions.resource_id AND interactions.resource_type = 'Download'")
       ctas = add_ical_fields_to_where_condition(ctas, params)
+    else 
+      # includes incompatible with joins in first branch
+      ctas = CallToAction.includes(call_to_action_tags: :tag).references(:call_to_action_tags)
+      if !where_clause.empty?
+        ctas = ctas.where("#{where_clause}")
+      end
     end
     if !tag_ids_subselect.empty?
       ctas = ctas.where("call_to_actions.id IN (#{tag_ids_subselect}) ")
-    end
-    if !where_clause.empty?
-      ctas = ctas.where("#{where_clause}")
     end
     if params[:limit]
       offset, limit = params[:limit][:offset], params[:limit][:perpage]
