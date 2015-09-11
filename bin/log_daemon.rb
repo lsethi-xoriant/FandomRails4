@@ -153,10 +153,8 @@ def get_query_data(process_file_path, pid)
   tenant_to_insert_values = Hash.new
   tenant_to_content_type_to_id_to_views = Hash.new
 
-  process_file_descriptor = File.open(process_file_path, 'r')
-  
   request_data = init_request_data(pid)
-  process_file_descriptor.each_line do |event_log_line|
+  File.foreach(process_file_path, :encoding => 'utf-8:utf-8') do |event_log_line|
     event_values = JSON.parse(event_log_line)
 
     unless event_values["data"]["already_synced"]
