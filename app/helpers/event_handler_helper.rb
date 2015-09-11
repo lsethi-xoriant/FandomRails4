@@ -65,7 +65,7 @@ module EventHandlerHelper
   def log_string_for_production(msg, data, timestamp, force_saving_in_db, level)
     if force_saving_in_db
       # TODO: remove file_name, method_name and line_number
-      Event.create(session_id: $session_id, pid: $pid, message: msg, request_uri: $request_uri, 
+      Event.create(session_id: $session_id[0..254], pid: $pid, message: msg[0..254], request_uri: $request_uri[0..254], 
         data: data.to_json, timestamp: timestamp, 
         level: level, tenant: $tenant, user_id: $user_id)
 

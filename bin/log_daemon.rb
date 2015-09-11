@@ -221,7 +221,7 @@ def get_values_for_event_log_line(event_values)
     when "pid", "user_id"
       values_for_event_log_line << value
     else
-      values_for_event_log_line << ActiveRecord::Base.connection.quote(value.to_s[0..244])
+      values_for_event_log_line << ActiveRecord::Base.connection.quote(value.to_s[0..254])
     end
   end
   values_for_event_log_line.join(', ')
