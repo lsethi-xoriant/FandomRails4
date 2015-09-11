@@ -384,6 +384,8 @@ Fandom::Application.routes.draw do
       get "/catalogue/gained", :to => "reward#show_all_my_catalogue", defaults: { format: 'json' }
       get "/catalogue/buy_reward", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
       get "/profile", :to => "profile#index", defaults: { format: 'json' }
+      get "/profile/badges", :to => "profile#badges", defaults: { format: 'json' }
+      get "/profile/levels", :to => "profile#levels", defaults: { format: 'json' }
     end
   end
 
