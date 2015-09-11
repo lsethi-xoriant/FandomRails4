@@ -106,7 +106,7 @@
                 <label><%= f.check_box :privacy %> Dichiaro di aver preso visione dell'<a href="/privacy_policy" target="_blank">informativa</a> e acconsento al trattamento dei dati personali</label>
               </div>
 
-              <button style="margin-top: 25px;" type="submit" class="btn btn-green btn-lg btn-block">Registrami</button>
+              <%= f.submit "Registrami", class: "btn btn-green btn-lg btn-block", style: "margin-top: 25px;", data: { disable_with: "Registrami" } %>
             <% end %>
           </div>
         </div>
