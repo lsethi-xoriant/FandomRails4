@@ -15,7 +15,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def permit(u)
-    u.permit(:first_name, :last_name, :username, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation, :privacy, :anonymous_id)
+    u.permit(:first_name, :last_name, :username, :avatar, :avatar_selected, :avatar_selected_url, :email, :password, :password_confirmation, :privacy, :anonymous_id, :required_attrs)
   end
 
   def new

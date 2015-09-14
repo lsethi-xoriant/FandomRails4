@@ -8,11 +8,19 @@ class Sites::Disney::RegistrationsController < RegistrationsController
   end
 
   def update
+    debugger
     user_params = params[:user]
     required_attrs = ["username", "username_length"]
-    params[:user] = user_params.merge(required_attrs: required_attrs)
+    user_params = user_params.merge(required_attrs: required_attrs)
 
-    super
+    current_user.update_attributes(user_params)
+
+    if current_user.errors.blank?
+      flash[:notice] = "Utente aggiornato correttamente"
+      redirect_to "/users/edit"
+    else
+      render :edit
+    end
   end
 
   def iur
