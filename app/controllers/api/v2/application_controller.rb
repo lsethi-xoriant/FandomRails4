@@ -18,6 +18,7 @@
       
       params = request.params
       params["page_elements"] = nil
+      params["comments_limit"] = 10
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       ctas_highlighted = map_highlighted_ctas_to_content_preview(get_cta_highlighted_carousel())
       result = {
