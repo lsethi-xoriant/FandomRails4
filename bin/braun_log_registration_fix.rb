@@ -18,12 +18,17 @@ def main
   config = YAML.load_file(ARGV[0].to_s)
   conn = PG::Connection.open(config["production_db"])
   events_conn = PG::Connection.open(config["events_db"])
+
   conn.exec("SET search_path TO '#{config['tenant']}'") if config["tenant"]
-  user_ids = config["user_ids"]
+
+  user_without_registration_log_ids = config["user_without_registration_log_ids"].split(",")
+  user_without_credit_log_ids = config["user_without_credit_log_ids"].split(",")
+  users = (user_without_registration_log_ids + user_without_credit_log_ids).uniq
+
   path_to_file = config["path_to_file"]
 
   puts "#{Time.now} - Getting users to fix"
-  users = conn.exec("SELECT * FROM users WHERE id IN (#{user_ids});")
+  users = conn.exec("SELECT * FROM users WHERE id IN (#{users.join(",")});")
   puts "#{users.count} users found to fix"
 
   puts "#{Time.now} - Getting data for users from events table"
@@ -36,7 +41,7 @@ def main
     AND message = 'http request start' 
     AND user_id IN (#{user_ids});"
   ).each do |event|
-    users_data_map[event["user_id"]] = JSON.parse(event["data"])
+    users_data_map[event["user_id"].to_s] = JSON.parse(event["data"])
   end
   puts "#{users_data_map.count} data for users found"
 
@@ -45,15 +50,15 @@ def main
   users.each_with_index do |user, index|
 
     session_id = (1..32).map { ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9].sample }.join
-    user_data = users_data_map[user["id"]]
+    user_data = users_data_map[user["id"].to_s]
     if user_data.nil?
       puts "No data for user #{user['id']}"
       pid = 27601
       remote_ip = "2.228.97.250"
       app_server = "ip-172-31-11-221"
     else
-      pid = user_data["pid"] # 12345
-      remote_ip = user_data["remote_ip"] # "123.456.7.8"
+      pid = user_data["pid"] # 27601
+      remote_ip = user_data["remote_ip"] # "2.228.97.250"
       app_server = user_data["app_server"] # "ip-172-31-11-221"
     end
 
@@ -109,7 +114,6 @@ def main
       "pid" => pid
     }
 
-
     assigning_reward_to_user = {
       "message" => "assigning reward to user",
       "level" => "audit",
@@ -125,7 +129,6 @@ def main
       "timestamp" => assigning_reward_time,
       "pid" => pid
     }
-
 
     http_request_end = {
       "message" => "http request end",
@@ -158,9 +161,13 @@ def main
     File.open(file_name, "w") do |f| 
       f.truncate(0)
       f.write(http_request_start.to_json + "\n")
-      f.write(email_sent.to_json + "\n")
-      f.write(registration.to_json + "\n")
-      f.write(assigning_reward_to_user.to_json + "\n")
+      if user_without_registration_log_ids.include?(user["id"].to_s)
+        f.write(email_sent.to_json + "\n")
+        f.write(registration.to_json + "\n")
+      end
+      if user_without_credit_log_ids.include?(user["id"].to_s)
+        f.write(assigning_reward_to_user.to_json + "\n")
+      end
       f.write(http_request_end.to_json)
     end
 
