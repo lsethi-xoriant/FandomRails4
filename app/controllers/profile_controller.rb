@@ -188,22 +188,6 @@ class ProfileController < ApplicationController
     end   
   end
 
-  def get_other_property_rewards(reward_name, property_name)
-    myrewards, use_prop = rewards_by_tag(reward_name, current_user)
-    other_rewards = []
-    if myrewards.present?
-      get_tags_with_tag("property").each do |property|
-        if myrewards[property.name] && property.name != property_name
-          reward = get_max(myrewards[property.name]) do |x,y| 
-            y.updated_at <=> x.updated_at # -1, 1 or 0
-          end
-          other_rewards << { "reward" => reward, "property" => property }
-        end
-      end
-    end
-    other_rewards
-  end
-
   def get_property_rankings
     property = get_property()
     if property.present?

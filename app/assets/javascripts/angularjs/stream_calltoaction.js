@@ -622,19 +622,25 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.processRegistrationForm = function() {
     delete $scope.form_data.current_user.errors;
-    data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction_id };
-    $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
-      .success(function(data) {
-        if(data.errors) {
-          $scope.form_data.current_user.errors = data.errors;
-        } else {
-          $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
-            $scope.openInstantWinModal();
-          });
-          $("#modal-interaction-instant-win-registration").modal("hide");
-          $scope.current_user.registration_fully_completed = true;
-        }
-      });
+    if(!$scope.ajax_in_progress) {
+      $scope.ajax_in_progress = true;
+      data = { user: $scope.form_data.current_user, interaction_id: $scope.aux.instant_win_info.interaction_id };
+      $http({ method: 'POST', url: '/profile/complete_for_contest', data: data })
+        .success(function(data) {
+          if(data.errors) {
+            $scope.form_data.current_user.errors = data.errors;
+          } else {
+            $('#modal-interaction-instant-win-registration').on('hidden.bs.modal', function () {
+              $scope.openInstantWinModal();
+            });
+            $("#modal-interaction-instant-win-registration").modal("hide");
+            $scope.current_user.registration_fully_completed = true;
+          }
+          $scope.ajax_in_progress = false;
+        }).error(function() {
+          $scope.ajax_in_progress = false;
+        });
+    }
   };
 
   function isOvervideoDuring(when_show_interaction) {
@@ -1953,7 +1959,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.updateAnswer = function(calltoaction_info, interaction_info, params, when_show_interaction, before_callback, before_callback_timeout) {
     var resource_type = interaction_info.interaction.resource_type;
-    if($scope.aux.assets.extra_fields && $scope.aux.assets.extra_fields.interaction_button_sound) {
+    if($scope.aux.assets && $scope.aux.assets.extra_fields && $scope.aux.assets.extra_fields.interaction_button_sound) {
       interactionButtonSound();
     }
 

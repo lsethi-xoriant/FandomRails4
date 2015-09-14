@@ -141,11 +141,11 @@ module CommentHelper
     end
   end
   
-  def append_comments_computation
+  def append_comments_computation(comments_limit = 10)
     append_or_update_comments(params[:interaction_id]) do |interaction, response|
       comments_without_shown = get_comments_approved_except_ids(interaction.resource.user_comment_interactions, params[:comment_ids])
       last_comment_shown_date = params[:last_updated_at]
-      comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(10)
+      comments = comments_without_shown.where("date_trunc('seconds', updated_at) <= ?", last_comment_shown_date).order("updated_at DESC").limit(comments_limit)
       comments_for_comment_info = Array.new
       comments.each do |comment|
         comments_for_comment_info << build_comment_for_comment_info(comment, true)
