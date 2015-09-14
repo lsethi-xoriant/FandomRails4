@@ -156,7 +156,7 @@ def main
       "pid" => pid
     }
 
-    file_name = "#{path_to_file}/#{pid}-#{created_at.strftime("%Y%m%d_%H%M%S")}_#{rand(1000000000)}-closed.log"
+    file_name = "#{path_to_file}/#{pid}-#{DateTime.now.strftime("%Y%m%d_%H%M%S_%6N")}#{index % 1000}-closed.log"
 
     File.open(file_name, "w") do |f| 
       f.truncate(0)
