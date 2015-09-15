@@ -361,6 +361,7 @@ Fandom::Application.routes.draw do
   namespace :api do
     namespace :v2 do
       get "/browse", :to => "browse#index", defaults: { format: 'json' }
+      get "/browse_stream", :to => "browse#index_stream", defaults: { format: 'json' }
       get "/browse_index", :to => "browse#browse_index", defaults: { format: 'json' }
       get "/browse_index_load_more", :to => "browse#browse_index_load_more", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
