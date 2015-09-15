@@ -22,6 +22,24 @@
       
     end
     
+    def index_stream
+      browse_settings = get_browse_settings(nil)
+      content_previews = []
+      
+      browse_settings.split(",").each do |section|
+        if !section.start_with?("$")
+          content_previews << tag_to_content_preview(Tag.find_by_name(section))
+        end
+      end
+      
+      response = {
+        "content_previews" => content_previews
+      }
+      
+      respond_with response.to_json
+      
+    end
+    
     def browse_index
       category = Tag.includes(:tags_tags).references(:tags_tags).find(params[:id])
       

@@ -361,6 +361,7 @@ Fandom::Application.routes.draw do
   namespace :api do
     namespace :v2 do
       get "/browse", :to => "browse#index", defaults: { format: 'json' }
+      get "/browse_stream", :to => "browse#index_stream", defaults: { format: 'json' }
       get "/browse_index", :to => "browse#browse_index", defaults: { format: 'json' }
       get "/browse_index_load_more", :to => "browse#browse_index_load_more", defaults: { format: 'json' }
       get "/index", :to => "application#index", defaults: { format: 'json' }
@@ -388,6 +389,7 @@ Fandom::Application.routes.draw do
       get "/profile/levels", :to => "profile#levels", defaults: { format: 'json' }
       get "/profile/avatars", :to => "profile#profile_avatars", defaults: { format: 'json' }
       get "/profile/update_info", :to => "profile#update_profile_info", defaults: { format: 'json' }
+      get "/profile/notices", :to => "profile#notices", defaults: { format: 'json' }
     end
   end
 

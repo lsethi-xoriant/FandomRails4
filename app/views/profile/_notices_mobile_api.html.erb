@@ -1,0 +1,37 @@
+<style>
+	.notice__reward-image{
+		max-width: 65px;
+	}
+</style>
+<div class="container container--default" style="background-color: #fff;">
+  <div class="row">
+    <div class="col-md-12">
+      
+      <div class="row section-heading" style="background-color: #3399ff; padding: 0;">
+        <div class="col-xs-12">
+          <h3 class="text-center">
+            <span class="glyphicon glyphicon-bell" aria-hidden="true" style="color: #fff; font-size: 28px;"></span>
+          </h3>
+          <h3 style="color: #fff; text-align: center; margin-top:0px;">Notifiche</h3>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-12">
+
+          <% notices_list.each do |notice| %>  
+            <div class="row">
+              <div class="col-xs-12">
+              	<%= notice[:notice].html_notice.html_safe %>
+              </div>
+            </div>
+          <% end %> 
+           
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+</div>
+

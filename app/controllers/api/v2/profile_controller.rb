@@ -231,4 +231,23 @@ class Api::V2::ProfileController < Api::V2::BaseController
     respond_with response.to_json
   end
   
+  def notices
+    Notice.mark_all_as_viewed()
+    expire_cache_key(notification_cache_key(current_user.id))
+    notices = Notice.where("user_id = ?", current_user.id).order("created_at DESC")
+    notices_list = group_notice_by_date(notices)
+    
+    response = {}
+    
+    response["html"] = prepare_html_notice(notices_list)
+    
+    respond_with response.to_json
+  end
+  
+  def prepare_html_notice(notices_list)
+    
+    html = render_to_string "/profile/_notices_mobile_api", layout: "ios_application", locals: { notices_list: notices_list }, formats: :html
+
+  end
+  
 end
