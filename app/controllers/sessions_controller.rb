@@ -96,7 +96,7 @@ class SessionsController < Devise::SessionsController
         set_account_up()
         cookies[:from_registration] = true 
       end
-    
+
       if $site.force_facebook_tab && !request_is_from_mobile_device?(request)
         redirect_to request.site.force_facebook_tab
       else

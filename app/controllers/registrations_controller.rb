@@ -25,7 +25,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     sign_up_params["password_confirmation"] = sign_up_params["password"]
-    
+
     if stored_anonymous_user?
       self.resource = adjust_anonymous_user(sign_up_params)
     else
