@@ -208,4 +208,27 @@ class Api::V2::ProfileController < Api::V2::BaseController
     badge_elements
   end
   
+  def profile_avatars
+    response = {}
+    response["avatar_list"] = get_avatar_list
+    respond_with response.to_json
+  end
+  
+  def update_profile_info
+    response = {}
+    user = User.find(params[:user_id])
+    user.update_attributes(:avatar_selected_url => params["avatar_selected_url"], :username => params[:username])
+    
+    if user.errors.any?
+      errors = user.errors.join("\n")
+      response["success"] = false
+      response["message"] = "Errori nel salvataggio profilo:\n#{errors}"
+    else
+      response["success"] = true
+      response["message"] = "Profilo aggiornato correttamente!"
+    end
+    
+    respond_with response.to_json
+  end
+  
 end
