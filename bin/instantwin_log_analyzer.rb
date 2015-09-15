@@ -124,9 +124,9 @@ def main
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
 
-    anonymous_users = exec_query(conn, tenant, events_is_tenant_specific, true, 
+    not_anonymous_users = exec_query(conn, tenant, events_is_tenant_specific, true, 
       "SELECT id FROM users
-      WHERE anonymous_id IS NOT NULL"
+      WHERE anonymous_id IS NULL"
     ).field_values("id")
 
     # Check that every user has registration log
@@ -145,7 +145,7 @@ def main
       AND message in ('registration', 'registration from oauth')"
     ).field_values("user_id")
     puts "#{Time.now} - Ended distinct user_id with registration query"
-    user_without_registration_ids = user_ids - anonymous_users - user_with_registration_ids
+    user_without_registration_ids = (user_ids & not_anonymous_users) - user_with_registration_ids
     if user_without_registration_ids.any?
       message = "ERROR: Some users haven't registration log: #{user_without_registration_ids.join(', ')}"
       puts message
@@ -164,7 +164,7 @@ def main
         AND (data::json->>'interaction')::int = #{interaction_id_for_registration};"
       ).field_values("user_id")
       puts "#{Time.now} - Ended distinct user_id with credit log query"
-      user_without_registration_credit_ids = user_ids - anonymous_users - user_with_registration_credit_ids
+      user_without_registration_credit_ids = (user_ids & not_anonymous_users) - user_with_registration_credit_ids
       if user_without_registration_credit_ids.any?
         message = "ERROR: Some users haven't registration credit log: #{user_without_registration_credit_ids.join(', ')}"
         puts message
@@ -202,12 +202,14 @@ def main
     end
 
     credits_assigned.each do |assigned|
-      number_of_attempts = instantwin_attempts_map[assigned["user_id"].to_i].to_i
-      if number_of_attempts
-        if assigned["count"].to_i < number_of_attempts
-          message = "ERROR: user #{assigned["user_id"]} gained #{assigned["count"]} credits, but played #{number_of_attempts} times"
-          puts message
-          errors << message
+      if not_anonymous_users.include?(assigned["user_id"])
+        number_of_attempts = instantwin_attempts_map[assigned["user_id"].to_i].to_i
+        if number_of_attempts
+          if assigned["count"].to_i < number_of_attempts
+            message = "ERROR: user #{assigned["user_id"]} gained #{assigned["count"]} credits, but played #{number_of_attempts} times"
+            puts message
+            errors << message
+          end
         end
       end
     end
