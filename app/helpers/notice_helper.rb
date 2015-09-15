@@ -47,5 +47,15 @@ module NoticeHelper
     end
     icon
   end
+  
+  def group_notice_by_date(notices)
+    notices_list = []
+    
+    notices.each do |n|
+      date = n.created_at.strftime("%d %B %Y")
+      notices_list << {date: date, notice: n}
+    end
+    notices_list
+  end
 
 end

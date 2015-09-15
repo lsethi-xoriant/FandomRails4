@@ -388,6 +388,7 @@ Fandom::Application.routes.draw do
       get "/profile/levels", :to => "profile#levels", defaults: { format: 'json' }
       get "/profile/avatars", :to => "profile#profile_avatars", defaults: { format: 'json' }
       get "/profile/update_info", :to => "profile#update_profile_info", defaults: { format: 'json' }
+      get "/profile/notices", :to => "profile#notices", defaults: { format: 'json' }
     end
   end
 

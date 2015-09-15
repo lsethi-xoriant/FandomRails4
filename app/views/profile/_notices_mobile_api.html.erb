@@ -1,0 +1,32 @@
+<div class="container container--default" style="background-color: #fff;">
+  <div class="row">
+    <div class="col-md-12">
+      
+      <div class="row section-heading">
+	        <div class="col-xs-12">
+	          <h3 class="text-center">
+	            <span class="glyphicon glyphicon-bell glyphicon-blu" aria-hidden="true"></span>
+	            Notifiche
+	          </h3>
+	        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-12">
+
+          <% notices_list.each do |notice| %>  
+            <div class="row">
+              <div class="col-xs-12">
+              	<%= notice[:notice].html_notice.html_safe %>
+              </div>
+            </div>
+          <% end %> 
+           
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+</div>
+
