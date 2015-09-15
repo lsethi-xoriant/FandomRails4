@@ -18,6 +18,7 @@ def main
   tenant = config["tenant"]
   events_is_tenant_specific = config["events_is_tenant_specific"]
   day_to_analyze = config["day_to_analyze"]
+  interaction_id_for_registration = config["interaction_id_for_registration"]
 
   conn = PG::Connection.open(config["production_db"])
   if events_is_tenant_specific
@@ -122,6 +123,54 @@ def main
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
+
+    anonymous_users = exec_query(conn, tenant, events_is_tenant_specific, true, 
+      "SELECT id FROM users
+      WHERE anonymous_id IS NOT NULL"
+    ).field_values("id")
+
+    # Check that every user has registration log
+    puts "#{Time.now} - Check registration log presence"
+
+    user_ids = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
+      "SELECT distinct user_id 
+       FROM events
+       WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}'"
+    ).field_values("user_id")
+    puts "#{Time.now} - Ended distinct user_id query"
+    user_with_registration_ids = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
+      "SELECT distinct user_id 
+      FROM events 
+      WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+      AND message in ('registration', 'registration from oauth')"
+    ).field_values("user_id")
+    puts "#{Time.now} - Ended distinct user_id with registration query"
+    user_without_registration_ids = user_ids - anonymous_users - user_with_registration_ids
+    if user_without_registration_ids.any?
+      message = "ERROR: Some users haven't registration log: #{user_without_registration_ids.join(', ')}"
+      puts message
+      errors << message
+    end
+
+    if interaction_id_for_registration
+      # Check that every user has registration credit
+      puts "#{Time.now} - Check registration credit logs presence"
+      user_with_registration_credit_ids = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
+        "SELECT distinct user_id 
+        FROM events 
+        WHERE message = 'assigning reward to user' 
+        AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+        AND (data::json->'outcome_rewards'->>'credit')::int = 1 
+        AND (data::json->>'interaction')::int = #{interaction_id_for_registration};"
+      ).field_values("user_id")
+      puts "#{Time.now} - Ended distinct user_id with credit log query"
+      user_without_registration_credit_ids = user_ids - anonymous_users - user_with_registration_credit_ids
+      if user_without_registration_credit_ids.any?
+        message = "ERROR: Some users haven't registration credit log: #{user_without_registration_credit_ids.join(', ')}"
+        puts message
+        errors << message
+      end
+    end
 
     # Check that no one got more than one credit for the same interaction
     puts "#{Time.now} - Check credits assignment"
