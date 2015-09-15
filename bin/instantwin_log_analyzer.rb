@@ -126,7 +126,8 @@ def main
 
     not_anonymous_users = exec_query(conn, tenant, events_is_tenant_specific, true, 
       "SELECT id FROM users
-      WHERE anonymous_id IS NULL"
+      WHERE anonymous_id IS NULL
+      AND created_at >= '#{instantwin["valid_from"]}'"
     ).field_values("id")
 
     # Check that every user has registration log
