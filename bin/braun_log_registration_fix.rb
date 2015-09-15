@@ -68,7 +68,7 @@ def main
     email_sent_time = add_ms(created_at, 567)
     registration_time = add_ms(created_at, 569)
     assigning_reward_time = add_ms(created_at, 574)    
-    http_req_end_time = add_ms(created_at, 575)
+    http_req_end_time = add_ms(created_at, 579)
 
     http_request_start = {
       "message" => "http request start",
@@ -161,6 +161,7 @@ def main
     File.open(file_name, "w") do |f| 
       f.truncate(0)
       f.write(http_request_start.to_json + "\n")
+      f.write('{"message":"cache miss computation","level":"info","data":{"key":"f:braun_ic:rewarding_rules_collector_51","time":0.008581015},"timestamp":"' + add_ms(created_at, -79).to_s + '","pid":' + pid.to_s + '}' + "\n" + '{"message":"cache miss computation","level":"info","data":{"key":"f:braun_ic:current_periodicities","time":0.002183007},"timestamp":"' + add_ms(created_at, -69).to_s + '","pid":' + pid.to_s + '}' + "\n" + '{"message":"cache miss computation","level":"info","data":{"key":"f:braun_ic:model_helper.rb:5","time":0.002143178},"timestamp":"' + add_ms(created_at, -58).to_s + '","pid":' + pid.to_s + '}' + "\n")
       if user_without_registration_log_ids.include?(user["id"].to_s)
         f.write(email_sent.to_json + "\n")
         f.write(registration.to_json + "\n")
@@ -168,6 +169,7 @@ def main
       if user_without_credit_log_ids.include?(user["id"].to_s)
         f.write(assigning_reward_to_user.to_json + "\n")
       end
+      f.write('{"message":"expiring cache key","level":"info","data":{"key":"f:braun_ic:cta_to_reward_statuses_' + user['id'] + '"},"timestamp":"' + add_ms(created_at, 575).to_s + '","pid":' + pid.to_s + '}' + "\n" + '{"message":"expiring cache key","level":"info","data":{"key":"f:braun_ic:status_reward_credit_' + user['id'] + '"},"timestamp":"' + add_ms(created_at, 576).to_s + '","pid":' + pid.to_s + '}' + "\n" + '{"message":"expiring cache key","level":"info","data":{"key":"f:braun_ic:rewards_credit_counter_for_user_' + user['id'] + '"},"timestamp":"' + add_ms(created_at, 577).to_s + '":' + pid.to_s + '}' + "\n" + '{"message":"cache miss computation","level":"info","data":{"key":"f:braun_ic:rewards_with_tag_to-be-notified","time":0.005173912},"timestamp":"' + add_ms(created_at, 578).to_s + '","pid":' + pid.to_s + '}' + "\n")
       f.write(http_request_end.to_json)
     end
 
