@@ -92,7 +92,6 @@ class SessionsController < Devise::SessionsController
       fandom_play_login(user)
     
       if from_registration
-        debugger
         log_data = { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id }
         if cookies[:initial_http_referrer].present?
           log_data[:initial_http_referrer] = cookies[:initial_http_referrer]
