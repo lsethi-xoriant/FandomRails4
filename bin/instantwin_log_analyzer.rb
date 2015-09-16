@@ -127,7 +127,8 @@ def main
     not_anonymous_users = exec_query(conn, tenant, events_is_tenant_specific, true, 
       "SELECT id FROM users
       WHERE anonymous_id IS NULL
-      AND created_at >= '#{instantwin["valid_from"]}'"
+      AND created_at >= '#{instantwin["valid_from"]}'
+      AND created_at < '#{(DateTime.now - 10.minutes).utc.strftime("%Y-%m-%d %H:%M:%S")}'"
     ).field_values("id")
 
     # Check that every user has registration log
@@ -310,7 +311,7 @@ def main
     send_email(ses, mail_from, mail_to, mail_subject, body) 
   end
 
-  puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds"
+  puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds\n"
 
 end
 
