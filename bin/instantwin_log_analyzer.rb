@@ -107,6 +107,12 @@ def main
     instantwin_start_date = DateTime.parse(instantwin["valid_from"])
     instantwin_end_date = DateTime.parse(instantwin["valid_to"])
 
+    max_events_timestamp = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
+      "SELECT MAX(timestamp) AS max FROM events
+      WHERE timestamp >= '#{instantwin["valid_from"]}'
+      AND tenant = '#{tenant}'"
+    ).first["max"]
+
     credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
@@ -128,7 +134,7 @@ def main
       "SELECT id FROM users
       WHERE anonymous_id IS NULL
       AND created_at >= '#{instantwin["valid_from"]}'
-      AND created_at < '#{(DateTime.now - 10.minutes).utc.strftime("%Y-%m-%d %H:%M:%S")}'"
+      AND created_at < '#{max_events_timestamp}'"
     ).field_values("id")
 
     # Check that every user has registration log
