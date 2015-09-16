@@ -20,6 +20,7 @@ def main
   db = config["db"]
   conn = PG::Connection.open(db)
   tenant = config["tenant"]
+  single_run = config["signle_run"]
 
   if tenant.nil?
     tenant = []
@@ -38,7 +39,8 @@ def main
 
   logger.info "cache daemon starting"
 
-  loop do
+  if single_run
+
     start_time = Time.now
 
     execute_job(logger) do
@@ -50,7 +52,24 @@ def main
 
     elapsed_time = Time.now - start_time
     logger.info "jobs executed; elapsed time: #{elapsed_time}s"
-    sleep(20 * 60) # 20 minutes
+
+  else
+
+    loop do
+      start_time = Time.now
+
+      execute_job(logger) do
+        tenant.each do |t|
+          cache_generate_rankings(conn, t, logger)
+          cache_generate_votes(conn, t, logger)
+        end
+      end
+
+      elapsed_time = Time.now - start_time
+      logger.info "jobs executed; elapsed time: #{elapsed_time}s"
+      sleep(20 * 60) # 20 minutes
+    end
+
   end
 
 end
