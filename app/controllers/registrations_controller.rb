@@ -46,7 +46,14 @@ class RegistrationsController < Devise::RegistrationsController
 
         sign_up_params_for_logging = sign_up_params.clone
         sign_up_params_for_logging.delete('password')
-        log_synced("registration", { 'form_data' => sign_up_params_for_logging, 'user_id' => current_user.id })
+
+        log_data = { 'form_data' => sign_up_params_for_logging, 'user_id' => current_user.id }
+        if cookies[:initial_http_referrer].present?
+          log_data["initial_http_referrer"] = cookies[:initial_http_referrer]
+          cookies.delete(:initial_http_referrer)
+        end
+        log_synced("registration", log_data)
+
         set_account_up()
         respond_with resource, :location => after_sign_up_path_for(resource)
       else

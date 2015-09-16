@@ -146,7 +146,11 @@
   <%= render partial: "/application/ga" %>
   <%= yield (:extra_script) %>
 
+  <%= @aux["assets"]["extra_fields"]["pixel_homepage"].html_safe rescue nil %>
+
   <% if @aux["from_registration"] %>
+    <%= @aux["assets"]["extra_fields"]["pixel_registration"].html_safe rescue nil %>
+
     <script type='text/javascript'>
     // Conversion Name: Wellness Machine - Thank You Page
     // INSTRUCTIONS 

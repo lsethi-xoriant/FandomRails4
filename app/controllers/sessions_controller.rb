@@ -92,7 +92,13 @@ class SessionsController < Devise::SessionsController
       fandom_play_login(user)
     
       if from_registration
-        log_synced("registration from oauth", { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id })
+        log_data = { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id }
+        if cookies[:initial_http_referrer].present?
+          log_data[:initial_http_referrer] = cookies[:initial_http_referrer]
+          cookies.delete(:initial_http_referrer)
+        end
+        log_synced("registration from oauth", log_data)
+
         set_account_up()
         cookies[:from_registration] = true 
       end
