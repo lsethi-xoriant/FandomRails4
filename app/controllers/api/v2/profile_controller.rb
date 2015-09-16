@@ -250,4 +250,62 @@ class Api::V2::ProfileController < Api::V2::BaseController
 
   end
   
+  def rankings
+    response = {}
+    rank = get_general_ranking()
+    
+    property_rank = get_full_rank(rank)
+    
+    response["ranking_list"] = []
+    response["ranking_list"] << prepare_ranking(property_rank)
+    
+    fan_of_days = []
+    (1..8).each do |i|
+      day = Time.now - i.day
+      winner = get_winner_of_day(day)
+      fan_of_days << {"day" => "#{day.strftime('%d')} #{calculate_month_string_ita(day.strftime('%m').to_i)[0..2].camelcase}", "winner" => winner} if winner
+    end
+    
+    response["ranking_list"] << prepare_ranking_from_fan_of_the_day(fan_of_days)
+    
+    respond_with response.to_json
+  end
+  
+  def prepare_ranking(rank)
+    ranking_element = {}
+    ranking_element["title"] = rank[:ranking].title
+    position_list = []
+    rank[:rank_list].each do |re|
+      position_list << {
+        "rank" => re["position"],
+        "avatarUrl" => re["avatar"],
+        "username" => re["user"],
+        "counter" => re["counter"] 
+      }
+    end
+    ranking_element["position_list"] = position_list
+    
+    ranking_element
+  end
+  
+  def prepare_ranking_from_fan_of_the_day(rank)
+    ranking_element = {}
+    ranking_element["title"] = "Fan del giorno"
+    position_list = []
+    rank.each do |winner|
+      if winner["winner"]
+        position = {
+          "rank" => winner["day"],
+          "avatarUrl" => winner["winner"].user.avatar_selected_url,
+          "username" => winner["winner"].user.username,
+          "counter" => winner["winner"].counter 
+        }
+        position_list << position
+      end
+    end
+    ranking_element["position_list"] = position_list
+    
+    ranking_element
+  end
+  
 end
