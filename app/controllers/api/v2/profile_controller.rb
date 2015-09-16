@@ -277,8 +277,8 @@ class Api::V2::ProfileController < Api::V2::BaseController
     position_list = []
     rank[:rank_list].each do |re|
       position_list << {
-        "rank" => re["position"],
-        "avatarUrl" => re["avatar"],
+        "rank" => "#" + "#{re["position"]}",
+        "avatar_url" => re["avatar"],
         "username" => re["user"],
         "counter" => re["counter"] 
       }
@@ -296,7 +296,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
       if winner["winner"]
         position = {
           "rank" => winner["day"],
-          "avatarUrl" => winner["winner"].user.avatar_selected_url,
+          "avatar_url" => winner["winner"].user.avatar_selected_url,
           "username" => winner["winner"].user.username,
           "counter" => winner["winner"].counter 
         }
