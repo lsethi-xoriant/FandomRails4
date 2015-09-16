@@ -162,7 +162,7 @@ module RankingHelper
       nil
     else
       cache_medium("winner_of_day_#{day.to_time.to_i}") do
-        unless $context_root.nil?
+        if !$context_root.nil? && !$context_root == "all"
           reward_id = Reward.find_by_name("#{$context_root}-point").id
         else
           reward_id = Reward.find_by_name("point").id
