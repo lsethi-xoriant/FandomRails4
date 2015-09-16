@@ -474,7 +474,7 @@ module RewardingSystemHelper
     total_time = Time.now.utc - start_time
     
     log_outcome(outcome)
-    log_info("predict interaction outcome", { 
+    log_debug("predict interaction outcome", { 
       'time' => total_time, 
       'interaction' => interaction.id, 
       'outcome_rewards' => outcome.reward_name_to_counter, 
@@ -550,7 +550,7 @@ module RewardingSystemHelper
         log_outcome(total_outcome)
 
         total_time = Time.now.utc - start_time
-        log_info("predict max cta outcome", { 
+        log_debug("predict max cta outcome", { 
           'time' => total_time, 
           'cta' => cta.id, 
           'outcome_rewards' => total_outcome.reward_name_to_counter, 

@@ -90,7 +90,7 @@ module CacheHelper
       block_run = true 
       block_result = yield block
       time = (Time.now.utc - start_time)
-      log_info("cache miss computation", { 'key' => cache_key, "time" => time })
+      log_debug("cache miss computation", { 'key' => cache_key, "time" => time })
       block_result 
     end
     
@@ -128,7 +128,7 @@ module CacheHelper
       time = (Time.now.utc - start_time) 
   
       if block_run
-        log_info("cache miss", { 'key' => cache_key, "time" => time })
+        log_debug("cache miss", { 'key' => cache_key, "time" => time })
       else
         log_info("cache hit", { 'key' => cache_key,  "time" => time })
       end
@@ -138,7 +138,7 @@ module CacheHelper
 
   def expire_cache_key(key)
     actual_key = get_cache_key(key)
-    log_info("expiring cache key", { key: actual_key })
+    log_debug("expiring cache key", { key: actual_key })
     Rails.cache.delete(actual_key)
   end
   
