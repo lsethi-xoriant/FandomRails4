@@ -34,29 +34,32 @@ def main
     bucket = get_s3_bucket(config['s3_settings'])
     tenant = config['tenant']
     
-    last_timestamp = bucket.objects["last_timestamp"].read()
-    events = get_events(db_conn, last_timestamp)
-    if events.empty?
-      logger.info("no events.")
-    else
-      buffer = StringIO.new
-      new_timestamp = events[0]['timestamp']
-      new_timestamp_file_postfix = new_timestamp.gsub(' ', '__').gsub(':', '-').gsub('.', '__')
-      dir = new_timestamp.split(" ")[0]
-            
-      count = 0 
-      events.each do |event|
-        if event['tenant'] == tenant
-          count += 1
-          event['data'] = JSON.load(event['data'])
-          buffer.write(JSON.dump(event))
-          buffer.write("\n")
+    while true
+      last_timestamp = bucket.objects["last_timestamp"].read()
+      events = get_events(db_conn, last_timestamp)
+      if events.empty?
+        logger.info("no more events to archive.")
+        break
+      else
+        buffer = StringIO.new
+        new_timestamp = events[0]['timestamp']
+        new_timestamp_file_postfix = new_timestamp.gsub(' ', '__').gsub(':', '-').gsub('.', '__')
+        dir = new_timestamp.split(" ")[0]
+              
+        count = 0 
+        events.each do |event|
+          if event['tenant'] == tenant
+            count += 1
+            event['data'] = JSON.load(event['data'])
+            buffer.write(JSON.dump(event))
+            buffer.write("\n")
+          end
         end
+        
+        bucket.objects["#{dir}/log__#{new_timestamp_file_postfix}.gz"].write(gzip_string(buffer.string), :sigle_request => true)
+        bucket.objects["last_timestamp"].write(new_timestamp, :sigle_request => true)
+        logger.info("archived #{count} events.")
       end
-      
-      bucket.objects["#{dir}/log__#{new_timestamp_file_postfix}.gz"].write(gzip_string(buffer.string), :sigle_request => true)
-      bucket.objects["last_timestamp"].write(new_timestamp, :sigle_request => true)
-      logger.info("archived #{count} events.")
     end
   rescue Exception => exception
     logger.error("toplevel exception: #{exception} - #{exception.backtrace}")
@@ -75,8 +78,8 @@ end
 def get_events(db_conn, max_timestamp)
   sql_query = 
     "SELECT * FROM events WHERE 
-    timestamp > '#{max_timestamp}' 
-    ORDER BY id DESC"
+    timestamp > '#{max_timestamp}' AND timestamp < ( ('#{max_timestamp}'::timestamp) + ('1 hour'::interval))
+    ORDER BY timestamp DESC"
   db_conn.exec(sql_query).to_a
 end
 
