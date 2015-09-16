@@ -40,10 +40,14 @@ module FandomUtils
     def request.site
       $site
     end
-  
+
     if $site.nil?
       render template: 'application/url_mistyped'
       return
+    end
+
+    unless fandom_domain?
+      cookies[:initial_http_referrer] = request.referrer
     end
 
     if $site.id == "disney" && request.present? && request.referrer.present? && request.referrer.include?("https://www.facebook.com")
@@ -62,6 +66,21 @@ module FandomUtils
       may_redirect_to_landing if $site.force_landing
     end
 
+  end
+
+  def fandom_domain?
+    result = false
+    if request.present? && request.referrer.present? && !self.is_a?(DeviseController)
+      $site.domains.each do |domain|
+        if request.referrer.include?(domain)
+          result = true
+          break
+        end
+      end
+    else
+      result = true
+    end
+    result
   end
 
   def may_redirect_to_landing
