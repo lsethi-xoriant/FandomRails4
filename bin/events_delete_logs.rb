@@ -1,6 +1,6 @@
 require "pg"
 require "yaml"
-require 'logger'
+require "logger"
 
 def main
 
@@ -35,6 +35,7 @@ def main
       sleep(sleep_time)
     rescue => e
       logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
+      sleep(sleep_time)
     end
   end
 
