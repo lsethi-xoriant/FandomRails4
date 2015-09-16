@@ -307,7 +307,7 @@ def main
 
   if errors.any?
     body = "<ul><li>" + errors.map {|s| s.gsub("\n", "<br>\n")}.join("\n</li><li>")  + "</li></ul>"
-    #send_email(ses, mail_from, mail_to, mail_subject, body) 
+    send_email(ses, mail_from, mail_to, mail_subject, body) 
   end
 
   puts "\n#{Time.now} - Instantwin log analyzer ended in #{Time.now - start_time} seconds"
