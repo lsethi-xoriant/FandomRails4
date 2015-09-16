@@ -6,9 +6,9 @@ def main
 
   if ARGV.size != 1
     puts <<-EOF
-      This script deletes logs from log archive, processing them by chunks.
+      This script deletes debug logs from log archive, processing them by chunks.
       Usage: #{$0} <config.yml>
-      config.yml file must define events_db, rails_app_dir, tenant, messages, events_chunk_size and sleep_time
+      config.yml file must define events_db, rails_app_dir, tenant, events_chunk_size and sleep_time
     EOF
     exit
   end
@@ -17,20 +17,19 @@ def main
 
   rails_app_dir = config["rails_app_dir"]
   tenant = config["tenant"]
-  messages = config["messages"].split(",")
   events_chunk_size = config["events_chunk_size"]
   sleep_time = config["sleep_time"]
 
   events_conn = PG::Connection.open(config["events_db"])
 
-  logger = Logger.new("#{rails_app_dir}/log/events_delete_logs.log")
+  logger = Logger.new("#{rails_app_dir}/log/events_delete_debug_logs.log")
 
-  logger.info("deleting logs process starting...")
+  logger.info("deleting debug logs process starting...")
 
   loop do
     begin
       logger.info("starting a new chunk deletion")
-      delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger)
+      delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
       logger.info("now taking a #{sleep_time} seconds nap...")
       sleep(sleep_time)
     rescue => e
@@ -40,7 +39,7 @@ def main
 
 end
 
-def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger)
+def delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
 
   logger.info("retrieving chunk timestamps interval")
 
@@ -48,8 +47,8 @@ def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger
     "SELECT timestamp 
     FROM events 
     WHERE tenant = '#{tenant}' 
-    AND message IN ('#{messages.join("','")}') 
-    ORDER BY timestamp DESC 
+    AND level = 'debug' 
+    ORDER BY timestamp ASC 
     LIMIT #{events_chunk_size}"
   ).to_a
 
@@ -62,7 +61,7 @@ def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger
   delete = events_conn.exec(
     "DELETE FROM events
     WHERE tenant = '#{tenant}' 
-    AND message IN ('#{messages.join("','")}')
+    AND level = 'debug' 
     AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
   )
 
