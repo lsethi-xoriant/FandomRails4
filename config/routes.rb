@@ -438,7 +438,7 @@ Fandom::Application.routes.draw do
     get "cta/show/:id", :to => "call_to_action#show_cta", :as => :cta_show
     get "cta/show_details/:id", :to => "call_to_action#show_details"
     get "cta/edit/:id/", :to => "call_to_action#edit_cta"
-    patch "cta/save", :to => "call_to_action#save_cta", via: [:get, :post]
+    match "cta/save", :to => "call_to_action#save_cta", via: [:get, :post]
     patch "cta/update", :to => "call_to_action#update_cta"
     post "cta/hide/:id", :to => "call_to_action#hide_cta"
     match "cta/clone/:id", :to => "call_to_action#clone", via: [:get, :post]
