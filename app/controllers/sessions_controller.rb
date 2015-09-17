@@ -93,11 +93,7 @@ class SessionsController < Devise::SessionsController
     
       if from_registration
         log_data = { 'form_data' => env["omniauth.auth"], 'user_id' => current_user.id }
-        if cookies[:initial_http_referrer].present?
-          log_data[:initial_http_referrer] = cookies[:initial_http_referrer]
-          cookies.delete(:initial_http_referrer)
-        end
-        log_synced("registration from oauth", log_data)
+        log_synced("registration from oauth", adjust_user_and_log_data_with_utm(user, log_data))
 
         set_account_up()
         cookies[:from_registration] = true 
