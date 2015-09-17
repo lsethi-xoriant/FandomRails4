@@ -4,13 +4,25 @@ class Api::V2::RewardController < Api::V2::BaseController
     all_rewards = get_all_rewards_map(get_property_for_reward_catalogue).map{|k,v| v}.sort_by{|reward| reward.created_at}
     cta_ids = all_rewards.map{ |reward| reward.call_to_action_id }
     
+    if current_user
+      header_message = "Hai #{get_counter_about_user_reward("credit")} crediti a disposizione"
+      extra_info = {
+        "credits" => get_counter_about_user_reward("credit")
+      }
+    else
+      header_message = "Registrati per ottenere crediti e sbloccare i contenuti esclusivi della community."
+      extra_info = nil
+    end
+    
     ctas = CallToAction.where("id in (?)", cta_ids)
     calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(ctas)
     result = {
         'call_to_action_info_list' => calltoaction_info_list,
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => false,
-        'title' => "Tutti i premi" 
+        'title' => "Tutti i premi",
+        'header_message' => header_message,
+        'extra_info' => extra_info
       }
     respond_with result.to_json
   end
