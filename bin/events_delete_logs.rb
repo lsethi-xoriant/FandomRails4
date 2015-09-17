@@ -29,7 +29,7 @@ def main
   loop do
     begin
       logger.info("starting a new chunk deletion")
-      delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger)
+      delete_events_chunk(events_conn, messages, events_chunk_size, logger)
       logger.info("now taking a #{sleep_time} seconds nap...")
       sleep(sleep_time)
     rescue => e
@@ -40,13 +40,13 @@ def main
 
 end
 
-def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger)
+def delete_events_chunk(events_conn, messages, events_chunk_size, logger)
 
   logger.info("retrieving chunk timestamps interval")
 
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
-    FROM events 
+    FROM fandom.events 
     WHERE message IN ('#{messages.join("','")}') 
     ORDER BY timestamp DESC 
     LIMIT #{events_chunk_size}"
@@ -59,7 +59,7 @@ def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger
   start_time = Time.now
 
   delete = events_conn.exec(
-    "DELETE FROM events 
+    "DELETE FROM fandom.events 
     WHERE message IN ('#{messages.join("','")}') 
     AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
   )

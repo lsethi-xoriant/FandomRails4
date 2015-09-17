@@ -26,14 +26,14 @@ def main
 
   begin
     logger.info("starting a new chunk deletion")
-    delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
+    delete_events_chunk(events_conn, events_chunk_size, logger)
   rescue => e
     logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
   end
 
 end
 
-def delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
+def delete_events_chunk(events_conn, events_chunk_size, logger)
 
   logger.info("retrieving chunk timestamps interval")
 
