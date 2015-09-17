@@ -46,7 +46,7 @@ def delete_events_chunk(events_conn, messages, events_chunk_size, logger)
 
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
-    FROM fandom.events 
+    FROM events 
     WHERE message IN ('#{messages.join("','")}') 
     ORDER BY timestamp DESC 
     LIMIT #{events_chunk_size}"
@@ -59,7 +59,7 @@ def delete_events_chunk(events_conn, messages, events_chunk_size, logger)
   start_time = Time.now
 
   delete = events_conn.exec(
-    "DELETE FROM fandom.events 
+    "DELETE FROM events 
     WHERE message IN ('#{messages.join("','")}') 
     AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
   )
