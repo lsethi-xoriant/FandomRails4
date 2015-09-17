@@ -1,7 +1,5 @@
 events_db:
-tenant:
-rails_app_dir: /Users/kairos
+rails_app_dir: /dir
 messages:  "cache miss computation,predict max cta outcome,expiring cache key,predict interaction outcome,cache miss"
-app_root_path: /
 events_chunk_size: 1000 # in rows
 sleep_time: 10 # in seconds

@@ -8,7 +8,7 @@ def main
     puts <<-EOF
       This script deletes debug logs from log archive, processing them by chunks.
       Usage: #{$0} <config.yml>
-      config.yml file must define events_db, rails_app_dir, tenant, events_chunk_size and sleep_time
+      config.yml file must define events_db, rails_app_dir and events_chunk_size
     EOF
     exit
   end
@@ -16,9 +16,7 @@ def main
   config = YAML.load_file(ARGV[0].to_s)
 
   rails_app_dir = config["rails_app_dir"]
-  tenant = config["tenant"]
   events_chunk_size = config["events_chunk_size"]
-  sleep_time = config["sleep_time"]
 
   events_conn = PG::Connection.open(config["events_db"])
 
@@ -26,16 +24,11 @@ def main
 
   logger.info("deleting debug logs process starting...")
 
-  loop do
-    begin
-      logger.info("starting a new chunk deletion")
-      delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
-      logger.info("now taking a #{sleep_time} seconds nap...")
-      sleep(sleep_time)
-    rescue => e
-      logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
-      sleep(sleep_time)
-    end
+  begin
+    logger.info("starting a new chunk deletion")
+    delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
+  rescue => e
+    logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
   end
 
 end
@@ -47,8 +40,7 @@ def delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
     FROM events 
-    WHERE tenant = '#{tenant}' 
-    AND level = 'debug' 
+    WHERE level = 'debug' 
     ORDER BY timestamp ASC 
     LIMIT #{events_chunk_size}"
   ).to_a
@@ -60,9 +52,8 @@ def delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
   start_time = Time.now
 
   delete = events_conn.exec(
-    "DELETE FROM events
-    WHERE tenant = '#{tenant}' 
-    AND level = 'debug' 
+    "DELETE FROM events 
+    WHERE level = 'debug' 
     AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
   )
 

@@ -8,7 +8,7 @@ def main
     puts <<-EOF
       This script deletes logs from log archive, processing them by chunks.
       Usage: #{$0} <config.yml>
-      config.yml file must define events_db, rails_app_dir, tenant, messages, events_chunk_size and sleep_time
+      config.yml file must define events_db, rails_app_dir, messages, events_chunk_size and sleep_time
     EOF
     exit
   end
@@ -16,7 +16,6 @@ def main
   config = YAML.load_file(ARGV[0].to_s)
 
   rails_app_dir = config["rails_app_dir"]
-  tenant = config["tenant"]
   messages = config["messages"].split(",")
   events_chunk_size = config["events_chunk_size"]
   sleep_time = config["sleep_time"]
@@ -48,8 +47,7 @@ def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
     FROM events 
-    WHERE tenant = '#{tenant}' 
-    AND message IN ('#{messages.join("','")}') 
+    WHERE message IN ('#{messages.join("','")}') 
     ORDER BY timestamp DESC 
     LIMIT #{events_chunk_size}"
   ).to_a
@@ -61,9 +59,8 @@ def delete_events_chunk(events_conn, tenant, messages, events_chunk_size, logger
   start_time = Time.now
 
   delete = events_conn.exec(
-    "DELETE FROM events
-    WHERE tenant = '#{tenant}' 
-    AND message IN ('#{messages.join("','")}')
+    "DELETE FROM events 
+    WHERE message IN ('#{messages.join("','")}') 
     AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
   )
 
