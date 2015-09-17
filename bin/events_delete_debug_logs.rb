@@ -53,8 +53,8 @@ def delete_events_chunk(events_conn, tenant, events_chunk_size, logger)
     LIMIT #{events_chunk_size}"
   ).to_a
 
-  min_chunck_timestamp = chunk_timestamps.last["timestamp"]
-  max_chunck_timestamp = chunk_timestamps.first["timestamp"]
+  min_chunck_timestamp = chunk_timestamps.first["timestamp"]
+  max_chunck_timestamp = chunk_timestamps.last["timestamp"]
 
   logger.info("deleting events between #{min_chunck_timestamp} and #{max_chunck_timestamp}")
   start_time = Time.now
