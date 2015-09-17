@@ -45,19 +45,24 @@ def delete_events_chunk(events_conn, events_chunk_size, logger)
     LIMIT #{events_chunk_size}"
   ).to_a
 
-  min_chunck_timestamp = chunk_timestamps.first["timestamp"]
-  max_chunck_timestamp = chunk_timestamps.last["timestamp"]
+  if chunk_timestamps.any?
+    min_chunck_timestamp = chunk_timestamps.first["timestamp"]
+    max_chunck_timestamp = chunk_timestamps.last["timestamp"]
 
-  logger.info("deleting events between #{min_chunck_timestamp} and #{max_chunck_timestamp}")
-  start_time = Time.now
+    logger.info("deleting events between #{min_chunck_timestamp} and #{max_chunck_timestamp}")
+    start_time = Time.now
 
-  delete = events_conn.exec(
-    "DELETE FROM events 
-    WHERE level = 'debug' 
-    AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
-  )
+    delete = events_conn.exec(
+      "DELETE FROM events 
+      WHERE level = 'debug' 
+      AND timestamp BETWEEN '#{min_chunck_timestamp}' AND '#{max_chunck_timestamp}'"
+    )
 
-  logger.info("#{delete.cmd_tuples()} rows successfully deleted in #{Time.now - start_time} seconds")
+    logger.info("#{delete.cmd_tuples()} rows successfully deleted in #{Time.now - start_time} seconds")
+  else
+    logger.info("no events found, now exit")
+    exit
+  end
 
 end
 
