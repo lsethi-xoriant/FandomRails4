@@ -8,7 +8,7 @@ def main
     puts <<-EOF
       This script deletes debug logs from log archive, processing them by chunks.
       Usage: #{$0} <config.yml>
-      config.yml file must define events_db, rails_app_dir and events_chunk_size
+      config.yml file must define events_db, rails_app_dir, events_chunk_size and starting_timestamp (optional)
     EOF
     exit
   end
@@ -17,33 +17,53 @@ def main
 
   rails_app_dir = config["rails_app_dir"]
   events_chunk_size = config["events_chunk_size"]
+  timestamps_lower_limit = config["starting_timestamp"]
 
   events_conn = PG::Connection.open(config["events_db"])
 
   logger = Logger.new("#{rails_app_dir}/log/events_delete_debug_logs.log")
 
-  logger.info("deleting debug logs process starting...")
+  if !timestamps_lower_limit
+    logger.info("retrieving first event timestamp...")
+    start_time = Time.now
+
+    timestamps_upper_limit = events_conn.exec(
+      "SELECT timestamp
+      FROM events
+      WHERE level = 'debug' 
+      ORDER BY timestamp ASC
+      LIMIT 1"
+    ).first["timestamp"]
+
+    logger.info("first event timestamp achieved in #{Time.now - start_time} seconds (#{timestamps_upper_limit})")
+  end
+
+  logger.info("deletion loop process starting...")
 
   begin
     logger.info("starting a new chunk deletion")
-    delete_events_chunk(events_conn, events_chunk_size, logger)
+    timestamps_lower_limit = delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, logger)
   rescue => e
     logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
   end
 
 end
 
-def delete_events_chunk(events_conn, events_chunk_size, logger)
+def delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, logger)
 
+  start_time = Time.now
   logger.info("retrieving chunk timestamps interval")
 
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
     FROM events 
-    WHERE level = 'debug' 
+    WHERE timestamp >= '#{timestamps_lower_limit}' 
+    AND level = 'debug' 
     ORDER BY timestamp ASC 
     LIMIT #{events_chunk_size}"
   ).to_a
+
+  logger.info("chunk timestamps interval gained in #{Time.now - start_time} seconds")
 
   if chunk_timestamps.any?
     min_chunck_timestamp = chunk_timestamps.first["timestamp"]
@@ -63,6 +83,8 @@ def delete_events_chunk(events_conn, events_chunk_size, logger)
     logger.info("no events found, now exit")
     exit
   end
+
+  return max_chunck_timestamp
 
 end
 
