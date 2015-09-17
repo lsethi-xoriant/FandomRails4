@@ -83,7 +83,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $(".cta-" + calltoaction_info.calltoaction.id + "-pin").popover("destroy");
   }
 
-  var x = false;
   $scope.updatePin = function(calltoaction_info, interaction_info, params, when_show_interaction) {
     if($scope.aux.mobile) {
       $("#pin-" + interaction_info.interaction.id).modal("show");

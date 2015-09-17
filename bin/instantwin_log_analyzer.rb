@@ -50,7 +50,7 @@ def main
 
   start_time = Time.now
 
-  puts "#{Time.now} - Instantwin log analyzer starting. #{instantwins.count} total instantwins to analyze"
+  puts "\n#{Time.now} - Instantwin log analyzer starting. #{instantwins.count} total instantwins to analyze"
   puts "#{Time.now} - Check that the right user won instantwin when he tried, if any"
 
   instantwins_map.each do |instantwin_id, instantwin|
