@@ -12,6 +12,7 @@
       if tag
         tag_name = tag.name
         featured_content_previews = get_content_previews(featured_tag_name, [tag])
+        property_content_preview = tag_to_content_preview(tag)
       else
         featured_content_previews = get_content_previews(featured_tag_name)
       end
@@ -29,7 +30,8 @@
         'menu_items' => get_menu_items(),
         'featured_content_previews' => featured_content_previews.contents,
         # TODO: content section need to have their timestamp
-        'content_sections' => []
+        'content_sections' => [],
+        'property' => property_content_preview
       }
       
       respond_with result.to_json
