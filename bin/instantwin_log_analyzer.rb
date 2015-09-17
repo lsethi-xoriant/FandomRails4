@@ -155,9 +155,7 @@ def main
     puts "#{Time.now} - Ended distinct user_id with registration query"
     user_without_registration_ids = (user_ids & not_anonymous_users) - user_with_registration_ids
     if user_without_registration_ids.any?
-      message = "ERROR: Some users haven't registration log: #{user_without_registration_ids.join(', ')}"
-      puts message
-      errors << message
+      errors = check_if_user_has_been_updated_recently(conn, user_without_registration_ids, "registration", errors)
     end
 
     if interaction_id_for_registration
@@ -174,9 +172,7 @@ def main
       puts "#{Time.now} - Ended distinct user_id with credit log query"
       user_without_registration_credit_ids = (user_ids & not_anonymous_users) - user_with_registration_credit_ids
       if user_without_registration_credit_ids.any?
-        message = "ERROR: Some users haven't registration credit log: #{user_without_registration_credit_ids.join(', ')}"
-        puts message
-        errors << message
+        errors = check_if_user_has_been_updated_recently(conn, user_without_registration_credit_ids, "credit for registration", errors)
       end
     end
 
@@ -352,6 +348,20 @@ def exec_query(conn, tenant, events_is_tenant_specific, is_db_production, query)
       conn.exec(query)
     end
   end
+end
+
+# This check will be executed on each user that have not registration log or credit for registration log, in order to
+# exclude the possibility that his logs haven't been stocked yet. To do so, we will throw errors only if user's
+# updated_at time goes back more than 10 minutes ago.
+def check_if_user_has_been_updated_recently(conn, user_ids, log_check, errors)
+  conn.exec("SELECT id, updated_at FROM braun_ic.users WHERE id IN (#{user_ids.join(",")})").each do |user|
+    if DateTime.parse(user["updated_at"]) < DateTime.now.utc - 10.minutes
+      message = "ERROR: User #{user['id']} haven't #{log_check} log"
+      puts message
+      errors << message
+    end
+  end
+  errors
 end
 
 main()
