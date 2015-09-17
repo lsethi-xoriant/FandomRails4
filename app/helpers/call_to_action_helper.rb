@@ -604,6 +604,7 @@ module CallToActionHelper
           extra_fields = get_extra_fields!(interaction.resource)
         when "download"
           ical = resource.ical_fields
+          attachment = resource.attachment.url rescue nil
         end
 
         interaction_info_list << {
@@ -629,7 +630,8 @@ module CallToActionHelper
               "ical" => ical,
               "vote_info" => vote_info,
               "url" => resource_url,
-              "coordinates" => resource_coordinates
+              "coordinates" => resource_coordinates,
+              "attachment" => attachment
             }
           },
           "status" => get_current_interaction_reward_status(MAIN_REWARD_NAME, interaction, nil),
