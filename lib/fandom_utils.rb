@@ -45,6 +45,8 @@ module FandomUtils
       render template: 'application/url_mistyped'
       return
     end
+    
+    save_utm(params)
 
     unless fandom_domain?
       cookies[:initial_http_referrer] = request.referrer
@@ -66,6 +68,13 @@ module FandomUtils
       may_redirect_to_landing if $site.force_landing
     end
 
+  end
+
+  def save_utm(params)
+    cookies[:utm_source] = params[:utm_source] if params[:utm_source].present?
+    cookies[:utm_medium] = params[:utm_medium] if params[:utm_medium].present?
+    cookies[:utm_content] = params[:utm_content] if params[:utm_content].present?
+    cookies[:utm_campaign] = params[:utm_campaign] if params[:utm_campaign].present?
   end
 
   def fandom_domain?

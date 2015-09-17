@@ -36,6 +36,59 @@ module ApplicationHelper
   include TagHelper
   include ProfileHelper
   include GalleryHelper
+
+  def adjust_user_and_log_data_with_utm(user, log_data)
+    aux = user.aux || {}
+    user_change = false
+
+    if cookies[:initial_http_referrer].present?
+      log_data[:initial_http_referrer] = cookies[:initial_http_referrer]
+      aux["initial_http_referrer"] = cookies[:initial_http_referrer]
+      cookies.delete(:initial_http_referrer)
+      user_change = true
+    end
+
+    if cookies[:utm_source].present?
+      log_data["utm_source"] = cookies[:utm_source]
+      aux["utm_source"] = cookies[:utm_source]
+      cookies.delete(:utm_source)
+      user_change = true
+    end
+    
+    if cookies[:utm_medium].present?
+      log_data["utm_medium"] = cookies[:utm_medium]
+      aux["utm_medium"] = cookies[:utm_medium]
+      cookies.delete(:utm_medium)
+      user_change = true
+    end
+
+    if cookies[:utm_content].present?
+      log_data["utm_content"] = cookies[:utm_content]
+      aux["utm_content"] = cookies[:utm_content]
+      cookies.delete(:utm_content)
+      user_change = true
+    end
+    
+    if cookies[:utm_campaign].present?
+      log_data["utm_campaign"] = cookies[:utm_campaign]
+      aux["utm_campaign"] = cookies[:utm_campaign]
+      cookies.delete(:utm_campaign)
+      user_change = true
+    end
+
+    if user_change
+      user.update_attribute(:aux, aux)
+    end
+
+    log_data
+  end 
+
+  def save_utm(params)
+    cookies[:utm_source] = params[:utm_source] if params[:utm_source].present?
+    cookies[:utm_medium] = params[:utm_medium] if params[:utm_medium].present?
+    cookies[:utm_content] = params[:utm_content] if params[:utm_content].present?
+    cookies[:utm_campaign] = params[:utm_campaign] if params[:utm_campaign].present?
+  end
    
   # This dirty workaround is needed to avoid rails admin blowing up because the pluarize method
   # is redefined in TextHelper
