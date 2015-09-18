@@ -282,7 +282,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
   end
   
   def load_more_ranking
-    positions, total = get_ranking_page(params[:ranking_name], params[:page])
+    positions, total = get_ranking_page(params[:ranking_name], params[:page].to_i)
     position_list = []
     positions.each do |position|
       position_list << {
