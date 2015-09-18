@@ -246,8 +246,8 @@ class Api::V2::ProfileController < Api::V2::BaseController
   
   def prepare_html_notice(notices_list)
     current_property = get_property()
-    if current_property != nil && get_extra_fields!(current_property)["label-background"]
-      background_color = get_extra_fields!(current_property)["label-background"]
+    if current_property != nil && get_extra_fields!(current_property)["background_color"]
+      background_color = get_extra_fields!(current_property)["background_color"]
     else
       background_color = "#3399ff" 
     end
