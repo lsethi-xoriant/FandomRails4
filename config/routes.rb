@@ -391,6 +391,7 @@ Fandom::Application.routes.draw do
       get "/profile/update_info", :to => "profile#update_profile_info", defaults: { format: 'json' }
       get "/profile/notices", :to => "profile#notices", defaults: { format: 'json' }
       get "/rankings", :to => "profile#rankings", defaults: { format: 'json' }
+      get "/rankings/load_more", :to => "profile#load_more_ranking", defaults: { format: 'json' }
     end
   end
 

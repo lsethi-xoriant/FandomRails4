@@ -281,6 +281,21 @@ class Api::V2::ProfileController < Api::V2::BaseController
     respond_with response.to_json
   end
   
+  def load_more_ranking
+    positions, total = get_ranking_page(params[:ranking_name], params[:page])
+    position_list = []
+    positions.each do |position|
+      position_list << {
+        "rank" => "#" + "#{position["position"]}",
+        "avatar_url" => position["avatar"],
+        "username" => position["user"],
+        "counter" => position["counter"] 
+      }
+    end
+    
+    respond_with position_list.to_json 
+  end
+  
   def prepare_my_position(my_position, reward_name)
     {
       "rank" => "# #{my_position}",
@@ -294,6 +309,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
   def prepare_ranking(rank)
     ranking_element = {}
     ranking_element["title"] = rank[:ranking].title
+    ranking_element["name"] = rank[:ranking].name
     position_list = []
     rank[:rank_list].each do |re|
       position_list << {
