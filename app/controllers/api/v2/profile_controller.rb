@@ -260,8 +260,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
     rank = get_general_ranking()
     
     property_rank = get_full_rank(rank)
-    
+    my_position, total = get_my_position(rank.name)
     response["ranking_list"] = []
+    
+    if my_position && my_position > 10
+      response["ranking_list"] << prepare_my_position(my_position, rank.reward.name)
+    end
+    
     response["ranking_list"] << prepare_ranking(property_rank)
     
     fan_of_days = []
@@ -274,6 +279,16 @@ class Api::V2::ProfileController < Api::V2::BaseController
     response["ranking_list"] << prepare_ranking_from_fan_of_the_day(fan_of_days)
     
     respond_with response.to_json
+  end
+  
+  def prepare_my_position(my_position, reward_name)
+    {
+      "rank" => "# #{my_position}",
+      "avatar_url" => current_user.avatar_selected_url,
+      "username" => current_user.username,
+      "counter" => get_counter_about_user_reward(reward_name) 
+    }
+    
   end
   
   def prepare_ranking(rank)
