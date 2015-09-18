@@ -154,8 +154,14 @@ def main
     ).field_values("user_id")
     puts "#{Time.now} - Ended distinct user_id with registration query"
     user_without_registration_ids = (user_ids & not_anonymous_users) - user_with_registration_ids
+
     if user_without_registration_ids.any?
-      errors = check_if_user_has_been_updated_recently(conn, user_without_registration_ids, "registration", errors)
+      users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_ids)
+      users_with_errors.each do |user_id|
+        message = "ERROR: User #{user_id} haven't registration log"
+        puts message
+        errors << message
+      end
     end
 
     if interaction_id_for_registration
@@ -171,8 +177,14 @@ def main
       ).field_values("user_id")
       puts "#{Time.now} - Ended distinct user_id with credit log query"
       user_without_registration_credit_ids = (user_ids & not_anonymous_users) - user_with_registration_credit_ids
+
       if user_without_registration_credit_ids.any?
-        errors = check_if_user_has_been_updated_recently(conn, user_without_registration_credit_ids, "credit for registration", errors)
+        users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_credit_ids)
+        users_with_errors.each do |user_id|
+          message = "ERROR: User #{user_id} haven't credit for registration log"
+          puts message
+          errors << message
+        end
       end
     end
 
@@ -205,16 +217,24 @@ def main
       instantwin_attempts_map[attempt["user_id"].to_i] = attempt["count"].to_i
     end
 
+    users_with_too_much_attempts = {}
     credits_assigned.each do |assigned|
       if not_anonymous_users.include?(assigned["user_id"])
         number_of_attempts = instantwin_attempts_map[assigned["user_id"].to_i].to_i
         if number_of_attempts
           if assigned["count"].to_i < number_of_attempts
-            message = "ERROR: user #{assigned["user_id"]} gained #{assigned["count"]} credits, but played #{number_of_attempts} times"
-            puts message
-            errors << message
+            users_with_too_much_attempts[assigned["user_id"].to_i] = {"gained" => assigned["count"].to_i, "attempts" => number_of_attempts}
           end
         end
+      end
+    end
+
+    if users_with_too_much_attempts.keys.any?
+      users_with_errors = check_if_user_has_been_updated_recently(conn, users_with_too_much_attempts.keys)
+      users_with_errors.each do |user_id|
+        message = "ERROR: user #{user_id} gained #{users_with_too_much_attempts[user_id]["gained"]} credits, but played #{users_with_too_much_attempts[user_id]["attempts"]} times"
+        puts message
+        errors << message
       end
     end
 
@@ -353,15 +373,14 @@ end
 # This check will be executed on each user that have not registration log or credit for registration log, in order to
 # exclude the possibility that his logs haven't been stocked yet. To do so, we will throw errors only if user's
 # updated_at time goes back more than 10 minutes ago.
-def check_if_user_has_been_updated_recently(conn, user_ids, log_check, errors)
-  conn.exec("SELECT id, updated_at FROM braun_ic.users WHERE id IN (#{user_ids.join(",")})").each do |user|
+def check_if_user_has_been_updated_recently(conn, user_ids)
+  users_with_errors = []
+  conn.exec("SELECT id, updated_at FROM users WHERE id IN (#{user_ids.join(",")})").each do |user|
     if DateTime.parse(user["updated_at"]) < DateTime.now.utc - 10.minutes
-      message = "ERROR: User #{user['id']} haven't #{log_check} log"
-      puts message
-      errors << message
+      users_with_errors << user["id"].to_i
     end
   end
-  errors
+  users_with_errors
 end
 
 main()
