@@ -223,7 +223,7 @@ def main
         number_of_attempts = instantwin_attempts_map[assigned["user_id"].to_i].to_i
         if number_of_attempts
           if assigned["count"].to_i < number_of_attempts
-            users_with_too_much_attempts[assigned["user_id"].to_i] = {"gained" => assigned["count"].to_i, "attempts" => number_of_attempts}
+            users_with_too_much_attempts[assigned["user_id"].to_i] = { "gained" => assigned["count"].to_i, "attempts" => number_of_attempts }
           end
         end
       end
