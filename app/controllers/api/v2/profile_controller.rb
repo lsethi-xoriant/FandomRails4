@@ -245,8 +245,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
   end
   
   def prepare_html_notice(notices_list)
-    
-    html = render_to_string "/profile/_notices_mobile_api", layout: "ios_application", locals: { notices_list: notices_list }, formats: :html
+    current_property = get_property()
+    if current_property != nil && get_extra_fields!(current_property)["label-background"]
+      background_color = get_extra_fields!(current_property)["label-background"]
+    else
+      background_color = "#3399ff" 
+    end
+    html = render_to_string "/profile/_notices_mobile_api", layout: "ios_application", locals: { notices_list: notices_list, bg_color: background_color }, formats: :html
 
   end
   
