@@ -245,8 +245,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
   end
   
   def prepare_html_notice(notices_list)
-    
-    html = render_to_string "/profile/_notices_mobile_api", layout: "ios_application", locals: { notices_list: notices_list }, formats: :html
+    current_property = get_property()
+    if current_property != nil && get_extra_fields!(current_property)["background_color"]
+      background_color = get_extra_fields!(current_property)["background_color"]
+    else
+      background_color = "#3399ff" 
+    end
+    html = render_to_string "/profile/_notices_mobile_api", layout: "ios_application", locals: { notices_list: notices_list, bg_color: background_color }, formats: :html
 
   end
   
@@ -255,8 +260,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
     rank = get_general_ranking()
     
     property_rank = get_full_rank(rank)
-    
+    my_position, total = get_my_position(rank.name)
     response["ranking_list"] = []
+    
+    if my_position && my_position > 10
+      response["ranking_list"] << prepare_my_position(my_position, rank.reward.name)
+    end
+    
     response["ranking_list"] << prepare_ranking(property_rank)
     
     fan_of_days = []
@@ -271,9 +281,35 @@ class Api::V2::ProfileController < Api::V2::BaseController
     respond_with response.to_json
   end
   
+  def load_more_ranking
+    positions, total = get_ranking_page(params[:ranking_name], params[:page].to_i)
+    position_list = []
+    positions.each do |position|
+      position_list << {
+        "rank" => "#" + "#{position.position}",
+        "avatar_url" => position.data["avatar_selected_url"],
+        "username" => position.data["username"],
+        "counter" => position.data["counter"] 
+      }
+    end
+    
+    respond_with position_list.to_json 
+  end
+  
+  def prepare_my_position(my_position, reward_name)
+    {
+      "rank" => "# #{my_position}",
+      "avatar_url" => current_user.avatar_selected_url,
+      "username" => current_user.username,
+      "counter" => get_counter_about_user_reward(reward_name) 
+    }
+    
+  end
+  
   def prepare_ranking(rank)
     ranking_element = {}
     ranking_element["title"] = rank[:ranking].title
+    ranking_element["name"] = rank[:ranking].name
     position_list = []
     rank[:rank_list].each do |re|
       position_list << {
