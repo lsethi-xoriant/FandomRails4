@@ -158,7 +158,7 @@ def main
     user_without_registration_ids = (user_ids & not_anonymous_users) - user_with_registration_ids
 
     if user_without_registration_ids.any?
-      users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_ids)
+      users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_ids, max_events_timestamp)
       users_with_errors.each do |user_id|
         message = "ERROR: User #{user_id} haven't registration log"
         puts message
@@ -181,7 +181,7 @@ def main
       user_without_registration_credit_ids = (user_ids & not_anonymous_users) - user_with_registration_credit_ids
 
       if user_without_registration_credit_ids.any?
-        users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_credit_ids)
+        users_with_errors = check_if_user_has_been_updated_recently(conn, user_without_registration_credit_ids, max_events_timestamp)
         users_with_errors.each do |user_id|
           message = "ERROR: User #{user_id} haven't credit for registration log"
           puts message
@@ -232,7 +232,7 @@ def main
     end
 
     if users_with_too_much_attempts.keys.any?
-      users_with_errors = check_if_user_has_been_updated_recently(conn, users_with_too_much_attempts.keys)
+      users_with_errors = check_if_user_has_been_updated_recently(conn, users_with_too_much_attempts.keys, max_events_timestamp)
       users_with_errors.each do |user_id|
         message = "ERROR: user #{user_id} gained #{users_with_too_much_attempts[user_id]["gained"]} credits, but played #{users_with_too_much_attempts[user_id]["attempts"]} time(s)"
         puts message
@@ -374,11 +374,11 @@ end
 
 # This check will be executed on each user that have not registration log or credit for registration log, 
 # in order to exclude the possibility that his logs haven't been stocked yet. To do so, we will throw errors 
-# only if user's updated_at time goes back more than 10 minutes ago.
-def check_if_user_has_been_updated_recently(conn, user_ids)
+# only if user's updated_at time goes back more than 1 minute before last event timestamp.
+def check_if_user_has_been_updated_recently(conn, user_ids, max_events_timestamp)
   users_with_errors = []
   conn.exec("SELECT id, updated_at FROM users WHERE id IN (#{user_ids.join(",")})").each do |user|
-    if DateTime.parse(user["updated_at"]) < DateTime.now.utc - 10.minutes
+    if DateTime.parse(user["updated_at"]) < DateTime.parse(max_events_timestamp) - 1.minutes
       users_with_errors << user["id"].to_i
     end
   end
