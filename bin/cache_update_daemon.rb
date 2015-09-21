@@ -20,7 +20,7 @@ def main
   db = config["db"]
   conn = PG::Connection.open(db)
   tenant = config["tenant"]
-  single_run = config["signle_run"]
+  single_run = config["single_run"]
 
   if tenant.nil?
     tenant = []
