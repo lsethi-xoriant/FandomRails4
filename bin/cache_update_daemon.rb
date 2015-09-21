@@ -75,7 +75,7 @@ def main
 end
 
 def cache_generate_rankings(conn, tenant, logger)
-  anonymous_user_id = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE email = 'anonymous@shado.tv'").first["id"] rescue 0
+  anonymous_user_ids = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE anonymous_id IS NOT NULL").field_values("id")
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
   rankings.each do |r|
@@ -102,7 +102,10 @@ def cache_generate_rankings(conn, tenant, logger)
     period_id_condition = period.values.empty? ? "ur.period_id is null" : "ur.period_id = #{period.first["id"]}"
     res = execute_query(conn, "SELECT ur.user_id, ur.counter, u.username, u.avatar_selected_url, u.first_name, u.last_name FROM 
                               #{tenant + '.' if tenant}user_rewards ur INNER JOIN #{tenant + '.' if tenant}users u ON u.id = ur.user_id
-                              WHERE (ur.reward_id = #{reward_id} and #{period_id_condition} and ur.user_id <> #{anonymous_user_id} ) 
+                              WHERE (
+                                ur.reward_id = #{reward_id} AND #{period_id_condition} 
+                                AND ur.user_id NOT IN (#{anonymous_user_ids.join(",")})
+                              ) 
                               ORDER BY ur.counter DESC, ur.updated_at ASC, ur.user_id ASC")
 
     res.each_with_index do |user_res, i|
