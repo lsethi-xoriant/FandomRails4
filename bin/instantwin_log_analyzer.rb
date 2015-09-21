@@ -48,6 +48,8 @@ def main
     instantwins_map[instantwin["id"]] = instantwin
   end
 
+  max_events_timestamp = DateTime.now.utc
+
   start_time = Time.now
 
   puts "\n#{Time.now} - Instantwin log analyzer starting. #{instantwins.count} total instantwins to analyze"
@@ -116,7 +118,7 @@ def main
     credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       message = 'assigning reward to user' 
-      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{max_events_timestamp}' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id;"
     ).to_a
@@ -125,7 +127,7 @@ def main
       "SELECT user_id, (data::json->>'interaction')::int as interaction, COUNT(*) 
       FROM events 
       WHERE message = 'assigning reward to user' 
-      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+      AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{max_events_timestamp}' 
       AND (data::json->'outcome_rewards'->>'credit')::int = 1 
       GROUP BY user_id, (data::json->>'interaction')::int;"
     ).to_a
@@ -143,13 +145,13 @@ def main
     user_ids = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT distinct user_id 
        FROM events
-       WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}'"
+       WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{max_events_timestamp}'"
     ).field_values("user_id")
     puts "#{Time.now} - Ended distinct user_id query"
     user_with_registration_ids = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT distinct user_id 
       FROM events 
-      WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+      WHERE timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{max_events_timestamp}' 
       AND message in ('registration', 'registration from oauth')"
     ).field_values("user_id")
     puts "#{Time.now} - Ended distinct user_id with registration query"
@@ -171,7 +173,7 @@ def main
         "SELECT distinct user_id 
         FROM events 
         WHERE message = 'assigning reward to user' 
-        AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{instantwin["valid_to"]}' 
+        AND timestamp BETWEEN '#{instantwin["valid_from"]}' AND '#{max_events_timestamp}' 
         AND (data::json->'outcome_rewards'->>'credit')::int = 1 
         AND (data::json->>'interaction')::int = #{interaction_id_for_registration};"
       ).field_values("user_id")
@@ -207,7 +209,7 @@ def main
     instantwin_attempts = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
       timestamp >= '#{instantwin["valid_from"]}' 
-      AND timestamp <= '#{instantwin["valid_to"]}' 
+      AND timestamp <= '#{max_events_timestamp}' 
       AND message = 'instant win attempted' 
       GROUP BY user_id;"
     )
@@ -232,7 +234,7 @@ def main
     if users_with_too_much_attempts.keys.any?
       users_with_errors = check_if_user_has_been_updated_recently(conn, users_with_too_much_attempts.keys)
       users_with_errors.each do |user_id|
-        message = "ERROR: user #{user_id} gained #{users_with_too_much_attempts[user_id]["gained"]} credits, but played #{users_with_too_much_attempts[user_id]["attempts"]} times"
+        message = "ERROR: user #{user_id} gained #{users_with_too_much_attempts[user_id]["gained"]} credits, but played #{users_with_too_much_attempts[user_id]["attempts"]} time(s)"
         puts message
         errors << message
       end
@@ -370,9 +372,9 @@ def exec_query(conn, tenant, events_is_tenant_specific, is_db_production, query)
   end
 end
 
-# This check will be executed on each user that have not registration log or credit for registration log, in order to
-# exclude the possibility that his logs haven't been stocked yet. To do so, we will throw errors only if user's
-# updated_at time goes back more than 10 minutes ago.
+# This check will be executed on each user that have not registration log or credit for registration log, 
+# in order to exclude the possibility that his logs haven't been stocked yet. To do so, we will throw errors 
+# only if user's updated_at time goes back more than 10 minutes ago.
 def check_if_user_has_been_updated_recently(conn, user_ids)
   users_with_errors = []
   conn.exec("SELECT id, updated_at FROM users WHERE id IN (#{user_ids.join(",")})").each do |user|
