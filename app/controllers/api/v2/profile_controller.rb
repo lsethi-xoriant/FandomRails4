@@ -286,10 +286,10 @@ class Api::V2::ProfileController < Api::V2::BaseController
     position_list = []
     positions.each do |position|
       position_list << {
-        "rank" => "#" + "#{position["position"]}",
-        "avatar_url" => position["avatar"],
-        "username" => position["user"],
-        "counter" => position["counter"] 
+        "rank" => "#" + "#{position.position}",
+        "avatar_url" => position.data["avatar_selected_url"],
+        "username" => position.data["username"],
+        "counter" => position.data["counter"] 
       }
     end
     
