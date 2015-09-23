@@ -422,6 +422,7 @@ Fandom::Application.routes.draw do
     # USER
     get "user", :to => "user#index_user"
     post "export_users", :to => "user#export_users"
+    get "export_winners", :to => "easyadmin#export_winners"
     get "user/show/:id", :to => "user#show_user"
     match "user/filter", :to => "user#filter_user", via: [:get, :post]
 

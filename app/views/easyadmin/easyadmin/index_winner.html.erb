@@ -21,6 +21,12 @@
         </div>
       <% end %>
 
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <a href="/easyadmin/export_winners" class="btn btn-default">ESPORTA</a>
+      </div>
+    </div>
+
     <div class="row cta-to-show">
       <div class="col-md-12"> 
         <table class="table table-striped">
@@ -38,21 +44,26 @@
           <% user = User.where(:id => instantwin_user_interaction.user_id).first %>
           <% reward_id = instantwin_user_interaction.aux["reward_id"] %>
           <% reward = Reward.where(:id => reward_id).first %>
-          <% instantwin = Instantwin.find(instantwin_user_interaction.aux["instant_win_id"]) %>
-            <tr>
-              <td><%= "#{user.first_name} #{user.last_name}" %></td>
-              <td><%= user.email %></td>
-              <td><%= reward.title %></td>
-              <td><%= instantwin.valid_from.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
-              <td><%= instantwin.updated_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") %></td>
+          <% instantwin = Instantwin.find(instantwin_user_interaction.aux["instant_win_id"]) rescue nil %>
+            <% if instantwin.present? %>
+              <tr>
+                <td><%= "#{user.first_name} #{user.last_name}" %></td>
+                <td><%= user.email %></td>
+                <td><%= reward.title %></td>
+                <td><%= instantwin.valid_from.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") rescue nil %></td>
+                <td><%= instantwin.updated_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M") rescue nil %></td>
 
-              <td>
-                <div class="col-sm-1" style="margin: 0;">
-                  <a href="/easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-                </div>
-              </td>
+                <td>
+                  <div class="col-sm-1" style="margin: 0;">
+                    <a href="/easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+                  </div>
+                  <div class="col-sm-1" style="margin: 0;">
+                    <a id="user-<%= user.id %>" onclick="send_email_to_winner(<%= user.id %>)"><i class="fa fa-envelope" style="color: red"></i></a>
+                  </div>
+                </td>
 
-            </tr>
+              </tr>
+            <% end %>
           <% end %>
         </table>
       </div>
@@ -68,17 +79,17 @@
 </div>
 
 <script type="text/javascript">
-  function send_email_to_winner(playticket_event_id) {
-    $("#playticket-event-" + playticket_event_id + " i").css('color', "gray");
+  function send_email_to_winner(user_id) {
+    $("#user-" + user_id + " i").css('color', "gray");
     $.ajax({
           type: "POST",
           url: "/easyadmin/winner/send_email_to_winner",
-          data: { playticket_event_id: playticket_event_id },
+          data: { user_id: user_id },
           beforeSend: function(jqXHR, settings) {
             jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
           },
           success: function(data) {
-            $("#playticket-event-" + playticket_event_id + " i").css('color', 'red');
+            $("#user-" + user_id + " i").css('color', 'red');
           } // success AJAX
       });
   }
