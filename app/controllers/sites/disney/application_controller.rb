@@ -32,7 +32,7 @@ class Sites::Disney::ApplicationController < ApplicationController
     tag_name = get_disney_property()
     params = { "page_elements" => ["like", "comment", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
-
+    
     @aux_other_params = { 
       filters: true,
       calltoaction_evidence_info: false,

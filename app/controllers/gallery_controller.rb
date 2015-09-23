@@ -74,9 +74,14 @@ class GalleryController < ApplicationController
     cta = CallToAction.find(params[:id])
     @cta_id = cta.id
     upload_interaction = cta.interactions.find_by_resource_type("Upload")
-    @upload_interaction_id = upload_interaction.id
-    @upload_type = Interaction.find(@upload_interaction_id).aux["configuration"]["type"] rescue "flowplayer"
-    @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
+    
+    if upload_interaction
+      @upload_interaction_id = upload_interaction.id
+      @upload_type = Interaction.find(@upload_interaction_id).aux["configuration"]["type"] rescue "flowplayer"
+      @upload_active = upload_interaction.when_show_interaction != "MAI_VISIBILE"
+      resource = upload_interaction.resource
+    end
+
     @gallery_tag = get_tag_with_tag_about_call_to_action(cta, "gallery").first
 
     gallery_calltoaction_id = cta.id
@@ -99,7 +104,7 @@ class GalleryController < ApplicationController
     gallery_tag_adjust_for_view = build_gallery_tag_for_view(@gallery_tag, cta, upload_interaction)
 
     @aux_other_params = { 
-      "upload_interaction_resource" => upload_interaction.resource,
+      "upload_interaction_resource" => resource,
       "gallery_calltoaction" => build_cta_info_list_and_cache_with_max_updated_at([cta]).first,
       "gallery_show" => true,
       "gallery_calltoactions_count" => galleries_user_cta_count,

@@ -61,6 +61,10 @@
             <label class="text-input">Commenti Disqus</label>
               <%= f.select(:enable_disqus, [["NON ABILITATI", false]], {}, { :class => "form-control" }) %>
           </div>
+          <div class="form-group">
+            <label class="text-input">Assegna all'utente</label>
+              <%= f.text_field :user_id, :class => "form-control" %>
+          </div>
           <div class="form-group media-image-form-group">
             <label class="text-input">Thumbnail</label>
             <div class="fileupload fileupload-new text-center" data-provides="fileupload">
