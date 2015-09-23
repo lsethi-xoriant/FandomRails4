@@ -2,6 +2,10 @@
   <%= render partial: "/gallery/launchers" %>    
 </div>
 
+<div style="margin-bottom: 30px;">
+  <%= render partial: "/gallery/gallery_description" %>
+</div>
+
 <div class="row main-row" ng-if="calltoaction_info.calltoaction.user == null">
   <div class="col-xs-6 cta__miniformat-col">
     <div ng-repeat="miniformat in [calltoaction_info.miniformat]" ng-if="calltoaction_info.miniformat">
@@ -82,11 +86,7 @@
   </div>
 </div>
 
-<div style="margin-bottom: 30px;">
-  <%= render partial: "/gallery/gallery_description" %>
-</div>
-
-<div class="row main-row">
+<div class="row main-row margin-top-main-row">
   <div class="col-md-7 cta_left-col">
     <div class="row">
       <!--
