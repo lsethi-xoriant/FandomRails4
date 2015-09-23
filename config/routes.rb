@@ -31,6 +31,9 @@ Fandom::Application.routes.draw do
         devise_scope :user do
           post "/users", :to => "registrations#create"
         end
+        namespace :easyadmin do
+          post "export_users", :to => "user#export_users"
+        end
       end
     end
   end

@@ -11,7 +11,7 @@
   <td>
     <div class="row">
       <div class="col-sm-1" style="margin: 0;">
-        <a title="Info" href="<%= root_url %>/easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
+        <a title="Info" href="<%= root_url %>easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
       </div>
       <% if can? :access, :rails_admin %>
       <div class="col-sm-1" style="margin: 0;">
@@ -20,7 +20,7 @@
       <% end %>
       <% if can? :manage, :users %>
         <div class="col-sm-1" style="margin: 0;">
-          <a title="Loggati come" href="<%= root_url %>/user/sign_in_as/<%= user.id %>"><i class="fa fa-sign-in" style="color: red"></i></a>
+          <a title="Loggati come" href="<%= root_url %>user/sign_in_as/<%= user.id %>"><i class="fa fa-sign-in" style="color: red"></i></a>
         </div>
       <% end %>
     </div>
