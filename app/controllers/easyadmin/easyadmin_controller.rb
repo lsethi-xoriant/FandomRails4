@@ -32,14 +32,37 @@ class Easyadmin::EasyadminController < ApplicationController
   end
 
   def send_email_to_winner
-    playticket_event = PlayticketEvent.find(params[:playticket_event_id])
 
-    SystemMailer.win_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
-    SystemMailer.win_admin_notice_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
+    if $site.id == "braun_ic"
+      user = User.find(params[:user_id])
+      SystemMailer.braun_win_mail(user).deliver_now
+    end
+
+    #SystemMailer.win_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
+    #SystemMailer.win_admin_notice_mail(playticket_event.user, playticket_event.instantwin.contest_periodicity.instant_win_prizes.first, playticket_event.instantwin).deliver
 
     respond_to do |format|
-      format.json { render :json => playticket_event.to_json }
+      format.json { render :json => "done".to_json }
     end
+  end
+
+  def export_winners
+    csv = "id;email;nome;cognome;data di nascita;giorno di vincita\n"
+    instantwin_user_interactions = UserInteraction.where("cast(\"aux\"->>'instant_win_id' AS int) IS NOT NULL").order("updated_at ASC")
+    instantwin_user_interactions.each do |instantwin_user_interaction|
+      user = User.where(:id => instantwin_user_interaction.user_id).first
+      reward = Reward.where(id: instantwin_user_interaction.aux["reward_id"])
+      instantwin = Instantwin.find(instantwin_user_interaction.aux["instant_win_id"]) rescue nil
+      if instantwin.present?
+        csv << "#{user.id};"
+        csv << "#{user.first_name};"
+        csv << "#{user.last_name};"
+        csv << "#{user.email};"
+        csv << "#{user.birth_date.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y")};"
+        csv << "#{instantwin.updated_at.in_time_zone(USER_TIME_ZONE).strftime("%d/%m/%Y %H:%M")}\n"
+      end
+    end
+    send_data(csv, :type => 'text/csv; charset=utf-8; header=present', :filename => "winners.csv")
   end
 
   def dashboard
