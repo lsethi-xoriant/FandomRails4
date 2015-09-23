@@ -30,10 +30,11 @@ class Sites::BraunIc::Easyadmin::UserController < Easyadmin::EasyadminController
     User.all.each do |user|
       if user.aux
         user.aux.keys.each do |key|
-          keys.add(key)
+          keys.add(key) if key != "products"
         end
       end
     end
+    keys.add("products")
     keys
   end
 
