@@ -8,7 +8,6 @@ class Sites::Disney::RegistrationsController < RegistrationsController
   end
 
   def update
-    debugger
     user_params = params[:user]
     required_attrs = ["username", "username_length"]
     user_params = user_params.merge(required_attrs: required_attrs)

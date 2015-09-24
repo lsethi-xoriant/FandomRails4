@@ -1930,8 +1930,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             return;
           }
 
+          console.log(data.current_user);
+          if(data.current_user) $scope.current_user = data.current_user;
+
           adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
-          $scope.current_user.main_reward_counter = data.main_reward_counter;  
           interaction_info.status = data.interaction_status;
 
           $scope.aux.share_interaction_daily_done = true;
@@ -2113,7 +2115,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
 
       if(interaction_info.interaction.resource_type == "like") {
-        if($scope.likePressed(interaction_info)) {
+        console.log(data.user_interaction.aux.like);
+        if(data.user_interaction.aux.like) {
           interaction_info.interaction.resource.counter += 1;
         } else {
           interaction_info.interaction.resource.counter -= 1;

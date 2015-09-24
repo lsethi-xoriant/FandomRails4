@@ -1,9 +1,10 @@
 module SeoHelper
   
   def set_seo_info(title, meta_description, keywords, meta_image)
+    meta_description = meta_description.present? ? CGI.unescapeHTML(strip_tags(meta_description)) : nil
     @seo_info = {
       "title" => CGI.unescapeHTML(strip_tags(title)),
-      "meta_description" => CGI.unescapeHTML(strip_tags(meta_description)),
+      "meta_description" => meta_description,
       "meta_image" => meta_image,
       "keywords" => keywords
     }
