@@ -61,24 +61,30 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     save_interaction_call_to_action_linking(@cta) unless @cta.errors.any?
 
-    tag_list = params[:tag_list].split(",")
-    @cta.call_to_action_tags.delete_all
-    tag_list.each do |t|
-      tag = Tag.find_by_name(t)
-      tag = Tag.create(title: t, name: t, slug: t) unless tag
-      if tag.errors.any?
-        @cta.errors.messages.merge!(tag.errors.messages)
-      else
-        CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
-      end
-    end
-
     if @cta.errors.any?
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/new_cta"
     else
-      flash[:notice] = "CallToAction generata correttamente"
+
+      tag_list = params[:tag_list].split(",")
+      @cta.call_to_action_tags.delete_all
+      tags_with_error = []
+      tag_list.each do |t|
+        tag = Tag.find_by_name(t)
+        tag = Tag.create(title: t, name: t, slug: t) if tag.blank?
+        if tag.errors.any?
+          tags_with_error << t
+        else
+          CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+        end
+      end
+
+      if tags_with_error.any?
+        flash[:error] = "Tag non validi: #{tags_with_error.join(",")}"
+      end
+
+      flash[:notice] = "Contenuto generato correttamente"
       set_cta_updated_at(@cta)
       set_content_updated_at_cookie(@cta.updated_at)
       redirect_to "/easyadmin/cta/show/#{ @cta.id }"
@@ -116,30 +122,31 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     updated_attributes = @cta.update_attributes(params[:call_to_action])
     saved_linking = save_interaction_call_to_action_linking(@cta)
 
-    if params[:tag_list]
-      old_tags_ids = CallToActionTag.where(:call_to_action_id => @cta.id).pluck(:tag_id)
-      tag_list = params[:tag_list].split(",")
-      new_existent_tags_ids = Tag.where(:name => tag_list).pluck(:id)
-      if (old_tags_ids != new_existent_tags_ids || new_existent_tags_ids.count != tag_list.count)
-        @cta.call_to_action_tags.delete_all
-        tag_list.each do |t|
-          tag = Tag.find_by_name(t)
-          tag = Tag.create(title: t, name: t, slug: t) unless tag
-          if tag.errors.any?
-            @cta.errors.messages.merge!(tag.errors.messages)
-          else
-            CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
-          end
-        end
-        @cta.update_attribute(:updated_at, Time.now)
-      end
-    end
-
     unless updated_attributes && saved_linking && @cta.errors.messages.empty?
       @tag_list = params[:tag_list]
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/edit_cta"
     else
+      if params[:tag_list]
+        tag_list = params[:tag_list].split(",")
+        @cta.call_to_action_tags.delete_all
+        tags_with_error = []
+        tag_list.each do |t|
+          tag = Tag.find_by_name(t)
+          tag = Tag.create(title: t, name: t, slug: t) if tag.blank?
+          if tag.errors.any?
+            tags_with_error << t
+          else
+            CallToActionTag.create(tag_id: tag.id, call_to_action_id: @cta.id)
+          end
+        end
+
+        if tags_with_error.any?
+          flash[:error] = "Tag non validi: #{tags_with_error.join(",")}"
+        end
+      end
+
+
       flash[:notice] = "CallToAction aggiornata correttamente"
       set_cta_updated_at(@cta)
       set_content_updated_at_cookie(@cta.updated_at) if @cta.updated_at != old_cta_updated_at
@@ -462,6 +469,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
           [[(condition_hash.keys.first || ""), (condition_hash.values.first || ""), (icta.call_to_action_id || "")]]
       end
     end
+
     @tag_list_arr = Array.new
     @cta.call_to_action_tags.each { |t| @tag_list_arr << t.tag.name }
     @tag_list = @tag_list_arr.join(",")
