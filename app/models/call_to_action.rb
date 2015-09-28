@@ -179,7 +179,7 @@ class CallToAction < ActiveRecordWithJSON
   end
 
   def set_activated_at
-    if self.activation_date_time.present?
+    if self.activation_date_time.present? && activated_at.blank?
       datetime_utc = time_parsed_to_utc("#{activation_date_time}")
       write_attribute :activated_at, "#{datetime_utc}"
       activation_date_time = nil
