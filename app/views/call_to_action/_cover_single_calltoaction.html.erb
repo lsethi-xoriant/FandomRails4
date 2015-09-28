@@ -81,7 +81,7 @@
     </div>
   </div>  
 
-  <div class="panel-footer cta-cover__card__footer" ng-if="!isCommentEmpty(calltoaction_info)">
+  <div class="panel-footer cta-cover__card__footer" ng-if="isCommentInteractionPresent(calltoaction_info)">
     <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterCommentInteractions" class="row">
       <%= light_link_to("/call_to_action/{{calltoaction_info.calltoaction.slug}}") do %>
         <%= render partial: "/call_to_action/cover_comment_interaction" %>

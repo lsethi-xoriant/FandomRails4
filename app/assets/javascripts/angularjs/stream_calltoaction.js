@@ -864,6 +864,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
   };
 
+  $scope.isCommentInteractionPresent = function(calltoaction_info) {
+    interaction_info = getCommentInteraction(calltoaction_info.calltoaction.id);
+    if(interaction_info) {
+      return true
+    } else {
+      return false;
+    }
+  };
+
   function getCommentInteraction(calltoaction_id) {
     comment_interaction = null;
     calltoaction_info = getCallToActionInfo(calltoaction_id);
