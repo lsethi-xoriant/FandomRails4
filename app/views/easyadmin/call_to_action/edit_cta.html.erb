@@ -73,10 +73,6 @@
               <label class="text-input">Descrizione</label>
               <%= f.cktext_area :description, :class => "form-control", :ckeditor => { :toolbar => 'Mini' } %>
           </div>
-           <div class="form-group">
-            <label class="text-input">Assegna all'utente</label>
-              <%= f.text_field :user_id, :class => "form-control" %>
-          </div>
           <div class="form-group">
             <label class="text-input">Commenti Disqus</label>
               <%= f.select(:enable_disqus, [["NON ABILITATI", false]], {}, { :class => "form-control" }) %>
@@ -295,6 +291,27 @@
           <%= render '/easyadmin/call_to_action/share_form', :f => builder %>
         <% end %>
       <% end %>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>UGC</h3>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+             <div class="form-group">
+                <label class="text-input">Assegna all'utente</label>
+                <%= f.text_field :user_id, :class => "form-control" %>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="text-input">Approvazione</label>
+                  <%= f.select(:approved, [["", nil], ["SI", true], ["NO", false] ], {}, { :class => "form-control" }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <h3>TAGGING</h3>
       <hr/>

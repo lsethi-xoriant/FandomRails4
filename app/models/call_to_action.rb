@@ -56,7 +56,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_uniqueness_of :name
   validates_uniqueness_of :slug
   validate :uniqueness_of_name_field
-  validates_presence_of :media_image, if: Proc.new { |c| user_id.present? }
+  validates_presence_of :media_image, if: Proc.new { |c| user_id.present? && (media_type == "IMAGE" || media_type == "FLOWPLAYER") }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
   validate :interaction_resource
   validate :check_video_interaction, if: Proc.new { |c| media_type == "YOUTUBE" || media_type == "KALTURA" || media_type == "FLOWPLAYER" }
@@ -179,7 +179,7 @@ class CallToAction < ActiveRecordWithJSON
   end
 
   def set_activated_at
-    if self.activation_date_time.present? && activated_at.blank?
+    if self.activation_date_time.present?
       datetime_utc = time_parsed_to_utc("#{activation_date_time}")
       write_attribute :activated_at, "#{datetime_utc}"
       activation_date_time = nil
