@@ -62,6 +62,30 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return $scope.groupingArrs[name];
   };
 
+  $scope.getGroupingGalleries = function(arr) {
+    if(angular.isUndefined($scope.groupingGalleryArrs)) {
+      setGroupingGalleries(arr);
+    }
+    return $scope.groupingGalleryArrs;
+  };
+
+  function setGroupingGalleries(arr) {
+    $scope.groupingGalleryArrs = [];
+    lArr = []; rArr = [];
+    index = 0;
+    angular.forEach(arr, function(el) {
+      if(index % 2 == 0) {
+        lArr.push(el);
+      } else {
+        rArr.push(el);
+      }
+      index++;
+    });
+    $scope.groupingGalleryArrs.push(lArr);
+    $scope.groupingGalleryArrs.push(rArr); 
+  }
+
+
   $scope.iwWin = function() {
     return ($scope.aux.instant_win_info.win == true);
   };
@@ -1251,9 +1275,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function otherParamsForGallery() {
     if($scope.aux.gallery_calltoaction) {
-      other_params = new Object();
-      other_params.gallery = new Object();
-      other_params.gallery.user = $scope.aux.gallery_user.id;
+      other_params = { gallery: {} };
+      if($scope.aux.gallery_user){
+        other_params.gallery.user = $scope.aux.gallery_user.id;
+      }
       if($scope.aux.gallery_calltoaction.calltoaction) {
         other_params.gallery.calltoaction_id = $scope.aux.gallery_calltoaction.calltoaction.id;
       } else {
@@ -1281,6 +1306,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
         $scope.has_more = data.has_more;
 
         $scope.ordering_in_progress = false;
+
+        if($scope.aux.gallery_calltoaction) {
+          setGroupingGalleries($scope.calltoactions);
+        }
 
       }).error(function() {
         $scope.ordering_in_progress = false;
@@ -1314,6 +1343,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       $("#append-other button").attr('disabled', false);
 
       $scope.append_ctas_in_progress = false;
+
+      if($scope.aux.gallery_calltoaction) {
+        setGroupingGalleries($scope.calltoactions);
+      }
 
       if (!angular.isUndefined(callback)) {
         callback();
