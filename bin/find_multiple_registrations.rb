@@ -121,7 +121,7 @@ def main
       end
     end
 
-    ip_registrations_hash.select{ |ip, count| count > registrations_limit }.each do |ip, count|
+    ip_registrations_hash.select{ |ip, count| count >= registrations_limit }.each do |ip, count|
       alert_message = "ip #{ip} registered #{count} times"
       logger.info(alert_message)
       messages << alert_message
