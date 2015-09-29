@@ -1,4 +1,5 @@
 ENV["RAILS_ENV"] = "test"
+
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'capybara/rails'
@@ -43,6 +44,7 @@ class ActiveSupport::TestCase
 
   # Performs a login with the given parameters
   def login_with_data(user_email, user_password)
+    perform_logout
     visit(build_url_for_capybara("/users/sign_in"))
     within("form#new_user") do
       fill_in "user_email", :with => user_email
@@ -99,7 +101,7 @@ class ActiveSupport::TestCase
   # visit - Boolean value; if true, capybara visits the call to action page
   #
   # Returns call to action complete url if visit is not true
-  def call_to_action_with_title(title, visit = false)
+  def login_and_find_call_to_action_with_title(title, visit = false)
     admin_login
     visit(build_url_for_capybara("/easyadmin/cta"))
     fill_in "title_filter", :with => title

@@ -9,7 +9,7 @@ class ShareInteractionTest < ActionController::TestCase
 
   test "share interaction" do
 
-    cta_link = call_to_action_with_title("Cta with share interaction")
+    cta_link = login_and_find_call_to_action_with_title("Cta with share interaction")
 
     delete_user_interactions
 
@@ -20,7 +20,7 @@ class ShareInteractionTest < ActionController::TestCase
     find("button[ng-if$='.direct_url']").click
     assert assert_selector("div[id$='-direct_url']"), "Direct url share div is not present after click"
 
-    #Email
+    # Email
     assert assert_no_selector("div[id$='-email']"), "Email share div is present before click"
     find("button[ng-if$='.email']").click
     assert assert_selector("div[id$='-email']"), "Email share div is not present after click"

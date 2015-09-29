@@ -10,7 +10,7 @@ class CommentInteractionTest < ActionController::TestCase
 
   test "comment interaction" do
 
-    cta_link = call_to_action_with_title("Cta with comment interaction")
+    cta_link = login_and_find_call_to_action_with_title("Cta with comment interaction")
     visit(cta_link)
 
     page.fill_in "text", :with => @comment_text

@@ -9,7 +9,7 @@ class VersusInteractionTest < ActionController::TestCase
 
   test "versus interaction" do
 
-    cta_link = call_to_action_with_title("Cta with versus interaction")
+    cta_link = login_and_find_call_to_action_with_title("Cta with versus interaction")
 
     delete_user_interactions
 

@@ -31,6 +31,7 @@ class GetContentPreviewsTest < ActiveSupport::TestCase
     other_tags = [@tags[1]] + [@tags[2]]
     content_previews = get_content_previews(@main_tag.name, other_tags)
     assert content_previews.contents.count == 0,  "There are #{content_previews.contents.count} contents instead of 0"
+    Rails.cache.clear
 
   end
 
@@ -39,6 +40,8 @@ class GetContentPreviewsTest < ActiveSupport::TestCase
     for i in 1..4
       check_number_of_contents(@main_tag, i)
     end
+
+    Rails.cache.clear
 
   end
 
@@ -54,6 +57,7 @@ class GetContentPreviewsTest < ActiveSupport::TestCase
     content_previews = get_content_previews(@main_tag.name)
     assert content_previews.contents[0].title == "Cta 1 test", "First content should be \"Cta 1 test\", but it is \"#{content_previews.contents[0].title}\""
     assert content_previews.contents[1].title == "Cta 2 test", "Second content should be \"Cta 2 test\", but it is \"#{content_previews.contents[1].title}\""
+    Rails.cache.clear
 
   end
 
@@ -79,9 +83,9 @@ class GetContentPreviewsTest < ActiveSupport::TestCase
   end
 
   def check_number_of_contents(main_tag, n)
+    Rails.cache.clear
     content_previews = get_content_previews(main_tag.name, [], {}, n)
     assert content_previews.contents.count == n,  "There are #{content_previews.contents.count} contents instead of #{n}"
-    Rails.cache.clear
   end
 
 end

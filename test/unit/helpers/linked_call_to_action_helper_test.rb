@@ -13,6 +13,7 @@ class LinkedCallToActionHelperTest < ActiveSupport::TestCase
   end
 
   test "seeds linked call to actions structure" do
+    Rails.cache.clear
     trees, cycles = CtaForest.build_trees(@starting_cta.id)
 
     assert cycles.empty?, "There shouldn't be any cycle"
@@ -33,6 +34,7 @@ class LinkedCallToActionHelperTest < ActiveSupport::TestCase
   end
 
   test "cycles detection" do
+    Rails.cache.clear
     cta_3 = CallToAction.create(:title => "3", :name => "three")
     cta_3_interaction = Interaction.create(:call_to_action_id => cta_3.id)
     add_link(@cta_2, cta_3)

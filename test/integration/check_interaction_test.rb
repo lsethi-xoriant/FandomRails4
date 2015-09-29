@@ -9,7 +9,7 @@ class CheckInteractionTest < ActionController::TestCase
 
   test "check interaction" do
 
-    call_to_action_with_title("Cta with check interaction", true)
+    login_and_find_call_to_action_with_title("Cta with check interaction", true)
 
     points = get_user_points_from_single_call_to_action_page
 

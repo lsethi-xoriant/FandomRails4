@@ -6,6 +6,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
   include EasyadminHelper
 
   setup do
+    initialize_tenant
   end
 
   test "content updated at cookie" do
@@ -67,7 +68,6 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
   def find_and_click_update_cache_button
     Capybara.ignore_hidden_elements = false
-
     assert_not page.find("div#update-cache-banner")[:class].include?("hidden"), "After cta update, cookie banner is hidden"
     page.find("button[onclick='updateUpdatedAt()']").click
     wait_for_ajax

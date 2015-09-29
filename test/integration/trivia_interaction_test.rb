@@ -9,7 +9,7 @@ class TriviaInteractionTest < ActionController::TestCase
 
   test "trivia interaction" do
 
-    cta_link = call_to_action_with_title("Cta with trivia interaction")
+    cta_link = login_and_find_call_to_action_with_title("Cta with trivia interaction")
 
     correct_answer_points = trivia_answer_test(cta_link, "Right")
     wrong_answer_points = trivia_answer_test(cta_link, "Wrong 1")
