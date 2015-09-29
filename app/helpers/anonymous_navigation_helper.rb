@@ -50,7 +50,7 @@ module AnonymousNavigationHelper
   end
 
   def create_and_sign_in_stored_anonymous_user()
-    if session.id.blank?
+    if session.id.blank? && !request_via_api?
       raise SessionIdEmptyError.new 
     end
 
