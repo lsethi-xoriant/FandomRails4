@@ -68,21 +68,18 @@ module RewardHelper
 
 
   def call_to_action_completed?(cta, user = nil)
-    if user.nil?
-      user = current_or_anonymous_user
-    end
+    user = current_or_anonymous_user if user.nil?
 
-    if !anonymous_user?(user)
+    if !anonymous_user?(user) || stored_anonymous_user?(user)
       require_to_complete_interactions = interactions_required_to_complete(cta)
 
       if require_to_complete_interactions.count == 0
-        return false
+        false
+      else
+        require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
+        interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
+        require_to_complete_interactions.count == interactions_done.count
       end
-
-      require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-      interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
-      require_to_complete_interactions.count == interactions_done.count
-
     else
       false
     end

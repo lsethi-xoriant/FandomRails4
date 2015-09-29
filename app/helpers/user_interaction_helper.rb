@@ -622,6 +622,7 @@ module UserInteractionHelper
   end
   
   def update_cta_and_interaction_status(cta, interaction, response)
+    debugger
     response[:interaction_status] = get_current_interaction_reward_status(get_main_reward_name(), interaction)
     response[:calltoaction_status] = compute_call_to_action_completed_or_reward_status(get_main_reward_name(), cta)
     response
