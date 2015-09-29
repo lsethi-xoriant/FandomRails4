@@ -81,6 +81,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
       index++;
     });
+
     $scope.groupingGalleryArrs.push(lArr);
     $scope.groupingGalleryArrs.push(rArr); 
   }
@@ -2009,6 +2010,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     if(interactionAllowed(interaction_info)) {
 
       if(!$scope.answer_in_progress) {
+        $scope.answer_in_progress = true;
         
         enableWaitingAudio("stop");
         if(!angular.isUndefined(before_callback)) before_callback();
@@ -2030,7 +2032,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.updateAnswerAjax = function(calltoaction_info, interaction_info, params, when_show_interaction) {
-    $scope.answer_in_progress = true;
     interaction_id = interaction_info.interaction.id;
 
     update_interaction_path = $scope.updatePathWithProperty("/update_interaction");
