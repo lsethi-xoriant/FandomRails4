@@ -182,12 +182,12 @@ module RewardHelper
 
   end
 
-  def get_property_point
-    get_counter_about_user_reward(get_current_property_point_reward_name)
+  def get_property_point()
+    get_counter_about_user_reward(get_main_reward_name)
   end  
 
-  def get_current_property_point_reward_name
-    $context_root.nil? ? $site.main_reward_name : "#{$context_root}-#{$site.main_reward_name}"
+  def get_main_reward_name()
+    $context_root.blank? || $context_root == $site.default_property ? $site.main_reward_name : "#{$context_root}-#{$site.main_reward_name}"
   end
 
   def get_counter_about_user_reward(reward_name, all_periods = false)
