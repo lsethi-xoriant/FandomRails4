@@ -29,7 +29,7 @@ def main
 
     timestamps_lower_limit = events_conn.exec(
       "SELECT timestamp
-      FROM braun_ic.events
+      FROM events
       WHERE level = 'debug' 
       ORDER BY timestamp ASC
       LIMIT 1"

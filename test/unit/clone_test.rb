@@ -1,4 +1,5 @@
 require "test_helper"
+require "byebug"
 
 class CloneTest < ActionController::TestCase
 
@@ -45,7 +46,7 @@ class CloneTest < ActionController::TestCase
     assert is_linking?(cta_id), "is_linking method called on linked call to action returned false"
 
     visit(build_url_for_capybara("/easyadmin/cta/clone/#{cta_id}"))
-
+debugger
     assert page.find("form")[:action].include?("post"), "Form for linking cta does not have action = post"
 
     within("form") do
