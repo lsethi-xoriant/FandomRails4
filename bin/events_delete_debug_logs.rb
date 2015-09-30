@@ -28,11 +28,9 @@ def main
     start_time = Time.now
 
     timestamps_lower_limit = events_conn.exec(
-      "SELECT timestamp
+      "SELECT MIN(timestamp) as timestamp
       FROM events
-      WHERE level = 'debug' 
-      ORDER BY timestamp ASC
-      LIMIT 1"
+      WHERE level = 'debug';"
     ).first["timestamp"]
 
     logger.info("first event timestamp achieved in #{Time.now - start_time} seconds (#{timestamps_lower_limit})")
