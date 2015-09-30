@@ -27,18 +27,18 @@ def main
     logger.info("retrieving first event timestamp...")
     start_time = Time.now
 
-    timestamps_upper_limit = events_conn.exec(
+    timestamps_lower_limit = events_conn.exec(
       "SELECT timestamp
-      FROM events
+      FROM braun_ic.events
       WHERE level = 'debug' 
       ORDER BY timestamp ASC
       LIMIT 1"
     ).first["timestamp"]
 
-    logger.info("first event timestamp achieved in #{Time.now - start_time} seconds (#{timestamps_upper_limit})")
+    logger.info("first event timestamp achieved in #{Time.now - start_time} seconds (#{timestamps_lower_limit})")
   end
 
-  logger.info("deletion loop process starting...")
+  logger.info("debug events deletion process starting...")
 
   begin
     logger.info("starting a new chunk deletion")
