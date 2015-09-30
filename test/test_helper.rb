@@ -147,7 +147,7 @@ class ActiveSupport::TestCase
   # Examples
   #
   #   verify_done_label_presence("check-undervideo-interaction__row", false)
-  #   ...
+  #   * do something *
   #   verify_done_label_presence("check-undervideo-interaction__row", true)
   #
   # div_last_class - Last identifying class for div that should contain "Done" label

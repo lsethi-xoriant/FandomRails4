@@ -28,7 +28,7 @@ def main
     start_time = Time.now
 
     timestamps_lower_limit = events_conn.exec(
-      "SELECT MIN(timestamp) as timestamp
+      "SELECT MIN(timestamp) AS timestamp
       FROM events
       WHERE level = 'debug';"
     ).first["timestamp"]
