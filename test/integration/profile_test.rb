@@ -5,10 +5,14 @@ class ProfileTest < ActionController::TestCase
   include Devise::TestHelpers
 
   setup do
+    @ignore_hidden_elements_option = Capybara.ignore_hidden_elements
+    Capybara.ignore_hidden_elements = false
     @user_email = build_new_user_email
   end
 
-  test "uesr registration and editing" do
+  test "user registration and editing" do
+
+    # Registration and notifications
 
     visit(build_url_for_capybara("/users/sign_up"))
 
@@ -24,8 +28,8 @@ class ProfileTest < ActionController::TestCase
 
     wait_for_ajax
 
-    user_first_name = find("p[class^='properties__right-bar-text']").text[0..3]
-    assert user_first_name == "John", "User name is not \"John\", but \"#{user_first_name}\""
+    user_first_name = find("p[class^='properties__right-bar-text']").text
+    assert user_first_name[0..3] == "John", "User name is not \"John D.\", but \"#{user_first_name}\""
 
     notices_link = find("a[ng-href='/profile/notices']")
     assert notices_link.text.to_i > 0, "User has no notice after registration"
@@ -40,13 +44,15 @@ class ProfileTest < ActionController::TestCase
 
     find("img[ng-if='!isAnonymousUser()']").click
     profile_url = current_url
-    find("a", :text => "Profilo").click
+    first("a", :text => "Profilo").click
     assert current_url == profile_url, "After secondary menu profile link click, redirected to #{current_url} instead of #{profile_url}"
 
     within("div.profile-header__item--level") do
       level = find("p.profile-header__item__title").text
-      assert level == "level-1", "Level in profile page should be \"level-1\", but it is \"#{level}\""
+      assert level == "level-2", "Level in profile page should be \"level-2\", but it is \"#{level}\""
     end
+
+    # Name editing
 
     assert assert_selector("input#user_first_name"), "User first name input is not present"
     assert assert_selector("input#user_last_name"), "User last name input is not present"
@@ -57,10 +63,40 @@ class ProfileTest < ActionController::TestCase
     assert assert_selector("div.alert"), "No alert present after changing user full name"
     assert find("div.alert")[:class].include?("alert-success"), "No success alert rendered after changing user full name"
 
+    # Rewards -> Levels
+
+    find("a", :text => "Rewards").click
+    wait_for_angular
+    wait_for_ajax
+    check_progress_bar_width_for_level("level-1", "== 100")
+    for i in 2..5
+      check_progress_bar_width_for_level("level-#{i}", "== 0")
+    end
+
+    visit(build_url_for_capybara("/call_to_action/qual-la-canzone-pi-romantica-della-discografia-dei-coldplay")) # just to take a couple of points
+    page.find("button.like-interaction__cover__info__button").click
+    wait_for_angular
+    go_back
+    reload_page
+
+    check_progress_bar_width_for_level("level-2", "> 0")
+
+  end
+
+  teardown do
+    Capybara.ignore_hidden_elements = @ignore_hidden_elements_option
   end
 
   def build_new_user_email
-    "test#{DateTime.now.strftime("%Y_%m_%d_%H_%M_%S")}@example.com"
+    "test_#{DateTime.now.strftime("%Y_%m_%d_%H_%M_%S")}@example.com"
+  end
+
+  def check_progress_bar_width_for_level(text, cond)
+    parent_div = find("h4", :text => text).first(:xpath, ".//..")
+    within(parent_div) do
+      @perc = find("div.progress-bar")[:style].gsub("width: ", "").gsub("\%\;", "")
+    end
+    assert eval(@perc + cond), "Progress for #{text} should be #{cond}% instead of #{@perc}%"
   end
 
 end

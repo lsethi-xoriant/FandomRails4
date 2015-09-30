@@ -10,23 +10,20 @@ class RandomInteractionTest < ActionController::TestCase
   test "random interaction" do
 
     counters = {}
-    for i in 1..5
-      counters[i] = 0
-    end
 
-    login_and_find_call_to_action_with_title("Cta with random interaction 1", true)
-    counters[cta_number] += 1
+    login_and_find_call_to_action_with_title("Coin Gift Machine", true)
+    counters[cta_title] = (counters[cta_title] || 0) + 1
 
-    for i in 1..9
-      within("div.randomresource-undervideo-interaction__row") do
+    for i in 1..10
+      within("div[ng-if^='interaction_info.interaction.resource_type ==']") do
         page.find("a[ng-click^='updateAnswer']").click
       end
-      counters[cta_number] += 1
+      counters[cta_title] = (counters[cta_title] || 0) + 1
       wait_for_angular
     end
 
-    counters.each do |value, count|
-      assert count < 10, "Random interaction always gave call to action number #{value}"
+    counters.each do |title, count|
+      assert count < 10, "Random interaction always gave call to action with title #{title}"
     end
 
     delete_user_interactions
@@ -34,8 +31,8 @@ class RandomInteractionTest < ActionController::TestCase
 
   end
 
-  def cta_number
-    find("h1[class^='cta__title']").text[-1].to_i
+  def cta_title
+    find("h1[class^='cta__title']").text
   end
 
 end

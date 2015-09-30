@@ -42,19 +42,19 @@ class CloneTest < ActionController::TestCase
     
     admin_login
 
-    cta_id = CallToAction.find_by_name("starting-call-to-action-for-testing").id
+    cta_id = CallToAction.where(:slug => "che-tipo-di-fan-dei-coldplay-sei").first.id
     assert is_linking?(cta_id), "is_linking method called on linked call to action returned false"
 
     visit(build_url_for_capybara("/easyadmin/cta/clone/#{cta_id}"))
-debugger
+
     assert page.find("form")[:action].include?("post"), "Form for linking cta does not have action = post"
 
     within("form") do
       fill_in "cloned_cta_title", :with => "Cloned cta title for testing"
       assert page.find("input#cloned_cta_name").value == "cloned-cta-title-for-testing", 
         "Cloned cta name is \"#{page.find("input#cloned_cta_name").text}\" instead of \"cloned-cta-title-for-testing\""
-      assert page.find("input#cloned_cta_linked-cta-helper-test-cta-1_name").value == "cloned-cta-title-for-testing-1", 
-        "Cloned linked cta name is \"#{page.find("input#cloned_cta_linked-cta-helper-test-cta-1_name").text}\" instead of \"cloned-cta-title-for-testing-1\""
+      assert page.find("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").value == "cloned-cta-title-for-testing-step-1", 
+        "Cloned linked cta name is \"#{page.find("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").text}\" instead of \"cloned-cta-title-for-testing-1\""
     end
 
   end

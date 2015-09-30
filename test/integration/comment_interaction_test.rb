@@ -10,7 +10,7 @@ class CommentInteractionTest < ActionController::TestCase
 
   test "comment interaction" do
 
-    cta_link = login_and_find_call_to_action_with_title("Cta with comment interaction")
+    cta_link = login_and_find_call_to_action_with_title("Chi dei musicisti dei Coldplay è il vostro preferito?")
     visit(cta_link)
 
     page.fill_in "text", :with => @comment_text
@@ -38,6 +38,14 @@ class CommentInteractionTest < ActionController::TestCase
     last_comment_text = all("p.comment-interaction__text-p").first.text[-(@comment_text.size)..-1]
 
     assert last_comment_text == @comment_text, "Comment should be \"#{@comment_text}\", but it is \"#{last_comment_text}\""
+
+    visit(build_url_for_capybara("/easyadmin/comments/approved"))
+
+    within("tbody") do
+      within first("tr") do
+        find("button[onclick^='updateComment(").click
+      end
+    end
 
     perform_logout
 

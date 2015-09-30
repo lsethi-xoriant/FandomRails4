@@ -9,7 +9,7 @@ class ShareInteractionTest < ActionController::TestCase
 
   test "share interaction" do
 
-    cta_link = login_and_find_call_to_action_with_title("Cta with share interaction")
+    cta_link = login_and_find_call_to_action_with_title("Qual è la canzone più romantica della discografia dei Coldplay?")
 
     delete_user_interactions
 

@@ -14,29 +14,14 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     delete_updating_content_cookies()
     assert get_content_updated_at_cookie().nil?, "content_updated_at cookie is not nil"
 
-    tag = Tag.where(:name => "sample-tag").first
-    tag_2 = Tag.where(:name => "sample-tag-2").first
-
-    tag_updated_at = tag.updated_at
-    tag_2_updated_at = tag_2.updated_at
-
     admin_login
 
-    visit(build_url_for_capybara("/easyadmin/cta"))
-    fill_in "title_filter", :with => "Cta to update"
-    page.find("input[value='APPLICA FILTRO']").click
-
-    within("table") do
-      first("a[href^='/easyadmin/cta/edit/']").click
-    end
-
-    activation_date_time = find_field("call_to_action[activation_date_time]").value
-    activation_date_time[-1] = ((activation_date_time[-1].to_i + 1) % 10).to_s
-    fill_in "call_to_action[activation_date_time]", :with => activation_date_time
-    page.find("button", :text => "AGGIORNA").click
+    old_activation_date_time = change_cta_activated_at()
 
     find_and_click_update_cache_button
+    wait_for_ajax
 
+    old_activation_date_time = change_cta_activated_at(old_activation_date_time)
     perform_logout
 
   end
@@ -48,19 +33,25 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
     admin_login
 
-    visit(build_url_for_capybara("/easyadmin/cta/to_approve"))
-    fill_in "title_filter", :with => "User cta to update"
-    page.find("input[value='FILTRA']").click
-    page.find("button[onclick^='updateCta(false,']").click
+    visit(build_url_for_capybara("/easyadmin/cta/approved"))
+
+    user_cta_slug = within(page.first("tr[id^='cta-']")) do
+      page.all("td")[1].text
+    end
+
+    page.first("button[onclick^='updateCta(false,']").click
 
     wait_for_ajax
 
-    visit(build_url_for_capybara("/easyadmin/cta/to_approve"))
+    visit(build_url_for_capybara("/easyadmin/cta/approved"))
 
     find_and_click_update_cache_button
 
-    user_cta = CallToAction.where(:name => "user-cta-to-update").first
-    user_cta.update_attribute(:approved, nil)
+    visit(build_url_for_capybara("/easyadmin/cta/not_approved"))
+    fill_in "slug_filter", :with => user_cta_slug
+    page.find("input[value='FILTRA']").click
+    wait_for_ajax
+    page.first("button[onclick^='updateCta(true,']").click
 
     perform_logout
 
@@ -74,6 +65,25 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     reload_page
     assert page.find("div#update-cache-banner")[:class].include?("hidden"), "After cookie button click, cookie banner is not hidden"
     wait_for_ajax
+  end
+
+  def change_cta_activated_at(new_activation_date_time = nil)
+    visit(build_url_for_capybara("/easyadmin/cta"))
+    fill_in "title_filter", :with => "Qual è la canzone più romantica della discografia dei Coldplay?"
+    page.find("input[value='APPLICA FILTRO']").click
+
+    within("table") do
+      first("a[href^='/easyadmin/cta/edit/']").click
+    end
+
+    old_activation_date_time = find_field("call_to_action[activation_date_time]").value
+    if !new_activation_date_time
+      new_activation_date_time = old_activation_date_time
+      new_activation_date_time[-1] = ((new_activation_date_time[-1].to_i + 1) % 10).to_s
+    end
+    fill_in "call_to_action[activation_date_time]", :with => new_activation_date_time
+    page.find("button", :text => "AGGIORNA").click
+    old_activation_date_time
   end
 
   def set_updated_at(instance, time)
