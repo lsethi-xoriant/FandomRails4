@@ -76,48 +76,49 @@ module UserInteractionHelper
     UserInteraction.includes(:interaction).where(interaction_id: interaction_ids, user_id: user.id)
   end
 
-  def init_or_update_linked_user_interaction_ids(user_interaction_ids, value)
-    if value.present?
-      user_interaction_ids << value
-    else
-      user_interaction_ids
-    end
-  end
+  def check_and_find_next_cta_from_user_interactions(calltoactions, cta_info_list, interactions_to_compute) 
+    end_ctas = []
+    end_cta_extras = []
 
-  def check_and_find_next_cta_from_user_interactions(cta_info_list, interactions_to_compute) 
-    result_cta_info_list = []
     is_cta_info_list_updated = false
 
     cta_info_list.each do |cta_info|  
-      index = 1
-
       interaction_ids = extract_interaction_ids_from_call_to_action_info_list([cta_info])
       user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
 
-      next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
-      linked_user_interaction_ids = init_or_update_linked_user_interaction_ids([], linked_user_interaction_id)
+      next_cta, nested_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(cta_info, user_interactions)
+      nested_user_interaction_ids = [] 
+      nested_user_interaction_ids << nested_user_interaction_id if nested_user_interaction_id
       
-      result_cta_info = nil
-      while next_cta_info
-        result_cta_info = next_cta_info
-        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ? AND user_interactions.user_id = ?", next_cta_info.id, current_user.id).references(:interactions)
-        next_cta_info, linked_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(next_cta_info, user_interactions)
-        linked_user_interaction_ids = init_or_update_linked_user_interaction_ids(linked_user_interaction_ids, linked_user_interaction_id)
-        index = index + 1
+      step = 1
+      end_cta = nil
+      while next_cta
+        end_cta = next_cta
+        user_interactions = UserInteraction.includes(:interaction).where("interactions.call_to_action_id = ? AND user_interactions.user_id = ?", next_cta.id, current_user.id).references(:interactions)
+        next_cta, nested_user_interaction_id = check_and_find_next_cta_from_user_interactions_computation(next_cta, user_interactions)
+        nested_user_interaction_ids << nested_user_interaction_id if nested_user_interaction_id
+        step = step + 1
       end
               
-      if result_cta_info.present?  
-        parent_cta_info = cta_info
-        result_cta_info = build_cta_info_list_and_cache_with_max_updated_at([result_cta_info], interactions_to_compute).first
-        result_cta_info["optional_history"] = update_cta_info_optional_history(parent_cta_info, result_cta_info, linked_user_interaction_ids, index) 
-        is_cta_info_list_updated = true
-      else
-        result_cta_info = cta_info
-      end
-      result_cta_info_list << result_cta_info
+      is_cta_info_list_updated = end_cta.present? 
+
+      parent_cta = find_in_calltoactions(calltoactions, cta_info["calltoaction"]["id"])
+      end_ctas << end_cta || parent_cta
+      end_cta_extras << [step, nested_user_interaction_ids]
     end
 
-    [result_cta_info_list, is_cta_info_list_updated]
+    if is_cta_info_list_updated
+      end_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at(end_ctas, interactions_to_compute)
+      end_cta_info_list.each_with_index do |end_cta, index|
+        parent_cta_info = cta_info_list[index] 
+        step, linked_user_interaction_ids = end_cta_extras[index]
+        end_cta["optional_history"] = update_cta_info_optional_history(parent_cta_info, end_cta, linked_user_interaction_ids, step) 
+      end 
+    else
+      end_cta_info_list = cta_info_list
+    end
+
+    end_cta_info_list
   end
 
   def update_cta_info_optional_history(parent_cta_info, cta_info, linked_user_interaction_ids, index)

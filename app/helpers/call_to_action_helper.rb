@@ -347,7 +347,6 @@ module CallToActionHelper
   end
 
   def build_cta_info_list(cache_key, calltoactions, interactions_to_compute = nil, params = {})
-
     calltoaction_info_list = cache_forever(cache_key) do
       
       calltoaction_info_list = Array.new
@@ -444,20 +443,17 @@ module CallToActionHelper
     interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
 
     calltoaction_ids = calltoactions.map { |calltoaction| calltoaction.id }
-    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.includes(:interaction).where(interactions: { call_to_action_id: calltoaction_ids }).references(:interactions).maximum(:updated_at))
-    max_user_reward_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_rewards.where("period_id IS NULL").maximum(:updated_at))
-    user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, "#{max_user_interaction_updated_at}_#{max_user_reward_updated_at}", params)
+    max_user_interaction_updated_at = from_updated_at_to_timestamp(current_or_anonymous_user.user_interactions.includes(:interaction).maximum(:updated_at))
+    user_cache_key = get_user_interactions_in_cta_info_list_cache_key(current_or_anonymous_user.id, cache_key, max_user_interaction_updated_at, params)
 
     calltoaction_info_list = cache_forever(user_cache_key) do
       if current_user
-        # calltoaction_info_list is updated in case of linked ctas; if so, it already fully "prepared"
-        calltoaction_info_list, is_calltoaction_info_list_updated = check_and_find_next_cta_from_user_interactions(calltoaction_info_list, interactions_to_compute)
-      
-        unless is_calltoaction_info_list_updated
-          interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
-          user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
-          adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
-        end
+        interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
+        user_interactions = get_user_interactions_with_interaction_id(interaction_ids, current_user)
+        adjust_call_to_actions_with_user_interaction_data(calltoactions, calltoaction_info_list, user_interactions)
+        
+        # calltoaction_info_list is updated in case of linked ctas; if so, it already fully "prepared"     
+        calltoaction_info_list = check_and_find_next_cta_from_user_interactions(calltoactions, calltoaction_info_list, interactions_to_compute)
       else    
         interaction_ids = extract_interaction_ids_from_call_to_action_info_list(calltoaction_info_list)
         user_interactions = get_user_interactions_with_interaction_id(interaction_ids, anonymous_user)
