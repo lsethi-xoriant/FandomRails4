@@ -433,6 +433,7 @@
 
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_name'));
     fillInputWithSlug($('#call_to_action_title'), $('#call_to_action_slug'));
+    substituteValue($('#call_to_action_slug'), / /g, "-");
 
     var formName = "new_call_to_action";
     var modelName = "call_to_action";

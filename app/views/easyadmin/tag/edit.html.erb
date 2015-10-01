@@ -169,6 +169,8 @@
 
     initializeTextboxWithJsonField(json_field, formName, modelName, fieldName);
 
+    substituteValue($('#tag_slug'), / /g, "-");
+
     $("#tag_valid_from_date_time").datetimepicker();
     $("#tag_valid_to_date_time").datetimepicker();
 

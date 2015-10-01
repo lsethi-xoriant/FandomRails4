@@ -136,6 +136,16 @@ function fillInputWithSlug(srcInputElement, destInputElement) {
   });
 };
 
+// Input replacement //
+
+function substituteValue(inputElement, oldValue, newValue) {
+  inputElement.on('input', function() { 
+    var text = this.value;
+    text = text.replace(oldValue, newValue);
+    inputElement.val(text);
+  });
+};
+
 // Extra fields //
 
 // Adds the "add json field" button and the click handler

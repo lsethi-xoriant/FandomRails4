@@ -16,6 +16,7 @@ class Tag < ActiveRecordWithJSON
   validates_presence_of :name
   validates :name, uniqueness: true
   validate :uniqueness_of_name_field
+  validate :absence_of_spaces_in_slug
 
   has_many :call_to_action_tags, dependent: :destroy
   has_many :reward_tags, dependent: :destroy
@@ -46,6 +47,12 @@ class Tag < ActiveRecordWithJSON
       errors.add(name, 'presente come nome di una CallToAction')
     elsif Reward.where(:name => self.name).any?
       errors.add(name, 'presente come nome di un Reward')
+    end
+  end
+
+  def absence_of_spaces_in_slug
+    if slug.include?(" ")
+      errors.add(slug, 'contiene degli spazi')
     end
   end
 

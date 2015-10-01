@@ -66,7 +66,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
       @extra_options = params[:extra_options]
       render template: "/easyadmin/call_to_action/new_cta"
     else
-
       tag_list = params[:tag_list].split(",")
       @cta.call_to_action_tags.delete_all
       tags_with_error = []
@@ -145,7 +144,6 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
           flash[:error] = "Tag non validi: #{tags_with_error.join(",")}"
         end
       end
-
 
       flash[:notice] = "CallToAction aggiornata correttamente"
       set_cta_updated_at(@cta)

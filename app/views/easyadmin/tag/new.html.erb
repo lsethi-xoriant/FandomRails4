@@ -156,6 +156,7 @@
 
     fillInputWithSlug($('#tag_title'), $('#tag_slug'));
     fillInputWithSlug($('#tag_title'), $('#tag_name'));
+    substituteValue($('#tag_slug'), / /g, "-");
 
     $("#tag_valid_from_date_time").datetimepicker();
     $("#tag_valid_to_date_time").datetimepicker();

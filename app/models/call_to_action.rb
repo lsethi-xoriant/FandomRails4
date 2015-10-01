@@ -55,6 +55,7 @@ class CallToAction < ActiveRecordWithJSON
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_uniqueness_of :slug
+  validate :absence_of_spaces_in_slug
   validate :uniqueness_of_name_field
   validates_presence_of :media_image, if: Proc.new { |c| user_id.present? && (media_type == "IMAGE" || media_type == "FLOWPLAYER") }
   validates_associated :releasing_file, if: Proc.new { |c| release_required }
@@ -230,6 +231,12 @@ class CallToAction < ActiveRecordWithJSON
       errors.add(name, 'presente come nome di un Tag')
     elsif Reward.where(:name => self.name).any?
       errors.add(name, 'presente come nome di un Reward')
+    end
+  end
+
+  def absence_of_spaces_in_slug
+    if slug.include?(" ")
+      errors.add(slug, 'contiene degli spazi')
     end
   end
 
