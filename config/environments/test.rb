@@ -37,4 +37,14 @@ Fandom::Application.configure do
 
   config.active_support.test_order = :sorted
   config.active_record.raise_in_transactional_callbacks = true
+  
+  
+  # Setting this to avoid the following warning: 
+  #  
+  # config.eager_load is set to nil. Please update your config/environments/*.rb files accordingly:
+  #
+  # * development - set it to false
+  # * test - set it to false (unless you use a tool that preloads your test environment)
+  # * production - set it to true 
+  config.eager_load = false 
 end
