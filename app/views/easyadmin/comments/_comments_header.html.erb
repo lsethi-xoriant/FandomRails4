@@ -23,35 +23,49 @@
 
 <hr/>
 
-<div class="row">
 <%= form_tag :method => 'post' do %>
+<div class="row">
   <div class="col-md-3">
     <div class="form-group">
       <label class="text-input">Filtra per ID UTENTE (separare con ",")</label></br>
-      <%= text_field_tag :user_id_filter, @user_id_filter, :class => 'form-control' %>
+      <%= text_field_tag "filters[user_id]", @filters["user_id"], :class => 'form-control' %>
     </div>
   </div>
   <div class="col-md-2">
     <div class="form-group">
       <label class="text-input">Filtra per ID CTA</label></br>
-      <%= text_field_tag :cta_id_filter, @cta_id_filter, :class => 'form-control' %>
+      <%= text_field_tag "filters[cta_id]", @filters["cta_id"], :class => 'form-control' %>
     </div>
   </div>
   <div class="col-md-3">
     <div class="form-group">
       <label class="text-input">Filtra per TESTO</label></br>
-      <%= text_field_tag :text_filter, @text_filter, :class => 'form-control' %>
+      <%= text_field_tag "filters[text]", @filters["text"], :class => 'form-control' %>
     </div>
   </div>
   <% if page == "not_approved" %>
     <div class="col-md-1">
       <div class="form-group">
         <label class="text-input">Profanity</label></br>
-        <%= check_box_tag :profanity_check_filter, true, @profanity_check_filter %>
+        <%= check_box_tag "filters[profanity_check]", true, @filters["profanity_check"] %>
       </div>
     </div>
   <% end %>
-  <div class="col-md-2">
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="form-group">
+      <label class="text-input">Dal giorno</label></br>
+      <%= text_field_tag "filters[from_date]", @filters["from_date"], :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-group">
+      <label class="text-input">Al giorno</label></br>
+      <%= text_field_tag "filters[to_date]", @filters["to_date"], :class => "form-control" %>
+    </div>
+  </div>
+  <div class="col-md-2 col-md-offset-2">
     <div class="form-group">
       </br><%= submit_tag 'APPLICA FILTRO', class: 'btn btn-primary' %>
     </div>
@@ -61,5 +75,14 @@
       </br><%= submit_tag 'RESET', class: 'btn btn-primary' %>
     </div>
   </div>
-<% end %>
 </div>
+<% end %>
+
+<script type="text/javascript">
+
+  $(function() {
+    $("#filters_from_date").datepicker();
+    $("#filters_to_date").datepicker();
+  });
+
+</script>

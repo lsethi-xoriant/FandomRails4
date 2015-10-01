@@ -56,10 +56,14 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved = false")
     @comment_not_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at DESC")
 
-    @user_id_filter = params[:user_id_filter]
-    @cta_id_filter = params[:cta_id_filter]
-    @text_filter = params[:text_filter]
-    @profanity_check_filter = params[:profanity_check_filter]
+    # @user_id_filter = params[:user_id_filter]
+    # @cta_id_filter = params[:cta_id_filter]
+    # @text_filter = params[:text_filter]
+    # @from_date_filter = params[:from_date_filter]
+    # @to_date_filter = params[:to_date_filter]
+    # @profanity_check_filter = params[:profanity_check_filter]
+
+    @filters = set_filter_values(params)
 
     @page_size = @comment_not_approved.num_pages
     @page_current = page
@@ -73,9 +77,7 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved IS NULL")
     @comment_to_be_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at ASC")
 
-    @user_id_filter = params[:user_id_filter]
-    @cta_id_filter = params[:cta_id_filter]
-    @text_filter = params[:text_filter]
+    @filters = set_filter_values(params)
 
     @page_size = @comment_to_be_approved.num_pages
     @page_current = page
@@ -89,35 +91,55 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved = true")
     @comment_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at DESC")
 
-    @user_id_filter = params[:user_id_filter]
-    @cta_id_filter = params[:cta_id_filter]
-    @text_filter = params[:text_filter]
+    @filters = set_filter_values(params)
 
     @page_size = @comment_approved.num_pages
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
+
+  def set_filter_values(params, value = nil)
+    filters = {}
+    if params[:filters]
+      params[:filters].each do |k, v|
+        if !value.nil?
+          filters[k] = value
+        else
+          filters[k] = v
+        end
+      end
+    end
+    filters
+  end
   
   def write_where_conditions(params, approved_cond)
-    params[:user_id_filter] = params[:cta_id_filter] = params[:text_filter] = params[:profanity_check_filter] = nil unless params[:commit] != "RESET"
+    if params[:commit] == "RESET"
+      params[:filters] = {}
+    end
     where_conditions = approved_cond
-    if params[:commit] != "RESET" && !params[:cta_id_filter].blank?
-      call_to_action_ids = [params[:cta_id_filter].to_i]
+    if params[:commit] != "RESET" && (!params[:filters]["cta_id"].blank? rescue false)
+      call_to_action_ids = [params[:filters]["cta_id"].to_i]
     else
       call_to_action_ids = CallToAction.where("#{ params['cta'] == 'user_call_to_actions' ? 'user_id IS NOT NULL' : 'user_id IS NULL' }").pluck(:id)
     end
     comment_ids = Interaction.where("call_to_action_id IN (?) AND resource_type = 'Comment'", call_to_action_ids).pluck(:resource_id)
-    if params[:profanity_check_filter]
-      comment_with_profanity_ids = []
-      UserCommentInteraction.where(:comment_id => comment_ids, :approved => false).each do |user_comment_interaction|
-        if (user_comment_interaction.aux["profanity"] == true rescue false)
-          comment_with_profanity_ids << user_comment_interaction.id
+    if params[:filters]
+      if params[:filters]["profanity_check"]
+        comment_with_profanity_ids = []
+        UserCommentInteraction.where(:comment_id => comment_ids, :approved => false).each do |user_comment_interaction|
+          if (user_comment_interaction.aux["profanity"] == true rescue false)
+            comment_with_profanity_ids << user_comment_interaction.id
+          end
         end
-      end 
+      end
     end
-    where_conditions << " AND user_id IN (#{params[:user_id_filter]})" unless params[:user_id_filter].blank?
+    if params[:filters]
+      where_conditions << " AND updated_at >= '#{params[:filters]["from_date"]}'" unless params[:filters]["from_date"].blank?
+      where_conditions << " AND updated_at <= '#{params[:filters]["to_date"]}'" unless params[:filters]["to_date"].blank?
+      where_conditions << " AND user_id IN (#{params[:filters]["user_id"]})" unless params[:filters]["user_id"].blank?
+      where_conditions << " AND text ILIKE '%#{params[:filters]["text"].gsub("'", "''")}%'" unless params[:filters]["text"].blank?
+    end
     where_conditions << " AND comment_id IN (#{ comment_ids.empty? ? "-1" : comment_ids.join(",") })"
-    where_conditions << " AND text ILIKE '%#{params[:text_filter].gsub("'", "''")}%'" unless params[:text_filter].blank?
     where_conditions << " AND id in (#{comment_with_profanity_ids.join(",")})" unless comment_with_profanity_ids.blank?
     where_conditions
   end
