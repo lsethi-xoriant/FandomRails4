@@ -140,7 +140,8 @@ module RankingHelper
         "user_id" => extra_data['user_id'], 
         "counter" => r.vote_sum,
         "cta_url" => "/call_to_action/#{r.call_to_action_id}",
-        "cta_image" => ctas_info[r.call_to_action_id]['thumb_url']
+        "cta_image" => ctas_info[r.call_to_action_id]['thumb_url'],
+        "title" => ctas_info[r.call_to_action_id]['title']
       }
     end
     positions
@@ -150,7 +151,7 @@ module RankingHelper
     ctas = CallToAction.where("id in (?)", cta_ids)
     ctas_info = {}
     ctas.each do |cta|
-      ctas_info[cta.id] = { "thumb_url" => cta.thumbnail.url(:thumb) }
+      ctas_info[cta.id] = { "thumb_url" => cta.thumbnail.url(:thumb), "title" => cta.title }
     end
     ctas_info
   end

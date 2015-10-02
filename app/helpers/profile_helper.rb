@@ -268,5 +268,22 @@ module ProfileHelper
     end
     other_rewards
   end
+  
+  def get_gallery_for_ranking_by_property(gallery_tags)
+    property = get_property()
+    gallery_tags.delete_if do |gallery_tag| 
+      has_ranking = get_extra_fields!(gallery_tag)["has_ranking"]
+      has_ranking ? (has_ranking["value"] == false) : false
+    end
+    if property.present? && property.name == $site.default_property
+      gallery_tags
+    elsif property.present?
+      property_name = property.name
+      gallery_tag_ids = gallery_tags.map { |t| t.id }
+      Tag.includes(tags_tags: :other_tag).where("other_tags_tags_tags.name = ? AND tags.id in (?)", property_name, gallery_tag_ids).references(:tags_tags, :other_tag)
+    else 
+      []
+    end
+  end
 
 end
