@@ -311,6 +311,7 @@ GEM
       haml (~> 4.0.0)
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
+    htmlentities (4.3.4)
     http (0.6.4)
       http_parser.rb (~> 0.6.0)
     http_parser.rb (0.6.0)
@@ -598,6 +599,7 @@ DEPENDENCIES
   gon
   hamster
   hirb
+  htmlentities (~> 4.3.4)
   httparty
   icalendar
   inherited_resources
@@ -639,3 +641,6 @@ DEPENDENCIES
   twitter
   uglifier
   unicorn
+
+BUNDLED WITH
+   1.10.3

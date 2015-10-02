@@ -24,6 +24,7 @@ gem 'koala'
 gem 'twitter'
 gem 'hirb'
 gem 'httparty'
+gem 'htmlentities', '~> 4.3.4'
 
 # gem 'doorkeeper'
 

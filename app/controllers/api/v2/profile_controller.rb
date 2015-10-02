@@ -267,7 +267,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
       response["ranking_list"] << prepare_my_position(my_position, rank.reward.name)
     end
     
-    response["ranking_list"] << prepare_ranking(property_rank)
+    response["ranking_list"] << prepare_ranking(property_rank, "point")
     
     fan_of_days = []
     (1..8).each do |i|
@@ -276,9 +276,34 @@ class Api::V2::ProfileController < Api::V2::BaseController
       fan_of_days << {"day" => "#{day.strftime('%d')} #{calculate_month_string_ita(day.strftime('%m').to_i)[0..2].camelcase}", "winner" => winner} if winner
     end
     
-    response["ranking_list"] << prepare_ranking_from_fan_of_the_day(fan_of_days)
+    response["ranking_list"] << prepare_ranking_from_fan_of_the_day(fan_of_days, "point")
+    
+    response["ranking_list"] = response["ranking_list"] + get_vote_rankings
     
     respond_with response.to_json
+  end
+  
+  def get_vote_rankings
+    
+    page = params[:page] ? params[:page].to_i : 1
+    
+    gallery_tags = get_tags_with_tag("gallery")
+    gallery_tag = Tag.find_by_name("gallery")
+    
+    gallery_tags = get_gallery_for_ranking_by_property(gallery_tags)
+    galleries = order_elements(gallery_tag, gallery_tags.sort_by{ |tag| tag.created_at }.reverse)
+    
+    gallery_rankings = []
+    
+    galleries.each do |gallery|
+      rank = get_full_vote_rank(gallery, page)
+      if rank[:rank_list].count > 0
+        gallery_rankings << prepare_ranking(rank, "vote")
+      end
+    end
+    
+    gallery_rankings
+    
   end
   
   def load_more_ranking
@@ -306,17 +331,20 @@ class Api::V2::ProfileController < Api::V2::BaseController
     
   end
   
-  def prepare_ranking(rank)
+  def prepare_ranking(rank, type)
     ranking_element = {}
     ranking_element["title"] = rank[:ranking].title
     ranking_element["name"] = rank[:ranking].name
+    ranking_element["type"] = type
     position_list = []
     rank[:rank_list].each do |re|
       position_list << {
         "rank" => "#" + "#{re["position"]}",
         "avatar_url" => re["avatar"],
         "username" => re["user"],
-        "counter" => re["counter"] 
+        "counter" => re["counter"],
+        "image" => re["cta_image"],
+        "title" => re["title"]
       }
     end
     ranking_element["position_list"] = position_list
@@ -324,9 +352,10 @@ class Api::V2::ProfileController < Api::V2::BaseController
     ranking_element
   end
   
-  def prepare_ranking_from_fan_of_the_day(rank)
+  def prepare_ranking_from_fan_of_the_day(rank, type)
     ranking_element = {}
     ranking_element["title"] = "Fan del giorno"
+    ranking_element["type"] = type
     position_list = []
     rank.each do |winner|
       if winner["winner"]
