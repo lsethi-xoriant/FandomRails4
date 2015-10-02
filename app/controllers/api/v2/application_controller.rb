@@ -33,7 +33,6 @@
         'content_sections' => [],
         'property' => property_content_preview
       }
-      
       respond_with result.to_json
     end
     
