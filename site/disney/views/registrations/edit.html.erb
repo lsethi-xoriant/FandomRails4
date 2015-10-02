@@ -1,112 +1,109 @@
 <div class="container container--default">
-	<% unless small_mobile_device? %>
-		<div class="row">
+  <% unless small_mobile_device? %>
+    <div class="row">
       <div class="col-md-12" style="margin-bottom: 15px; margin-top: 15px;">
         <%= render partial: "profile/profile_header" %>
       </div>
     </div>
-		<%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
+    <%= render partial: "profile/profile_navbar", locals: { page: "edit" } %>
   <% end %>
   <%= form_for(resource, :as => resource_name, :url => "/users/edit", :html => { :method => :put, :multipart => true }) do |f| %>
     <div class="row" style="padding: 10px 0;">
       <div class="col-md-12">
-              <div class="row main-row">
-                <div class="col-md-12">
-                  <% if resource.errors.any? %>
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="alert alert-danger">
-                          <p>Errori nel salvataggio dell'utente:</p>
-                          <p>
-                            <ul>
-                              <% resource.errors.full_messages.each do |msg| %>
-                                <li><%= msg %></li>
-                              <% end %>
-                            </ul>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  <% elsif flash[:notice] %>
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="alert alert-success"><%= flash[:notice] %></div>
-                      </div>
-                    </div>
-                  <% end %>
+        <div class="row main-row">
+          <div class="col-md-12">
+            <% if resource.errors.any? %>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-danger">
+                    <p>Errori nel salvataggio dell'utente:</p>
+                    <p>
+                      <ul>
+                        <% resource.errors.full_messages.each do |msg| %>
+                          <li><%= msg %></li>
+                        <% end %>
+                      </ul>
+                    </p>
+                  </div>
                 </div>
               </div>
+            <% elsif flash[:notice] %>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-success"><%= flash[:notice] %></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
 
-              <div class="row main-row">
-                <%= f.hidden_field :avatar_selected_url %>
-                <div class="col-xs-12">
-                	
-                  <div class="row form-group">
-	                <label for="username" class="col-xs-12 control-label">Nickname</label>
-	                <div class="col-xs-12">
-	                  <%= f.text_field :username, :class => "form-control" %>
-	                </div>
-	                
-	                
-	              </div>
-                	
-                  <div class="row">
-                  	<label for="avatar" class="col-xs-12 control-label">Avatar</label>
-                    <div class="col-sm-3 text-center">
-                            <img class="current_avatar_selected" src="<%= current_user.avatar_selected_url %>">
-                    </div>
-                    <div class="col-sm-8">
-                    	<div class="row">
-                    		<div class="col-sm-12 avatars__flexslider">
-							  <div class="flexslider avatars__flexslider-desktop">
-							    <div class="flex-viewport-shadow"></div>
-							    <ul class="slides">
-							    	<% get_avatar_list.each_slice(2) do |avatar_slice| %>
-								      <li  class="text-center avatars__flexslider-desktop-item">
-								        <div class="row">
-								        	<% avatar_slice.each do |avatar| %>
-								        	<div class="col-xs-12">
-								        		<div class="avatars__flexslider__avatar-container" onclick="selectAvatar(this);">
-								        			<img ng-src="<%= avatar[:url] %>">	
-								        		</div>
-								        	</div>
-								        	<% end %>
-								        </div>
-								      </li>
-							      	<% end %>
-							    </ul>
-							  </div>
-							
-							</div>
-                    	</div>
+        <div class="row main-row">
+          <%= f.hidden_field :avatar_selected_url %>
+          <div class="col-xs-12">
+
+            <div class="row form-group">
+              <label for="username" class="col-xs-12 control-label">Nickname</label>
+              <div class="col-xs-12">
+                <%= f.text_field :username, :class => "form-control" %>
+              </div>
+            </div>
+
+            <div class="row">
+              <label for="avatar" class="col-xs-12 control-label">Avatar</label>
+              <div class="col-sm-3 text-center">
+                <img class="current_avatar_selected" src="<%= current_user.avatar_selected_url %>">
+              </div>
+              <div class="col-sm-8">
+                <div class="row">
+                  <div class="col-sm-12 avatars__flexslider">
+                    <div class="flexslider avatars__flexslider-desktop">
+                      <div class="flex-viewport-shadow"></div>
+                      <ul class="slides">
+                        <% get_avatar_list.each_slice(2) do |avatar_slice| %>
+                          <li  class="text-center avatars__flexslider-desktop-item">
+                            <div class="row">
+                              <% avatar_slice.each do |avatar| %>
+                                <div class="col-xs-12">
+                                  <div class="avatars__flexslider__avatar-container" onclick="selectAvatar(this);">
+                                    <img ng-src="<%= avatar[:url] %>">  
+                                  </div>
+                                </div>
+                              <% end %>
+                            </div>
+                          </li>
+                        <% end %>
+                      </ul>
                     </div>
                   </div>
-                  <% unless small_mobile_device? %>
-	                  <div class="row">
-	                  	<div class="col-xs-12">
-	                  		<p><span style="font-weight: bold;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
-		            	  	<button class="btn btn-primary">Salva</button>
-		            	</div>
-	            	  </div>
-            	  <% else %>
-            	  	<div class="row">
-	                  	<div class="col-xs-12 text-center">
-	                  		<p><span style="font-weight: bold; text-align: left;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
-		            	  	<button class="btn btn-primary">Salva</button>
-		            	</div>
-	            	  </div>
-            	  	<div class="row">
-                  		<div class="col-xs-12 text-center">
-				  			<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
-				  		</div>
-            	  	</div>
-				  <% end %>
                 </div>
               </div>
+            </div>
+            <% unless small_mobile_device? %>
+              <div class="row">
+                <div class="col-xs-12">
+                  <p><span style="font-weight: bold;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
+                <button class="btn btn-primary">Salva</button>
+            </div>
+            </div>
+          <% else %>
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <p><span style="font-weight: bold; text-align: left;">Scegli</span> il tuo Nickname e il tuo avatar: <span style="font-weight: bold;">come i punteggi</span> rimarranno gli stessi per tutte le Community Disney.</p>
+                <button class="btn btn-primary">Salva</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <%= light_link_to "/profile", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+              </div>
+            </div>
+          <% end %>
+          </div>
+        </div>
       </div>
       <% if small_mobile_device? %>
-	  	<%= light_link_to "/profile/index", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
-	  <% end %>
+      <%= light_link_to "/profile", {"class" => "btn btn-lg btn-primary btn-back"} do %>Indietro<% end %>
+    <% end %>
     </div>
   <% end %>
 </div>
@@ -127,10 +124,10 @@ $(document).ready(function() {
 });
   
   function selectAvatar(elem){
-  	$(".avatars__flexslider__avatar-container").removeClass("avatars__flexslider__avatar-container--selected");
-  	$(elem).addClass("avatars__flexslider__avatar-container--selected");
-  	$("#user_avatar_selected_url").attr("value", $(elem).find("img").attr("src") );
-  	$(".current_avatar_selected").attr("src", $(elem).find("img").attr("src"));
+    $(".avatars__flexslider__avatar-container").removeClass("avatars__flexslider__avatar-container--selected");
+    $(elem).addClass("avatars__flexslider__avatar-container--selected");
+    $("#user_avatar_selected_url").attr("value", $(elem).find("img").attr("src") );
+    $(".current_avatar_selected").attr("src", $(elem).find("img").attr("src"));
   }
 </script>
  
