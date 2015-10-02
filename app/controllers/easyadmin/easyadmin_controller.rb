@@ -77,9 +77,12 @@ class Easyadmin::EasyadminController < ApplicationController
       else
         @from_date_string = params[:datepicker_from_date]
       end
-      @to_date_string = (params[:datepicker_to_date].blank? || params[:commit] == "Reset") ? 
-                          Time.now.strftime('%m/%d/%Y')
-                            : params[:datepicker_to_date]
+
+      if params[:datepicker_to_date].blank? || params[:commit] == "Reset"
+        @to_date_string = Time.now.strftime('%m/%d/%Y')
+      else
+        @to_date_string = params[:datepicker_to_date]
+      end
 
       @from_date = DateTime.strptime("#{@from_date_string} 00:00:00", '%m/%d/%Y %H:%M:%S')
       @to_date = DateTime.strptime("#{@to_date_string} 23:59:59", '%m/%d/%Y %H:%M:%S')
@@ -101,11 +104,12 @@ class Easyadmin::EasyadminController < ApplicationController
       @values = counters_hashes[0]
       @extra_fields = counters_hashes[1]
 
-      flash[:notice] = 
-        @values["migration_day"] == true ? 
-          "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
-            dunque i dati visualizzati comprendono anche tutte le statistiche precedenti a quel giorno"
-        : nil
+      if @values["migration_day"]
+        flash[:notice] = "Hai selezionato un periodo che comprende o precede il giorno di migrazione,
+                          dunque i dati visualizzati comprendono anche tutte le statistiche precedenti a quel giorno"
+      else
+        flash[:notice] = nil
+      end
 
       from = @from_date
       to = @to_date

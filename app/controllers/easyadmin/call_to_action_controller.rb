@@ -94,8 +94,8 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     if params[:part] == "user_cta_image" && params[:call_to_action]
       params[:call_to_action]['thumbnail'] = params[:call_to_action]['media_image']
     end
-    @cta = CallToAction.find(params[:id])
 
+    @cta = CallToAction.find(params[:id])
     aux = @cta.aux || {}
 
     if params[:call_to_action]["media_image"] && ALLOWED_UPLOAD_MEDIA_TYPES.include?(params[:call_to_action]["media_type"])
@@ -463,8 +463,9 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @cta.interactions.each do |interaction|
       InteractionCallToAction.where(:interaction_id => interaction.id).each do |icta|
         condition_hash = icta.condition || {}
-        @interaction_call_to_actions += 
-          [[(condition_hash.keys.first || ""), (condition_hash.values.first || ""), (icta.call_to_action_id || "")]]
+        @interaction_call_to_actions += [
+          [(condition_hash.keys.first || ""), (condition_hash.values.first || ""), (icta.call_to_action_id || "")]
+        ]
       end
     end
 
@@ -511,8 +512,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     notifications_enable = Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['upload_approved']
 
     if cta.approved
-      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template",
-                                        layout: false, locals: { cta: cta }, formats: :html
+      html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_ugc_approved_template", layout: false, locals: { cta: cta }, formats: :html
       if notifications_enable != false
         notice = create_notice(:user_id => user_upload_interaction.user_id, :html_notice => html_notice, :viewed => false, :read => false)
       end
