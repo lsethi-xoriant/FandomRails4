@@ -1,6 +1,7 @@
 require "pg"
 require "yaml"
 require "logger"
+require "active_support/time"
 
 def main
 
@@ -18,6 +19,7 @@ def main
   rails_app_dir = config["rails_app_dir"]
   events_chunk_size = config["events_chunk_size"]
   timestamps_lower_limit = config["starting_timestamp"]
+  latter_days_to_preserve = config["latter_days_to_preserve"]
 
   events_conn = PG::Connection.open(config["events_db"])
 
@@ -40,22 +42,25 @@ def main
 
   begin
     logger.info("starting a new chunk deletion")
-    timestamps_lower_limit = delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, logger)
+    timestamps_lower_limit = delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, latter_days_to_preserve, logger)
   rescue => e
     logger.info("exception rescued: #{e.inspect}\n#{e.backtrace}")
   end
 
 end
 
-def delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, logger)
+def delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, latter_days_to_preserve, logger)
 
   start_time = Time.now
-  logger.info("retrieving chunk timestamps interval")
+  timestamps_upper_limit = DateTime.now - latter_days_to_preserve.days
+
+  logger.info("retrieving chunk timestamps interval between #{timestamps_lower_limit} and #{timestamps_upper_limit}")
 
   chunk_timestamps = events_conn.exec(
     "SELECT timestamp 
     FROM events 
-    WHERE timestamp >= '#{timestamps_lower_limit}' 
+    WHERE timestamp <= '#{timestamps_upper_limit}' 
+    AND timestamp >= '#{timestamps_lower_limit}' 
     AND level = 'debug' 
     ORDER BY timestamp ASC 
     LIMIT #{events_chunk_size}"
@@ -78,7 +83,7 @@ def delete_events_chunk(events_conn, timestamps_lower_limit, events_chunk_size, 
 
     logger.info("#{delete.cmd_tuples()} rows successfully deleted in #{Time.now - start_time} seconds")
   else
-    logger.info("no events found, now exit")
+    logger.info("no events to delete found, now exit")
     exit
   end
 
