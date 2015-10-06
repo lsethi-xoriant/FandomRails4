@@ -141,6 +141,14 @@ module ApplicationHelper
     end
   end
 
+  def compute_property_path(property)
+    if property.name == $site.default_property
+      nil
+    else
+      property.name
+    end
+  end
+
   def get_menu_items(property = nil)
     result = []
 

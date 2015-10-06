@@ -36,14 +36,6 @@ module DisneyHelper
     get_disney_ctas(property).where("call_to_actions.id IN (?)", tag_calltoactions.map { |calltoaction| calltoaction.id }).order("activated_at #{order}")
   end
 
-  def compute_property_path(property)
-    if property.name == "disney-channel"
-      nil
-    else
-      property.name
-    end
-  end
-
   def disney_profile_completed?()
     current_user.aux["profile_completed"] rescue true
   end

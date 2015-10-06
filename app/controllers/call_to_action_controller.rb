@@ -362,10 +362,6 @@ class CallToActionController < ApplicationController
     response
   end
 
-  def send_share_interaction_email(address, calltoaction)
-    SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
-  end
-
   def upload
     upload_helper
   end
