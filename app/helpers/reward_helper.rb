@@ -66,7 +66,6 @@ module RewardHelper
     end
   end
 
-
   def call_to_action_completed?(cta, user = nil)
     user = current_or_anonymous_user if user.nil?
 
@@ -115,7 +114,7 @@ module RewardHelper
 
         interaction_outcomes_and_interaction.each do |intearction_outcome, interaction|
           user_interaction = interaction.user_interactions.find_by_user_id(user.id)        
-    
+
           if user_interaction && user_interaction.outcome.present?
             win_reward_count = JSON.parse(user_interaction.outcome)["win"]["attributes"]["reward_name_to_counter"].fetch(reward_name, 0)
             correct_answer_outcome = JSON.parse(user_interaction.outcome)["correct_answer"]

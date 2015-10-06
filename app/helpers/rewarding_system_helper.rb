@@ -91,8 +91,7 @@ module RewardingSystemHelper
     attribute :user_rewards #, type: Hash
     
     attribute :rules_collector #, type: RulesCollector
-    
-    
+
     def first_time
       user_interaction.counter == 1
     end
@@ -497,7 +496,7 @@ module RewardingSystemHelper
         total_outcome = compute_max_outcome(tree, user, get_ctas_for_max_outcome(), visited)
       end
 
-      total_outcome.reward_name_to_counter.default = 0
+      total_outcome.reward_name_to_counter.default = nil
       [total_outcome, interaction_outcomes, sorted_interactions]
 
     else

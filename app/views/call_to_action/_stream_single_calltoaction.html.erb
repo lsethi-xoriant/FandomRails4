@@ -6,13 +6,13 @@
   </div>
   <div class="col-xs-6 text-right">
     <!-- CALLTOACTION WINNABLE REWARD COUNT -->
-    <div ng-if="calltoaction_info.status && calltoaction_info.status.winnable_reward_count > 0" class="cta__winnable-reward cta__winnable-reward--single-page">
+    <div ng-if="getParentCtaInfo(calltoaction_info).status && getParentCtaInfo(calltoaction_info).status.winnable_reward_count > 0" class="cta__winnable-reward cta__winnable-reward--single-page">
       <span class="label label-warning cta-cover__winnable-reward__label">
-        +{{calltoaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+        +{{getParentCtaInfo(calltoaction_info).status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
       </span>  
-    </div> 
+    </div>
     <!-- CALLTOACTION DONE -->
-    <div ng-if="!calltoaction_info.status" class="cta__winnable-reward cta__winnable-reward--single-page">
+    <div ng-if="getParentCtaInfo(calltoaction_info).status && !getParentCtaInfo(calltoaction_info).status.winnable_reward_count" class="cta__winnable-reward cta__winnable-reward--single-page">
       <span class="label label-success cta-cover__winnable-reward__label">
         Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
       </span>  

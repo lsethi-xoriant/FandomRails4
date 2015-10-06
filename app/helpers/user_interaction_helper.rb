@@ -113,7 +113,7 @@ module UserInteractionHelper
         parent_cta_info = cta_info_list[index] 
         step, linked_user_interaction_ids = end_cta_extras[index]
         end_cta["optional_history"] = update_cta_info_optional_history(parent_cta_info, end_cta, linked_user_interaction_ids, step) 
-      end 
+      end
     else
       end_cta_info_list = cta_info_list
     end
