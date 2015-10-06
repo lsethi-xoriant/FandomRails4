@@ -11,7 +11,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
     response["header"] = {
       "type" => "nickname",
       "info" => {
-        "nickname" => extract_name_or_username(current_user),
+        "nickname" => extract_username_or_name(current_user),
       }
     }
     
@@ -133,6 +133,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
         tmp = []
       end
       i += 1
+    end
+    
+    unless tmp.empty?
+      level_elements << {
+        "type" => "reward",
+        "rewards" => tmp
+      }
     end
     
     level_elements

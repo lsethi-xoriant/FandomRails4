@@ -144,10 +144,8 @@ module CallToActionHelper
 
     page_elements = params && params["page_elements"] ? params["page_elements"] : nil
     if gallery_info
-      if page_elements
+      if page_elements.present?
         page_elements = page_elements + ["vote"]
-      else
-        page_elements = ["vote"]
       end
     end
 
@@ -816,13 +814,13 @@ module CallToActionHelper
       duplicate_cta_tag(user_calltoaction, tag)
     end
 
-      user_calltoaction.release_required = upload_interaction.releasing? rescue false
-      user_calltoaction.build_releasing_file(file: params["releasing"])
+    user_calltoaction.release_required = upload_interaction.releasing? rescue false
+    user_calltoaction.build_releasing_file(file: params["releasing"])
 
-      user_calltoaction.privacy_required = upload_interaction.privacy? rescue false
-      user_calltoaction.privacy = !params["privacy"].blank?
+    user_calltoaction.privacy_required = upload_interaction.privacy? rescue false
+    user_calltoaction.privacy = !params["privacy"].blank?
 
-      # user_calltoaction.releasing_file_id = releasing.id
+    # user_calltoaction.releasing_file_id = releasing.id
 
     user_calltoaction
   end

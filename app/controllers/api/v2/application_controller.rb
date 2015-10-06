@@ -33,7 +33,6 @@
         'content_sections' => [],
         'property' => property_content_preview
       }
-      
       respond_with result.to_json
     end
     
@@ -60,7 +59,6 @@
       
       params["page_elements"] = nil
       calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
-      
       
       result = {
         'call_to_action_info_list' => calltoaction_info_list,

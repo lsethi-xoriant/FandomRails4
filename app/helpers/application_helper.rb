@@ -490,6 +490,14 @@ module ApplicationHelper
       "#{user.first_name} #{user.last_name}"
     end
   end
+  
+  def extract_username_or_name(user)
+    if !user.username.blank?
+      user.username
+    else
+      "#{user.first_name} #{user.last_name}"
+    end
+  end
 
   def disqus_sso
     disqus = get_deploy_setting("sites/#{$site.id}/disqus", nil)

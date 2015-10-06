@@ -100,10 +100,14 @@ module UserInteractionHelper
         step = step + 1
       end
               
-      is_cta_info_list_updated = end_cta.present? 
-
-      parent_cta = find_in_calltoactions(calltoactions, cta_info["calltoaction"]["id"])
-      end_ctas << end_cta || parent_cta
+      if end_cta.present?
+        is_cta_info_list_updated = true 
+        end_ctas << end_cta
+      else
+        parent_cta = find_in_calltoactions(calltoactions, cta_info["calltoaction"]["id"])
+        end_ctas << parent_cta
+      end
+      
       end_cta_extras << [step, nested_user_interaction_ids]
     end
 

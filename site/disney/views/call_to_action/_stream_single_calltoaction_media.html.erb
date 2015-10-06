@@ -1,0 +1,69 @@
+<div ng-if="(calltoaction_info.calltoaction.media_type == 'YOUTUBE' || calltoaction_info.calltoaction.media_type == 'KALTURA' || calltoaction_info.calltoaction.media_type == 'FLOWPLAYER') && calltoaction_info.calltoaction.media_image_from_answer_type != 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}">
+  <div class="media-youtube embed-responsive embed-responsive-16by9">             
+    
+    <!-- IFRAME VIDEO -->
+    <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+
+    <!-- OVERVIDEO AREA -->
+    <%= render partial: "/call_to_action/overvideo_interaction" %>
+
+    <!-- DEFAULT END -->
+    <div class="col-xs-12 end-interaction text-center" ng-if="calltoaction_info.active_end_interaction">
+      <p class="end-interaction__title" ng-if="!calltoaction_info.calltoaction.extra_fields['end-video']">Cosa ne pensi? Dì la tua!<br>Lascia subito il tuo commento su questo argomento.</p>
+      <p class="end-interaction__title" ng-if="calltoaction_info.calltoaction.extra_fields['end-video']">{{calltoaction_info.calltoaction.extra_fields['end-video']}}</p>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-lg hidden-xs"><span>COMMENTA</span></a>
+      <a href="javascript: void(0)" ng-click="scrollTo('comment-interactions')" class="btn btn-blue btn-sm visible-xs"><span>COMMENTA</span></a>
+    </div>
+
+    <div ng-if="calltoaction_info.percentage_animation" id="percentage_circle_{{calltoaction_info.calltoaction.id}}" class="percentage_circle percentage_circle_overvideo p0">
+      <span id="percentage_circle_value_{{calltoaction_info.calltoaction.id}}" class="percentace_circle_value"></span>
+      <div class="percentage_circle_slice">
+        <div class="percentage_circle_bar"></div>
+        <div class="percentage_circle_fill"></div>
+      </div>
+    </div>
+
+    <!-- PLAY INTERACTION -->
+    <div class="play-interaction__container" ng-if="(interaction_info = getPlayInteraction(calltoaction_info.calltoaction.id)) && !interaction_info.hide">
+      <div class="col-md-12 text-center hidden-xs">
+        <p class="play-interaction__title">Guarda il video e guadagna i punti.</p>
+      </div>
+      <div ng-if="interaction_info.user_interaction" class="row">
+        <div class="col-md-12 play-interaction__winnable-reward text-center">
+          <span class="label label-success cta-cover__winnable-reward__label">
+            Fatto <span class="cta-cover__glyphicon-icon glyphicon glyphicon-ok">
+          </span> 
+        </div>
+      </div>
+      <div ng-if="!interaction_info.user_interaction" class="row text-center">
+        <div class="col-md-12 play-interaction__winnable-reward">
+          <span class="label label-warning cta-cover__winnable-reward__label">
+            +{{interaction_info.status.winnable_reward_count}}<span class="cta-cover__glyphicon-icon fa fa-star">
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ANSWER MEDIA IMAGE -->
+<div ng-if="calltoaction_info.calltoaction.media_image_from_answer_type == 'IMAGE'" class="media-image">
+  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image_from_answer}}" style="width: 100%;">
+</div>
+
+<!-- MAIN MEDIA IMAGE -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE' && calltoaction_info.calltoaction.media_image_from_answer_type != 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+  <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
+  
+  <div class="col-sm-12 twitter-description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
+    <p>{{calltoaction_info.calltoaction.description}}</p>
+  </div>
+
+  <%= render partial: "/call_to_action/over_media_interactions" %>
+</div>
+<!-- IFRAME -->
+<div ng-if="calltoaction_info.calltoaction.media_type == 'IFRAME'" >
+  <!-- IFRAME -->
+  <div class="embed-responsive embed-responsive-16by9 text-center" id="iframe-calltoaction-{{calltoaction_info.calltoaction.id}}" ng-bind-html="calltoaction_info.calltoaction.media_data | unsafe"></div>
+</div>
