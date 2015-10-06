@@ -598,7 +598,7 @@ module RewardHelper
         badges = order_elements(badge_tag, badges)
       end
     end
-    badges.last
+    UserReward.where("user_id = ? AND reward_id in (?)", current_user.id, badges.map{|b| b.id}).order("updated_at DESC").first.reward
   end
   
 end
