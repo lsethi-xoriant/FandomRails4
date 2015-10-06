@@ -135,6 +135,13 @@ class Api::V2::ProfileController < Api::V2::BaseController
       i += 1
     end
     
+    unless tmp.empty?
+      level_elements << {
+        "type" => "reward",
+        "rewards" => tmp
+      }
+    end
+    
     level_elements
   end
   
