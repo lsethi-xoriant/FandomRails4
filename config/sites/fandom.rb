@@ -13,6 +13,7 @@ module Fandom
       aws_transcoding: true,
       allowed_context_roots: ["all", "sport", "series", "talent", "music", "branded"],
       init_ctas: 6,
+      periodicity_kinds: [PERIOD_KIND_DAILY],      
       environment: { 'EMAIL_ADDRESS' => 'noreply@shado.tv' }
     )
   end
