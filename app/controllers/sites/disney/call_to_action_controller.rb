@@ -9,18 +9,6 @@ class Sites::Disney::CallToActionController < CallToActionController
   def expire_user_interaction_cache_keys()
   end
 
-  def send_share_interaction_email(address, calltoaction)
-    property = get_tag_from_params(get_disney_property())
-    aux = {
-      color: get_extra_fields!(property)["label-background"],
-      logo: (get_extra_fields!(property)["logo"]["url"] rescue nil),
-      path: compute_property_path(property),
-      root: root_url,
-      subject: property.title
-    }
-    SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
-  end
-
   def append_calltoaction
     tag_name = get_disney_property()
     params[:page_elements] = ["like", "comment", "share"]

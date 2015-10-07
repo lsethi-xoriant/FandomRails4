@@ -406,7 +406,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   function getOrigResourceType(resource_type) {
-    if(resource_type == "versus" || resource_type == "quiz" || resource_type == "test") {
+    if(resource_type == "versus" || resource_type == "quiz" || resource_type == "test" || resource_type == "trivia") {
       return "quiz";
     } else {
       return resource_type;

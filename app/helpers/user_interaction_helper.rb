@@ -581,6 +581,7 @@ module UserInteractionHelper
     rescue Exception => exception
       is_share_valid = false
       error = exception.to_s
+      log_error("mail share error", { message: error})
     end
 
     if is_share_valid
@@ -592,8 +593,21 @@ module UserInteractionHelper
     response[:share] = Hash.new
     response[:share][:result] = is_share_valid
     response[:share][:exception] = error 
-
+    response[:exception] = error
+     
     [user_interaction, outcome, response]
+  end
+
+  def send_share_interaction_email(address, calltoaction)
+    property = get_property()
+    aux = {
+      color: get_extra_fields!(property)["label-background"],
+      logo: (get_extra_fields!(property)["logo"]["url"] rescue nil),
+      path: compute_property_path(property),
+      root: root_url,
+      subject: property.title
+    }
+    SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
   end
 
   def update_random_interaction(cta, interaction, aux, response)

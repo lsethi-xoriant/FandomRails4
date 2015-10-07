@@ -86,7 +86,7 @@ module RewardHelper
 
   def compute_call_to_action_completed_or_reward_status(reward_name, calltoaction, user = nil)
     user = current_or_anonymous_user if user.nil?
-
+    
     if call_to_action_completed?(calltoaction, user)
       nil
     else
@@ -476,7 +476,7 @@ module RewardHelper
       all_rewards = {}
       where_conditions = []
 
-      if property && property != "all"
+      if property.present?
         rewards_with_tag_property = get_rewards_with_tag(property)
         if rewards_with_tag_property.empty?
           return {}

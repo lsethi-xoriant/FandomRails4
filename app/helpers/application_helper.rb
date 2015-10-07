@@ -141,6 +141,14 @@ module ApplicationHelper
     end
   end
 
+  def compute_property_path(property)
+    if property.name == $site.default_property
+      nil
+    else
+      property.name
+    end
+  end
+
   def get_menu_items(property = nil)
     result = []
 
@@ -1182,6 +1190,13 @@ module ApplicationHelper
     end
 
     result.nil? ? "" : result
+  end
+  
+  def adjust_ctas_descriptions(cta_info_list)
+    cta_info_list.each do |ctainfo|
+      ctainfo["calltoaction"]["description"] = HTMLEntities.new.decode(strip_tags(ctainfo["calltoaction"]["description"])) 
+    end
+    cta_info_list
   end
   
 end
