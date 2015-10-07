@@ -27,7 +27,7 @@
         'call_to_action_highlight_list' => ctas_highlighted,
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
-        'menu_items' => get_menu_items(),
+        #'menu_items' => get_menu_items(),
         'featured_content_previews' => featured_content_previews.contents,
         # TODO: content section need to have their timestamp
         'content_sections' => [],
