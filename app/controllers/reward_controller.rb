@@ -8,8 +8,13 @@ class RewardController < ApplicationController
   include RewardHelper
 
   def index
-    property = get_property_for_reward_catalogue
-    all_rewards_hash = get_all_rewards_map(property)
+    property = get_property()
+
+    if property.present?
+      property_name = property.name
+    end
+
+    all_rewards_hash = get_all_rewards_map(property_name)
     if current_user
       user_rewards = get_user_rewards(all_rewards_hash).slice(0,8)
       user_available_rewards = get_user_available_rewards(all_rewards_hash)

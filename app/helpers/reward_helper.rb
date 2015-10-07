@@ -476,7 +476,7 @@ module RewardHelper
       all_rewards = {}
       where_conditions = []
 
-      if property && property != "all"
+      if property.present?
         rewards_with_tag_property = get_rewards_with_tag(property)
         if rewards_with_tag_property.empty?
           return {}
