@@ -17,7 +17,7 @@ class Api::V2::RewardController < Api::V2::BaseController
     ctas = CallToAction.where("id in (?)", cta_ids)
     calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at(ctas)
     result = {
-        'call_to_action_info_list' => calltoaction_info_list,
+        'call_to_action_info_list' => adjust_ctas_descriptions(calltoaction_info_list),
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => false,
         'title' => "Tutti i premi",

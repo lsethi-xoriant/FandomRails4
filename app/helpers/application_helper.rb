@@ -1192,4 +1192,11 @@ module ApplicationHelper
     result.nil? ? "" : result
   end
   
+  def adjust_ctas_descriptions(cta_info_list)
+    cta_info_list.each do |ctainfo|
+      ctainfo["calltoaction"]["description"] = HTMLEntities.new.decode(strip_tags(ctainfo["calltoaction"]["description"])) 
+    end
+    cta_info_list
+  end
+  
 end

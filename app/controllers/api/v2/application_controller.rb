@@ -36,13 +36,6 @@
       respond_with result.to_json
     end
     
-    def adjust_ctas_descriptions(cta_info_list)
-      cta_info_list.each do |ctainfo|
-        ctainfo["calltoaction"]["description"] = HTMLEntities.new.decode(strip_tags(ctainfo["calltoaction"]["description"])) 
-      end
-      cta_info_list
-    end
-    
     def index_gallery
       params["other_params"] = {}
       params["other_params"]["gallery"] = {}
