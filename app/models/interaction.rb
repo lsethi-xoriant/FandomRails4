@@ -5,9 +5,9 @@ class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
     :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed,
     :interaction_positioning, :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id,
-    :twitter_registered_users_only, :instagram_registered_users_only
+    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id
   attr_accessor :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, 
-    :twitter_registered_users_only, :instagram_registered_users_only
+    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -25,10 +25,16 @@ class Interaction < ActiveRecord::Base
   before_update :set_social_tag_in_interaction_aux
 
   def set_social_tag_in_interaction_aux
-    if self.gallery_type == "instagram" || self.gallery_type == "twitter"
+    if self.gallery_type == "instagram" || self.gallery_type == "twitter" || self.gallery_type == "facebook"
       aux = self.aux || {}
       aux["configuration"] = { "type" => self.gallery_type }
-      if self.gallery_type == "instagram"
+      if self.gallery_type == "facebook"
+        tag_info = {
+          "facebook_page" => {
+            "id" => self.facebook_page_id
+          }
+        }
+      elsif self.gallery_type == "instagram"
         tag_info = {
           "instagram_tag" => {
             "name" => self.instagram_tag_name, 

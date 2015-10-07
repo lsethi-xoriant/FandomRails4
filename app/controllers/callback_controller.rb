@@ -78,7 +78,7 @@ class CallbackController < ApplicationController
             if !cta_with_media_present && !media_already_processed.include?(media["id"])
               media_already_processed << media["id"]
               registered_users_only = upload.aux["configuration"]["registered_users_only"] rescue false
-              clone_params = get_clone_params(registered_users_only, media)
+              clone_params = get_instagram_clone_params(registered_users_only, media)
               if clone_params.any?
                 begin
                   cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
@@ -98,7 +98,7 @@ class CallbackController < ApplicationController
     end
   end
 
-  def get_clone_params(registered_users_only, media)
+  def get_instagram_clone_params(registered_users_only, media)
     auth = Authentication.find_by_uid_and_provider(media["user"]["id"], "instagram_#{$site.id}")
     if !auth && registered_users_only
       return {}
@@ -111,6 +111,90 @@ class CallbackController < ApplicationController
         "extra_fields" => { "layout" => "instagram", "instagram_avatar" => media["user"]["profile_picture"], "instagram_username" => media["user"]["username"] }
       }
     end
+  end
+
+  def facebook_page_feed_callback
+
+    if params["hub.mode"] && params["hub.mode"] == "subscribe"
+      render json: params["hub.challenge"]
+    else
+      call_to_action_save = true
+
+      # Request body example:
+      # {
+      #   object: "page", 
+      #   entry: [
+      #     changes: [
+      #       field: "feed", 
+      #       value: {
+      #         created_time: "1444051456", 
+      #         item: "status" / "photo" / "video", 
+      #         link: "https://[...].jpg", 
+      #         message: "Look at this!", 
+      #         photo_id: "1025277764189605", 
+      #         post_id: "1024018720982176_1025276557523059", 
+      #         published: "1", 
+      #         sender_id: "1024018720982176", 
+      #         sender_name: "Page title", 
+      #         verb: "add"
+      #       }
+      #     ], 
+      #     id: "1024018720982176", 
+      #     time: "1444051456"
+      #   ]
+      # }
+      facebook_subscriptions_setting = Setting.find_by_key(FACEBOOK_SUBSCRIPTIONS_SETTINGS_KEY)
+      facebook_subscriptions_setting_hash = JSON.parse(facebook_subscriptions_setting.value)
+
+      params["body"]["entry"].each do |entry|
+
+        page_id = entry["id"]
+        interaction_id = facebook_subscriptions_setting_hash[page_id]["interaction_id"]
+        upload = Interaction.find(interaction_id).resource
+
+        entry["changes"].each do |change|
+
+          post = change["value"]
+          if post["published"].to_i == 1
+            cta_with_post_present = CallToAction.where("aux->>'facebook_post_id' = '#{post["post_id"]}'").first
+            clone_params = get_facebook_clone_params(post, upload.call_to_action)
+
+            if cta_with_post_present
+              begin
+                clone_params["media_image"] = clone_params.delete("upload")
+                clone_params["thumbnail"] = clone_params["media_image"]
+                clone_params["aux"] = cta_with_post_present.aux.merge({ "facebook_params" => change })
+                cta_with_post_present.update_attributes(clone_params)
+                cta_with_post_present.save
+              end
+            else
+              # check item??
+              begin
+                cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
+                # cloned_cta.build_user_upload_interaction(user_id: user_id, upload_id: upload.id)
+                cloned_cta.aux = { "facebook_params" => change }
+                cloned_cta.approved = true
+                cloned_cta.save
+              end
+            end
+
+          end
+
+        end
+
+      end
+
+      render json: "OK"
+    end
+  end
+
+  def get_facebook_clone_params(post, template_call_to_action)
+    {
+      "title" => "Titolo", 
+      "description" => post["item"] == "share" ? "#{post["message"]}\n#{post["link"]}" : post["message"], 
+      "upload" => (post["item"] == "photo" && post["link"]) ? open(post["link"]) : open(template_call_to_action.media_image.url), 
+      "extra_fields" => {}
+    }
   end
 
 end

@@ -35,6 +35,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   PROFANITIES_SETTINGS_KEY = 'profanity.words'
   INSTAGRAM_CALLBACK_URL = 'instagram.callback.url'
   INSTAGRAM_SUBSCRIPTIONS_SETTINGS_KEY = 'instagram.subscriptions'
+  FACEBOOK_SUBSCRIPTIONS_SETTINGS_KEY = 'facebook.subscriptions'
   TWITTER_SUBSCRIPTIONS_SETTINGS_KEY = 'twitter.subscriptions'
   NOTIFICATIONS_LIMIT_DEFAULT = 50
   NOTIFICATIONS_LIMIT_KEY = 'notifications.limit'

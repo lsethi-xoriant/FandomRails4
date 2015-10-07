@@ -544,6 +544,9 @@ Fandom::Application.routes.draw do
   post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
   match "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }, via: [:get, :post]
 
+  # Facebook callback
+  match "/facebook_page_feed_callback", :to => "callback#facebook_page_feed_callback", defaults: { format: 'json' }, via: [:get, :post]
+
   get "/how_to", :to => "application#how_to"
   get "/landing", :to => "landing#index"
 

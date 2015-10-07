@@ -24,6 +24,9 @@
               <%= f.radio_button :gallery_type, "flowplayer", :class => "flowplayer", :checked => (get_upload_type(f.object.id) == "flowplayer" || get_upload_type(f.object.id) == nil), :onchange => "updateInputsForGalleryType($(this))" %> Upload + Flowplayer
             </div>
             <div class="radio">
+              <%= f.radio_button :gallery_type, "facebook", :class => "facebook", :checked => (get_upload_type(f.object.id) == "facebook"), :onchange => "updateInputsForGalleryType($(this))" %> Facebook
+            </div>
+            <div class="radio">
               <%= f.radio_button :gallery_type, "instagram", :class => "instagram", :checked => (get_upload_type(f.object.id) == "instagram"), :onchange => "updateInputsForGalleryType($(this))" %> Instagram
             </div>
             <div class="radio">
@@ -101,6 +104,16 @@
           </div>
           <div class="form-group">
             <%# = f.text_area :aux, :cols => "60", :rows => "5" %>
+          </div>
+        </div>
+      </div>
+      <div class="row facebook-gallery gallery-form <%= f.object.id %> <%= get_upload_type(f.object.id) == 'facebook' ? '' : 'hidden' %>" style="margin-bottom: 0px;">
+        <div class="col-lg-12">
+          <% facebook_page = Interaction.find(f.object.id).aux["configuration"]["facebook_page"] rescue {} %>
+          <div class="form-group col-lg-4">
+            <label class="text-input">ID pagina Facebook</label>
+            <% facebook_page_id = facebook_page["id"] rescue "" %>
+            <%= f.text_field :facebook_page_id, :class => "form-control facebook-page-id", :value => facebook_page_id %>
           </div>
         </div>
       </div>
@@ -186,13 +199,21 @@
         parentDiv.siblings(".gallery-form").addClass("hidden");
         parentDiv.siblings(".video-gallery").removeClass("hidden");
         break;
+      case "facebook":
+        parentDiv.siblings(".gallery-form").addClass("hidden");
+        parentDiv.siblings(".instagram-gallery").addClass("hidden");
+        parentDiv.siblings(".facebook-gallery").removeClass("hidden");
+        parentDiv.siblings(".video-gallery").children().children("input").val("");
+        break;
       case "instagram":
         parentDiv.siblings(".gallery-form").addClass("hidden");
+        parentDiv.siblings(".facebook-gallery").addClass("hidden");
         parentDiv.siblings(".instagram-gallery").removeClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
       case "twitter":
         parentDiv.siblings(".gallery-form").addClass("hidden");
+        parentDiv.siblings(".facebook-gallery").addClass("hidden");
         parentDiv.siblings(".twitter-gallery").removeClass("hidden");
         parentDiv.siblings(".video-gallery").children().children("input").val("");
         break;
@@ -215,11 +236,11 @@
       tagName = button.siblings("input").val();
       img = button.siblings("img")[0];
       img.style.display = "inline";
-      changeTagSubscriptionRequest(interactionId, tagName, img);
+      changeInstagramTagSubscriptionRequest(interactionId, tagName, img);
     }
   };
 
-  function changeTagSubscriptionRequest(interactionId, tagName, img) {
+  function changeInstagramTagSubscriptionRequest(interactionId, tagName, img) {
     $.ajax({
       type: "POST", 
       dataType: "json", 

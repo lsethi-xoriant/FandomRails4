@@ -436,7 +436,10 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
 
-    render template: "/easyadmin/call_to_action/index_user_cta_#{params[:approvation_status]}" if params[:commit] != "ESPORTA"
+    if params[:commit] != "ESPORTA"
+      cta_page = params[:approvation_status] != "to_approve" ? params[:approvation_status] : "to_be_approved"
+      render template: "/easyadmin/call_to_action/index_user_cta_#{}" 
+    end
 
   end
 
