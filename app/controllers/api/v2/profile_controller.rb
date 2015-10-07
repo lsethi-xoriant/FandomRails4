@@ -351,7 +351,8 @@ class Api::V2::ProfileController < Api::V2::BaseController
         "username" => re["user"],
         "counter" => re["counter"],
         "image" => re["cta_image"],
-        "title" => re["title"]
+        "title" => re["title"],
+        "user_id" => re["user_id"]
       }
     end
     ranking_element["position_list"] = position_list
