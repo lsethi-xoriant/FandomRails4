@@ -270,11 +270,10 @@ class Api::V2::ProfileController < Api::V2::BaseController
     my_position, total = get_my_position(rank.name)
     response["ranking_list"] = []
     
-    if my_position && my_position > 10
-      response["ranking_list"] << prepare_my_position(my_position, rank.reward.name)
-    end
-    
     response["ranking_list"] << prepare_ranking(property_rank, "point")
+    if my_position && my_position > 10
+      response["ranking_list"].first["position_list"].unshift(prepare_my_position(my_position, rank.reward.name))
+    end
     
     fan_of_days = []
     (1..8).each do |i|
@@ -333,7 +332,8 @@ class Api::V2::ProfileController < Api::V2::BaseController
       "rank" => "# #{my_position}",
       "avatar_url" => current_user.avatar_selected_url,
       "username" => current_user.username,
-      "counter" => get_counter_about_user_reward(reward_name) 
+      "counter" => get_counter_about_user_reward(reward_name),
+      "user_id" => current_user.id 
     }
     
   end
