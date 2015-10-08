@@ -16,6 +16,7 @@ module ApplicationHelper
   include CaptchaHelper
   include CommentHelper
   include ContentHelper
+  include DisneyHelper
   include RewardingSystemHelper
   include RewardHelper
   include NoticeHelper
@@ -153,26 +154,27 @@ module ApplicationHelper
     result = []
 
     menu_item_tag = get_tag_from_params("menu-item")
-    
-    menu_item_tag_ids = [menu_item_tag.id]
-    if property
-      menu_item_tag_ids << property.id
-    end
+    if menu_item_tag.present?    
+      menu_item_tag_ids = [menu_item_tag.id]
+      if property
+        menu_item_tag_ids << property.id
+      end
 
-    menu_items = get_tags_with_tags_in_and(menu_item_tag_ids)
+      menu_items = get_tags_with_tags_in_and(menu_item_tag_ids)
 
-    if menu_items.any?    
-      menu_items = order_elements(menu_item_tag, menu_items)
-      
-      menu_items.each do |item|
-        extra_fields = get_extra_fields!(item)
-        result << {
-          "id" => item.id,
-          "name" => item.name,
-          "slug" => item.slug,
-          "title" => item.title,
-          "extra_fields" => extra_fields
-        }
+      if menu_items.any?    
+        menu_items = order_elements(menu_item_tag, menu_items)
+        
+        menu_items.each do |item|
+          extra_fields = get_extra_fields!(item)
+          result << {
+            "id" => item.id,
+            "name" => item.name,
+            "slug" => item.slug,
+            "title" => item.title,
+            "extra_fields" => extra_fields
+          }
+        end
       end
     end
 
@@ -1027,7 +1029,7 @@ module ApplicationHelper
       property_path_name = nil;
     end
 
-    assets = Tag.find("assets")
+    assets = Tag.find_by_name("assets")
 
     if cookies[:from_registration].present?
       connect_from_page = cookies[:from_registration]

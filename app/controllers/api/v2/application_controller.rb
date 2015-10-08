@@ -27,7 +27,7 @@
         'call_to_action_highlight_list' => ctas_highlighted,
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
-        'menu_items' => get_menu_items(),
+        #'menu_items' => get_menu_items(),
         'featured_content_previews' => featured_content_previews.contents,
         # TODO: content section need to have their timestamp
         'content_sections' => [],
@@ -48,6 +48,8 @@
       if params[:calltoaction_id]
         params["other_params"]["gallery"]["calltoaction_id"] = params[:calltoaction_id]
         gallery_tag = get_tag_with_tag_about_call_to_action(CallToAction.find(params[:calltoaction_id]), "gallery").first
+
+        is_ugc = Interaction.where(call_to_action_id: params[:calltoaction_id], resource_type: "Upload").where.not(when_show_interaction: "MAI_VISIBILE").count == 0
       end
       
       params["page_elements"] = nil
@@ -59,7 +61,9 @@
         'call_to_action_info_list_has_more' => has_more,
         'galleries' => get_api_gallery_ctas_carousel,
         'gallery_ctas_count' => get_gallery_ctas_count(),
-        'gallery_tag' => gallery_tag
+        'gallery_tag' => gallery_tag,
+        'is_ugc' => is_ugc
+
       }
       
       respond_with result.to_json

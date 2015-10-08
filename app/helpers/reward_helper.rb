@@ -373,14 +373,18 @@ module RewardHelper
   end
 
   def get_reward_image_for_status(reward)
-    cache_short(get_status_rewar_image_key(reward.name, current_user.id)) do
-      if user_has_reward(reward.name)
-        reward.main_image.url
-      elsif reward.is_expired
-        reward.not_winnable_image.url
-      else
-        reward.not_awarded_image.url
+    if reward.present?
+      cache_short(get_status_rewar_image_key(reward.name, current_user.id)) do
+        if user_has_reward(reward.name)
+          reward.main_image.url
+        elsif reward.is_expired
+          reward.not_winnable_image.url
+        else
+          reward.not_awarded_image.url
+        end
       end
+    else
+      nil
     end
   end
 
@@ -597,7 +601,8 @@ module RewardHelper
         badges = order_elements(badge_tag, badges)
       end
     end
-    UserReward.where("user_id = ? AND reward_id in (?)", current_user.id, badges.map{|b| b.id}).order("updated_at DESC").first.reward
+    user_reward = UserReward.where("user_id = ? AND reward_id in (?)", current_user.id, badges.map{|b| b.id}).order("updated_at DESC").first
+    user_reward.present? ? user_reward.reward : nil
   end
   
 end

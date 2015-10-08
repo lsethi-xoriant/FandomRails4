@@ -9,16 +9,19 @@
     
     def update_interaction
       send_anonymous_user = current_user.nil?
-
-      response = update_interaction_computation(params)
-
-      # update_interaction will create a new user if the user was not logged, it needs to be passed explicitly in the mobile API
-      if send_anonymous_user
-        response[:anonymous_user] = current_user
+      begin
+        result = update_interaction_computation(params)
+  
+        # update_interaction will create a new user if the user was not logged, it needs to be passed explicitly in the mobile API
+        if send_anonymous_user
+          result[:anonymous_user] = current_user
+        end
+      rescue Exception => e
+        result = { "exception": e.to_s }
       end
 
       respond_to do |format|
-        format.json { render :json => response.to_json }
+        format.json { render :json => result.to_json }
       end
     end
     
