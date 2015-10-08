@@ -373,7 +373,7 @@ module UserInteractionHelper
     aux = JSON.parse(aux)
 
     if !interaction_allowed?(interaction.resource_type.downcase, user)
-      log_error('an interaction not allowed for anonymous user has been invoked', { user_id: user.id, interaction_id: interaction.id, cta_id: interaction.call_to_action_id })
+      log_error("an interaction not allowed for anonymous user has been invoked", { user_id: user.id, interaction_id: interaction.id, cta_id: interaction.call_to_action_id })
       raise Exception.new("an interaction not allowed for anonymous user has been invoked")
     end
 
