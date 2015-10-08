@@ -536,10 +536,10 @@ Fandom::Application.routes.draw do
   post "/reward/buy", :to => "reward#buy_reward_attempt", defaults: { format: 'json' }
   get "/reward/how_to", :to => "reward#how_to"
 
-  # Captcha.
+  # Captcha
   get "/captcha", :to => "captcha#generate_captcha", defaults: { format: 'json' }
 
-  # Instagram subscribe.
+  # Instagram subscribe
   post "/save_instagram_upload_object/:interaction_id/:subscription_id/:tag_name", :to => "application#save_instagram_upload_object"
   post "/modify_instagram_upload_object/:interaction_id/:tag_name", :to => "application#modify_instagram_upload_object"
   match "/instagram_new_tagged_media_callback", :to => "callback#instagram_new_tagged_media_callback", defaults: { format: 'json' }, via: [:get, :post]

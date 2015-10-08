@@ -115,6 +115,11 @@
             <% facebook_page_id = facebook_page["id"] rescue "" %>
             <%= f.text_field :facebook_page_id, :class => "form-control facebook-page-id", :value => facebook_page_id %>
           </div>
+          <div class="form-group col-lg-4">
+            <label class="text-input">Contenuti da approvare?</label>
+            <% facebook_to_be_approved = facebook_page["to_be_approved"] rescue "" %>
+            <%= f.check_box :facebook_to_be_approved, { checked: (facebook_page["to_be_approved"] rescue false) } %>
+          </div>
         </div>
       </div>
       <div class="row instagram-gallery gallery-form <%= f.object.id %> <%= get_upload_type(f.object.id) == 'instagram' ? '' : 'hidden' %>" style="margin-bottom: 0px;">

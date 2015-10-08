@@ -5,9 +5,9 @@ class Interaction < ActiveRecord::Base
   attr_accessible :name, :resource, :resource_id, :resource_type, :seconds, :call_to_action_id, :resource_attributes,
     :when_show_interaction, :required_to_complete, :stored_for_anonymous, :aux, :registration_needed,
     :interaction_positioning, :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id,
-    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id
+    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id, :facebook_to_be_approved
   attr_accessor :gallery_type, :instagram_tag_name, :twitter_tag_name, :instagram_tag_subscription_id, 
-    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id
+    :twitter_registered_users_only, :instagram_registered_users_only, :facebook_page_id, :facebook_to_be_approved
   
   belongs_to :resource, polymorphic: true, dependent: :destroy
   belongs_to :call_to_action
@@ -31,7 +31,8 @@ class Interaction < ActiveRecord::Base
       if self.gallery_type == "facebook"
         tag_info = {
           "facebook_page" => {
-            "id" => self.facebook_page_id
+            "id" => self.facebook_page_id, 
+            "to_be_approved" => self.facebook_to_be_approved == "1"
           }
         }
       elsif self.gallery_type == "instagram"
