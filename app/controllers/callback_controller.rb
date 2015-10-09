@@ -148,7 +148,7 @@ class CallbackController < ApplicationController
       facebook_subscriptions_setting = Setting.find_by_key(FACEBOOK_SUBSCRIPTIONS_SETTINGS_KEY)
       facebook_subscriptions_setting_hash = JSON.parse(facebook_subscriptions_setting.value)
 
-      params["body"]["entry"].each do |entry|
+      params["entry"].each do |entry|
 
         page_id = entry["id"]
         interaction_id = facebook_subscriptions_setting_hash[page_id]["interaction_id"]
@@ -158,7 +158,7 @@ class CallbackController < ApplicationController
         entry["changes"].each do |change|
 
           post = change["value"]
-          if post["published"].to_i == 1
+          if post["published"].nil? || post["published"].to_i == 1
             cta_with_post_present = CallToAction.where(:name => "UGC_facebook_#{post["post_id"]}").first
             clone_params = get_facebook_clone_params(entry, post, upload.call_to_action)
 
@@ -168,19 +168,20 @@ class CallbackController < ApplicationController
                   clone_params["media_image"] = clone_params.delete("upload")
                   clone_params["thumbnail"] = clone_params["media_image"]
                 elsif post["item"] == "video"
-                  clone_params["media_image"] = open(template_call_to_action.media_image.url)
+                  clone_params["media_image"] = open(upload.call_to_action.media_image.url)
                   clone_params["thumbnail"] = clone_params["media_image"]
                   clone_params["media_type"] = "FLOWPLAYER"
                   clone_params["media_data"] = post["link"]
                 end
                 clone_params["aux"] = cta_with_post_present.aux.merge({ "facebook_params" => change })
                 cta_with_post_present.update_attributes(clone_params)
+                set_activated_at(cta_with_post_present, post, entry)
                 cta_with_post_present.save
               end
             else
               begin
                 cloned_cta = clone_and_create_cta(upload, clone_params, (upload.watermark rescue nil))
-                # cloned_cta.build_user_upload_interaction(user_id: user_id, upload_id: upload.id)
+                cloned_cta.build_user_upload_interaction(user_id: anonymous_user.id, upload_id: upload.id)
                 cloned_cta.name = "UGC_facebook_#{post["post_id"]}"
                 cloned_cta.aux = { "facebook_params" => change }
                 if (interaction.aux["configuration"]["to_be_approved"] rescue false)
@@ -188,6 +189,7 @@ class CallbackController < ApplicationController
                 else
                   cloned_cta.approved = true
                 end
+                set_activated_at(cloned_cta, post, entry)
                 cloned_cta.save
               end
             end
@@ -202,17 +204,19 @@ class CallbackController < ApplicationController
     end
   end
 
+  def set_activated_at(cta, post, entry)
+    activated_at = post["verb"] == "remove" ? nil : Time.at(entry["time"]).utc.strftime("%Y-%m-%d %H:%M:%S")
+    cta.update_attribute(:activated_at, activated_at)
+  end
+
   def get_facebook_clone_params(entry, post, template_call_to_action)
     params = {
+      "title" => post["sender_name"] ? "#{post["sender_name"]} - Post Facebook" : "Post Facebook", 
+      "user_id" => anonymous_user.id, 
       "description" => post["item"] == "share" ? "#{post["message"]}\n#{post["link"]}" : post["message"], 
-      "upload" => (["photo", "video"].include?(post["item"]) && post["link"]) ? open(post["link"]) : open(template_call_to_action.media_image.url), 
-      "activated_at" => post["verb"] == "remove" ? nil : Time.at(entry["time"]).utc.strftime("%Y-%m-%d %H:%M:%S"),
+      "upload" => (["photo", "video"].include?(post["item"]) && post["link"]) ? open(post["link"]) : nil, 
       "extra_fields" => {}
     }
-
-    if post["sender_name"]
-      params["title"] = "#{post["sender_name"]} - post Facebook"
-    end
 
     params
   end
