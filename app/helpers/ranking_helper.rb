@@ -168,7 +168,7 @@ module RankingHelper
         else
           reward_id = Reward.find_by_name("point").id
         end
-        UserReward.includes(:user).where("user_rewards.reward_id = ? AND user_rewards.period_id = ? AND users.anonymous_id IS NULL", reward_id, period.id).references(:users).order("user_rewards.counter DESC, user_rewards.updated_at ASC, user_rewards.user_id ASC").first
+        UserReward.includes(:user).where("user_rewards.reward_id = ? AND user_rewards.period_id = ? AND user_rewards.user_id <> ? AND users.anonymous_id IS NULL", reward_id, period.id, anonymous_user.id).references(:users).order("user_rewards.counter DESC, user_rewards.updated_at ASC, user_rewards.user_id ASC").first
       end
     end
   end
