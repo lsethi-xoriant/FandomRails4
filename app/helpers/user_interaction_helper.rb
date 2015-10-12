@@ -99,8 +99,10 @@ module UserInteractionHelper
         nested_user_interaction_ids << nested_user_interaction_id if nested_user_interaction_id
         step = step + 1
       end
-              
-      if end_cta.present?
+          
+      is_cta_updated = end_cta.present?
+
+      if is_cta_updated
         is_cta_info_list_updated = true 
         end_ctas << end_cta
       else
@@ -108,15 +110,17 @@ module UserInteractionHelper
         end_ctas << parent_cta
       end
       
-      end_cta_extras << [step, nested_user_interaction_ids]
+      end_cta_extras << [is_cta_updated, step, nested_user_interaction_ids]
     end
 
     if is_cta_info_list_updated
       end_cta_info_list = build_cta_info_list_and_cache_with_max_updated_at(end_ctas, interactions_to_compute)
       end_cta_info_list.each_with_index do |end_cta, index|
-        parent_cta_info = cta_info_list[index] 
-        step, linked_user_interaction_ids = end_cta_extras[index]
-        end_cta["optional_history"] = update_cta_info_optional_history(parent_cta_info, end_cta, linked_user_interaction_ids, step) 
+        is_cta_updated, step, linked_user_interaction_ids = end_cta_extras[index]
+        if is_cta_updated
+          parent_cta_info = cta_info_list[index] 
+          end_cta["optional_history"] = update_cta_info_optional_history(parent_cta_info, end_cta, linked_user_interaction_ids, step) 
+        end
       end
     else
       end_cta_info_list = cta_info_list
