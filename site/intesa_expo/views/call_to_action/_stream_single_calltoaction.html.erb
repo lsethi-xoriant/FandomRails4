@@ -80,8 +80,8 @@
         </div>
 
         <!-- UNDER MEDIA -->
-        <div class="col-md-12">         
-          <h2 class="cta__description" ng-class="{'cta__description__without-media': !(calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery)}" ng-bind-html="calltoaction_info.calltoaction.extra_fields['subtitle'] | unsafe"></h2>
+        <div class="col-md-12">
+          <h2 class="cta__description" ng-class="{'cta__description__without-media': !(calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery)}" ng-bind-html="(calltoaction_info.calltoaction.extra_fields.subtitle.value || calltoaction_info.calltoaction.extra_fields.subtitle) | unsafe"></h2>
         </div>
 
         <!-- MOBILE SHARE -->
