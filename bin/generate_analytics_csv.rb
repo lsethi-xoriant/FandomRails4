@@ -22,52 +22,46 @@ def main
   main_tag_name = config["main_tag_name"]
   other_tags_names = config["other_tags_names"].gsub(" ", "").split(",")
 
+  csv_file_name = "#{main_tag_name}_#{starting_date}_#{ending_date}.csv"
   csv_path = "#{rails_app_dir}/bin/files"
 
   logger = Logger.new("#{rails_app_dir}/log/generate_analytics_csv.log")
+  start_time = Time.now
 
   FileUtils::mkdir_p(csv_path)
 
-  starting_date.each_with_index do |sd, i|
+  CSV.open("#{csv_path}/#{csv_file_name}", "wb") do |csv|
 
-    start_time = Time.now
-    ed = ending_date[i]
-    csv_file_name = "#{main_tag_name}_#{sd}_#{ed}.csv"
+    logger.info("starting analytics csv generation from #{starting_date} to #{ending_date} for main tag \"#{main_tag_name}\" and other tags #{other_tags_names.join(", ")}")
 
-    CSV.open("#{csv_path}/#{csv_file_name}", "wb") do |csv|
-
-      logger.info("starting analytics csv generation from #{sd} to #{ed} for main tag \"#{main_tag_name}\" and other tags #{other_tags_names.join(", ")}")
-
-      conn = PG::Connection.open(config["db"])
-      if tenant
-        conn.exec("SET search_path = '#{tenant}'")
-      end
-
-      interaction_types = conn.exec("SELECT DISTINCT resource_type FROM interactions;").field_values("resource_type").sort! # Array
-      logger.info("interaction types retrieved: #{interaction_types.join(", ")}")
-      csv << [" "] + interaction_types
-
-      main_tag = get_tag_with_name(conn, logger, main_tag_name)
-      if main_tag.nil?
-        exit
-      end
-
-      cta_with_main_tag_ids = get_cta_ids_with_tag(conn, logger, main_tag["id"])
-
-      other_tags_names.each do |other_tags_name|
-        other_tag = get_tag_with_name(conn, logger, other_tags_name)
-        if other_tag
-          values_hash = get_user_interactions_values(conn, logger, cta_with_main_tag_ids, [other_tag], interaction_types, sd, ed)
-          values_array = values_hash.values
-          csv << [other_tags_name] + values_array
-        end
-      end
-
+    conn = PG::Connection.open(config["db"])
+    if tenant
+      conn.exec("SET search_path = '#{tenant}'")
     end
-    
-    logger.info("#{main_tag_name} csv file generated in #{Time.now - start_time} seconds")
+
+    interaction_types = conn.exec("SELECT DISTINCT resource_type FROM interactions;").field_values("resource_type").sort! # Array
+    logger.info("interaction types retrieved: #{interaction_types.join(", ")}")
+    csv << [" "] + interaction_types
+
+    main_tag = get_tag_with_name(conn, logger, main_tag_name)
+    if main_tag.nil?
+      exit
+    end
+
+    cta_with_main_tag_ids = get_cta_ids_with_tag(conn, logger, main_tag["id"])
+
+    other_tags_names.each do |other_tags_name|
+      other_tag = get_tag_with_name(conn, logger, other_tags_name)
+      if other_tag
+        values_hash = get_user_interactions_values(conn, logger, cta_with_main_tag_ids, [other_tag], interaction_types, starting_date, ending_date)
+        values_array = values_hash.values
+        csv << [other_tags_name] + values_array
+      end
+    end
 
   end
+  
+  logger.info("#{main_tag_name} csv file generated in #{Time.now - start_time} seconds")
 
 end
 
