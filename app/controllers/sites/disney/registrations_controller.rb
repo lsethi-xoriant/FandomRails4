@@ -9,7 +9,7 @@ class Sites::Disney::RegistrationsController < RegistrationsController
 
   def update
     user_params = params[:user]
-    required_attrs = ["username", "username_length"]
+    required_attrs = ["username", "username_length", "username_without_at_symbol"]
     user_params = user_params.merge(required_attrs: required_attrs)
 
     current_user.update_attributes(user_params)

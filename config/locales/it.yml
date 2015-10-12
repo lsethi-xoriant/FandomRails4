@@ -253,6 +253,8 @@ it:
               blank: "deve essere caricata."
         user:
           attributes:
+            username:
+              at_symbol: "contiene caratteri non ammessi (@)"
             email:
               taken: "già in uso."
               blank: "non può essere lasciata in bianco"

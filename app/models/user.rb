@@ -40,6 +40,7 @@ class User < ActiveRecordWithJSON
   validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
 
   validates_length_of :username, maximum: 15, if: Proc.new { |f| required_attr?("username_length") }
+  validate :absence_of_at_symble_on_username, if: Proc.new { |f| required_attr?("username_without_at_symbol") }
   validates_presence_of :location, if: Proc.new { |f| required_attr?("location") }
   validates_presence_of :gender, if: Proc.new { |f| required_attr?("gender") }
   validates_presence_of :province, if: Proc.new { |f| required_attr?("province") }
@@ -154,6 +155,12 @@ class User < ActiveRecordWithJSON
       params.delete(:password_confirmation) if params[:password_confirmation].blank? 
     end 
     update_attributes(params) 
+  end
+
+  def absence_of_at_symble_on_username
+    if self.username.include?("@")
+      errors.add(:username, :at_symbol)
+    end
   end
 
   # Specifies that this is a real user, not somebody used just interanlly by the system, such as to evaluate rules
