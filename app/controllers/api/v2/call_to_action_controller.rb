@@ -17,7 +17,7 @@
           result[:anonymous_user] = current_user
         end
       rescue Exception => e
-        result = { "exception": e.to_s }
+        result = { "exception" => e.to_s }
       end
 
       respond_to do |format|
@@ -28,6 +28,7 @@
     def get_single_cta
       cta = CallToAction.find(params["cta_id"])
       cta_info = build_cta_info_list_and_cache_with_max_updated_at([cta]).first
+      cta_info["calltoaction"]["description"] = HTMLEntities.new.decode(strip_tags(cta_info["calltoaction"]["description"]))
       respond_with cta_info.to_json
     end
     
