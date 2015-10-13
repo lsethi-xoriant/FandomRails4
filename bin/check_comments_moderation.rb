@@ -1,6 +1,7 @@
 require "pg"
 require "yaml"
 require "logger"
+require "aws/ses"
 require "active_support/time"
 
 def main
