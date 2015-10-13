@@ -46,7 +46,8 @@ apt-get install vim \
   traceroute \
   autoconf \
   bison \
-  libreadline-dev
+  libreadline-dev \
+  ntp
 
   
 #
