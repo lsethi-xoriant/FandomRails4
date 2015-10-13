@@ -10,19 +10,7 @@
 
   <td>
     <div class="row">
-      <div class="col-sm-1" style="margin: 0;">
-        <a title="Info" href="<%= root_url %>easyadmin/user/show/<%= user.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-      </div>
-      <% if can? :access, :rails_admin %>
-      <div class="col-sm-1" style="margin: 0;">
-        <a title="Rails Admin" href="/rails_admin/user/<%= user.id %>/edit"><i class="fa fa-adn" style="color: red"></i></a>
-      </div>
-      <% end %>
-      <% if can? :manage, :users %>
-        <div class="col-sm-1" style="margin: 0;">
-          <a title="Loggati come" href="<%= root_url %>user/sign_in_as/<%= user.id %>"><i class="fa fa-sign-in" style="color: red"></i></a>
-        </div>
-      <% end %>
+      <%= get_user_buttons(user) %>
     </div>
   </td>
 

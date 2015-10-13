@@ -21,29 +21,7 @@
   <td>
     <div class="row">
 
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="<%= is_call_to_action_gallery(calltoaction) ? "/gallery/#{calltoaction.id}" : "/call_to_action/#{calltoaction.id}" %>"><i class="fa fa-external-link " style="color: red" title="Vai alla call to action"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/cta/show/<%= calltoaction.id %>"><i class="fa fa-info-circle" style="color: red" title="Info"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/cta/edit/<%= calltoaction.id %>"><i class="fa fa-pencil-square-o" style="color: red" title="Edita"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/cta/tag/<%= calltoaction.id %>"><i class="fa fa-tag" style="color: red" title="Tagga"></i></a>
-      </div>
-      
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/cta/clone/<%= calltoaction.id %>"><i class="fa fa-copy" style="color: red" title="Clona"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="javascript: void(0)" onclick="hideCalltoaction('<%= calltoaction.id %>')"><i class="fa fa-eye" style="color: <%= calltoaction.activated_at.blank? ? "gray" : "red" %>" id="eye-<%= calltoaction.id %>" title="Attiva / Disattiva"></i></a>
-      </div>
+      <%= get_cta_action_buttons(calltoaction) %>
 
     </div>
   </td>

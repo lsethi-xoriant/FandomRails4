@@ -210,4 +210,168 @@ module EasyadminHelper
     cookies.delete(:user_call_to_action_moderation)
   end
 
+  def get_cta_action_buttons(call_to_action)
+    actions = [
+      {
+        "url" => is_call_to_action_gallery(call_to_action) ? "/gallery/#{call_to_action.id}" : "/call_to_action/#{call_to_action.id}", 
+        "icon" => "fa fa-external-link", 
+        "title" => "Vai alla call to action"
+      }, 
+      {
+        "url" => "/easyadmin/cta/show/#{call_to_action.id}", 
+        "icon" => "fa fa-info-circle", 
+        "title" => "Info"
+      }, 
+      {
+        "url" => "/easyadmin/cta/edit/#{call_to_action.id}", 
+        "icon" => "fa fa-pencil-square-o", 
+        "title" => "Edita"
+      }, 
+      {
+        "url" => "/easyadmin/cta/tag/#{call_to_action.id}", 
+        "icon" => "fa fa-tag", 
+        "title" => "Tagga"
+      }, 
+      {
+        "url" => "/easyadmin/cta/clone/#{call_to_action.id}", 
+        "icon" => "fa fa-copy", 
+        "title" => "Clona"
+      }, 
+      {
+        "url" => "javascript: void(0)", 
+        "icon" => "fa fa-eye", 
+        "title" => "Attiva / Disattiva", 
+        "style" => call_to_action.activated_at.blank? ? "color: gray" : "color: red", 
+        "id" => "eye-#{call_to_action.id}", 
+        "onclick" => "hideCalltoaction('#{call_to_action.id}')"
+      }, 
+    ]
+
+    buttons = <<-EOF
+      <script type="text/javascript">
+        function hideCalltoaction(id){
+          $.ajax({
+            type: "POST",
+            url: "/easyadmin/cta/hide/" + id,
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            },
+            success: function(data) {
+              if(data == "active") 
+                $("#eye-" + id).css("color", "red");
+              else
+                $("#eye-" + id).css("color", "gray");
+            }
+          });
+        }
+      </script>
+    EOF
+
+    actions.each do |action|
+      buttons += <<-EOF
+      <div class="col-sm-1" style="margin: 0;">
+        <a href="#{action["url"]}"#{action["onclick"] ? " onclick=\"#{action["onclick"]}\"" : ""}><i #{action["id"] ? "id='#{action["id"]}'" : ""} class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+      </div>
+      EOF
+    end
+
+    buttons.html_safe
+  end
+
+  def get_tag_buttons(tag)
+    actions = [
+      {
+        "url" => "/easyadmin/tag/#{tag.id}", 
+        "icon" => "fa fa-info-circle", 
+        "title" => "Info"
+      }, 
+      {
+        "url" => "/easyadmin/tag/#{tag.id}/edit", 
+        "icon" => "fa fa-pencil-square-o", 
+        "title" => "Edita"
+      }, 
+      {
+        "url" => "/easyadmin/tag/clone/#{tag.id}", 
+        "icon" => "fa fa-copy", 
+        "title" => "Clona"
+      }
+    ]
+
+    buttons = ""
+
+    actions.each do |action|
+      buttons += <<-EOF
+        <div class="col-sm-1" style="margin: 0;">
+          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+        </div>
+      EOF
+    end
+
+    buttons.html_safe
+  end
+
+  def get_reward_buttons(reward)
+    actions = [
+      {
+        "url" => "/easyadmin/reward/show/#{reward.id}", 
+        "icon" => "fa fa-info-circle", 
+        "title" => "Info"
+      }, 
+      {
+        "url" => "/easyadmin/reward/edit/#{reward.id}", 
+        "icon" => "fa fa-pencil-square-o", 
+        "title" => "Edita"
+      }, 
+      {
+        "url" => "/easyadmin/reward/clone/#{reward.id}", 
+        "icon" => "fa fa-copy", 
+        "title" => "Clona"
+      }
+    ]
+
+    buttons = ""
+
+    actions.each do |action|
+      buttons += <<-EOF
+        <div class="col-sm-1" style="margin: 0;">
+          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+        </div>
+      EOF
+    end
+
+    buttons.html_safe
+  end
+
+  def get_user_buttons(user)
+    actions = [
+      {
+        "url" => "/easyadmin/user/show/#{user.id}", 
+        "icon" => "fa fa-info-circle", 
+        "title" => "Info"
+      }, 
+      {
+        "url" => "/rails_admin/user/#{user.id}/edit", 
+        "icon" => "fa fa-adn", 
+        "title" => "Rails Admin"
+      }, 
+      {
+        "url" => "/user/sign_in_as/#{user.id}", 
+        "icon" => "fa fa-sign-in", 
+        "title" => "Loggati come"
+      }
+    ]
+
+    buttons = ""
+
+    actions.each do |action|
+      buttons += <<-EOF
+        <div class="col-sm-1" style="margin: 0;">
+          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+        </div>
+      EOF
+    end
+
+    buttons.html_safe
+  end
+
 end

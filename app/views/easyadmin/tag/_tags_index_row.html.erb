@@ -3,15 +3,15 @@
     <% if tag.valid_to.present? %>
       <% if tag.valid_to.in_time_zone(USER_TIME_ZONE) < DateTime.now %>
         <s><%= tag.name %></s>
-      </td>
-      <td>
-        <s><%= tag.title %></s>
-      </td>
-      <td>
-        <s><%= tag.slug %></s>
-      </td>
-      <td>
-        <s><%= tag.description %></s>
+        </td>
+        <td>
+          <s><%= tag.title %></s>
+        </td>
+        <td>
+          <s><%= tag.slug %></s>
+        </td>
+        <td>
+          <s><%= tag.description %></s>
       <% else %>
         <%= tag.name %>
         </td>
@@ -33,37 +33,25 @@
       <td>
       <%= tag.description %>
     <% end %>
-      </td>
-      <td><%= tag.valid_from.present? ? tag.valid_from.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
-      <td><%= tag.valid_to.present? ? tag.valid_to.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
-      <td><%= (tag.tags_tags.map { |tag_tag| tag_tag.other_tag.name }).join(", ") %></td>
-      <td>
-        <% if tag.locked %>
-          <i class="fa fa-check fa-2"></i>
-        <% end %>
-      </td>
-      <td>
-        <% if get_extra_fields!(tag).any? %>
-            Si
-        <% else %>
-            No
-        <% end %>
-      </td>
-      <td>
+  </td>
+  <td><%= tag.valid_from.present? ? tag.valid_from.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
+  <td><%= tag.valid_to.present? ? tag.valid_to.in_time_zone(USER_TIME_ZONE).strftime('%d/%m/%Y %H:%M') : nil %></td>
+  <td><%= (tag.tags_tags.map { |tag_tag| tag_tag.other_tag.name }).join(", ") %></td>
+  <td>
+    <% if tag.locked %>
+      <i class="fa fa-check fa-2"></i>
+    <% end %>
+  </td>
+  <td>
+    <% if get_extra_fields!(tag).any? %>
+        Si
+    <% else %>
+        No
+    <% end %>
+  </td>
+  <td class="col-sm-1">
     <div class="row">
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/tag/<%= tag.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/tag/<%= tag.id %>/edit"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
-      </div>
-
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="/easyadmin/tag/clone/<%= tag.id %>"><i class="fa fa-copy" style="color: red"></i></a>
-      </div>
-
+      <%= get_tag_buttons(tag) %>
     </div>
   </td>
 </tr>

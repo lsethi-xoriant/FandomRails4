@@ -95,21 +95,9 @@
               <td>
                 <%= (p.reward_tags.map { |reward_tag| reward_tag.tag.name }).join(", ") %>
               </td>
-              <td>
+              <td class="col-sm-1">
                 <div class="row">
-
-                  <div class="col-sm-1" style="margin: 0;">
-                    <a href="/easyadmin/reward/show/<%= p.id %>"><i class="fa fa-info-circle" style="color: red"></i></a>
-                  </div>
-
-                  <div class="col-sm-1" style="margin: 0;">
-                    <a href="/easyadmin/reward/edit/<%= p.id %>"><i class="fa fa-pencil-square-o" style="color: red"></i></a>
-                  </div>
-
-                  <div class="col-sm-1" style="margin: 0;">
-                        <a href="/easyadmin/reward/clone/<%= p.id %>"><i class="fa fa-copy" style="color: red"></i></a>
-                    </div>
-
+                  <%= get_reward_buttons(p) %>
                 </div>
               </td>
             </tr>
