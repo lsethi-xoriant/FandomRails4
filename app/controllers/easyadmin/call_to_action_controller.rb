@@ -438,7 +438,7 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
 
     if params[:commit] != "ESPORTA"
       cta_page = params[:approvation_status] != "to_approve" ? params[:approvation_status] : "to_be_approved"
-      render template: "/easyadmin/call_to_action/index_user_cta_#{}" 
+      render template: "/easyadmin/call_to_action/index_user_cta_#{cta_page}" 
     end
 
   end
