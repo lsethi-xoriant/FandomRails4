@@ -27,17 +27,9 @@
         $("#update-cache-banner").removeClass("hidden");
       </script>
     <% end %>
-    
-    <div class="row text-right">
-    	<div class="col-md-12">
-    		<a href="/easyadmin/reward/edit/<%= @current_reward.id %>w"><button type="button" class="btn btn-primary">EDIT</button></a>
-    	</div>
-    </div>
 
-    <div class="row">
-      <div class="col-sm-offset-11">
-        <%= get_reward_buttons(@current_reward) %>
-      </div>
+    <div class="row text-right" style="margin-right: 2%">
+      <%= get_reward_buttons(@current_reward, true) %>
     </div>
 
     <h3>Dati generali</h3>

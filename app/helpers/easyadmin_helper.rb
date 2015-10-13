@@ -210,12 +210,12 @@ module EasyadminHelper
     cookies.delete(:user_call_to_action_moderation)
   end
 
-  def get_cta_action_buttons(call_to_action)
+  def get_cta_action_buttons(call_to_action, show_page = false)
     actions = [
       {
         "url" => is_call_to_action_gallery(call_to_action) ? "/gallery/#{call_to_action.id}" : "/call_to_action/#{call_to_action.id}", 
         "icon" => "fa fa-external-link", 
-        "title" => "Vai alla call to action"
+        "title" => "Vai alla CTA"
       }, 
       {
         "url" => "/easyadmin/cta/show/#{call_to_action.id}", 
@@ -240,45 +240,85 @@ module EasyadminHelper
       {
         "url" => "javascript: void(0)", 
         "icon" => "fa fa-eye", 
-        "title" => "Attiva / Disattiva", 
+        "title" => call_to_action.activated_at.blank? ? "Attiva" : "Disattiva",  
         "style" => call_to_action.activated_at.blank? ? "color: gray" : "color: red", 
         "id" => "eye-#{call_to_action.id}", 
         "onclick" => "hideCalltoaction('#{call_to_action.id}')"
       }, 
     ]
 
-    buttons = <<-EOF
-      <script type="text/javascript">
-        function hideCalltoaction(id){
-          $.ajax({
-            type: "POST",
-            url: "/easyadmin/cta/hide/" + id,
-            beforeSend: function(jqXHR, settings) {
-                jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-            },
-            success: function(data) {
-              if(data == "active") 
-                $("#eye-" + id).css("color", "red");
-              else
-                $("#eye-" + id).css("color", "gray");
-            }
-          });
-        }
-      </script>
-    EOF
+    if show_page
 
-    actions.each do |action|
-      buttons += <<-EOF
-      <div class="col-sm-1" style="margin: 0;">
-        <a href="#{action["url"]}"#{action["onclick"] ? " onclick=\"#{action["onclick"]}\"" : ""}><i #{action["id"] ? "id='#{action["id"]}'" : ""} class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
-      </div>
+      buttons = <<-EOF
+        <script type="text/javascript">
+          function hideCalltoaction(id){
+            $.ajax({
+              type: "POST",
+              url: "/easyadmin/cta/hide/" + id,
+              beforeSend: function(jqXHR, settings) {
+                  jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+              },
+              success: function(data) {
+                if(data == "active") {
+                  $("#eye-" + id).attr("title", "Disattiva");
+                  html = $("#eye-" + id).parent().html();
+                  html = html.replace("Attiva", "Disattiva");
+                  $("#eye-" + id).parent().html(html);
+                }
+                else {
+                  $("#eye-" + id).attr("title", "Attiva");
+                  html = $("#eye-" + id).parent().html();
+                  html = html.replace("Disattiva", "Attiva");
+                  $("#eye-" + id).parent().html(html);
+                }
+              }
+            });
+          }
+        </script>
       EOF
+
+      actions.each_with_index do |action, i|
+        unless (action["title"] == "Edita" && !can?(:manage, :all)) || action["title"] == "Info"
+          buttons += get_action_button_for_show_page(action)
+        end
+      end
+
+    else
+
+      buttons = <<-EOF
+        <script type="text/javascript">
+          function hideCalltoaction(id){
+            $.ajax({
+              type: "POST",
+              url: "/easyadmin/cta/hide/" + id,
+              beforeSend: function(jqXHR, settings) {
+                  jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+              },
+              success: function(data) {
+                if(data == "active") 
+                  $("#eye-" + id).css("color", "red");
+                else
+                  $("#eye-" + id).css("color", "gray");
+              }
+            });
+          }
+        </script>
+      EOF
+
+      actions.each do |action|
+        buttons += <<-EOF
+        <div class="col-sm-1" style="margin: 0;">
+          <a href="#{action["url"]}"#{action["onclick"] ? " onclick=\"#{action["onclick"]}\"" : ""}><i #{action["id"] ? "id='#{action["id"]}'" : ""} class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+        </div>
+        EOF
+      end
+
     end
 
     buttons.html_safe
   end
 
-  def get_tag_buttons(tag)
+  def get_tag_buttons(tag, show_page = false)
     actions = [
       {
         "url" => "/easyadmin/tag/#{tag.id}", 
@@ -299,18 +339,30 @@ module EasyadminHelper
 
     buttons = ""
 
-    actions.each do |action|
-      buttons += <<-EOF
-        <div class="col-sm-1" style="margin: 0;">
-          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
-        </div>
-      EOF
+    if show_page
+
+      actions.each do |action|
+        unless action["title"] == "Info"
+          buttons += get_action_button_for_show_page(action)
+        end
+      end
+
+    else
+
+      actions.each do |action|
+        buttons += <<-EOF
+          <div class="col-sm-1" style="margin: 0;">
+            <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+          </div>
+        EOF
+      end
+
     end
 
     buttons.html_safe
   end
 
-  def get_reward_buttons(reward)
+  def get_reward_buttons(reward, show_page = false)
     actions = [
       {
         "url" => "/easyadmin/reward/show/#{reward.id}", 
@@ -331,18 +383,30 @@ module EasyadminHelper
 
     buttons = ""
 
-    actions.each do |action|
-      buttons += <<-EOF
-        <div class="col-sm-1" style="margin: 0;">
-          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
-        </div>
-      EOF
+    if show_page
+
+      actions.each do |action|
+        unless action["title"] == "Info"
+          buttons += get_action_button_for_show_page(action)
+        end
+      end
+
+    else
+
+      actions.each do |action|
+        buttons += <<-EOF
+          <div class="col-sm-1" style="margin: 0;">
+            <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+          </div>
+        EOF
+      end
+
     end
 
     buttons.html_safe
   end
 
-  def get_user_buttons(user)
+  def get_user_buttons(user, show_page = false)
     actions = [
       {
         "url" => "/easyadmin/user/show/#{user.id}", 
@@ -363,15 +427,39 @@ module EasyadminHelper
 
     buttons = ""
 
-    actions.each do |action|
-      buttons += <<-EOF
-        <div class="col-sm-1" style="margin: 0;">
-          <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
-        </div>
-      EOF
+    if show_page
+
+      actions.each do |action|
+        unless action["title"] == "Info"
+          buttons += get_action_button_for_show_page(action)
+        end
+      end
+
+    else
+
+      actions.each do |action|
+        buttons += <<-EOF
+          <div class="col-sm-1" style="margin: 0;">
+            <a href="#{action["url"]}"><i class="#{action["icon"]}" style="#{action["style"] || "color: red"}" title="#{action["title"]}"></i></a>
+          </div>
+        EOF
+      end
+
     end
 
     buttons.html_safe
+  end
+
+  def get_action_button_for_show_page(action)
+    res = <<-EOF
+      <a href="#{action["url"]}"#{action["onclick"] ? " onclick=\"#{action["onclick"]}\"" : ""}>
+        <button type="button" class="btn btn-primary">
+        <i #{action["id"] ? "id='#{action["id"]}'" : ""} class="#{action["icon"]}" title="#{action["title"]}"></i>
+          #{action["title"]}
+        </button>
+      </a>
+    EOF
+    res
   end
 
 end

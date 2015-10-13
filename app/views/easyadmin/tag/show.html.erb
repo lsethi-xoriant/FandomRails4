@@ -27,17 +27,9 @@
         $("#update-cache-banner").removeClass("hidden");
       </script>
     <% end %>
-    
-    <div class="row text-right">
-    	<div class="col-md-12">
-    		<a href="/easyadmin/tag/<%= @tag.id %>/edit"><button type="button" class="btn btn-primary">EDIT</button></a>
-    	</div>
-    </div>
 
-    <div class="row">
-      <div class="col-sm-offset-11">
-        <%= get_tag_buttons(@tag) %>
-      </div>
+    <div class="row text-right" style="margin-right: 2%">
+      <%= get_tag_buttons(@tag, true) %>
     </div>
 
     <h3>Dati generali</h3>

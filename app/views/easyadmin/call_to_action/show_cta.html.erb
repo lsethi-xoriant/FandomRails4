@@ -45,22 +45,16 @@
       </div>
     </div>
 
-    <div class="row text-right">
-      <% if can? :manage, :all %>
-        <div class="col-md-1 col-md-offset-9">
-          <a href="/easyadmin/cta/edit/<%= @current_cta.id %>"><button type="button" class="btn btn-primary"> MODIFICA </button></a>
-        </div>
-      <% end %>
-      <!-- Button trigger modal -->
-      <div id="show-tree-button" class="col-md-2">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#treeModal"> CTA COLLEGATE </button>
-      </div>
-    </div>
+    <div class="row text-right" style="margin-right: 2%">
 
-    <div class="row">
-      <div class="col-sm-offset-10">
-        <%= get_cta_action_buttons(@current_cta) %>
-      </div>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#treeModal"> 
+        <i class="fa fa-link"></i>
+        Cta Collegate
+      </button>
+      
+      <%= get_cta_action_buttons(@current_cta, true) %>
+      
     </div>
 
     <h3>Dati generali</h3>
@@ -111,10 +105,6 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-
-    // if($("#trees").find("li").length <= 1) {
-    //   $("#show-tree-button").hide();
-    // }
 
     $("#details-button").click(function() {
       $("#details-button-div").remove();
