@@ -32,7 +32,7 @@ def send_releasing_files(tenant, emails, days, max_releasing_files)
     releasing_files_text << 
       "<tr>
         <td> #{user_call_to_action.slug} </td>
-        <td> #{user_call_to_action.releasing_file.file.url} </td>
+        <td> #{user_call_to_action.releasing_file ? user_call_to_action.releasing_file.file.url : "Liberatoria non presente"} </td>
       </tr>"
   end
   releasing_files_text << "</table>"
