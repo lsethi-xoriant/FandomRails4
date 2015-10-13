@@ -172,8 +172,14 @@ class CallToActionController < ApplicationController
   def show
 
     calltoaction_id = params[:id]
-    
-    calltoaction = CallToAction.includes(:interactions).active.references(:interactions).find(calltoaction_id)
+
+    if current_user
+      if current_user.role == "admin" || current_user.role == "editor"
+        calltoaction = CallToAction.includes(:interactions).references(:interactions).find(calltoaction_id)
+      end
+    else
+      calltoaction = CallToAction.includes(:interactions).active.references(:interactions).find(calltoaction_id)
+    end
 
     log_call_to_action_viewed(calltoaction)
 
