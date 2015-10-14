@@ -260,7 +260,7 @@ module UserInteractionHelper
   end
 
   def adjust_counter!(interaction, value = 1)
-    ViewCounter.transaction do
+    ActiveRecord::Base.transaction do
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       if counter
         if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"

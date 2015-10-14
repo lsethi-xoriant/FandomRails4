@@ -126,11 +126,12 @@ class CallToActionTest < ActionController::TestCase
   end
 
   def user_ctas?(cta_info_list)
-    user_ctas = true
     cta_info_list.each do |cta_info|
-      user_ctas = user_ctas && cta_info["calltoaction"]["user_id"].present?
+      if cta_info["calltoaction"]["user"].nil?
+        return false
+      end
     end
-    user_ctas
+    return true
   end
 
   def get_ids_from_cta_info_list(cta_info_list)
@@ -142,13 +143,13 @@ class CallToActionTest < ActionController::TestCase
   end
 
   def ctas_tagged_with?(cta_info_list, tag)
-    result = true
     cta_info_list.each do |cta_info|
-      cta = CallToAction.find(cta_info["calltoaction"]["id"])
-      cta_tagged = cta.call_to_action_tags.find_by_tag_id(tag.id).present?
-      result = result && cta_tagged
+      cta_tagged = CallToActionTag.where(tag_id: tag.id, call_to_action_id: cta_info["calltoaction"]["id"]).any?
+      unless cta_tagged
+        return false
+      end
     end
-    result
+    return true
   end
 
   def ctas_ordered_by_comment_count?(cta_info_list)
