@@ -173,10 +173,8 @@ class CallToActionController < ApplicationController
 
     calltoaction_id = params[:id]
 
-    if current_user
-      if current_user.role == "admin" || current_user.role == "editor"
-        calltoaction = CallToAction.includes(:interactions).references(:interactions).find(calltoaction_id)
-      end
+    if current_user && (current_user.role == "admin" || current_user.role == "editor")
+      calltoaction = CallToAction.includes(:interactions).references(:interactions).find(calltoaction_id)
     else
       calltoaction = CallToAction.includes(:interactions).active.references(:interactions).find(calltoaction_id)
     end
