@@ -1602,8 +1602,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   		'entry_id': media_data,
   		'flashvars':{
   			'autoPlay': false,
-  			'doubleClick': { 
-  				'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
+  			'doubleClick': {
+  				//'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
+  				'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=vast&unviewed_position_start=1&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&iu=/165891808/Disney.it/disneychannel.it/community/" + $scope.calltoaction_info.calltoaction.slug + "&sz=1920x480&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&correlator=" + Date.now + "&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=&vid=" + media_data,
 				'htmlCompanions': 'div-video-mpu:300:250;' 
 			}
   		},
