@@ -1828,7 +1828,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             // GOOGLE ANALYTICS
             if(data.ga) {
               $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
                 $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
               });
             }
@@ -1986,7 +1986,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           if(data.ga) {
             $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+            angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
               $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
             });
           }
@@ -2079,7 +2079,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // Google analytics.
     if(data.ga) {
       $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-      angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+      angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
         $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
       });
     }
@@ -2154,12 +2154,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
 
     } else {
-      if(interaction_info.user_interaction) {
-        interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      if(data.new_outcome) {
+        interaction_info.feedback = data.new_outcome.attributes;
       }
 
       if(interaction_info.interaction.resource_type == "like") {
-        console.log(data.user_interaction.aux.like);
         if(data.user_interaction.aux.like) {
           interaction_info.interaction.resource.counter += 1;
         } else {

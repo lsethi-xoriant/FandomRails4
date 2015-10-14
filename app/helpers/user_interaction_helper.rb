@@ -456,7 +456,7 @@ module UserInteractionHelper
 
     if user_interaction
       response[:user_interaction] = build_user_interaction_for_interaction_info(user_interaction)
-      response[:outcome] = outcome
+      response[:new_outcome] = outcome
 
       if $site.id == "braun_ic"
         reward_names = outcome[:reward_name_to_counter].map { |key, value| key.to_s }
