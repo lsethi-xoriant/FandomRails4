@@ -19,34 +19,34 @@ def main
   config = YAML.load_file(ARGV[0].to_s)
   db = config["db"]
   conn = PG::Connection.open(db)
-  tenant = config["tenant"]
+  tenants = config["tenants"]
   single_run = config["single_run"]
 
-  if tenant.nil?
-    tenant = []
+  if tenants.nil?
+    tenants = []
     conn.exec("SELECT nspname FROM pg_namespace").each do |value|
       unless (value["nspname"].start_with?("pg_") or value["nspname"] == "public" or value["nspname"] == "information_schema")
-        tenant << value["nspname"]
+        tenants << value["nspname"]
       end
     end
-  elsif tenant.class == String
-    tenant = [tenant]
+  elsif tenants.class == String
+    tenants = tenants.gsub(" ", "").split(",")
   end
 
   app_root_path = config["app_root_path"]
 
   logger = Logger.new("#{app_root_path}/log/cache_update_daemon.log")
 
-  logger.info "cache daemon starting"
+  logger.info "cache daemon starting for tenants #{tenants.join(", ")}"
 
   if single_run
 
     start_time = Time.now
 
     execute_job(logger) do
-      tenant.each do |t|
-        cache_generate_rankings(conn, t, logger)
-        cache_generate_votes(conn, t, logger)
+      tenants.each do |tenant|
+        cache_generate_rankings(conn, tenant, logger)
+        cache_generate_votes(conn, tenant, logger)
       end
     end
 
@@ -59,9 +59,9 @@ def main
       start_time = Time.now
 
       execute_job(logger) do
-        tenant.each do |t|
-          cache_generate_rankings(conn, t, logger)
-          cache_generate_votes(conn, t, logger)
+        tenants.each do |t|
+          cache_generate_rankings(conn, tenant, logger)
+          cache_generate_votes(conn, tenant, logger)
         end
       end
 
@@ -75,7 +75,8 @@ def main
 end
 
 def cache_generate_rankings(conn, tenant, logger)
-  anonymous_user_ids = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE anonymous_id IS NOT NULL").field_values("id")
+  logger.info("starting rankings generation for tenant \"#{tenant}\"")
+  anonymous_user_ids = execute_query(conn, "SELECT id FROM #{tenant + '.' if tenant}users WHERE anonymous_id IS NOT NULL OR email = 'anonymous@shado.tv'").field_values("id")
   rankings = execute_query(conn, "SELECT * FROM #{tenant + '.' if tenant}rankings")
 
   rankings.each do |r|
@@ -113,7 +114,7 @@ def cache_generate_rankings(conn, tenant, logger)
                 "first_name" => nullify_or_escape_string(conn, user_res["first_name"]), "last_name" => nullify_or_escape_string(conn, user_res["last_name"]), 
                   "counter" => user_res["counter"].to_i }
       execute_query(conn, "INSERT INTO #{tenant + '.' if tenant}cache_rankings (name, version, user_id, position, data, created_at, updated_at) 
-                            VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json}', now(), now())")
+                            VALUES ('#{name}', #{new_cache_version}, #{user_res['user_id']}, #{i + 1}, '#{hash.to_json.gsub("'", "''")}', now(), now())")
 
       # In order to avoid database stressing, the loop will sleep for 1 second every 1000 lines inserted into cache_rankings table
       if i % 500 == 0 and i != 0
@@ -128,7 +129,7 @@ def cache_generate_rankings(conn, tenant, logger)
                             VALUES ('#{name}', #{new_cache_version}, '#{hash.to_json}', now(), now())")
     else
       execute_query(conn, "UPDATE #{tenant + '.' if tenant}cache_versions 
-                            SET version = #{new_cache_version}, created_at = now(), updated_at = now() WHERE name = '#{name}'")  
+                            SET version = #{new_cache_version}, data = '#{hash.to_json}', created_at = now(), updated_at = now() WHERE name = '#{name}'")  
     end
 
     logger.info "cache ranking for #{name} successfully updated to version #{new_cache_version}: #{Time.now - start_time}"
@@ -138,6 +139,7 @@ def cache_generate_rankings(conn, tenant, logger)
 end
 
 def cache_generate_votes(conn, tenant, logger)
+  logger.info("starting votes generation for tenant \"#{tenant}\"")
   start_time = Time.now
 
   votes = execute_query(conn, "SELECT call_to_action_id, sum((user_interactions.aux::json->>'vote')::integer) AS sum, count(*) AS count 
