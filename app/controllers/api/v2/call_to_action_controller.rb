@@ -21,8 +21,10 @@
           format.json { render :json => result.to_json }
         end
       rescue Exception => exception
-        response = { "errors" => [exception.to_s] }.to_json
-        respond_with response, status: 500
+        response = { "errors" => [exception.to_s] }
+        respond_to do |format|
+          format.json { render :json => response.to_json, status: 500 }
+        end
       end
     end
     

@@ -272,15 +272,22 @@ class CallToActionController < ApplicationController
     end
   end
 
+  respond_to :json, only: :update_interaction
+
   def update_interaction
     begin
       response = update_interaction_computation(params)
-    rescue SessionIdEmptyError => e
+      status = 200
+    rescue SessionIdEmptyError => exception
       response = { session_empty: true }
+      status = 500
+    rescue Exception => exception
+      response = { "errors" => [exception.to_s] }
+      status = 500
     end
 
     respond_to do |format|
-      format.json { render :json => response.to_json }
+      format.json { render :json => response.to_json, status: status }
     end
   end
 
