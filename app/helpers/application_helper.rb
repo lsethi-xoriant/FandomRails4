@@ -595,10 +595,29 @@ module ApplicationHelper
     outcome.reward_name_to_counter.each do |r|
       reward_name = r.first
       if to_be_notified_reward_names.include?(reward_name)
+        property = get_property()
+        if property
+          property_name = property.name
+        end
+
         reward = get_reward_by_name(reward_name)
-        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_template", locals: { reward: reward }, layout: false, formats: :html
-        notice = create_notice(:user_id => user_id, :html_notice => html_notice, :viewed => false, :read => false)
-        # notice.send_to_user(request)
+        if reward.media_type && reward.media_type.downcase == "calltoaction"
+          text = "Complimenti! Hai sbloccato il contenuto esclusivo \"#{reward.call_to_action.title}\""
+        else
+          text = "Complimenti! Hai ottenuto il badge #{reward.title}"
+        end
+
+        notice = create_notice(
+          :user_id => user_id, 
+          :viewed => false, 
+          :read => false, 
+          :aux => {
+            :ref_type => "reward", 
+            :ref_id => reward.id, 
+            :property => property_name, 
+            :text => text
+          }
+        )
         expire_cache_key(notification_cache_key(user_id))
       end
     end

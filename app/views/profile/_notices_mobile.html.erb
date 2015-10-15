@@ -23,7 +23,29 @@
                   <li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices.notices">
                     <div class="row">
                         <div class="col-xs-12">
-                          <div class="row" ng-bind-html='notice.html_notice'></div>
+                          <!-- <div class="row" ng-bind-html='notice.html_notice'></div> -->
+                          <div class="row" ng-if="notice.html_notice" ng-bind-html='notice.html_notice'></div>
+                          <div class="row" ng-if="!notice.html_notice">
+                            <div class="hidden-xs col-sm-2">
+                              <img ng-src="{{notice.notice_logo}}" class="img-responsive notice__property-icon">
+                            </div>
+                            <div ng-if="notice.aux.ref_type != 'user_comment_interaction'" class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                              <img ng-src="{{notice.notice_image}}" class="img-responsive notice__reward-image">
+                            </div>
+                            <div ng-if="notice.aux.ref_type == 'user_comment_interaction'" class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                              <span class="glyphicon glyphicon glyphicon-comment glyphicon-comment--notice"></span>
+                            </div>
+                            <div class="col-xs-6 col-sm-8">
+                              <h5 class="notice__title">
+                                {{notice.aux.text}}
+                                <p ng-if="notice.notice_link">
+                                  <a ng-href="{{notice.notice_link}}">
+                                    Vai al contenuto.
+                                  </a>
+                                </p>
+                              </h5>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </li>

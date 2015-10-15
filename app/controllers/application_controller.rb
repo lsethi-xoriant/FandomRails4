@@ -124,7 +124,6 @@ class ApplicationController < ActionController::Base
     params = { "page_elements" => ["like", "comment", "share", "randomresource"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream(property_name, params, init_ctas)
 
-
     @aux_other_params = { 
       calltoaction_evidence_info: true,
       featured_content_previews: featured_content_previews,

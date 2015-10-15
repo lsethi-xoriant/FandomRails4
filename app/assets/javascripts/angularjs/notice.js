@@ -140,25 +140,25 @@ function NoticePageCtrl($scope, $resource, $sce, $filter) {
 
 	$scope.mark_as_read = function(id){
 		$.ajax({
-	      type: "POST",
-	      url: "/profile/notices/mark_as_read",
-	      data: { notice_id: id },
-	      beforeSend: function(jqXHR, settings) {
-	        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-	      },
-	      success: function(data) {
-	        if(data.success){
-	        	$("li#"+id).removeClass("notice--unread");
-	        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
-	        }else{
-	        	alert(data.message);
-	        }
-	      } // success AJAX
-      	});
+      type: "POST",
+      url: "/profile/notices/mark_as_read",
+      data: { notice_id: id },
+      beforeSend: function(jqXHR, settings) {
+        jqXHR.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      },
+      success: function(data) {
+        if(data.success){
+        	$("li#"+id).removeClass("notice--unread");
+        	$("li#"+id+" i.fa").removeClass("fa-circle-o").addClass("fa-circle");
+        }else{
+        	alert(data.message);
+        }
+      } // success AJAX
+  	});
 	};
 
 	$scope.min = function(arr) {
-    	return $filter('min')
-      		($filter('map')(arr, 'date'));
+  	return $filter('min')
+  		($filter('map')(arr, 'date'));
  	};
 }

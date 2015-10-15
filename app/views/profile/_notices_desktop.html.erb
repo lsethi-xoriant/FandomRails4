@@ -12,7 +12,7 @@
           <span class="section-heading__marker"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></span>
           Notifiche
         </h3>
-        </div>
+      </div>
       <div class="row">
         <div class="col-xs-12">
           <div ng-repeat="notices in notice_list">
@@ -20,16 +20,37 @@
             <ul class="list-group">
               <li id="{{notice.id}}" ng-class="{'list-group-item': true, 'notice--unread': !notice.read}" ng-repeat="notice in notices.notices">
                 <div class="row">
-                    <div class="col-xs-11">
-                      <div class="row" ng-bind-html='notice.html_notice'></div>
-                    </div>
-                    <div class="col-xs-1">
-                      <i class="fa fa-circle" style="float: right;" ng-if="notice.read"></i>
-                      <a href="javascript:void(0)" ng-click="mark_as_read(notice.id);" style="float: right; color: black;" ng-if="!notice.read">
-                        <i class="fa fa-circle-o"></i>
-                      </a>
+                  <div class="col-xs-11">
+                    <div class="row" ng-if="notice.html_notice" ng-bind-html='notice.html_notice'></div>
+                    <div class="row" ng-if="!notice.html_notice">
+                      <div class="hidden-xs col-sm-2">
+                        <img ng-src="{{notice.notice_logo}}" class="img-responsive notice__property-icon">
+                      </div>
+                      <div ng-if="notice.aux.ref_type != 'user_comment_interaction'" class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                        <img ng-src="{{notice.notice_image}}" class="img-responsive notice__reward-image">
+                      </div>
+                      <div ng-if="notice.aux.ref_type == 'user_comment_interaction'" class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                        <span class="glyphicon glyphicon glyphicon-comment glyphicon-comment--notice"></span>
+                      </div>
+                      <div class="col-xs-6 col-sm-8">
+                        <h5 class="notice__title">
+                          {{notice.aux.text}}
+                          <p ng-if="notice.notice_link">
+                            <a ng-href="{{notice.notice_link}}">
+                              Vai al contenuto.
+                            </a>
+                          </p>
+                        </h5>
+                      </div>
                     </div>
                   </div>
+                  <div class="col-xs-1">
+                    <i class="fa fa-circle" style="float: right;" ng-if="notice.read"></i>
+                    <a href="javascript:void(0)" ng-click="mark_as_read(notice.id);" style="float: right; color: black;" ng-if="!notice.read">
+                      <i class="fa fa-circle-o"></i>
+                    </a>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

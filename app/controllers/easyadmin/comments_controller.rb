@@ -21,20 +21,41 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     if current_comment.approved
       cta = interaction.call_to_action
 
+      property = get_property()
+      if property
+        property_name = property.name
+      end
+
       if anonymous_user.id != current_comment.user_id
         user_interaction, outcome = create_or_update_interaction(current_comment.user, interaction, nil, nil)
-
-        html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_comment_approved_template", locals: { cta: cta }, layout: false, formats: :html
-
-        if (Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['comment_approved'] != false rescue true)
-          create_notice(:user_id => current_comment.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+        if (JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)["comment_approved"] != false rescue true)
+          create_notice(
+            :user_id => current_comment.user_id, 
+            :viewed => false, 
+            :read => false, 
+            :aux => {
+              :ref_type => "user_comment_interaction", 
+              :ref_id => current_comment.id, 
+              :property => property_name, 
+              :text => "Commento approvato su \"#{cta.title}\""
+            }
+          )
         end
       end
 
-      unless cta.user_id.nil? # user_call_to_action
-        if (Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value['user_cta_interactions'] != false rescue true)
-          html_notice = render_to_string "/easyadmin/easyadmin_notice/_notice_interaction_on_ugc_approved_template", locals: { cta: cta, interaction_type: "commento" }, layout: false, formats: :html
-          create_notice(:user_id => cta.user_id, :html_notice => html_notice, :viewed => false, :read => false)
+      unless cta.user_id.nil? # send notice to user_call_to_action owner
+        if (JSON.parse(Setting.find_by_key(NOTIFICATIONS_SETTINGS_KEY).value)["user_cta_interactions"] != false rescue true)
+          create_notice(
+            :user_id => cta.user_id, 
+            :viewed => false, 
+            :read => false, 
+            :aux => {
+              :ref_type => "user_comment_interaction", 
+              :ref_id => current_comment.id, 
+              :property => property_name, 
+              :text => "Nuovo commento approvato su \"#{cta.title}\""
+            }
+          )
         end
       end
 

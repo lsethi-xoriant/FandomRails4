@@ -88,12 +88,26 @@ class Easyadmin::EasyadminNoticeController < Easyadmin::EasyadminController
       end
     end
 
+    property = get_property()
+    if property
+      property_name = property.name
+    end
+
     users = all ? User.all : User.where("email IN (?)", params[:users].split(",")).to_a
 
     users.each do |user|
       if notification_channels.include?("fandom")
-        notice = create_notice(:user_id => user.id, :html_notice => params[:fandom_notice], :viewed => false, :read => false)
-        # notice.send_to_user(request, true) if notification_channels.include?("email")
+        notice = create_notice(
+          :user_id => user.id, 
+          :viewed => false, 
+          :read => false, 
+          :aux => {
+            :ref_type => nil, 
+            :ref_id => nil, 
+            :property => property_name, 
+            :text => params[:fandom_notice]
+          }
+        )
       end
       if notification_channels.include?("email")
         if (JSON.parse(user.aux)['subscriptions']['notifications'] rescue true)
