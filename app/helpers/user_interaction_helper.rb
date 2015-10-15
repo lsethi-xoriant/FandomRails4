@@ -388,7 +388,6 @@ module UserInteractionHelper
     end
 
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-    aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
 
     if user_interaction
       if interaction.resource.one_shot
@@ -396,12 +395,15 @@ module UserInteractionHelper
         raise Exception.new("one shot interaction attempted more than once")
       end
 
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, aux: aux)  
     else
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
     end
 
-    update_user_counters(interaction, user_interaction, user)
+    # TODO: delete in all project
+    # update_user_counters(interaction, user_interaction, user)
 
     user_interaction, outcome = compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)    
     user_interaction.save
