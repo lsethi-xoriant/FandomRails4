@@ -17,6 +17,10 @@
             <ul class="nav navbar-nav navbar-right">
               <li ng-repeat="item in aux.menu_items" ng-class="{'active': (aux.tag_menu_item == item.name)}"><a href="{{item.extra_fields.url}}">{{item.title}}</a>
               </li>
+              <li ng-if="aux.instant_win_info.interaction_id">
+                <button style="margin: 4px 10px 0 10px" ng-if="current_user.registration_fully_completed" type="button" class="btn btn-primary" ng-click="openInstantWinModal()">Gioca</button>
+                <button style="margin: 4px 10px 0 10px" ng-if="!current_user.registration_fully_completed" type="button" class="btn btn-primary" ng-click="openRegistrationModalForInstantWin()">Gioca</button>
+              </li>
               <li class="navbar-item--socials" ng-if="aux.assets.extra_fields.menu_item_socials" ng-bind-html="aux.assets.extra_fields.menu_item_socials">
               </li>
             </ul>
