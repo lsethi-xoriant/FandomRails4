@@ -64,12 +64,12 @@ module NoticeHelper
         notice_logo = nil
         notice_image = nil
         notice_link = nil
+
         if notice.aux["ref_type"] == "reward"
           reward = Reward.find(notice.aux["ref_id"])
           notice_logo = get_notice_icon(reward)
           notice_image = reward.main_image.url
           if reward.call_to_action
-            # notice_link = "/#{get_property_from_cta(reward.call_to_action)}/call_to_action/#{reward.call_to_action.slug}"
             notice_link = "/call_to_action/#{reward.call_to_action.slug}"
           end
         else
@@ -80,9 +80,9 @@ module NoticeHelper
             cta = UserCommentInteraction.find(notice.aux["ref_id"]).comment.interaction.call_to_action
           end
           notice_logo = get_notice_icon_from_cta(cta)
-          # notice_link = "/#{get_property_from_cta(cta)}/call_to_action/#{cta.slug}"
           notice_link = "/call_to_action/#{cta.slug}"
         end
+
         attributes.merge!({
           :notice_logo => notice_logo, 
           :notice_image => notice_image, 
