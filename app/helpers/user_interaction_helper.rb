@@ -260,7 +260,7 @@ module UserInteractionHelper
   end
 
   def adjust_counter!(interaction, value = 1)
-    ViewCounter.transaction do
+    ActiveRecord::Base.transaction do
       counter = ViewCounter.where("ref_type = 'interaction' AND ref_id = ?", interaction.id).first
       if counter
         if interaction.resource_type.downcase == "vote" || interaction.resource_type.downcase == "quiz"
@@ -388,7 +388,6 @@ module UserInteractionHelper
     end
 
     user_interaction = user.user_interactions.find_by_interaction_id(interaction.id)
-    aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
 
     if user_interaction
       if interaction.resource.one_shot
@@ -396,12 +395,15 @@ module UserInteractionHelper
         raise Exception.new("one shot interaction attempted more than once")
       end
 
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, aux: aux)  
     else
+      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
     end
 
-    update_user_counters(interaction, user_interaction, user)
+    # TODO: delete in all project
+    # update_user_counters(interaction, user_interaction, user)
 
     user_interaction, outcome = compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)    
     user_interaction.save
@@ -456,7 +458,7 @@ module UserInteractionHelper
 
     if user_interaction
       response[:user_interaction] = build_user_interaction_for_interaction_info(user_interaction)
-      response[:outcome] = outcome
+      response[:new_outcome] = outcome
 
       if $site.id == "braun_ic"
         reward_names = outcome[:reward_name_to_counter].map { |key, value| key.to_s }
@@ -605,10 +607,9 @@ module UserInteractionHelper
   def send_share_interaction_email(address, calltoaction)
     property = get_property()
     aux = {
-      color: get_extra_fields!(property)["label-background"],
-      logo: (get_extra_fields!(property)["logo"]["url"] rescue nil),
       path: compute_property_path(property),
       root: root_url,
+      extra_fields: get_extra_fields!(property),
       subject: property.title
     }
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver

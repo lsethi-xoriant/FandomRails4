@@ -14,6 +14,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
 
   def update_comment_status
     current_comment = UserCommentInteraction.find(params[:comment_id])
+    comment_initial_status = current_comment.approved
+
     current_comment.update_attributes(approved: params[:approved])
 
     interaction = current_comment.comment.interaction
@@ -58,8 +60,8 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
           )
         end
       end
-
-    else
+      
+    elsif comment_initial_status
       adjust_counter!(interaction, -1)
     end
 

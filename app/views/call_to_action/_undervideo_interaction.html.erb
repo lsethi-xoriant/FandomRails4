@@ -67,13 +67,13 @@
   </div>
 </div>
 
-<div ng-if="interaction_info.user_interaction && interaction_info.user_interaction.feedback && checkUndervideoInteractionTypes(interaction_info)" class="row undervideo-interaction__feedback">
+<div ng-if="interaction_info.feedback && checkUndervideoInteractionTypes(interaction_info)" class="row undervideo-interaction__feedback">
   <div ng-if="interaction_info.interaction.resource_type != 'trivia'" class="col-sm-12 interaction__feedback-col">
     <div class="interaction__feedback-circle interaction__feedback-circle--green text-center">
       <span class="glyphicon glyphicon-ok trivia-interaction__feedback__glyphicon trivia-interaction__feedback__glyphicon-ok"></span>
     </div>
     <p class="interaction__feedback-text">Complimenti!</p> 
-    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
+    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.feedback.reward_name_to_counter.point}} punti.</p>
   </div> 
     
   <div ng-if="interaction_info.interaction.resource_type == 'trivia' && interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">
@@ -81,7 +81,7 @@
       <span class="glyphicon glyphicon-ok trivia-interaction__feedback__glyphicon trivia-interaction__feedback__glyphicon-ok"></span>
     </div>
     <p class="interaction__feedback-text interaction__feedback-text--green">Bravo! Risposta corretta.</p> 
-    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.user_interaction.outcome.reward_name_to_counter.point}} punti.</p>
+    <p class="interaction__feedback-description">Hai guadagnato +{{interaction_info.feedback.reward_name_to_counter.point}} punti.</p>
   </div> 
 
   <div ng-if="interaction_info.interaction.resource_type == 'trivia' && !interaction_info.user_interaction.answer.correct" class="col-sm-12 interaction__feedback-col">

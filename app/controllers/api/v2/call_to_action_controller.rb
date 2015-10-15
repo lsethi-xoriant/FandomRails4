@@ -16,12 +16,15 @@
         if send_anonymous_user
           result[:anonymous_user] = current_user
         end
-      rescue Exception => e
-        result = { "exception" => e.to_s }
-      end
 
-      respond_to do |format|
-        format.json { render :json => result.to_json }
+        respond_to do |format|
+          format.json { render :json => result.to_json }
+        end
+      rescue Exception => exception
+        response = { "errors" => [exception.to_s] }
+        respond_to do |format|
+          format.json { render :json => response.to_json, status: 500 }
+        end
       end
     end
     

@@ -1602,8 +1602,9 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   		'entry_id': media_data,
   		'flashvars':{
   			'autoPlay': false,
-  			'doubleClick': { 
-  				'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
+  			'doubleClick': {
+  				//'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
+  				'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=vast&unviewed_position_start=1&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&iu=/165891808/Disney.it/disneychannel.it/community/" + $scope.calltoaction_info.calltoaction.slug + "&sz=1920x480&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&correlator=" + Date.now + "&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=&vid=" + media_data,
 				'htmlCompanions': 'div-video-mpu:300:250;' 
 			}
   		},
@@ -1827,7 +1828,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             // GOOGLE ANALYTICS
             if(data.ga) {
               $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
                 $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
               });
             }
@@ -1985,7 +1986,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           if(data.ga) {
             $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+            angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
               $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
             });
           }
@@ -2078,7 +2079,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // Google analytics.
     if(data.ga) {
       $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-      angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
+      angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
         $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
       });
     }
@@ -2153,12 +2154,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       }
 
     } else {
-      if(interaction_info.user_interaction) {
-        interaction_info.user_interaction.feedback = data.user_interaction.outcome;
+      if(data.new_outcome) {
+        interaction_info.feedback = data.new_outcome.attributes;
       }
 
       if(interaction_info.interaction.resource_type == "like") {
-        console.log(data.user_interaction.aux.like);
         if(data.user_interaction.aux.like) {
           interaction_info.interaction.resource.counter += 1;
         } else {

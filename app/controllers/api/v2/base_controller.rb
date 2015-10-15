@@ -17,7 +17,8 @@
     # utilities
 
     def respond_with_errors(errors, status = 400)
-      respond_with ({ "errors" => errors }.to_json), :status=>status
+      response = { "errors" => errors }.to_json
+      respond_with response, :status=>status
     end
 
     def respond_with_json(x)

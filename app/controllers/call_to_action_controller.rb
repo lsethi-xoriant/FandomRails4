@@ -173,10 +173,8 @@ class CallToActionController < ApplicationController
 
     calltoaction_id = params[:id]
 
-    if current_user
-      if current_user.role == "admin" || current_user.role == "editor"
-        calltoaction = CallToAction.includes(:interactions).references(:interactions).find(calltoaction_id)
-      end
+    if current_user && (current_user.role == "admin" || current_user.role == "editor")
+      calltoaction = CallToAction.includes(:interactions).references(:interactions).find(calltoaction_id)
     else
       calltoaction = CallToAction.includes(:interactions).active.references(:interactions).find(calltoaction_id)
     end
@@ -274,15 +272,22 @@ class CallToActionController < ApplicationController
     end
   end
 
+  respond_to :json, only: :update_interaction
+
   def update_interaction
     begin
       response = update_interaction_computation(params)
-    rescue SessionIdEmptyError => e
+      status = 200
+    rescue SessionIdEmptyError => exception
       response = { session_empty: true }
+      status = 500
+    rescue Exception => exception
+      response = { "errors" => [exception.to_s] }
+      status = 500
     end
 
     respond_to do |format|
-      format.json { render :json => response.to_json }
+      format.json { render :json => response.to_json, status: status }
     end
   end
 

@@ -22,7 +22,7 @@ module RewardHelper
   end
   
   def get_user_rewards_from_cache(user)
-    cache_short(get_user_rewards_cache_key(user.id)) do
+    cache_forever(get_user_rewards_cache_key(user.id)) do
       rewards = Reward.joins(:user_rewards).select("rewards.*").where("user_rewards.user_id = ?", user.id)
       id_to_reward = {}
       rewards.each do |r|
@@ -380,7 +380,6 @@ module RewardHelper
 
   def get_reward_image_for_status(reward)
     if reward.present?
-      cache_short(get_status_rewar_image_key(reward.name, current_user.id)) do
         if user_has_reward(reward.name)
           reward.main_image.url
         elsif reward.is_expired
@@ -388,7 +387,6 @@ module RewardHelper
         else
           reward.not_awarded_image.url
         end
-      end
     else
       nil
     end
