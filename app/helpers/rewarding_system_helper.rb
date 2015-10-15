@@ -487,21 +487,23 @@ module RewardingSystemHelper
   #   user - the user performing the interaction; if nil or anonymous, the context of the interaction will be reset (counters and rewards)
   def predict_max_cta_outcome(cta, user)
     if is_linking?(cta.id)
-
-      graph, cycles = CtaForest.build_linked_cta_graph(cta.id)
-      tree = graph[cta.id]
-      total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
-      if cycles.empty?
-        visited = {}
-        total_outcome = compute_max_outcome(tree, user, get_ctas_for_max_outcome(), visited)
-      end
-
-      total_outcome.reward_name_to_counter.default = nil
-      [total_outcome, interaction_outcomes, sorted_interactions]
-
+      predict_max_linking_cta_outcome(cta, user)
     else
       build_max_cta_outcome(cta, user)
     end
+  end
+
+  def predict_max_linking_cta_outcome(cta, user)
+    graph, cycles = CtaForest.build_linked_cta_graph(cta.id)
+    tree = graph[cta.id]
+    total_outcome, interaction_outcomes, sorted_interactions = build_max_cta_outcome(cta, user)
+    if cycles.empty?
+      visited = {}
+      total_outcome = compute_max_outcome(tree, user, get_ctas_for_max_outcome(), visited)
+    end
+
+    total_outcome.reward_name_to_counter.default = nil
+    [total_outcome, interaction_outcomes, sorted_interactions]
   end
 
   def build_max_cta_outcome(cta, user)

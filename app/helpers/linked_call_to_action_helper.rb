@@ -189,14 +189,13 @@ module LinkedCallToActionHelper
 
   def is_linking?(cta_id)
     CallToAction.find(cta_id).interactions.each do |interaction|
-      return true if (InteractionCallToAction.find_by_interaction_id(interaction.id) or call_to_action_answers_linked_cta(cta_id).any? )
+      return true if (InteractionCallToAction.find_by_interaction_id(interaction.id) || call_to_action_answers_linked_cta(cta_id).any?)
     end
     false
   end
 
   def is_linked?(cta_id)
-    return true if (InteractionCallToAction.find_by_call_to_action_id(cta_id) or Answer.find_by_call_to_action_id(cta_id) )
-    false
+    InteractionCallToAction.find_by_call_to_action_id(cta_id) || Answer.find_by_call_to_action_id(cta_id)
   end
 
   def call_to_action_answers_linked_cta(cta_id)

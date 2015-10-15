@@ -72,12 +72,18 @@ module RewardHelper
     if !anonymous_user?(user) || stored_anonymous_user?(user)
       require_to_complete_interactions = interactions_required_to_complete(cta)
 
-      if require_to_complete_interactions.count == 0
-        false
+      if is_linking?(cta.id)
+        total_outcome, interaction_outcomes, sorted_interactions = predict_max_linking_cta_outcome(cta, user)
+        main_reward_name = get_main_reward_name()
+        total_outcome.reward_name_to_counter[main_reward_name].nil?
       else
-        require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
-        interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
-        require_to_complete_interactions.count == interactions_done.count
+        if require_to_complete_interactions.count == 0
+          false
+        else
+          require_to_complete_interactions_ids = require_to_complete_interactions.map { |i| i.id }
+          interactions_done = UserInteraction.where("user_interactions.user_id = ? and interaction_id IN (?)", user.id, require_to_complete_interactions_ids)
+          require_to_complete_interactions.count == interactions_done.count
+        end
       end
     else
       false
