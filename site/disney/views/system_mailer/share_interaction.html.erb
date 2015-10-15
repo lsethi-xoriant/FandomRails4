@@ -5,9 +5,9 @@
   </head>
   <body style="font-family: helvetica, arial, sans-serif; margin: 0; font-size: 15px;">
     <div>
-      <div style="background: <%= @aux[:color] %>;">
+      <div style="background: <%= @aux[:extra_fields]["label-background"] %>;">
         <div style="text-align: center;">
-          <img style="max-width: 200px; margin-top: 15px; margin-bottom: 15px; width: 100%;" src="<%= @aux[:logo] %>">
+          <img style="max-width: 200px; margin-top: 15px; margin-bottom: 15px; width: 100%;" src="<%= @aux[:extra_fields]["logo"]["url"] %>">
         </div>
       </div>
       <div style="max-width: 600px; width: 100%; margin-left: auto; margin-right: auto; padding-top: 30px;">     

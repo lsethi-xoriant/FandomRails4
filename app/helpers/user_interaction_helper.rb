@@ -607,10 +607,9 @@ module UserInteractionHelper
   def send_share_interaction_email(address, calltoaction)
     property = get_property()
     aux = {
-      color: get_extra_fields!(property)["label-background"],
-      logo: (get_extra_fields!(property)["logo"]["url"] rescue nil),
       path: compute_property_path(property),
       root: root_url,
+      extra_fields: get_extra_fields!(property),
       subject: property.title
     }
     SystemMailer.share_interaction(current_user, address, calltoaction, aux).deliver
