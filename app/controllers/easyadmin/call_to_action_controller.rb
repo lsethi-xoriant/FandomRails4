@@ -43,6 +43,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     create_and_link_attachment(params[:call_to_action], nil)
     @cta = CallToAction.create(params[:call_to_action])
 
+    comment_like_interaction = @cta.interactions.where(resource_type: "CommentLike").first
+    if comment_like_interaction.present? && @cta.errors.empty? && comment_interaction = @cta.interactions.where(resource_type: "Comment").first
+      comment_like_interaction.resource.update_attribute(:comment_id, comment_interaction.resource.id)
+    end
+
     aux = {}
 
     if params[:call_to_action]["media_image_gravity_position"]
@@ -120,6 +125,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     create_and_link_attachment(params[:call_to_action], @cta)
     updated_attributes = @cta.update_attributes(params[:call_to_action])
     saved_linking = save_interaction_call_to_action_linking(@cta)
+
+    comment_like_interaction = @cta.interactions.where(resource_type: "CommentLike").first
+    if comment_like_interaction.present? && @cta.errors.empty? && comment_interaction = @cta.interactions.where(resource_type: "Comment").first
+      comment_like_interaction.resource.update_attribute(:comment_id, comment_interaction.resource.id)
+    end
 
     unless updated_attributes && saved_linking && @cta.errors.messages.empty?
       @tag_list = params[:tag_list]

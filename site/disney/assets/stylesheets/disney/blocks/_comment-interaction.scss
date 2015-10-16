@@ -49,13 +49,25 @@
   margin: 6px auto 0 auto;
 }
 
-.comment-interaction__text-p {
+.comment-interaction__text-p, .comment-like-interaction__text-p {
   color: #999;
   margin: 0;
   padding-left: 40px;
   padding-right: 15px;
   padding-top: 0;
   text-transform: none;
+}
+
+.comment-like-interaction__text-p {
+  margin-top: 15px;
+}
+
+.comment-like-interaction__text-p.active {
+  color: $blu;
+}
+
+.comment-like-interaction-thumbs-up {
+  cursor: pointer;
 }
 
 .comment-interaction__date {

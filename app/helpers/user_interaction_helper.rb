@@ -238,6 +238,7 @@ module UserInteractionHelper
         result << {
           "id" => comment.id,
           "text" => comment.text,
+          "like_counter" => comment.like_counter,
           "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
           "user" => {
             "name" => user.username,
@@ -281,10 +282,10 @@ module UserInteractionHelper
     end
   end
 
-  def adjust_user_interaction_aux(resource_type, user_interaction, interaction, aux, answer_id)
+  def adjust_user_interaction_aux_and_counter(resource_type, user_interaction, interaction, aux, answer_id)
     user_interaction_aux = user_interaction.present? ? user_interaction.aux : aux
     aux.each do |key, value|
-      if key != "providers"
+      if key != "providers" && key != "comment_id"
         user_interaction_aux[key] = value
       end
     end
@@ -297,6 +298,17 @@ module UserInteractionHelper
           value = user_interaction_aux["providers"][provider] 
           user_interaction_aux["providers"][provider] = value.present? ? (value + increment) : increment
         end
+      end
+    when "commentlike"
+      if(user_interaction_aux["comment_active_ids"].present? && user_interaction_aux["comment_active_ids"].include?(aux["comment_id"]))
+        user_interaction_aux["comment_active_ids"].delete(aux["comment_id"])
+        UserCommentInteraction.decrement_counter(:like_counter, aux["comment_id"])
+      else
+        (user_interaction_aux["comment_active_ids"] ||= []) << aux["comment_id"]
+        if(user_interaction_aux["comment_ids"].nil? || !user_interaction_aux["comment_ids"].include?(aux["comment_id"]))
+          (user_interaction_aux["comment_ids"] ||= []) << aux["comment_id"]
+        end
+        UserCommentInteraction.increment_counter(:like_counter, aux["comment_id"])
       end
     when "comment"
       adjust_counter!(interaction)
@@ -395,17 +407,22 @@ module UserInteractionHelper
         raise Exception.new("one shot interaction attempted more than once")
       end
 
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
+      aux = adjust_user_interaction_aux_and_counter(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction.assign_attributes(counter: (user_interaction.counter + 1), answer_id: answer_id, aux: aux)  
     else
-      aux = adjust_user_interaction_aux(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
+      aux = adjust_user_interaction_aux_and_counter(interaction.resource_type.downcase, user_interaction, interaction, aux, answer_id)
       user_interaction = UserInteraction.new(user_id: user.id, interaction_id: interaction.id, answer_id: answer_id, aux: aux)
     end
 
     # TODO: delete in all project
     # update_user_counters(interaction, user_interaction, user)
 
-    user_interaction, outcome = compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)    
+    if !(interaction.resource_type == "CommentLike" && aux["comment_ids"].include?(aux["comment_id"]))
+      user_interaction, outcome = compute_and_assign_outcome_to_user_interaction(interaction, user_interaction, user)
+    else
+      outcome = nil
+    end    
+
     user_interaction.save
   
     [user_interaction, outcome]
@@ -452,6 +469,9 @@ module UserInteractionHelper
     when "download"
       response["download_interaction_attachment"] = interaction.resource.attachment.url
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
+    when "commentlike"
+      aux[:comment_id] = params[:params]
+      user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, nil, aux.to_json)
     else
       user_interaction, outcome = create_or_update_interaction(current_or_anonymous_user, interaction, nil, aux.to_json)
     end
@@ -700,7 +720,6 @@ module UserInteractionHelper
     end
 
     return build_cta_info_list_and_cache_with_max_updated_at([cta]).first
-     
   end
 
 end

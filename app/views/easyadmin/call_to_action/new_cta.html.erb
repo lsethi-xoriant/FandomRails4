@@ -227,6 +227,19 @@
       <% end %>
 
       <div class="row">
+        <div class="col-md-10"><h3>LIKE COMMENTI</h3></div>
+        <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI LIKE COMMENTI", f, :interactions, "commentLike", "commentlike" %></div>
+      </div>
+
+      <div id="tmp-commentlike-add"></div>
+
+      <%= f.fields_for :interactions do |builder| %>
+        <% if builder.object.resource_type == "CommentLike" %>
+          ADDED
+        <% end %>
+      <% end %>
+
+      <div class="row">
         <div class="col-md-10"><h3>LINK</h3></div>
         <div class="col-md-2"><%= link_to_add_fields "AGGIUNGI LINK", f, :interactions, "link" %></div>
       </div>

@@ -3,6 +3,7 @@ class Comment < ActiveRecord::Base
 
 	has_many :user_comment_interactions
   has_one :interaction, as: :resource
+  has_one :comment_like
 
   def one_shot
     false
