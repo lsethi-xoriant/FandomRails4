@@ -466,6 +466,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: ballando; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: ballando; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -2338,6 +2370,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: braun_ic; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: braun_ic; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
@@ -4188,6 +4252,38 @@ CREATE SEQUENCE checks_id_seq
 --
 
 ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comment_likes; Type: TABLE; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: coin; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: coin; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
 
 
 --
@@ -6044,6 +6140,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: disney; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: disney; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -7894,6 +8022,38 @@ CREATE SEQUENCE checks_id_seq
 --
 
 ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comment_likes; Type: TABLE; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: fandom; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: fandom; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
 
 
 --
@@ -9750,6 +9910,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: forte; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: forte; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -11600,6 +11792,38 @@ CREATE SEQUENCE checks_id_seq
 --
 
 ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comment_likes; Type: TABLE; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: intesa_expo; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: intesa_expo; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
 
 
 --
@@ -13456,6 +13680,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: maxibon; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: maxibon; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -15306,6 +15562,38 @@ CREATE SEQUENCE checks_id_seq
 --
 
 ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
+
+
+--
+-- Name: comment_likes; Type: TABLE; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: orzoro; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: orzoro; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
 
 
 --
@@ -17162,6 +17450,38 @@ ALTER SEQUENCE checks_id_seq OWNED BY checks.id;
 
 
 --
+-- Name: comment_likes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comment_likes (
+    id integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    title character varying,
+    comment_id integer
+);
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE comment_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comment_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE comment_likes_id_seq OWNED BY comment_likes.id;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -18273,7 +18593,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -18715,6 +19036,13 @@ ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
 --
 
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: ballando; Owner: -
+--
+
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -19068,6 +19396,13 @@ ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_ac
 --
 
 ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: braun_ic; Owner: -
+--
+
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
 
 
 --
@@ -19433,6 +19768,13 @@ ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: coin; Owner: -
 --
 
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: coin; Owner: -
+--
+
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -19786,6 +20128,13 @@ ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_ac
 --
 
 ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: disney; Owner: -
+--
+
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
 
 
 --
@@ -20151,6 +20500,13 @@ ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
 --
 
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: fandom; Owner: -
+--
+
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -20504,6 +20860,13 @@ ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_ac
 --
 
 ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: forte; Owner: -
+--
+
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
 
 
 --
@@ -20869,6 +21232,13 @@ ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
 --
 
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: intesa_expo; Owner: -
+--
+
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -21222,6 +21592,13 @@ ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_ac
 --
 
 ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: maxibon; Owner: -
+--
+
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
 
 
 --
@@ -21587,6 +21964,13 @@ ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
 --
 
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: orzoro; Owner: -
+--
+
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -21940,6 +22324,13 @@ ALTER TABLE ONLY call_to_actions ALTER COLUMN id SET DEFAULT nextval('call_to_ac
 --
 
 ALTER TABLE ONLY checks ALTER COLUMN id SET DEFAULT nextval('checks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY comment_likes ALTER COLUMN id SET DEFAULT nextval('comment_likes_id_seq'::regclass);
 
 
 --
@@ -22309,6 +22700,14 @@ ALTER TABLE ONLY call_to_actions
 
 ALTER TABLE ONLY checks
     ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: ballando; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -22722,6 +23121,14 @@ ALTER TABLE ONLY checks
 
 
 --
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments_pkey; Type: CONSTRAINT; Schema: braun_ic; Owner: -; Tablespace: 
 --
 
@@ -23129,6 +23536,14 @@ ALTER TABLE ONLY call_to_actions
 
 ALTER TABLE ONLY checks
     ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: coin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -23542,6 +23957,14 @@ ALTER TABLE ONLY checks
 
 
 --
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments_pkey; Type: CONSTRAINT; Schema: disney; Owner: -; Tablespace: 
 --
 
@@ -23949,6 +24372,14 @@ ALTER TABLE ONLY call_to_actions
 
 ALTER TABLE ONLY checks
     ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: fandom; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -24362,6 +24793,14 @@ ALTER TABLE ONLY checks
 
 
 --
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments_pkey; Type: CONSTRAINT; Schema: forte; Owner: -; Tablespace: 
 --
 
@@ -24769,6 +25208,14 @@ ALTER TABLE ONLY call_to_actions
 
 ALTER TABLE ONLY checks
     ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -25182,6 +25629,14 @@ ALTER TABLE ONLY checks
 
 
 --
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments_pkey; Type: CONSTRAINT; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -25592,6 +26047,14 @@ ALTER TABLE ONLY checks
 
 
 --
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments_pkey; Type: CONSTRAINT; Schema: orzoro; Owner: -; Tablespace: 
 --
 
@@ -25999,6 +26462,14 @@ ALTER TABLE ONLY call_to_actions
 
 ALTER TABLE ONLY checks
     ADD CONSTRAINT checks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comment_likes
+    ADD CONSTRAINT comment_likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -26458,6 +26929,20 @@ CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
+
+
+--
 -- Name: index_events_on_message; Type: INDEX; Schema: ballando; Owner: -; Tablespace: 
 --
 
@@ -26884,6 +27369,20 @@ CREATE INDEX index_call_to_actions_on_updated_at ON call_to_actions USING btree 
 --
 
 CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: braun_ic; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
 
 
 --
@@ -27316,6 +27815,20 @@ CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
+
+
+--
 -- Name: index_events_on_message; Type: INDEX; Schema: coin; Owner: -; Tablespace: 
 --
 
@@ -27742,6 +28255,20 @@ CREATE INDEX index_call_to_actions_on_updated_at ON call_to_actions USING btree 
 --
 
 CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: disney; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
 
 
 --
@@ -28174,6 +28701,20 @@ CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
+
+
+--
 -- Name: index_events_on_message; Type: INDEX; Schema: fandom; Owner: -; Tablespace: 
 --
 
@@ -28600,6 +29141,20 @@ CREATE INDEX index_call_to_actions_on_updated_at ON call_to_actions USING btree 
 --
 
 CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: forte; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
 
 
 --
@@ -29032,6 +29587,20 @@ CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
+
+
+--
 -- Name: index_events_on_message; Type: INDEX; Schema: intesa_expo; Owner: -; Tablespace: 
 --
 
@@ -29461,6 +30030,20 @@ CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (us
 
 
 --
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
+
+
+--
 -- Name: index_events_on_message; Type: INDEX; Schema: maxibon; Owner: -; Tablespace: 
 --
 
@@ -29887,6 +30470,20 @@ CREATE INDEX index_call_to_actions_on_updated_at ON call_to_actions USING btree 
 --
 
 CREATE INDEX index_call_to_actions_on_user_id ON call_to_actions USING btree (user_id);
+
+
+--
+-- Name: index_call_to_actions_on_valid_from; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_from ON call_to_actions USING btree (valid_from);
+
+
+--
+-- Name: index_call_to_actions_on_valid_to; Type: INDEX; Schema: orzoro; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_call_to_actions_on_valid_to ON call_to_actions USING btree (valid_to);
 
 
 --
@@ -31046,4 +31643,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150710140146');
 INSERT INTO schema_migrations (version) VALUES ('20150710140400');
 
 INSERT INTO schema_migrations (version) VALUES ('20150710140431');
+
+INSERT INTO schema_migrations (version) VALUES ('20151015105328');
+
+INSERT INTO schema_migrations (version) VALUES ('20151015153155');
 

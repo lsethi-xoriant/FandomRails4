@@ -45,6 +45,10 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
   };
 
+  $scope.isOdd = function(index) {
+    return (index % 2 == 1);
+  };
+
   $scope.groupingArr = function(name, arr, group_size) {
     if(angular.isUndefined($scope.groupingArrs[name])) {
       groupingArr = []; tmpArr = [];
@@ -875,6 +879,19 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     return new Array(num);   
   };
 
+  $scope.isInteractionPresent = function(calltoaction_info, resource_type) {
+    interaction_info = getInteraction(calltoaction_info.calltoaction.id, resource_type);
+    if(interaction_info) {
+      return true;
+    } else {
+      return false
+    }
+  };
+
+  $scope.getInteraction = function(calltoaction_info, resource_type) {
+    return getInteraction(calltoaction_info.calltoaction.id, resource_type);
+  };
+
   $scope.isCommentEmpty = function(calltoaction_info) {
     interaction_info = getCommentInteraction(calltoaction_info.calltoaction.id);
     if(interaction_info) {
@@ -882,6 +899,34 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     } else {
       return true;
     }
+  };
+
+  $scope.isCommentLikePressed = function(comment_id) {
+    if(calltoaction_info.commentlike_interaction_info.user_interaction) {
+      return (calltoaction_info.commentlike_interaction_info.user_interaction.aux.comment_active_ids.indexOf(comment_id) > -1);
+    } else {
+      return false;
+    }
+  };
+
+  $scope.refreshCommentLikeCounter = function(calltoaction_info, comment_id, value) {
+    var commentInteraction = getInteraction(calltoaction_info.calltoaction.id, "comment");
+    var comments = commentInteraction.interaction.resource.comment_info.comments;
+    angular.forEach(comments, function(comment) {
+      if(comment.id == comment_id) {
+        comment.like_counter += value;
+      }
+    });
+  };
+
+  $scope.initOrRefreshCommentLikeInteractionInfo = function(calltoaction_info) {
+    calltoaction_info.commentlike_interaction_info = getInteraction(calltoaction_info.calltoaction.id, "commentlike");
+  };
+
+  $scope.getComments = function(calltoaction_info) {
+    $scope.initOrRefreshCommentLikeInteractionInfo(calltoaction_info);
+    comment_interaction_info = getInteraction(calltoaction_info.calltoaction.id, "comment");
+    return comment_interaction_info.interaction.resource.comment_info.comments;
   };
 
   $scope.isCommentInteractionPresent = function(calltoaction_info) {
@@ -1984,9 +2029,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
           if(data.ga) {
             $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label);
-            angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
-              $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-            });
+            if(data.new_outcome) {
+              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
+                $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
           }
 
         }).error(function() {
@@ -2037,7 +2084,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     $http.post(update_interaction_path, { interaction_id: interaction_id, params: params, user_interactions_history: $scope.getUserInteractionsHistory(calltoaction_info), parent_cta_id: $scope.getParentCtaId(calltoaction_info) })
       .success(function(data) {
-        $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction);
+        $scope.updateAnswerAjaxSuccess(data, calltoaction_info, interaction_info, when_show_interaction, params);
       }).error(function() {
         $scope.answer_in_progress = false;
       });
@@ -2051,7 +2098,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
   };
 
-  $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction) {
+  $scope.updateAnswerAjaxSuccess = function(data, calltoaction_info, interaction_info, when_show_interaction, params) {
     if(data.session_empty) {
       alert("Per funzionare correttamente il sito necessita l'abilitazione dei cookie");
       $scope.answer_in_progress = false;
@@ -2060,6 +2107,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
     calltoaction_id = calltoaction_info.calltoaction.id;
     interaction_id = interaction_info.interaction.id;
+
+    if(interaction_info.interaction.resource_type == "commentlike") {
+      new_comment_active_ids_length = data.user_interaction.aux.comment_active_ids.length;
+      if(!interaction_info.user_interaction || interaction_info.user_interaction.aux.comment_active_ids.length < new_comment_active_ids_length) {
+        $scope.refreshCommentLikeCounter(calltoaction_info, params, 1);
+      } else {
+        $scope.refreshCommentLikeCounter(calltoaction_info, params, -1);
+      }
+    }
 
     if(data.current_user) {
       $scope.current_user = data.current_user;
@@ -2077,9 +2133,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // Google analytics.
     if(data.ga) {
       $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-      angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
-        $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-      });
+      if(data.new_outcome) {
+        angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
+          $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+        });
+      }
     }
 
     if(data.answers) {

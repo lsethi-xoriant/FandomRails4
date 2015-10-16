@@ -64,21 +64,44 @@
         user.save()
         respond_with_json user
       else
-        password = Devise.friendly_token.first(8)
-        authentication_token = Devise.friendly_token
-        user = User.create(
-          email: facebook_user["email"], 
-          first_name: facebook_user["first_name"], 
-          last_name: facebook_user["last_name"], 
-          password: password, 
-          password_confirmation: password, 
-          authentication_token: authentication_token)
+        if stored_anonymous_user?
+          user = stored_anonymous_sign_up_from_facebook(facebook_user)
+        else
+          user = anonymous_sign_up_from_facebook(facebook_user)
+        end
         if user.errors.blank?
           respond_with_json user
         else
           respond_with_errors user.errors
-        end
+        end          
       end
+    end
+    
+    def stored_anonymous_sign_up_from_facebook(facebook_user)
+      user = current_user
+      user.assign_attributes({
+        email: facebook_user["email"], 
+        first_name: facebook_user["first_name"], 
+        last_name: facebook_user["last_name"] 
+      })
+      if user.valid?
+        user.assign_attributes(anonymous_id: nil)
+        user.save()          
+      end
+      user    
+    end
+    
+    def anonymous_sign_up_from_facebook(facebook_user)
+      password = Devise.friendly_token.first(8)
+      authentication_token = Devise.friendly_token
+      user = User.create(
+        email: facebook_user["email"], 
+        first_name: facebook_user["first_name"], 
+        last_name: facebook_user["last_name"], 
+        password: password, 
+        password_confirmation: password, 
+        authentication_token: authentication_token)
+       user      
     end
 
 end

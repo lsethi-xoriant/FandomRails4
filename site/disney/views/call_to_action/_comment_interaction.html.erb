@@ -17,20 +17,20 @@
     </div> 
   </div>
 
-  <div class="row collapse comment-interaction__emoticon-list" id="emoticons-panel">
-    <div class="comment-interaction__emoticon-list_padding">
-      <span ng-click="addEmoticonToComment(emoticon_code, interaction_info.interaction.resource.comment_info)" style="font-size: 28px; padding: 5px;" ng-repeat="emoticon_code in aux.emoticons" ng-bind-html="fromCodeToHtml(emoticon_code) | unsafe"></span>
-    </div>
-  </div>
-
-  <div ng-repeat="comment in interaction_info.interaction.resource.comment_info.comments">
-    <div class="row comment-interaction__comment-row" ng-class="{'comment_evidence': (comment.evidence), 'comment-interaction__comment-even': ($index % 2 == 0), 'comment-interaction__comment-odd': ($index % 2 == 1)}">
+  <!-- COMMENTS -->
+  <div ng-repeat="comment in getComments(calltoaction_info)">
+    <div class="row comment-interaction__comment-row" ng-class="{'comment_evidence': (comment.evidence), 'comment-interaction__comment-even': !isOdd($index), 'comment-interaction__comment-odd': isOdd($index)}">
       <div class="col-xs-12">
         <img ng-src="{{comment.user.avatar}}" class="comment-interaction__avatar">
         <p class="comment-interaction__text-p">
           <span class="comment-interaction__cover__name">{{comment.user.name}}</span><br>
           <span class="comment-interaction__cover__text">{{comment.text}}</span><br>
-          <!--<span class="comment-interaction__date">{{comment.updated_at}}</span>-->
+        </p>
+      </div>
+      <!-- COMMENT LIKE INTERACTION -->
+      <div class="col-xs-12 text-right">
+        <p class="comment-like-interaction__text-p" ng-class="{'active': isCommentLikePressed(comment.id)}" ng-if="calltoaction_info.commentlike_interaction_info">
+          <span class="fa fa-thumbs-up comment-like-interaction-thumbs-up" ng-click="updateAnswer(calltoaction_info, calltoaction_info.commentlike_interaction_info, comment.id, interaction_info.interaction.when_show_interaction)"></span> {{comment.like_counter || 0}}
         </p>
       </div>
     </div>

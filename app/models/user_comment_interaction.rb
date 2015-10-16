@@ -1,5 +1,5 @@
 class UserCommentInteraction < ActiveRecord::Base
-  attr_accessible :text, :approved, :user_id, :comment_id, :aux
+  attr_accessible :text, :approved, :user_id, :comment_id, :like_counter, :aux
   
   scope :approved, -> { where(approved: true) }
 

@@ -80,6 +80,7 @@ module CommentHelper
     {
       "id" => comment.id,
       "text" => comment.text,
+      "like_counter" => comment.like_counter,
       "updated_at" => comment.updated_at.strftime("%Y/%m/%d %H:%M:%S"),
       "evidence" => evidence,
       "user" => {
