@@ -58,7 +58,7 @@ module NoticeHelper
   end
 
   def get_notice_attributes(notice)
-    attributes = notice.attributes
+    attributes = notice.attributes.symbolize_keys
     if notice.aux # structured notice
       if notice.aux["ref_type"] # not custom
         notice_logo = nil
@@ -83,11 +83,9 @@ module NoticeHelper
           notice_link = "/call_to_action/#{cta.slug}"
         end
 
-        attributes.merge!({
-          :notice_logo => notice_logo, 
-          :notice_image => notice_image, 
-          :notice_link => notice_link
-        })
+        attributes[:notice_logo] = notice_logo
+        attributes[:notice_image] = notice_image
+        attributes[:notice_link] = notice_link
       end
     end
     attributes 

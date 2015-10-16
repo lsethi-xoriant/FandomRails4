@@ -41,7 +41,27 @@
           <% notices_list.each do |notice| %>  
             <div class="row" style="border-bottom: 1px solid #eff0f1; padding: 5px 0;">
               <div class="col-xs-12 notices-list">
-              	<%= notice[:notice].html_notice.html_safe %>
+                <% if notice[:notice][:html_notice].nil? %>
+                    <div class="hidden-xs col-sm-2">
+                      <img src="<%= notice[:notice][:notice_logo] %>" class="img-responsive notice__property-icon">
+                    </div>
+                    <% if notice[:notice]["aux"] != 'user_comment_interaction' %>
+                        <div class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                          <img src="<%= notice[:notice][:notice_image] %>" class="img-responsive notice__reward-image">
+                        </div>
+                    <% else %>
+                        <div class="col-xs-4 col-xs-offset-1 col-sm-2 col-sm-offset-0">
+                          <span class="glyphicon glyphicon glyphicon-comment glyphicon-comment--notice"></span>
+                        </div>
+                    <% end %>
+                    <div class="col-xs-6 col-sm-8">
+                      <h5 class="notice__title">
+                        <%= notice[:notice]["aux"]["text"] %>
+                      </h5>
+                    </div>
+                <% else %>
+              	  <%= notice[:notice][:html_notice].html_safe %>
+              	<% end %>
               </div>
             </div>
           <% end %> 
