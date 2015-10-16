@@ -22,13 +22,14 @@ def main
   main_tag_name = config["main_tag_name"]
   other_tags_names = config["other_tags_names"].gsub(" ", "").split(",")
 
-  csv_file_name = "#{main_tag_name}_#{starting_date}_#{ending_date}.csv"
   csv_path = "#{rails_app_dir}/bin/files"
 
   logger = Logger.new("#{rails_app_dir}/log/generate_analytics_csv.log")
   start_time = Time.now
 
   FileUtils::mkdir_p(csv_path)
+
+  csv_file_name = "#{main_tag_name}_#{starting_date}_#{ending_date}.csv"
 
   CSV.open("#{csv_path}/#{csv_file_name}", "wb") do |csv|
 
@@ -79,13 +80,19 @@ def get_user_interactions_values(conn, logger, cta_with_main_tag_ids, tags, inte
 
   logger.info("getting id - resource_type map for interactions belonging to call to actions having \"#{tags.map{|tag| tag["name"]}.join("\",\"")}\" tag(s) and main tag")
 
-  id_interaction_type_array = conn.exec(
-    "SELECT id, resource_type 
-    FROM interactions 
-    WHERE call_to_action_id IN (
-      #{(cta_with_main_tag_ids & call_to_action_with_other_tags_ids).join(",")}
-    )"
-  ).to_a
+  cta_ids = cta_with_main_tag_ids & call_to_action_with_other_tags_ids
+
+  if cta_ids.any?
+    id_interaction_type_array = conn.exec(
+      "SELECT id, resource_type 
+      FROM interactions 
+      WHERE call_to_action_id IN (
+        #{(cta_with_main_tag_ids & call_to_action_with_other_tags_ids).join(",")}
+      )"
+    ).to_a
+  else
+    id_interaction_type_array = {}
+  end
 
   logger.info("getting counter values for every resource_type")
 
