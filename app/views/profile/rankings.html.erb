@@ -24,7 +24,7 @@
       	<% if current_user %>
       		<li class="rewards-flexslider__item rewards-flexslider__item--fod">
   		  		<div class="ranking-element ranking-element--myposition">
-  		  			<p class="ranking-element__position ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
+  		  			<p class="ranking-element__position--myposition text-center"># <%= @property_rank[:my_position] %></p>
   		  			<img src="<%= current_avatar %>" class="ranking-element__avatar" />
   		  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= current_user.username %></p>
   		  			<div class="label label-warning ranking-element__points">+ <%= get_point %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>
@@ -63,7 +63,7 @@
   			  			<% if current_user && winner["winner"].user.email == current_user.email %>
   			  				<li class="rewards-flexslider__item--fod">
   						  		<div class="ranking-element ranking-element--myposition">
-  						  			<p class="ranking-element__position ranking-element__position--myposition text-center"><%= winner["day"] %></p>
+  						  			<p class="ranking-element__position--myposition text-center"><%= winner["day"] %></p>
   						  			<img src="<%= winner["winner"].user.avatar_selected_url  %>" class="ranking-element__avatar" />
   						  			<p class="ranking-element__nickname ranking-element__nickname--myposition"><%= winner["winner"].user.username %></p>
   						  			<div class="label label-warning ranking-element__points">+ <%= winner["winner"].counter %><span class="cta-cover__glyphicon-icon fa fa-star"></span></div>

@@ -275,7 +275,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     errors = [];
 
     if(!angular.equals(extra_fields, {})) {
-      console.log(extra_fields[0]);
       angular.forEach(extra_fields, function(extra_field) {
         if(extra_field['required'] && !$scope.form_data[extra_field['name']]) {
           errors.push(extra_field['label']);
@@ -312,7 +311,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     // <img ng-if="picFile[0].dataUrl != null" ng-src="{{picFile[0].dataUrl}}" class="thumb">
     if (file != null) {
       if(fileReaderSupported() && file.type.indexOf('image') > -1) {
-        console.log(file);
         $timeout(function() {
           var fileReader = new FileReader();
           fileReader.readAsDataURL(file);
@@ -503,8 +501,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     }
     
     loadYTApi();
-    
-    if($scope.aux.kaltura) {
+    if($scope.aux.kaltura && $scope.calltoaction_info != undefined && $scope.calltoaction_info.calltoaction.media_type == "KALTURA") {
       kaltura_api_link = "http://cdnapi.kaltura.com/p/" + $scope.aux.kaltura.partner_id + "/sp/" + $scope.aux.kaltura.partner_id + "00/embedIframeJs/uiconf_id/" + $scope.aux.kaltura.uiconf_id + "/partner_id/" + $scope.aux.kaltura.partner_id;
       var tag = document.createElement('script');
       tag.src = kaltura_api_link;
@@ -851,13 +848,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   };
 
   $scope.getPaginationPagesBefore = function(page, num_pages){
-    console.log(page);
     if(page == 1) {
       return [];
     } else if(page == 2) {
       return [1];
     } else if (page > 3) {
-      console.log([1, "...", page - 2, page - 1]);
       return [1, "...", page - 2, page - 1];
     } else {
       return [page - 2, page - 1];
@@ -1594,33 +1589,36 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   	player = this;
     $scope.KalturaPlayerId = playerId;
-    // Update: http://knowledge.kaltura.com/javascript-api-kaltura-media-players#EnablingtheJavascriptAPI
-	  kWidget.embed({
-  		'targetId': this.playerId,
-  		'wid': '_' + $scope.aux.kaltura.partner_id,
-  		'uiconf_id': $scope.aux.kaltura.uiconf_id,
-  		'entry_id': media_data,
-  		'flashvars':{
-  			'autoPlay': false,
-  			'doubleClick': {
-  				//'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
-  				'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=vast&unviewed_position_start=1&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&iu=/165891808/Disney.it/disneychannel.it/community/" + $scope.calltoaction_info.calltoaction.slug + "&sz=1920x480&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&correlator=" + Date.now + "&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=&vid=" + media_data,
-				'htmlCompanions': 'div-video-mpu:300:250;' 
-			}
-  		},
-  		'params':{
-  			'wmode': 'transparent' 
-  		},
-  		'readyCallback': function( playerId ){
-  			kdp = $("#" + playerId).get(0);
-  			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
-  			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
-  			kdp.addJsListener("preSequenceStart", "onKalturaAdvStart");
-  			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
-  			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
-  			player.playerManager = kdp;
-  		}
-     });
+    
+    this.init = function() {
+	    // Update: http://knowledge.kaltura.com/javascript-api-kaltura-media-players#EnablingtheJavascriptAPI
+		  kWidget.embed({
+	  		'targetId': this.playerId,
+	  		'wid': '_' + $scope.aux.kaltura.partner_id,
+	  		'uiconf_id': $scope.aux.kaltura.uiconf_id,
+	  		'entry_id': media_data,
+	  		'flashvars':{
+	  			'autoPlay': false
+	  			// 'doubleClick': {
+	  				// //'adTagUrl': "http://analytics.disneyinternational.com/ads/tagsv2/video/?sdk=1&hub=Disney.it&site=disneychannel.it&section=community&slug1=" + $scope.calltoaction_info.calltoaction.slug + "&sdk=1&cmsid=13728&vid=" + media_data + "&output=xml_vast2&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug,
+	  				// 'adTagUrl': "http://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&impl=s&output=vast&unviewed_position_start=1&description_url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&iu=/165891808/Disney.it/disneychannel.it/community/" + $scope.calltoaction_info.calltoaction.slug + "&sz=1920x480&url=http://community.disneychannel.it/call_to_action/" + $scope.calltoaction_info.calltoaction.slug + "&correlator=" + Date.now + "&ad_rule=1&cmsid=13728&ciu_szs=320x50,300x250&cust_params=&vid=" + media_data,
+					// 'htmlCompanions': 'div-video-mpu:300:250;' 
+				// }
+	  		},
+	  		'params':{
+	  			'wmode': 'transparent' 
+	  		},
+	  		'readyCallback': function( playerId ){
+	  			kdp = $("#" + playerId).get(0);
+	  			kdp.addJsListener("playerReady", "onKalturaPlayerReady");
+	  			kdp.addJsListener("doPlay", "onKalturaPlayEvent");
+	  			kdp.addJsListener("preSequenceStart", "onKalturaAdvStart");
+	  			kdp.addJsListener("playerUpdatePlayhead", "kalturaCheckInteraction");
+	  			kdp.addJsListener("playerPlayEnd", "onKalturaVideoEnded");
+	  			player.playerManager = kdp;
+	  		}
+	     });
+	};
      
   	this.play = function(){
   		this.playerManager.sendNotification('doPlay');
@@ -1639,7 +1637,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   	if(typeof kWidget === 'undefined'){
   		setTimeout(initKalturaApi, 300);
   	}else{
-		  kalturaApiReady();
+		kalturaApiReady();
   	}
   };
  
@@ -1700,10 +1698,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   
   $window.appendKalturaframe = function(calltoaction_info) {
     if(calltoaction_info.calltoaction.media_type == "KALTURA" && $scope.kaltura_api_ready) {
-      
       player = new kalturaPlayer('main-media-iframe-' + calltoaction_info.calltoaction.id, calltoaction_info.calltoaction.media_data);
+      setTimeout(function(){
+      	player.init();
+      }, 1000);
       calltoaction_info.calltoaction["player"] = player;
-
       $scope.play_event_tracked[calltoaction_info.calltoaction.id] = false;
       $scope.current_user_answer_response_correct[calltoaction_info.calltoaction.id] = false;
 
@@ -1974,7 +1973,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             return;
           }
 
-          console.log(data.current_user);
           if(data.current_user) $scope.current_user = data.current_user;
 
           adjustInteractionWithUserInteraction(calltoaction_id, interaction_id, data.user_interaction);
