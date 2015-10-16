@@ -75,7 +75,7 @@ class ActiveSupport::TestCase
 
   # Loops until all ajax requests have finished
   def wait_for_ajax
-    Timeout.timeout(Capybara.default_wait_time) do
+    Timeout.timeout(10) do
       loop until finished_all_ajax_requests?
     end
   end
@@ -86,7 +86,7 @@ class ActiveSupport::TestCase
 
   # Loops until all AngularJS requests have finished
   def wait_for_angular
-    Timeout.timeout(Capybara.default_wait_time) do
+    Timeout.timeout(10) do
       loop until finished_all_angular_requests?
     end
   end
@@ -105,7 +105,7 @@ class ActiveSupport::TestCase
     admin_login
     visit(build_url_for_capybara("/easyadmin/cta"))
     fill_in "title_filter", :with => title
-    page.find("input[value='APPLICA FILTRO']").click
+    page.first("input[value='APPLICA FILTRO']").click
 
     cta_link = first("a[href^='/call_to_action/']")[:href]
 
@@ -124,7 +124,7 @@ class ActiveSupport::TestCase
   #
   # Returns total points after action
   def get_points_after_answer(points, button_type, text)
-    page.find(button_type, :text => text).click
+    page.first(button_type, :text => text).click
 
     wait_for_angular
 
@@ -137,7 +137,7 @@ class ActiveSupport::TestCase
   def get_user_points_from_single_call_to_action_page
     points = nil
     within("div[ng-if='!isAnonymousUser()']") do
-      points = find("span.cta-cover__winnable-reward__label").text
+      points = first("span.cta-cover__winnable-reward__label").text
     end
     points.gsub("+", "").to_i
   end
@@ -153,13 +153,17 @@ class ActiveSupport::TestCase
   # div_last_class - Last identifying class for div that should contain "Done" label
   # should_be_present - Boolean value to perform presence or absence assertion
   def verify_done_label_presence(div_last_class, should_be_present)
-    within("div[class$='#{div_last_class}']") do 
+    wait_for_angular
+    wait_for_ajax
+    div_selector = "div[class$='#{div_last_class}']"
+    assert_selector(div_selector)
+    within(find(div_selector)) do
       if should_be_present
         assert assert_selector("span[class^='label label-success']"), "Success label is not present"
       else
         assert assert_no_selector("span[class^='label label-success']"), "Success label is present even if it shouldn't be"
       end
-    end    
+    end
   end
 
   def quiz?(resource_type)

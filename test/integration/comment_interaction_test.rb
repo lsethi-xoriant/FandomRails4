@@ -14,7 +14,7 @@ class CommentInteractionTest < ActionController::TestCase
     visit(cta_link)
 
     page.fill_in "text", :with => @comment_text
-    page.find("button[ng-click='submitComment(interaction_info)']").click
+    page.first("button[ng-click='submitComment(interaction_info)']").click
     assert assert_selector("button[class='modal__custom__button-sign-up btn btn-primary']"), "Moderation message did not appear"
 
     visit(build_url_for_capybara("/easyadmin/comments/to_approved"))
@@ -22,14 +22,14 @@ class CommentInteractionTest < ActionController::TestCase
     if page.has_selector?("ul[class='pagination']") # go to last page to find comment in easyadmin
       within("ul.pagination") do
         within all("li").last do
-          find("a").click
+          first("a").click
         end
       end
     end
 
     within("tbody") do
       within all("tr").last do
-        find("button[onclick^='updateComment(true']").click
+        first("button[onclick^='updateComment(true']").click
       end
     end
 
@@ -43,7 +43,7 @@ class CommentInteractionTest < ActionController::TestCase
 
     within("tbody") do
       within first("tr") do
-        find("button[onclick^='updateComment(").click
+        first("button[onclick^='updateComment(").click
       end
     end
 

@@ -16,7 +16,7 @@ class CheckInteractionTest < ActionController::TestCase
     verify_done_label_presence("check-undervideo-interaction__row", false)
 
     within("div.check-interaction__container") do
-      page.find("a[ng-click^='updateAnswer']").click
+      page.first("a[ng-click^='updateAnswer']").click
     end
 
     wait_for_angular

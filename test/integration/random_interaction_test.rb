@@ -16,7 +16,7 @@ class RandomInteractionTest < ActionController::TestCase
 
     for i in 1..10
       within("div[ng-if^='interaction_info.interaction.resource_type ==']") do
-        page.find("a[ng-click^='updateAnswer']").click
+        page.first("a[ng-click^='updateAnswer']").click
       end
       counters[cta_title] = (counters[cta_title] || 0) + 1
       wait_for_angular
@@ -32,7 +32,7 @@ class RandomInteractionTest < ActionController::TestCase
   end
 
   def cta_title
-    find("h1[class^='cta__title']").text
+    first("h1[class^='cta__title']").text
   end
 
 end

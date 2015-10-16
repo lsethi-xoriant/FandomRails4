@@ -24,13 +24,13 @@ class LinkedCallToActionHelperTest < ActiveSupport::TestCase
     assert children_values.include?(@cta_1.id), "Cta #{ @cta_1.id } should be #{ trees.first.value } child"
     assert children_values.include?(@cta_2.id), "Cta #{ @cta_2.id } should be #{ trees.first.value } child"
 
-    assert is_linking?(@starting_cta.id) == true, "Cta #{ @starting_cta.id } is linking"
-    assert is_linking?(@cta_1.id) == false, "Cta #{ @cta_1.id } is not linking"
-    assert is_linking?(@cta_2.id) == false, "Cta #{ @cta_2.id } is not linking"
+    assert is_linking?(@starting_cta.id), "Cta #{ @starting_cta.id } is not linking"
+    assert !is_linking?(@cta_1.id), "Cta #{ @cta_1.id } is linking"
+    assert !is_linking?(@cta_2.id), "Cta #{ @cta_2.id } is linking"
 
-    assert is_linked?(@starting_cta.id) == false, "Cta #{ @starting_cta.id } is not linked by other ctas"
-    assert is_linked?(@cta_1.id) == true, "Cta #{ @cta_1.id } is linked by another cta"
-    assert is_linked?(@cta_2.id) == true, "Cta #{ @cta_2.id } is linked by another cta"
+    assert !is_linked?(@starting_cta.id), "Cta #{ @starting_cta.id } is linked by other ctas"
+    assert is_linked?(@cta_1.id), "Cta #{ @cta_1.id } is linked by another cta"
+    assert is_linked?(@cta_2.id), "Cta #{ @cta_2.id } is linked by another cta"
   end
 
   test "cycles detection" do

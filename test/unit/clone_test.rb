@@ -47,14 +47,14 @@ class CloneTest < ActionController::TestCase
 
     visit(build_url_for_capybara("/easyadmin/cta/clone/#{cta_id}"))
 
-    assert page.find("form")[:action].include?("post"), "Form for linking cta does not have action = post"
+    assert page.first("form")[:action].include?("post"), "Form for linking cta does not have action = post"
 
     within("form") do
       fill_in "cloned_cta_title", :with => "Cloned cta title for testing"
-      assert page.find("input#cloned_cta_name").value == "cloned-cta-title-for-testing", 
-        "Cloned cta name is \"#{page.find("input#cloned_cta_name").text}\" instead of \"cloned-cta-title-for-testing\""
-      assert page.find("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").value == "cloned-cta-title-for-testing-step-1", 
-        "Cloned linked cta name is \"#{page.find("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").text}\" instead of \"cloned-cta-title-for-testing-1\""
+      assert page.first("input#cloned_cta_name").value == "cloned-cta-title-for-testing", 
+        "Cloned cta name is \"#{page.first("input#cloned_cta_name").text}\" instead of \"cloned-cta-title-for-testing\""
+      assert page.first("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").value == "cloned-cta-title-for-testing-step-1", 
+        "Cloned linked cta name is \"#{page.first("input#cloned_cta_che-tipo-di-fan-dei-coldplay-sei-step-1_name").text}\" instead of \"cloned-cta-title-for-testing-1\""
     end
 
   end

@@ -60,17 +60,17 @@ class EasyadminUpdatingCookies < ActionController::TestCase
   def find_and_click_update_cache_button
     Capybara.ignore_hidden_elements = false
     assert_not page.find("div#update-cache-banner")[:class].include?("hidden"), "After cta update, cookie banner is hidden"
-    page.find("button[onclick='updateUpdatedAt()']").click
+    page.first("button[onclick='updateUpdatedAt()']").click
     wait_for_ajax
     reload_page
-    assert page.find("div#update-cache-banner")[:class].include?("hidden"), "After cookie button click, cookie banner is not hidden"
+    assert page.first("div#update-cache-banner")[:class].include?("hidden"), "After cookie button click, cookie banner is not hidden"
     wait_for_ajax
   end
 
   def change_cta_activated_at(new_activation_date_time = nil)
     visit(build_url_for_capybara("/easyadmin/cta"))
     fill_in "title_filter", :with => "Qual è la canzone più romantica della discografia dei Coldplay?"
-    page.find("input[value='APPLICA FILTRO']").click
+    page.first("input[value='APPLICA FILTRO']").click
 
     within("table") do
       first("a[href^='/easyadmin/cta/edit/']").click
@@ -82,7 +82,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
       new_activation_date_time[-1] = ((new_activation_date_time[-1].to_i + 1) % 10).to_s
     end
     fill_in "call_to_action[activation_date_time]", :with => new_activation_date_time
-    page.find("button", :text => "AGGIORNA").click
+    page.first("button", :text => "AGGIORNA").click
     old_activation_date_time
   end
 

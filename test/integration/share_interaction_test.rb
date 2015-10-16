@@ -16,14 +16,11 @@ class ShareInteractionTest < ActionController::TestCase
     visit(cta_link)
 
     # Direct url
-    assert assert_no_selector("div[id$='-direct_url']"), "Direct url share div is present before click"
-    find("button[ng-if$='.direct_url']").click
-    assert assert_selector("div[id$='-direct_url']"), "Direct url share div is not present after click"
-
-    # Email
-    assert assert_no_selector("div[id$='-email']"), "Email share div is present before click"
-    find("button[ng-if$='.email']").click
-    assert assert_selector("div[id$='-email']"), "Email share div is not present after click"
+    assert assert_no_selector("div[id$='-share-modal']"), "Direct url share div is present before click"
+    first("span[class='fa fa-share-alt']").find(:xpath, "..").click
+    wait_for_ajax
+    wait_for_angular
+    assert assert_selector("div[id$='-share-modal']"), "Direct url share div is not present after click"
 
     delete_user_interactions
 

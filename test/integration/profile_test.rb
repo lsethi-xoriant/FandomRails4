@@ -23,33 +23,33 @@ class ProfileTest < ActionController::TestCase
       fill_in "user_password", :with => "shado00"
       fill_in "user_password_confirmation", :with => "shado00"
       check("user_privacy")
-      find("button", :text => "Registrati").click
+      first("button", :text => "Registrati").click
     end
 
     wait_for_ajax
 
-    user_first_name = find("p[class^='properties__right-bar-text']").text
+    user_first_name = first("p[class^='properties__right-bar-text']").text
     assert user_first_name[0..3] == "John", "User name is not \"John D.\", but \"#{user_first_name}\""
 
-    notices_link = find("a[ng-href='/profile/notices']")
+    notices_link = first("a[ng-href='/profile/notices']")
     assert notices_link.text.to_i > 0, "User has no notice after registration"
     notices_link.click
 
     within("div.section-heading") do
-      page_title = find("h3").text
+      page_title = first("h3").text
       assert page_title == "Notifiche", "Page title is \"#{page_title}\" instead of \"Notifiche\""
     end
 
     visit_home
 
-    find("img[ng-if='!isAnonymousUser()']").click
+    first("img[ng-if='!isAnonymousUser()']").click
     profile_url = current_url
     first("a", :text => "Profilo").click
     assert current_url == profile_url, "After secondary menu profile link click, redirected to #{current_url} instead of #{profile_url}"
 
     within("div.profile-header__item--level") do
-      level = find("p.profile-header__item__title").text
-      assert level == "level-2", "Level in profile page should be \"level-2\", but it is \"#{level}\""
+      level = first("p.profile-header__item__title").text
+      assert level == "Livello 2 All", "Level in profile page should be \"Livello 2 All\", but it is \"#{level}\""
     end
 
     # Name editing
@@ -58,14 +58,14 @@ class ProfileTest < ActionController::TestCase
     assert assert_selector("input#user_last_name"), "User last name input is not present"
     fill_in "user_first_name", :with => "Joe"
     fill_in "user_last_name", :with => "Bloggs"
-    find("button", :text => "SALVA").click
+    first("button", :text => "SALVA").click
 
     assert assert_selector("div.alert"), "No alert present after changing user full name"
-    assert find("div.alert")[:class].include?("alert-success"), "No success alert rendered after changing user full name"
+    assert first("div.alert")[:class].include?("alert-success"), "No success alert rendered after changing user full name"
 
     # Rewards -> Levels
 
-    find("a", :text => "Rewards").click
+    first("a", :text => "Rewards").click
     wait_for_angular
     wait_for_ajax
     check_progress_bar_width_for_level("level-1", "== 100")
@@ -74,7 +74,7 @@ class ProfileTest < ActionController::TestCase
     end
 
     visit(build_url_for_capybara("/call_to_action/qual-la-canzone-pi-romantica-della-discografia-dei-coldplay")) # just to take a couple of points
-    page.find("button.like-interaction__cover__info__button").click
+    page.first("button.like-interaction__cover__info__button").click
     wait_for_angular
     go_back
     reload_page
@@ -92,9 +92,9 @@ class ProfileTest < ActionController::TestCase
   end
 
   def check_progress_bar_width_for_level(text, cond)
-    parent_div = find("h4", :text => text).first(:xpath, ".//..")
+    parent_div = first("h4", :text => text).first(:xpath, ".//..")
     within(parent_div) do
-      @perc = find("div.progress-bar")[:style].gsub("width: ", "").gsub("\%\;", "")
+      @perc = first("div.progress-bar")[:style].gsub("width: ", "").gsub("\%\;", "")
     end
     assert eval(@perc + cond), "Progress for #{text} should be #{cond}% instead of #{@perc}%"
   end
