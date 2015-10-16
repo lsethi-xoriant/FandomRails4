@@ -71,7 +71,7 @@ def get_user_interactions_values(conn, logger, cta_with_main_tag_ids, tags, inte
 
   tags.each_with_index do |tag, i|
     if i > 0
-      call_to_action_with_other_tags_ids = call_to_action_with_other_tags_ids && get_cta_ids_with_tag(conn, logger, tag["id"])
+      call_to_action_with_other_tags_ids = call_to_action_with_other_tags_ids & get_cta_ids_with_tag(conn, logger, tag["id"])
     else
       call_to_action_with_other_tags_ids = get_cta_ids_with_tag(conn, logger, tag["id"])
     end
@@ -83,7 +83,7 @@ def get_user_interactions_values(conn, logger, cta_with_main_tag_ids, tags, inte
     "SELECT id, resource_type 
     FROM interactions 
     WHERE call_to_action_id IN (
-      #{(cta_with_main_tag_ids && call_to_action_with_other_tags_ids).join(",")}
+      #{(cta_with_main_tag_ids & call_to_action_with_other_tags_ids).join(",")}
     )"
   ).to_a
 
