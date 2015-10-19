@@ -211,6 +211,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function updateUserWithAvatarSuccess(data) {
     $scope.current_user = data.current_user;
+
+    if($scope.aux.instant_win_info.user) {
+      $scope.aux.instant_win_info.user.first_name = $scope.current_user.first_name;
+      $scope.aux.instant_win_info.user.last_name = $scope.current_user.last_name;
+    }
+
     $("#modal-update-user").modal("hide");
     $("#modal-update-user-pt2").modal("show");
   }
@@ -660,6 +666,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             });
             $("#modal-interaction-instant-win-registration").modal("hide");
             $scope.current_user.registration_fully_completed = true;
+            $scope.current_user.first_name = $scope.form_data.current_user.first_name;
+            $scope.current_user.last_name = $scope.form_data.current_user.last_name;
           }
           $scope.ajax_in_progress = false;
         }).error(function() {

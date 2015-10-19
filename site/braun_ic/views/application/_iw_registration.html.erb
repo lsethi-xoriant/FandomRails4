@@ -45,7 +45,7 @@
                       <div class="form-group" ng-if="field.type == 'textfield'">
                         <label class="col-sm-3 control-label">{{field.label}}<span ng-if="field.required">*</span></label>
                         <div class="col-sm-9">
-                          <input class="form-control" id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="textfield" value="1" ng-model="form_data.current_user[field.name]" ng-readonly="field.readonly">
+                          <input class="form-control" id="extra_fields_age_{{field.name}}" name="extra_fields_{{field.name}}" type="textfield" value="1" ng-model="form_data.current_user[field.name]" ng-readonly="field.readonly || current_user[field.name]">
                         </div>
                       </div>
 
