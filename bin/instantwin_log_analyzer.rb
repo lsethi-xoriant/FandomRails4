@@ -115,7 +115,7 @@ def main
       AND tenant = '#{tenant}'"
     ).first["max"]
 
-    puts "max events timestamp retrieved (#{max_events_timestamp})"
+    puts "#{Time.now} - max events timestamp retrieved (#{max_events_timestamp})"
 
     credits_assigned = exec_query(events_conn, tenant, events_is_tenant_specific, false, 
       "SELECT user_id, COUNT(*) FROM events WHERE 
