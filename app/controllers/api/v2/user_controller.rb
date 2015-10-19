@@ -80,6 +80,7 @@
     def stored_anonymous_sign_up_from_facebook(facebook_user)
       user = current_user
       user.assign_attributes({
+        username: facebook_user["email"], 
         email: facebook_user["email"], 
         first_name: facebook_user["first_name"], 
         last_name: facebook_user["last_name"] 
@@ -95,6 +96,7 @@
       password = Devise.friendly_token.first(8)
       authentication_token = Devise.friendly_token
       user = User.create(
+        username: facebook_user["email"], 
         email: facebook_user["email"], 
         first_name: facebook_user["first_name"], 
         last_name: facebook_user["last_name"], 
