@@ -42,6 +42,16 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
         "tag_menu_item" => "imprese-home"
       }
       render template: "/application/imprese_index"
+    
+    elsif $context_root == "inaugurazione" # italiadalvivo
+      
+      @aux_other_params = {
+        calltoaction_evidence_info: true,
+        "press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
+        "tag_menu_item" => "inaugurazione-home"
+      }
+
+      render template: "/application/italiadalvivo_index"
 
     else
 

@@ -6,7 +6,7 @@ module Fandom
       assets_precompile: ['intesa_expo_application.css', 'intesa_expo_application.js', 'intesa_expo_ie9.css'],
       periodicity_kinds: [PERIOD_KIND_DAILY],
       interactions_for_anonymous: ["share", "play", "download"],
-      allowed_context_roots: ["it", "en", "imprese"],
+      allowed_context_roots: ["it", "en", "imprese", "inaugurazione"], # it and and are expo properties
       default_property: "it",
       free_provider_share: true,
       init_ctas: 3,
