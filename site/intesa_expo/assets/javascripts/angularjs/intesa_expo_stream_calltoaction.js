@@ -58,6 +58,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
   $scope.extraInit = function() {
     $scope.content_ical = new Object();
+
     if($scope.calltoaction_info) {
       if($scope.aux.tag_menu_item) {
         $scope.menu_field = $scope.aux.tag_menu_item;
@@ -81,7 +82,35 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         $scope.menu_field = $scope.aux.tag_menu_item;
       }
     }
+
+    if($scope.aux.context_root == "inaugurazione" && $scope.aux.event_stripe) {
+      eventPreviews = {};
+      $scope.eventPreviewDates = [];
+
+      angular.forEach($scope.aux.event_stripe.contents, function(contentPreview) {
+        interactions = getIcalInteractionsForContentPreview(contentPreview);
+
+        angular.forEach(interactions, function(interactionResource) {
+          _datetime = interactionResource.ical_fields.start_datetime.value
+          date = $scope.formatDate(_datetime);
+          if(!(date in eventPreviews)) {
+            eventPreviews[date] = [];
+          }
+          eventPreviews[date].push([$scope.extractTimeFromDate(_datetime), contentPreview]);
+        });
+
+      });
+
+      angular.forEach(eventPreviews, function(eventPreview, key) {
+        $scope.eventPreviewDates.push([key, eventPreview]);
+      });
+    }
+
   };
+
+  $scope.orderEventPreviewDates = function(eventPreviewDate) {
+    return eventPreviewDate[0];
+  }
 
   $scope.hasPhotoGallery = function(calltoaction) {
     return ($scope.getContentWithPrefixFromExtraFields(calltoaction.extra_fields, "photo_gallery_").length > 0);
@@ -97,6 +126,16 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     });
     return contents;
   };
+
+  function getIcalInteractionsForContentPreview(contentPreview) {
+    icalInteractions = []
+    angular.forEach(contentPreview.interactions, function(contentPreviewInteraction) {
+      if(contentPreviewInteraction.interaction_info.when_show_interaction != "MAI_VISIBILE" && contentPreviewInteraction.interaction_resource.ical_fields) {
+        icalInteractions.push(contentPreviewInteraction.interaction_resource); 
+      }
+    });
+    return icalInteractions;
+  }
 
   function getIcalInteractions(calltoaction_id) {
     interaction_info_list = $scope.getInteractions(calltoaction_id, "download");

@@ -4,7 +4,7 @@ module IntesaExpoHelper
     cta_info && cta_info["calltoaction"]["extra_fields"] && cta_info["calltoaction"]["extra_fields"]["spotlight"]
   end
 
-  def get_intesa_expo_ctas_with_tag(tag_name)
+  def get_intesa_expo_ctas_with_tag(tag_name, params = {})
 
     language_tag = get_tag_from_params($context_root || "it")
 
@@ -12,26 +12,26 @@ module IntesaExpoHelper
     when "$prev-event-live"
       tag_name = "prev-event-live"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
-      params = { 
+      params.merge({ 
         ical_end_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) DESC" 
-      }
+      })
     when "$next-event-live"
       tag_name = "next-event-live"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
-      params = { 
+      params.merge({ 
         ical_start_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC" 
-      }
+      })
     when "event"
       current_time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
       # exclude_cta_ids = CallToAction.active.where("cast(\"extra_fields\"->>'valid_from' AS timestamp) < ?", current_time).map { |cta| cta.id }
-      params = { 
+      params.merge({ 
         ical_start_datetime: current_time,
         order_string: "cast(\"ical_fields\"->'start_datetime'->>'value' AS timestamp) ASC" 
-      }
+      })
     else
-      params = {}
+      # nothing to do
     end
 
     param_tag = get_tag_from_params(tag_name)
