@@ -1,30 +1,31 @@
-<div id="header"><!-- Top Bar -->
-    <div id="isp-header" class="chrome modern mac webkit">
-        <div class="header small-12 ">
-            <div class="row">
-                <div class="small-6 large-5 large-offset-1 columns">
-                    <img alt="Intesa_sanpaolo" class="logo" src="https://unmondopossibile.intesasanpaolo.com/assets/intesa_sanpaolo.png">
-                </div>
-                <div class="large-3 small-4 medium-offset-3 small-offset-2 large-offset-1 columns sito">
-                    <a href="http://www.intesasanpaolo.com/" target="_blank"><span>VAI AL SITO <span class="hide-for-small show-for-ie7">DELLA BANCA</span> &gt;</span></a>
-                </div>
-            </div>
+<div id="header">
+  <!-- Top Bar -->
+  <div id="isp-header" class="chrome modern mac webkit">
+    <div class="header small-12 ">
+      <div class="row">
+        <div class="small-6 large-5 large-offset-1 columns">
+          <img alt="Intesa_sanpaolo" class="logo" src="https://unmondopossibile.intesasanpaolo.com/assets/intesa_sanpaolo.png">
         </div>
-
-        <div class="title-header " style="background-color: #3d6b80;">
-            <a href="https://unmondopossibile.intesasanpaolo.com/">
-                <div class="row">
-                    <div class="small-1 large-offset-1 columns mondo-possibile show-squares">
-                        <img alt="Squares" src="https://unmondopossibile.intesasanpaolo.com/assets/squares.png">
-                    </div>
-                    <div class="small-11 large-5 small-centered columns">
-                        <div class="title">UN MONDO POSSIBILE</div>
-                    </div>
-                </div>
-            </a>
+        <div class="large-3 small-4 medium-offset-3 small-offset-2 large-offset-1 columns sito">
+          <a href="http://www.intesasanpaolo.com/" target="_blank"><span>VAI AL SITO <span class="hide-for-small show-for-ie7">DELLA BANCA</span> &gt;</span></a>
         </div>
+      </div>
     </div>
-    <!-- End Top Bar -->
+
+    <div class="title-header " style="background-color: #3d6b80;">
+      <a href="https://unmondopossibile.intesasanpaolo.com/">
+        <div class="row">
+          <div class="small-1 large-offset-1 columns mondo-possibile show-squares">
+              <img alt="Squares" src="https://unmondopossibile.intesasanpaolo.com/assets/squares.png">
+          </div>
+          <div class="small-11 large-5 small-centered columns">
+              <div class="title">UN MONDO POSSIBILE</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <!-- End Top Bar -->
 </div>
 
 <div class="container hidden-xs">
@@ -86,12 +87,12 @@
 	            <p class="navbar__item-text"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></p>
 	          </a>
 	        </li>
-          <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese'">
+          <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese' && aux.language != 'inaugurazione'">
             <a href="/it">
               <p class="navbar__item-text">it</p>
             </a>
           </li>
-          <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese'">
+          <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese' && aux.language != 'inaugurazione'">
             <a href="/en">
               <p class="navbar__item-text">en</p>
             </a>
@@ -138,12 +139,12 @@
             <p class="navbar__item-text"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></p>
           </a>
         </li>
-        <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language">
+        <li ng-class="{'active': ('it' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese' && aux.language != 'inaugurazione'">
           <a href="/it">
             <p class="navbar__item-text">it</p>
           </a>
         </li>
-        <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language">
+        <li ng-class="{'active': ('en' == aux.language)}" class="navbar__language" ng-if="aux.language != 'imprese' && aux.language != 'inaugurazione'">
           <a href="/en">
             <p class="navbar__item-text">en</p>
           </a>
