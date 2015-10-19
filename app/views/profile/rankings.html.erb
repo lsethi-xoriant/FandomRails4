@@ -14,7 +14,9 @@
         	<h3>
         		<span class="section-heading__marker"><i class="fa fa-users"></i></span>
         		Classifica generale
-        		<a href="/ranking/show/<%= @property_rank[:ranking].id %>" class="section-heading__see-all">Vedi tutti</a>
+        		<%= light_link_to("/ranking/show/#{@property_rank[:ranking].id}", "class" => "section-heading__see-all") do %>
+        			Vedi tutti
+				<% end %>
         		<p class="relateds__description">La classifica viene aggiornata ogni ora</p>
         	</h3>
       </div>

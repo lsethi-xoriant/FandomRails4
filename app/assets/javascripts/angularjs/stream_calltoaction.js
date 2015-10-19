@@ -2171,7 +2171,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
         $timeout(function() { 
           interaction_info.feedback = false;
-          interaction_info.interaction.overvideo_active = false;
+          removeOvervideoInteraction(getPlayer(calltoaction_id), calltoaction_id, interaction_info);
           $scope.answer_in_progress = false;
         }, 1500);                
 
@@ -2492,6 +2492,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             enable_percentage_animation = getOvervideoInteractionAtSeconds(calltoaction_id, (youtube_player_current_time + OVERVIDEO_COUNTDOWN_ANIMATION_TIME + 1));            
 
             preinteraction_animation = !(calltoaction_info.calltoaction.extra_fields.preinteraction_animation && calltoaction_info.calltoaction.extra_fields.preinteraction_animation.value == false);
+            
             if(enable_percentage_animation != null && !calltoaction_info.percentage_animation && preinteraction_animation) {
               calltoaction_info.percentage_animation = true;
               adjustPercentageAnimation(OVERVIDEO_COUNTDOWN_ANIMATION_TIME, 0, calltoaction_info);
