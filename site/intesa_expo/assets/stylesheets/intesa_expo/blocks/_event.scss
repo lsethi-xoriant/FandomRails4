@@ -1,0 +1,32 @@
+.event-container, .event-miniformat-border {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.event-miniformat-border {
+  height: 4px;
+  width: 100%;
+  background-color: $blue;
+}
+
+.event-panel {
+  margin-bottom: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.event-panel-body {
+  padding: 0;
+}
+
+.event-time {
+  padding: 10px 15px 5px 15px;
+  font-weight: bold;
+}
+
+.event-title {
+  padding: 0 15px 10px 15px;
+  white-space: nowrap;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+}

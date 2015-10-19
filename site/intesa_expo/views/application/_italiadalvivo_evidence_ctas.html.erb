@@ -57,16 +57,14 @@
       </div>
       <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)">
         <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
-          <div class="col-xs-2">
-          <i class="fa fa-file-text cta__related__icon--press-release"></i>
-        </div>
-        <div class="col-xs-9">
-          <p class="cta__related__title--press-release">{{content.title| cut:true:45}}</p>
-          <p class="cta__related__date--press-release">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}} - {{extractTimeFromDate(content.extra_fields.publishing_date.value)}}</p>
-        </div>
-        <div class="col-xs-1">
-          <i class="fa fa-angle-right cta__related__icon--arrow"></i>
-        </div>
+          <div class="col-xs-12">
+            <i class="fa fa-file-text cta__related__icon--press-release"></i>
+            <div class="cta__related__title--press-release_info-container">
+              <p class="cta__related__title--press-release">{{content.title| cut:true:45}}</p>
+              <p class="cta__related__date--press-release">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}} - {{extractTimeFromDate(content.extra_fields.publishing_date.value)}}</p>
+            </div>
+            <i class="fa fa-angle-right cta__related__icon--arrow"></i>
+          </div>
         </a>
       </div>
     </div>
