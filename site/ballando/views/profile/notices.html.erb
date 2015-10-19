@@ -2,43 +2,43 @@
   
   <div class="row">
     <div class="col-md-12">
-          <%= render partial: "profile/profile_header" %>
+      <%= render partial: "profile/profile_header" %>
           
-          <div class="hidden-xs">
+      <div class="hidden-xs">
           
-          <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
-          <div class="row">
-            <div class="col-md-12">
-              <% if @notices_list.blank? %>
-              	<h3 class="text-center">Non hai nessuna notifica al momento</h3>
+        <%= render partial: "profile/profile_navbar", locals: { page: "notices" } %>
+        <div class="row">
+          <div class="col-md-12">
+            <% if @notices_list.blank? %>
+            	<h3 class="text-center">Non hai nessuna notifica al momento</h3>
+            <% end %>
+            <% @notices_list.each do |notice| %>
+            <h5><%= notice[:date] %></h5>
+            <ul class="list-group">
+            	<% [notice[:notice]].each do |n| %>
+              <li id="<%= n[:id] %>" class="list-group-item <%= "list-group-item-warning" if !n[:read] %>">
+                <div class="row">
+                	<div class="col-sm-11">
+                		<%= n[:html_notice].html_safe if n[:html_notice] %>
+                	</div>
+                	<div class="col-sm-1">
+                			<% if n[:read] %>
+                				<i class="fa fa-circle" style="float: right;"></i>
+                			<% else %>
+                			<a href="javascript:void(0)" onclick="mark_as_read(<%= n[:id] %>);" style="float: right; color: black;">
+                				<i class="fa fa-circle-o"></i>
+                			</a>
+                			<% end %>
+                	</div>
+                </div>
+              </li>
               <% end %>
-              <% @notices_list.each do |x| %>
-              <h5><%= x[:date] %></h5>
-              <ul class="list-group">
-              	<% [x[:notice]].each do |n| %>
-                <li id="<%= n.id %>" class="list-group-item <%= "list-group-item-warning" if !n.read %>">
-                  <div class="row">
-                  	<div class="col-sm-11">
-                  		<%= n.html_notice.html_safe %>
-                  	</div>
-                  	<div class="col-sm-1">
-                  			<% if n.read %>
-                  				<i class="fa fa-circle" style="float: right;"></i>
-                  			<% else %>
-                  			<a href="javascript:void(0)" onclick="mark_as_read(<%= n.id %>);" style="float: right; color: black;">
-                  				<i class="fa fa-circle-o"></i>
-                  			</a>
-                  			<% end %>
-                  	</div>
-                  </div>
-                </li>
-                <% end %>
-              </ul>
-              <% end %>
-            </div>
+            </ul>
+            <% end %>
           </div>
-          
-          </div>
+        </div>
+        
+      </div>
             
     </div>
   </div>
