@@ -119,7 +119,7 @@
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       
       result = {
-        'call_to_action_info_list' => calltoaction_info_list,
+        'call_to_action_info_list' => adjust_ctas_descriptions(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more
       }
       
