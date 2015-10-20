@@ -110,8 +110,9 @@ module CallToActionHelper
     end
    
     if tag || gallery_info
+      
       if gallery_info
-        cache_key = "gallery_#{gallery_info["gallery_calltoaction_id"]}"
+        cache_key = "gallery_#{tag.name}_#{gallery_info["gallery_calltoaction_id"]}"
         if gallery_info["gallery_user_id"].present?
           cache_key = "#{cache_key}_user_#{gallery_info["gallery_user_id"]}"
         end
@@ -200,30 +201,45 @@ module CallToActionHelper
     end
   end
 
+  # Returns a list of call to actions filtered by tag, or belonging to some gallery
+  # 
+  # tag        - the tag to filter on; can be null
+  # in_gallery - either null, or a gallery cta id, or the string "all", meaning to get all ctas of all galleries 
   def get_ctas(tag, in_gallery = nil)
     if in_gallery
-      if in_gallery != "all"
-        gallery_calltoaction = CallToAction.find(in_gallery)
-        gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
-        calltoactions = CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL AND call_to_actions.approved", gallery_tag.id).references(:call_to_action_tags)
-      else
-        calltoactions = CallToAction.active.where("call_to_actions.user_id IS NOT NULL AND call_to_actions.approved")
-      end
+      return get_ctas_in_gallery(tag, in_gallery)
     else
+      return get_ctas_not_in_gallery(tag)
+    end
+  end
+  
+  def get_ctas_in_gallery(tag, gallery_cta_id_or_all)
+    if gallery_cta_id_or_all == "all"
       if tag
-        calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id).references(:call_to_action_tags, :rewards, :interactions)
+        return CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL AND call_to_actions.approved", tag.id).references(:call_to_action_tags)
       else
-        calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL").references(:rewards, :interactions)
+        return CallToAction.active.where("call_to_actions.user_id IS NOT NULL AND call_to_actions.approved")
       end
-      ugc_tag = get_tag_from_params("ugc")
-      if ugc_tag
-        ugc_calltoactions = CallToActionTag.select(:call_to_action_id).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
-        if ugc_calltoactions.any?
-          calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions)
-        end
+    else # single gallery
+      gallery_calltoaction = CallToAction.find(gallery_cta_id_or_all)
+      gallery_tag = get_tag_with_tag_about_call_to_action(gallery_calltoaction, "gallery").first
+      return CallToAction.active.includes(:call_to_action_tags).where("call_to_action_tags.tag_id = ? AND call_to_actions.user_id IS NOT NULL AND call_to_actions.approved", gallery_tag.id).references(:call_to_action_tags)
+    end
+  end
+
+  def get_ctas_not_in_gallery(tag)
+    if tag
+      calltoactions = CallToAction.active.includes(:call_to_action_tags, :rewards, :interactions).where("call_to_action_tags.tag_id = ? AND rewards.id IS NULL", tag.id).references(:call_to_action_tags, :rewards, :interactions)
+    else
+      calltoactions = CallToAction.active.includes(:rewards, :interactions).where("rewards.id IS NULL").references(:rewards, :interactions)
+    end
+    ugc_tag = get_tag_from_params("ugc")
+    if ugc_tag
+      ugc_calltoactions = CallToActionTag.select(:call_to_action_id).where("call_to_action_tags.tag_id = ?", ugc_tag.id)
+      if ugc_calltoactions.any?
+        calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions)
       end
     end
-    calltoactions
   end
 
   def cta_url(cta)

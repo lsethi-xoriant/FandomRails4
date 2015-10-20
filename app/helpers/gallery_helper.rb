@@ -26,8 +26,14 @@ module GalleryHelper
   end
   
   def get_gallery_ctas_carousel
-    cache_medium(get_carousel_gallery_cache_key) do
-      gallery_tag_ids = get_tags_with_tag("gallery").map{ |t| t.id}
+    if $site.galleries_split_by_property
+      property = get_property()
+    else
+      property = nil
+    end
+    cache_medium(get_carousel_gallery_cache_key(property.nil? ? nil : property.name)) do
+      gallery_tag_ids = get_gallery_ctas_carousel_tag_ids(property)
+      
       params = {
         conditions: { 
           without_user_cta: true 
@@ -36,6 +42,15 @@ module GalleryHelper
       
       galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
       construct_cta_gallery_info(galleries, gallery_tag_ids)
+    end
+  end
+  
+  def get_gallery_ctas_carousel_tag_ids(property)
+    if property
+      tag_ids = Tag.select(:id).where(name: ["gallery", property.name]).map { |row| row.id }
+      return get_tags_with_tags_in_and(tag_ids).map{ |t| t.id}
+    else
+      return get_tags_with_tag("gallery").map{ |t| t.id}
     end
   end
 

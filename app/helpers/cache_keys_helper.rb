@@ -383,8 +383,8 @@ module CacheKeysHelper
     "ctas_gallery"
   end
   
-  def get_carousel_gallery_cache_key
-    "carousel_galleries"
+  def get_carousel_gallery_cache_key(property_name)
+    "carousel_galleries_#{property_name}"
   end
   
   def get_index_gallery_ctas_cache_key

@@ -63,6 +63,7 @@ module ConfigUtils
     attribute :main_reward_name, :default => "point"
     attribute :instantwin_ticket_name, :default => nil
     attribute :is_tag_filter_exclusive, :default => false
+    attribute :galleries_split_by_property, :default => true
 
     def unbranded?
       self.id == 'fandom'

@@ -24,11 +24,11 @@ class GalleryController < ApplicationController
     end
   end
 
-  def init_galleries_user_cta_count(gallery_calltoaction_id, user_id = nil)
+  def init_galleries_user_cta_count(gallery_calltoaction_id, property_name, user_id = nil)
     if user_id
-      get_ctas(nil, gallery_calltoaction_id).where("user_id = ?", user_id).count
+      get_ctas(property_name, gallery_calltoaction_id).where("user_id = ?", user_id).count
     else
-      get_ctas(nil, gallery_calltoaction_id).count
+      get_ctas(property_name, gallery_calltoaction_id).count
     end
   end
 
@@ -45,10 +45,20 @@ class GalleryController < ApplicationController
     end
 
     gallery_calltoaction_id = "all"
-    galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, _params[:user])
+    
+    if $site.galleries_split_by_property
+      property = get_property()
+      property_name = property.name
+      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, property, _params[:user])
+    else
+      property_name = nil
+      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, nil, _params[:user])
+    end
+
 
     _params["page_elements"] = ["like", "comment", "share"]
-    @calltoaction_info_list, @has_more = get_ctas_for_stream(nil, _params, $site.init_ctas)
+    
+    @calltoaction_info_list, @has_more = get_ctas_for_stream(property_name, _params, $site.init_ctas)
 
     @aux_other_params = { 
       "gallery_calltoaction" => true, 
