@@ -73,8 +73,9 @@ class Api::V2::RewardController < Api::V2::BaseController
   def buy_reward_attempt
     response = {}
     reward = Reward.find(params[:reward_id])
-    
-    if user_has_currency_for_reward(reward)
+    if anonymous_user?
+      raise Exception.new("Anonymous user cannot buy reward")
+    elsif user_has_currency_for_reward(reward)
       buy_reward(current_user, reward)
       
       response["unlocked"] = true 
