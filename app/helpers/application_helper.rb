@@ -1031,7 +1031,7 @@ module ApplicationHelper
         end
 
         time_now = Time.now.utc
-        iw_active = iw_cta.valid_from >= time_now && time_now <= iw_cta.valid_to  
+        iw_active = iw_cta.valid_from <= time_now && time_now <= iw_cta.valid_to  
 
         iw_info = {
           "user" => user_for_registation_form(),
