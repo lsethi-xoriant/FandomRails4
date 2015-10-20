@@ -53,7 +53,14 @@
       end
       
       params["page_elements"] = nil
-      calltoaction_info_list, has_more = get_ctas_for_stream(get_property().name, params, $site.init_ctas)
+      
+      if $site.galleries_split_by_property
+        property_name = get_property().name
+      else
+        property_name = nil
+      end
+
+      calltoaction_info_list, has_more = get_ctas_for_stream(property_name, params, $site.init_ctas)
       
       result = {
         'call_to_action_info_list' => calltoaction_info_list,

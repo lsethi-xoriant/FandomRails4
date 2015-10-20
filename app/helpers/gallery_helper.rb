@@ -109,6 +109,7 @@ module GalleryHelper
       galleries.each do |gallery|
         gallery_carousel << cta_to_content_preview(gallery)
       end
+      gallery_carousel
     end
   end
   
