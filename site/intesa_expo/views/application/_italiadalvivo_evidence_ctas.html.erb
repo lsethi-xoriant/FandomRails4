@@ -1,77 +1,68 @@
-<div class="container">
-  <div class="row main-row__evidence">
+<div class="row main-row__evidence">
 
-    <!-- SLIDER START -->
-    <div class="col-md-9 ctas__flexslider__container" style="padding-left: 0; padding-right: 0;" ng-if="aux.calltoaction_evidence_info">
-      <div class="flexslider ctas__flexslider">
-        <ul class="slides">
-          <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-            <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
-              <div class="row">
+  <!-- SLIDER -->
+  <div class="col-md-9 ctas__flexslider__container" style="padding-left: 0; padding-right: 0;" ng-if="aux.calltoaction_evidence_info">
+    <div class="flexslider ctas__flexslider ctas__flexslider--italiadalvivo">
+      <ul class="slides">
+        <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
+          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
+            <div class="row">
 
-                <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
-                  <img ng-src="{{calltoaction.thumb_medium_url}}">
-                </div>
+              <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
+                <img ng-src="{{calltoaction.thumb_medium_url}}">
+              </div>
 
-                <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
-                  <img ng-src="{{calltoaction.thumb_wide_url}}">
-                </div>
+              <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
+                <img ng-src="{{calltoaction.thumb_wide_url}}">
+              </div>
 
-                <div class="col-xs-12 ctas__info">
-                  <div class="ctas__info--bottom">
-                    <p class="ctas__flexslider__title hidden-xs" ng-bind-html="calltoaction.title"></p>
-                    <p class="ctas__flexslider__title visible-xs" ng-if="calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.extra_fields.title_mobile"></p>
-                    <p class="ctas__flexslider__title visible-xs" ng-if="!calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.title"></p>
+              <div class="col-xs-12 ctas__info">
+                <p class="ctas__flexslider__title hidden-xs" ng-bind-html="calltoaction.title"></p>
+                <p class="ctas__flexslider__title visible-xs" ng-if="calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.extra_fields.title_mobile"></p>
+                <p class="ctas__flexslider__title visible-xs" ng-if="!calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.title"></p>
 
-                    <div ng-if="getFirstIcalInteractionForContent(calltoaction)">
-                      <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[3]}}</span></p>
-                      <p class="ctas__flexslider__description hidden-xs" ng-if="getFirstIcalInteractionForContent(calltoaction)[2]"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[2]}}</span></p>
-                      <p class="ctas__flexslider__description hidden-xs" ng-if="calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="ctas__flexslider__extra-field">{{calltoaction.extra_fields.guests}}</span></p>
-                    </div>
-
-                  </div>
+                <div ng-if="infoEvent = getFirstIcalInteractionForContent(calltoaction)">
+                  <p class="ctas__flexslider__subtitle">{{infoEvent[4]}} - ore {{infoEvent[2]}}</p>
+                  <p class="ctas__flexslider__location" ng-bind-html="infoEvent[5]"></p>
                 </div>
               </div>
-            </a>
-          </li>
-        </ul>
-      </div>
+            </div>
+          </a>
+        </li>
+      </ul>
     </div>
-    <!-- SLIDER END -->
+  </div>
 
-    <div class="col-md-3 col-sm-6 cta__evidence-banner">
-      <div class="cta__evidence-banner__img--inaugurazione" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'">
-        <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}"> 
-      </div> 
-      <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
-        <div class="cta__evidence-banner__img--inaugurazione">
-          <img ng-src="{{aux.assets['banner_img_1_' + aux.language].url}}">  
+  <!-- BANNER -->
+  <div class="col-md-3 col-sm-6 cta__evidence-banner">
+    <div class="cta__evidence-banner__img--inaugurazione" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
+    </div> 
+    <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
+      <div class="cta__evidence-banner__img--inaugurazione" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
+      </div>
+    </a>
+  </div>
+
+  <!-- OFFICE AREA -->
+  <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione">
+    <div class="cta__evidence__press-widget__title-container">
+      <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
+      <div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-inaugurazione">Leggi</a></div>
+    </div>
+    <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)" ng-class="{'cta__evidence__press-widget__element--border': !$last}">
+      <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
+        <div class="col-xs-12">
+          <i class="fa fa-file-text cta__related__icon--press-release"></i>
+          <div class="cta__related__title--press-release_info-container">
+            <p class="cta__related__title--press-release">{{content.title| cut:true:45}}</p>
+            <p class="cta__related__date--press-release">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}} - {{extractTimeFromDate(content.extra_fields.publishing_date.value)}}</p>
+          </div>
+          <i class="fa fa-angle-right cta__related__icon--arrow"></i>
         </div>
       </a>
     </div>
-
-    <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione">
-      <div class="cta__evidence__press-widget__title-container">
-        <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
-        <div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-inaugurazione">Leggi</a></div>
-      </div>
-      <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)">
-        <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
-          <div class="col-xs-2">
-          <i class="fa fa-file-text cta__related__icon--press-release"></i>
-        </div>
-        <div class="col-xs-9">
-          <p class="cta__related__title--press-release">{{content.title| cut:true:45}}</p>
-          <p class="cta__related__date--press-release">{{formatDate(content.extra_fields.publishing_date.value, aux.language)}} - {{extractTimeFromDate(content.extra_fields.publishing_date.value)}}</p>
-        </div>
-        <div class="col-xs-1">
-          <i class="fa fa-angle-right cta__related__icon--arrow"></i>
-        </div>
-        </a>
-      </div>
-    </div>
-    
   </div>
+  
 </div>
 
 <script type="text/javascript">

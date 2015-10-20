@@ -12,7 +12,11 @@ class Sites::Disney::CallToActionController < CallToActionController
   def append_calltoaction
     tag_name = get_disney_property()
     params[:page_elements] = ["like", "comment", "share"]
-    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, 6)
+    if params[:other_params] && params[:other_params][:gallery]
+      calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, 6)
+    else
+      calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, 6)
+    end
     response = {
       calltoaction_info_list: calltoaction_info_list,
       has_more: has_more

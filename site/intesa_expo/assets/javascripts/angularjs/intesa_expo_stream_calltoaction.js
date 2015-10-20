@@ -58,6 +58,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
 
   $scope.extraInit = function() {
     $scope.content_ical = new Object();
+
     if($scope.calltoaction_info) {
       if($scope.aux.tag_menu_item) {
         $scope.menu_field = $scope.aux.tag_menu_item;
@@ -65,23 +66,73 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         $scope.menu_field = "";
       }
 
-      if($scope.calltoaction_info.calltoaction.extra_fields) {
-        contents = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "content_");
-        if(contents.length > 0) {
-          $scope.calltoaction_info.calltoaction.contents = contents;
-        }
-        gallery = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "photo_gallery_");
-        if(gallery.length > 0) {
-          $scope.calltoaction_info.calltoaction.gallery = gallery;
-        }
-      }
+      adjustGalleryCtaInfo($scope.calltoaction_info);
       
     } else {
       if($scope.aux.tag_menu_item) {
         $scope.menu_field = $scope.aux.tag_menu_item;
       }
     }
+
+    if($scope.aux.context_root == "inaugurazione" && $scope.aux.event_stripe) {
+      initEventContainer();
+
+      if($scope.aux.italiadalvivo_branch_cta_info) {
+        adjustGalleryCtaInfo($scope.aux.italiadalvivo_branch_cta_info);
+      }
+    }
+
   };
+
+  function initEventContainer() {
+    eventPreviews = {};
+    $scope.eventPreviewDates = [];
+    $scope.fullDates = {};
+
+    // build an hash with date as key and time with content preview as value
+    angular.forEach($scope.aux.event_stripe.contents, function(contentPreview) {
+      interactions = getIcalInteractionsForContentPreview(contentPreview);
+
+      angular.forEach(interactions, function(interactionResource) {
+        _datetime = interactionResource.ical_fields.start_datetime.value
+        var date = $scope.formatDate(_datetime);
+        if(!(date in eventPreviews)) {
+          eventPreviews[date] = [];
+        }
+
+        $scope.fullDates[date] = $scope.formatFullDateWithoutYear(_datetime);
+        eventPreviews[date].push([$scope.extractTimeFromDate(_datetime), contentPreview]);
+      });
+    });
+
+    // build an array from previous hash to use with ng-repeat (ordering by first value). Each element
+    // has date, date with week day name and content preview.
+    angular.forEach(eventPreviews, function(eventPreview, key) {
+      fullDate = $scope.fullDates[key];
+      $scope.eventPreviewDates.push([key, fullDate, eventPreview]);
+    });
+  }
+
+  $scope.getItaliaDalVivoBranchCtaInfo = function() {
+    return [$scope.aux.italiadalvivo_branch_cta_info];
+  };
+
+  function adjustGalleryCtaInfo(calltoaction_info) {
+    if(calltoaction_info.calltoaction.extra_fields) {
+      contents = $scope.getContentWithPrefixFromExtraFields(calltoaction_info.calltoaction.extra_fields, "content_");
+      if(contents.length > 0) {
+        calltoaction_info.calltoaction.contents = contents;
+      }
+      gallery = $scope.getContentWithPrefixFromExtraFields(calltoaction_info.calltoaction.extra_fields, "photo_gallery_");
+      if(gallery.length > 0) {
+        calltoaction_info.calltoaction.gallery = gallery;
+      }
+    }
+  }
+
+  $scope.orderEventPreviewDates = function(eventPreviewDate) {
+    return eventPreviewDate[0];
+  }
 
   $scope.hasPhotoGallery = function(calltoaction) {
     return ($scope.getContentWithPrefixFromExtraFields(calltoaction.extra_fields, "photo_gallery_").length > 0);
@@ -98,6 +149,16 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     return contents;
   };
 
+  function getIcalInteractionsForContentPreview(contentPreview) {
+    icalInteractions = []
+    angular.forEach(contentPreview.interactions, function(contentPreviewInteraction) {
+      if(contentPreviewInteraction.interaction_info.when_show_interaction != "MAI_VISIBILE" && contentPreviewInteraction.interaction_resource.ical_fields) {
+        icalInteractions.push(contentPreviewInteraction.interaction_resource); 
+      }
+    });
+    return icalInteractions;
+  }
+
   function getIcalInteractions(calltoaction_id) {
     interaction_info_list = $scope.getInteractions(calltoaction_id, "download");
     ical_info_list = [];
@@ -111,12 +172,14 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     });
     return ical_info_list;
   }
+
   //ng-if="ical.dates[$index] != ical.dates_to[$index] || !(ical.times[$index] == '00:00' && ical.times_to[$index] == '23:59')"
   $scope.getFirstIcalInteractionForContent = function(content) {
     if(angular.isUndefined(content.content_ical)) {
-      min_date = null;
-      min_date_to = null;
+
+      min_date = min_date_to = _location = null;
       today_date = new Date();
+
       angular.forEach(content.interactions, function(value) {
         if(value.interaction_info.resource_type.toLowerCase() == "download" && value.interaction_resource.ical_fields) {
           ical_fields = value.interaction_resource.ical_fields;
@@ -125,26 +188,35 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
           if(start_datetime) {
             date = new Date(start_datetime["value"]);
             if(!min_date || (date < min_date && date > today_date)) {
+              _location = value.interaction_resource.ical_fields.location.split("|")[0];
               min_date = date;
               min_date_to = new Date(end_datetime["value"]);
             }
           }
         }
       });
+
       if(min_date) {
         month = $scope.computeMonthName(min_date.getMonth(), $scope.aux.language).substring(0, 3);
         day = ("0" + min_date.getDate()).slice(-2);
+        
         _datetime = $scope.formatDate(min_date, $scope.aux.language);
         _datetime_to = $scope.formatDate(min_date_to, $scope.aux.language);
+        
         time = $scope.extractTimeFromDate(min_date);
         time_to = $scope.extractTimeFromDate(min_date_to);
+        
+        fulldate = $scope.formatFullDate(min_date, $scope.aux.language);
+
         if(_datetime == _datetime_to && time == '00:00' && time_to == '23:59') {
           time = null;
         }
-        content.content_ical = [month, day, time, _datetime];
+
+        content.content_ical = [month, day, time, _datetime, fulldate, _location];
       } else {
         content.content_ical = min_date;
       }
+
     }
     return content.content_ical;
   };
@@ -321,9 +393,11 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
           // Google analytics.
           if(data.ga) {
             update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-            angular.forEach(data.outcome.attributes.reward_name_to_counter, function(value, name) {
-              update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-            });
+            if(data.new_outcome) {
+              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
+                update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+              });
+            }
           }
 
           window.location.href = "/ical/" + interaction_id + "/" + ical_name;

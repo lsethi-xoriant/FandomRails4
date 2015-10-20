@@ -28,7 +28,6 @@ class RewardController < ApplicationController
       "user_available_rewards" => prepare_rewards_for_presentation(user_available_rewards),
       "newest_rewards" => prepare_rewards_for_presentation(newest_rewards),
       "all_rewards" => prepare_rewards_for_presentation(all_rewards_hash.values)
-
     }
     @reward_list = reward_list
   end
@@ -73,7 +72,9 @@ class RewardController < ApplicationController
     response = {}
     reward = Reward.find(params[:reward_id])
     
-    if user_has_currency_for_reward(reward)
+    if anonymous_user?
+      raise Exception.new("Anonymous user cannot buy reward")
+    elsif user_has_currency_for_reward(reward)
       buy_reward(current_user, reward)
       
       response["html"] = "<p class=\"cta-preview__unlocked-message\">PREMIO SBLOCCATO</p>

@@ -189,7 +189,12 @@
   margin-top: 30px;
 }
 
-.cta__related__title--press-release{
+.cta__related__title--press-release_info-container {
+  padding-left: 35px;
+  padding-right: 15px;
+}
+
+.cta__related__title--press-release {
   font-size: 12px;
   text-align: left;
   margin-top: 5px;
@@ -202,16 +207,30 @@
   color: #444;
 }
 
-.cta__related__icon--press-release{
+.cta__related__icon--press-release {
   font-size: 28px;
   margin-top: 8px;
   color: $lightblue !important;
 }
 
-.cta__related__icon--arrow{
+.cta__related__icon--arrow {
   font-size: 28px;
   margin-top: 8px;
   color: $lightblue !important;
+}
+
+.body-inaugurazione {
+  .cta__related__icon--press-release {
+    position: absolute;
+  }
+  .cta__related__icon--arrow {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+  }
+  .main-row__evidence {
+    margin-bottom: 0;
+  }
 }
 
 .cta__related__title-content {

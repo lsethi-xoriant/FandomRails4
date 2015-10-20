@@ -10,6 +10,7 @@ module Fandom
       init_ctas: 6,
       free_provider_share: true,
       aws_transcoding: true,
+      galleries_split_by_property: false,
       assets:{
         "anon_avatar" => "disney_anon.png",
         "community_logo" => "disney_community_logo.png"

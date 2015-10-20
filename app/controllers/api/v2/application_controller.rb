@@ -53,17 +53,23 @@
       end
       
       params["page_elements"] = nil
-      calltoaction_info_list, has_more = get_ctas_for_stream(nil, params, $site.init_ctas)
+      
+      if $site.galleries_split_by_property
+        property_name = get_property().name
+      else
+        property_name = nil
+      end
+
+      calltoaction_info_list, has_more = get_ctas_for_stream(property_name, params, $site.init_ctas)
       
       result = {
         'call_to_action_info_list' => calltoaction_info_list,
         'call_to_action_info_list_version' => get_max_updated_at_from_cta_info_list(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more,
         'galleries' => get_api_gallery_ctas_carousel,
-        'gallery_ctas_count' => get_gallery_ctas_count(),
+        'gallery_ctas_count' => get_gallery_ctas_count(params[:user]),
         'gallery_tag' => gallery_tag,
         'is_ugc' => is_ugc
-
       }
       
       respond_with result.to_json
@@ -119,7 +125,7 @@
       calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, cta_chunk_size)
       
       result = {
-        'call_to_action_info_list' => calltoaction_info_list,
+        'call_to_action_info_list' => adjust_ctas_descriptions(calltoaction_info_list),
         'call_to_action_info_list_has_more' => has_more
       }
       

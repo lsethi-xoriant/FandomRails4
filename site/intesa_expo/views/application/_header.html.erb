@@ -28,27 +28,29 @@
   <!-- End Top Bar -->
 </div>
 
-<div class="container hidden-xs">
-  <div class="row main-row">
-    <div class="col-sm-4">  
-      <img ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['left_logo_url_' + aux.language] == '#'" class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
-      <a ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['left_logo_url_' + aux.language] != '#'" href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Acquista', $event)">
-        <img class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
-      </a>
-    </div>
-    <div class="col-sm-4 text-center">
-      <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">  
-        <img class="center-logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">   
-      </a>
-    </div>
-    <div class="col-sm-4 text-right">
-      <img ng-if="aux.assets['right_logo_' + aux.language] && aux.assets['right_logo_url_' + aux.language] == '#'" class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
-      <a ng-if="aux.assets['right_logo_' + aux.language] && aux.assets['right_logo_url_' + aux.language] != '#'" href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Eventi', $event)">
-        <img class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
-      </a>     
+<% if $context_root != "inaugurazione" %>
+  <div class="container hidden-xs">
+    <div class="row main-row">
+      <div class="col-sm-4">  
+        <img ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['left_logo_url_' + aux.language] == '#'" class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
+        <a ng-if="aux.assets['left_logo_' + aux.language] && aux.assets['left_logo_url_' + aux.language] != '#'" href="{{aux.assets['left_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Acquista', $event)">
+          <img class="left-logo" ng-src="{{aux.assets['left_logo_' + aux.language].url}}">  
+        </a>
+      </div>
+      <div class="col-sm-4 text-center">
+        <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">  
+          <img class="center-logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">   
+        </a>
+      </div>
+      <div class="col-sm-4 text-right">
+        <img ng-if="aux.assets['right_logo_' + aux.language] && aux.assets['right_logo_url_' + aux.language] == '#'" class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
+        <a ng-if="aux.assets['right_logo_' + aux.language] && aux.assets['right_logo_url_' + aux.language] != '#'" href="{{aux.assets['right_logo_url_' + aux.language]}}" target="_blank" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Eventi', $event)">
+          <img class="right-logo" ng-src="{{aux.assets['right_logo_' + aux.language].url}}">
+        </a>     
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <div class="navbar__container-fluid hidden-xs">
   <div class="container navbar__container">

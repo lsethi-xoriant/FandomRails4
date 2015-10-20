@@ -14,7 +14,7 @@
     .flex-direction-nav a {
         text-shadow: none;
         color: #ccc;
-        top: 63px;
+        top: 55px;
     }
     .flex-prev {
         left: 15px;
@@ -61,6 +61,9 @@
         padding: 0 !important;
         height: auto !important;
     }
+    .flex-control-paging {
+        display: none;
+    }
 }
 
 .ctas__flexslider#gallery-slider {
@@ -85,6 +88,10 @@
             user-select: none;
         }
     }
+}
+
+.ctas__flexslider.ctas__flexslider--italiadalvivo {
+    border: none !important;  
 }
 
 .cta-cover__thumbnail-column {
@@ -125,6 +132,28 @@
     background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
     background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
     background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+}
+
+.ctas__flexslider--italiadalvivo {
+    .ctas__info {
+        padding: 30px;
+    }
+    .ctas__flexslider__title {
+        margin-bottom: 0;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle {
+        font-size: 18px;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle::first-letter {
+      text-transform: uppercase;
+    }
+    .ctas__flexslider__location {
+        padding-top: 15px;
+        color: $blue_italiadalvivo;
+        font-size: 12px;
+    }
 }
 
 .ctas__info--bottom {
@@ -194,6 +223,9 @@
     }
     .ctas__flexslider {
         height: 390px;
+    }
+    .ctas__flexslider--italiadalvivo {
+        height: 380px;
     }
 }
 

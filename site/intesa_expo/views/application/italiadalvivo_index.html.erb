@@ -1,15 +1,50 @@
-<div class="container-fluid__blue">
+<div class="container main-container home-main-stripe">
+
+  <!-- MAIN CAROUSEL --> 
   <%= render partial: "/application/italiadalvivo_evidence_ctas" %>
+
+  <!-- CALENDAR -->
+  <div class="row main-row">
+    <div class="col-sm-12 text-center">
+      <h2 class="stripe__title">{{aux.assets["home_event_stripe_" + aux.language]}}</h2>
+    </div>
+    <div class="col-sm-12 text-center events-container">
+      <div class="row">
+        <div class="col-sm-4" ng-repeat="eventPreviewDate in eventPreviewDates | orderBy:orderEventPreviewDates:false">
+          <div class="row">
+            <div class="col-sm-12 text-center event-header-container">
+              <div class="event-header">
+                <h3 class="event-header-text">{{eventPreviewDate[0]}}</h3>
+              </div>
+            </div>
+            <div class="col-sm-12 event-container" ng-repeat="eventPreview in eventPreviewDate[2] | orderBy:orderEventPreviewDates:false">
+
+              <!-- EVENT --> 
+              <div class="panel panel-default event-panel">
+                <div class="panel-body event-panel-body text-left">
+                  <p class="event-time"><span class="fa fa-clock-o"></span>{{eventPreview[0]}}</p>
+                  <p class="event-title">{{eventPreview[1].title | cut:80}}</p>
+                  <img ng-src="{{eventPreview[1].thumb_wide_url}}">
+                </div>
+              </div>
+              <div class="panel-footer event-miniformat-border" ng-style="{'background-color': eventPreview[1].aux.miniformat.extra_fields.label_background}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="stripe-container stripe-white">
-  <div class="container main-container">
-    <div class="row">
+<div class="container-fluid__blue italiadalvivo-branch-container" ng-repeat="calltoaction_info in getItaliaDalVivoBranchCtaInfo()">
+  <div class="container" ng-if="calltoaction_info.calltoaction.gallery"> 
+    <div class="row main-row">  
       <div class="col-sm-12 text-center">
-        <h2 class="stripe__title">{{aux.assets["home_event_stripe_" + aux.language]}}</h2>
+        <h2 class="stripe__title">{{calltoaction_info.calltoaction.title}}</h2>
       </div>
-      <div class="col-sm-12">
-        
+      <div class="col-sm-10 col-sm-offset-1">
+        <%= render partial: "/application/photo_gallery" %>
       </div>
     </div>
   </div>

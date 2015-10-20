@@ -45,13 +45,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     
     elsif $context_root == "inaugurazione" # italiadalvivo
       
-      @aux_other_params = {
-        calltoaction_evidence_info: true,
-        "press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
-        "tag_menu_item" => "inaugurazione-home"
-      }
-
-      render template: "/application/italiadalvivo_index"
+      inaugurazione_index
 
     else
 
@@ -83,6 +77,29 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       }
       
     end
+  end
+
+  def inaugurazione_index
+    ical_start_datetime = DateTime.parse("2015-10-27")
+    ical_end_datetime = ical_start_datetime + 3.days
+
+    params = { ical_start_datetime: ical_start_datetime.to_s, ical_end_datetime: ical_end_datetime.to_s }
+    events = get_intesa_expo_ctas_with_tag("event", params)
+
+    italiadalvivo_branch_cta = CallToAction.find_by_name("italiadalvivo-branch")
+    if italiadalvivo_branch_cta
+      italiadalvivo_branch_cta_info = build_cta_info_list_and_cache_with_max_updated_at([italiadalvivo_branch_cta]).first
+    end
+
+    @aux_other_params = {
+      calltoaction_evidence_info: true,
+      "italiadalvivo_branch_cta_info" => italiadalvivo_branch_cta_info,
+      "event_stripe" => events,
+      "press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
+      "tag_menu_item" => "inaugurazione-home"
+    }
+
+    render template: "/application/italiadalvivo_index"
   end
 
   def live

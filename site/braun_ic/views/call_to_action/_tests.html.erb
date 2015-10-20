@@ -141,10 +141,10 @@
                           </div>
                           <div class="col-sm-9 text-center cta_cover-end_container-btn_container-btn_col">
                             <p class="cta_cover-end_container-btn_container-subtitle"><span ng-if="ctaHasFeedback(calltoaction_info)">Complimenti! Hai guadagnato un biglietto</span></p>
-                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()">
+                            <button ng-if="!isAnonymousUser() && current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openInstantWinModal()">
                               SCOPRI SE HAI VINTO
                             </button>
-                            <button ng-if="!isAnonymousUser() && aux.instant_win_info.active && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
+                            <button ng-if="!isAnonymousUser() && !current_user.registration_fully_completed" type="button" class="btn btn-green btn-lg btn-green-iw btn-block" ng-click="openRegistrationModalForInstantWin(<%= user_for_registation_form().to_json %>)">
                               SCOPRI SE HAI VINTO
                             </button>
                             <a ng-if="isAnonymousUser()" ng-click="ctaGaEvent(calltoaction_info)" href="/users/sign_up" class="btn btn-green btn-lg btn-green-iw btn-block">

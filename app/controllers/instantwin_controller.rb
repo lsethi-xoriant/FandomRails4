@@ -25,7 +25,15 @@ class InstantwinController < ApplicationController
     if current_user
 
       interaction = Interaction.find(params[:interaction_id])
-      if has_tickets() && !user_already_won(interaction.id)[:win]
+      iw_cta = interaction.call_to_action
+      time_now = Time.now.utc
+      iw_active = iw_cta.valid_from <= time_now && time_now <= iw_cta.valid_to
+
+      if !iw_active
+        response[:win] = false
+        response[:active] = false 
+        log_synced("instant win error: contest close", { "interaction_id" => interaction.id })
+      elsif has_tickets() && !user_already_won(interaction.id)[:win]
         time = Time.now.utc
         log_synced("instant win attempted", { "interaction_id" => interaction.id, "computation_time" => time })
         instantwin, prize = check_win(interaction, time)

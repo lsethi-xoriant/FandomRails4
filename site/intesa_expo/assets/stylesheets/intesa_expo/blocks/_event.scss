@@ -1,0 +1,64 @@
+.event-container, .event-miniformat-border, .event-header-container {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.home-main-stripe, .italiadalvivo-branch-container {
+  padding-bottom: 60px;
+  .stripe__title {
+    margin-bottom: 30px;
+    margin-top: 30px;
+    color: $blue_italiadalvivo;
+  }
+}
+
+.events-container {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.event-header {
+  background-color: $blue_italiadalvivo;
+}
+
+.event-header-text {
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+
+.event-miniformat-border {
+  padding-top: 4px;
+  padding-bottom: 0;
+  width: 100%;
+  background-color: $blue;
+}
+
+.event-panel {
+  margin-bottom: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.event-panel-body {
+  padding: 0;
+}
+
+.event-time {
+  padding: 10px 15px 0 15px;
+  font-size: 12px;
+  span {
+    margin-right: 5px;
+  }
+  color: $blue_italiadalvivo;
+}
+
+.event-title {
+  padding: 0 15px 10px 15px;
+  height: 50px;
+  color: $blue_italiadalvivo;
+  text-transform: uppercase;
+}

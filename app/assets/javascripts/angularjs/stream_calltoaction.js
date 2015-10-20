@@ -211,6 +211,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   function updateUserWithAvatarSuccess(data) {
     $scope.current_user = data.current_user;
+
+    if($scope.aux.instant_win_info.user) {
+      $scope.aux.instant_win_info.user.first_name = $scope.current_user.first_name;
+      $scope.aux.instant_win_info.user.last_name = $scope.current_user.last_name;
+    }
+
     $("#modal-update-user").modal("hide");
     $("#modal-update-user-pt2").modal("show");
   }
@@ -568,6 +574,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
       .success(function(data) { 
+
+        if(data.active == false) {
+          console.log("AAA");
+          $scope.aux.instant_win_info.active = data.active;
+          return;
+        }
         
         if(data.win == true) {
           image = $scope.aux.assets.extra_fields.iw_win;
@@ -660,6 +672,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             });
             $("#modal-interaction-instant-win-registration").modal("hide");
             $scope.current_user.registration_fully_completed = true;
+            $scope.current_user.first_name = $scope.form_data.current_user.first_name;
+            $scope.current_user.last_name = $scope.form_data.current_user.last_name;
           }
           $scope.ajax_in_progress = false;
         }).error(function() {
@@ -1872,9 +1886,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             // GOOGLE ANALYTICS
             if(data.ga) {
               $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
-                $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
+              if(data.new_outcome) {
+                angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
+                  $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+                });
+              }
             }
 
             calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -2800,10 +2816,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     date = new Date(date);
     return date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
-  
+
   $scope.formatFullDate = function(date, language) {
     date = new Date(date);
     return $scope.computeDayName(date.getDay(), language) + " " + date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
+  };
+
+  $scope.formatFullDateWithoutYear = function(date, language) {
+    date = new Date(date);
+    return $scope.computeDayName(date.getDay(), language) + " " + date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language);
   };
 
   $scope.extractTimeFromDate = function(date) {
