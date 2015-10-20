@@ -16,11 +16,11 @@ class ShareInteractionTest < ActionController::TestCase
     visit(cta_link)
 
     # Direct url
-    assert assert_no_selector("div[id$='-share-modal']"), "Direct url share div is present before click"
-    first("span[class='fa fa-share-alt']").find(:xpath, "..").click
+    first("span[class='fa fa-share-alt']").first(:xpath, "..").click
+
     wait_for_ajax
-    wait_for_angular
-    assert assert_selector("div[id$='-share-modal']"), "Direct url share div is not present after click"
+
+    assert_selector("div[id$='-share-modal']")
 
     delete_user_interactions
 

@@ -19,7 +19,7 @@ class CommentInteractionTest < ActionController::TestCase
 
     visit(build_url_for_capybara("/easyadmin/comments/to_approved"))
 
-    if page.has_selector?("ul[class='pagination']") # go to last page to find comment in easyadmin
+    if page.first("ul[class='pagination']") # go to last page to find comment in easyadmin
       within("ul.pagination") do
         within all("li").last do
           first("a").click
@@ -27,7 +27,9 @@ class CommentInteractionTest < ActionController::TestCase
       end
     end
 
-    within("tbody") do
+    table_body = page.find("tbody", match: :first)
+
+    within(table_body) do
       within all("tr").last do
         first("button[onclick^='updateComment(true']").click
       end
@@ -41,7 +43,9 @@ class CommentInteractionTest < ActionController::TestCase
 
     visit(build_url_for_capybara("/easyadmin/comments/approved"))
 
-    within("tbody") do
+    table_body = page.find("tbody", match: :first)
+
+    within(table_body) do
       within first("tr") do
         first("button[onclick^='updateComment(").click
       end

@@ -19,7 +19,6 @@ class RandomInteractionTest < ActionController::TestCase
         page.first("a[ng-click^='updateAnswer']").click
       end
       counters[cta_title] = (counters[cta_title] || 0) + 1
-      wait_for_angular
     end
 
     counters.each do |title, count|

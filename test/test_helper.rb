@@ -12,9 +12,11 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Make the Capybara DSL available in all integration tests
-  include Capybara::DSL
+  # include Capybara::DSL
+  include Capybara::Angular::DSL
 
   Capybara.default_driver = :selenium
+  Capybara.default_wait_time = 10
 
   CORRECT_ANSWER = true
   INCORRECT_ANSWER = false
@@ -75,24 +77,13 @@ class ActiveSupport::TestCase
 
   # Loops until all ajax requests have finished
   def wait_for_ajax
-    Timeout.timeout(10) do
+    Timeout.timeout(Capybara.default_wait_time) do
       loop until finished_all_ajax_requests?
     end
   end
 
   def finished_all_ajax_requests?
     page.evaluate_script('jQuery.active').zero?
-  end
-
-  # Loops until all AngularJS requests have finished
-  def wait_for_angular
-    Timeout.timeout(10) do
-      loop until finished_all_angular_requests?
-    end
-  end
-
-  def finished_all_angular_requests?
-    page.evaluate_script '(typeof angular === "undefined") || (angular.element(".ng-scope").injector().get("$http").pendingRequests.length == 0)'
   end
 
   # Finds the call to action with a specific title
@@ -126,7 +117,7 @@ class ActiveSupport::TestCase
   def get_points_after_answer(points, button_type, text)
     page.first(button_type, :text => text).click
 
-    wait_for_angular
+    
 
     new_points = get_user_points_from_single_call_to_action_page()
     assert new_points > points, "No point given for answer \"#{text}\"" if points
@@ -153,8 +144,8 @@ class ActiveSupport::TestCase
   # div_last_class - Last identifying class for div that should contain "Done" label
   # should_be_present - Boolean value to perform presence or absence assertion
   def verify_done_label_presence(div_last_class, should_be_present)
-    wait_for_angular
-    wait_for_ajax
+    
+    
     div_selector = "div[class$='#{div_last_class}']"
     assert_selector(div_selector)
     within(find(div_selector)) do

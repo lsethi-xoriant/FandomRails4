@@ -17,8 +17,6 @@ class LikeInteractionTest < ActionController::TestCase
 
     page.first("button.like-interaction__cover__info__button").click
 
-    wait_for_angular
-
     new_likes = first("span.like-interaction__cta__info__text").text.gsub(" mi piace", "").to_i
     new_points = get_user_points_from_single_call_to_action_page()
 

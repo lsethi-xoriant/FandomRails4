@@ -63,6 +63,7 @@ class GetContentPreviewsTest < ActiveSupport::TestCase
 
   test "get content previews with ordering and related" do
 
+    Rails.cache.clear
     @main_tag.update_attribute(:extra_fields, { "ordering" => "tag-1-test,tag-2-test" })
     content_previews = get_content_previews(@main_tag.name, [], { :related => true })
     assert content_previews.contents[0].title != "Tag 1 test", "First content should not be \"Tag 1 test\""

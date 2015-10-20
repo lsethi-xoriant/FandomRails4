@@ -19,8 +19,6 @@ class CheckInteractionTest < ActionController::TestCase
       page.first("a[ng-click^='updateAnswer']").click
     end
 
-    wait_for_angular
-
     verify_done_label_presence("check-undervideo-interaction__row", true)
 
     assert get_user_points_from_single_call_to_action_page > points, "No point given for check interaction done"

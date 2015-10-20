@@ -60,13 +60,14 @@ class InstantwinControllerTest < ActionController::TestCase
     dates_and_wins_array.each do |date_and_win|
       date = date_and_win[0]
       win = date_and_win[1]
-      travel_to date
-      instantwin, prize = check_win(@interaction, Time.now.utc)
+      travel_to date do
+        instantwin, prize = check_win(@interaction, Time.now.utc)
 
-      assert instantwin.present? == win, "check_win method for #{date} play gave instantwin.present? = #{instantwin.present?}"
-      assert prize.present? == win, "check_win method for #{date} play gave prize.present? = #{instantwin.present?}"
-      if instantwin
-        assert instantwin.won == win, "instantwin.won for #{date} play is #{instantwin.won}"
+        assert instantwin.present? == win, "check_win method for #{date} play gave instantwin.present? = #{instantwin.present?}"
+        assert prize.present? == win, "check_win method for #{date} play gave prize.present? = #{instantwin.present?}"
+        if instantwin
+          assert instantwin.won == win, "instantwin.won for #{date} play is #{instantwin.won}"
+        end
       end
     end
   end

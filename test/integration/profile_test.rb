@@ -14,9 +14,12 @@ class ProfileTest < ActionController::TestCase
 
     # Registration and notifications
 
+    perform_logout
     visit(build_url_for_capybara("/users/sign_up"))
 
-    within("form[action='/users']") do
+    form = page.find("form[action='/users']")
+
+    within(form) do
       fill_in "user_first_name", :with => "John"
       fill_in "user_last_name", :with => "Doe"
       fill_in "user_email", :with => @user_email
@@ -25,8 +28,6 @@ class ProfileTest < ActionController::TestCase
       check("user_privacy")
       first("button", :text => "Registrati").click
     end
-
-    wait_for_ajax
 
     user_first_name = first("p[class^='properties__right-bar-text']").text
     assert user_first_name[0..3] == "John", "User name is not \"John D.\", but \"#{user_first_name}\""
@@ -66,20 +67,19 @@ class ProfileTest < ActionController::TestCase
     # Rewards -> Levels
 
     first("a", :text => "Rewards").click
-    wait_for_angular
-    wait_for_ajax
-    check_progress_bar_width_for_level("level-1", "== 100")
+    
+    check_progress_bar_width_for_level("Livello 1 All", "== 100")
     for i in 2..5
-      check_progress_bar_width_for_level("level-#{i}", "== 0")
+      check_progress_bar_width_for_level("Livello #{i} All", "== 0")
     end
 
     visit(build_url_for_capybara("/call_to_action/qual-la-canzone-pi-romantica-della-discografia-dei-coldplay")) # just to take a couple of points
     page.first("button.like-interaction__cover__info__button").click
-    wait_for_angular
+    
     go_back
     reload_page
 
-    check_progress_bar_width_for_level("level-2", "> 0")
+    check_progress_bar_width_for_level("Livello 2 All", "> 0")
 
   end
 

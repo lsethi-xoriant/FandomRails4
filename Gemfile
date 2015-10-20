@@ -84,6 +84,7 @@ end
 group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'capybara-angular'
 end
 
 gem 'rails_admin' #, '0.4.9'

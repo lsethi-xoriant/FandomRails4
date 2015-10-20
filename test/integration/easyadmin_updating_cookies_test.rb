@@ -19,7 +19,6 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     old_activation_date_time = change_cta_activated_at()
 
     find_and_click_update_cache_button
-    wait_for_ajax
 
     old_activation_date_time = change_cta_activated_at(old_activation_date_time)
     perform_logout
@@ -41,8 +40,6 @@ class EasyadminUpdatingCookies < ActionController::TestCase
 
     page.first("button[onclick^='updateCta(false,']").click
 
-    wait_for_ajax
-
     visit(build_url_for_capybara("/easyadmin/cta/approved"))
 
     find_and_click_update_cache_button
@@ -50,7 +47,7 @@ class EasyadminUpdatingCookies < ActionController::TestCase
     visit(build_url_for_capybara("/easyadmin/cta/not_approved"))
     fill_in "slug_filter", :with => user_cta_slug
     page.find("input[value='FILTRA']").click
-    wait_for_ajax
+    
     page.first("button[onclick^='updateCta(true,']").click
 
     perform_logout
@@ -60,11 +57,10 @@ class EasyadminUpdatingCookies < ActionController::TestCase
   def find_and_click_update_cache_button
     Capybara.ignore_hidden_elements = false
     assert_not page.find("div#update-cache-banner")[:class].include?("hidden"), "After cta update, cookie banner is hidden"
-    page.first("button[onclick='updateUpdatedAt()']").click
+    page.find("button[onclick='updateUpdatedAt()']").click
     wait_for_ajax
     reload_page
-    assert page.first("div#update-cache-banner")[:class].include?("hidden"), "After cookie button click, cookie banner is not hidden"
-    wait_for_ajax
+    assert page.find("div#update-cache-banner")[:class].include?("hidden"), "After cookie button click, cookie banner is not hidden"
   end
 
   def change_cta_activated_at(new_activation_date_time = nil)
