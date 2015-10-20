@@ -574,6 +574,12 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     delete $scope.aux.instant_win_info.win;
     $http.post("/play", { interaction_id: $scope.aux.instant_win_info.interaction_id })
       .success(function(data) { 
+
+        if(data.active == false) {
+          console.log("AAA");
+          $scope.aux.instant_win_info.active = data.active;
+          return;
+        }
         
         if(data.win == true) {
           image = $scope.aux.assets.extra_fields.iw_win;
