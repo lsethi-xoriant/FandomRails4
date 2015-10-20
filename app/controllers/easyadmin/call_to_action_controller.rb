@@ -175,15 +175,16 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     authorize! :manage, :call_to_actions
 
     @current_cta = CallToAction.find(params[:id])
+    interactions = @current_cta.interactions
 
-    @shares = build_cta_detail(@current_cta, "Share", "share-counter")
-    @plays = build_cta_detail(@current_cta, "Play", "play-counter")
-    @likes = build_cta_detail(@current_cta, "Like", "like-counter")
-    @downloads = build_cta_detail(@current_cta, "Download", "download-counter")
-    @uploads = build_cta_detail(@current_cta, "Upload")
-    @checks = build_cta_detail(@current_cta, "Check")
-    @comments = build_cta_detail(@current_cta, "Comment")
-    @links = build_cta_detail(@current_cta, "Link")
+    @shares = build_cta_detail(interactions, "Share", "share-counter")
+    @plays = build_cta_detail(interactions, "Play", "play-counter")
+    @likes = build_cta_detail(interactions, "Like", "like-counter")
+    @downloads = build_cta_detail(interactions, "Download", "download-counter")
+    @uploads = build_cta_detail(interactions, "Upload")
+    @checks = build_cta_detail(interactions, "Check")
+    @comments = build_cta_detail(interactions, "Comment")
+    @links = build_cta_detail(interactions, "Link")
 
     @votes = Hash.new
     interaction_votes = @current_cta.interactions.where("resource_type='Vote'")
@@ -196,12 +197,13 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
           total += 1
           sum += user_interaction.aux["vote"]
         end
-        @votes[i] = { "title" => interaction_vote.resource.title, "total" => total, "mean" => sum.to_f/total }
+        title = interaction_vote.resource.title
+        @votes[i] = { "title" => title ? "VOTE [#{title}]" : "VOTE" , "total" => total, "mean" => sum.to_f/total }
       end
     end
 
     @trivia_answer = Hash.new
-    @versus_answer = Hash.new
+    @versus_and_test_answer = Hash.new
 
     @current_cta.interactions.where("resource_type='Quiz'").each do |q|
       if q.resource.quiz_type == "TRIVIA"
@@ -210,12 +212,12 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
           "answer_correct" => correct_count,
           "answer_wrong" => UserInteraction.where("interaction_id = #{q.id}").count - correct_count  
         }
-      elsif q.resource.quiz_type == "VERSUS"
-        @versus_answer["#{ q.id }"] = Hash.new
+      else
+        @versus_and_test_answer["#{ q.id }"] = Hash.new
         sum = 0
         q.resource.answers.each { |a| sum = sum + a.user_interactions.count }
         q.resource.answers.each do |v|
-          @versus_answer["#{ q.id }"]["#{ v.id }"] = {
+          @versus_and_test_answer["#{ q.id }"]["#{ v.id }"] = {
             "answer" => v.text,
             "perc" => ((v.user_interactions.count.to_f/sum.to_f*100))
           }
@@ -226,32 +228,44 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
     render :partial => 'show_cta_details'
   end
 
-  def build_cta_detail(cta, resource_type, reward_name_to_counter = nil)
+  def build_cta_detail(interactions, resource_type, reward_name_to_counter = nil)
     type_interactions_info = Hash.new
-    type_interactions = cta.interactions.where("resource_type='#{resource_type}'")
+    type_interactions = interactions.where("resource_type='#{resource_type}'")
     if type_interactions.any?
       type_interactions.each_with_index do |interaction, i|
         total = 0
         if reward_name_to_counter
           user_interaction_outcomes = UserInteraction.where(:interaction_id => interaction.id).pluck(:outcome)
           user_interaction_outcomes.each do |out|
-            total += out["win"]["attributes"]["reward_name_to_counter"]["#{reward_name_to_counter}"]
+            total += JSON.parse(out)["win"]["attributes"]["reward_name_to_counter"]["#{reward_name_to_counter}"]
           end
           if resource_type == "Share"
             type_interactions_info[i] = { "total" => total, "providers" => interaction.resource.providers }
           else
-            type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
+            title = interaction.resource.title
+            type_interactions_info[i] = { 
+              "title" => title.blank? ? "#{resource_type.upcase}" : "#{resource_type.upcase} [#{title}]", 
+              "total" => total
+            }
           end
         else # infos are not in outcome field
           if resource_type == "Upload" or resource_type == "Link"
             UserInteraction.where(:interaction_id => interaction.id).pluck(:counter).each do |counter|
               total += counter
             end
-            type_interactions_info[i] = 
-              resource_type == "Upload" ?
-                { "title" => CallToAction.find(interaction.resource.call_to_action_id).title, "total" => total }
-              :
-                { "title" => interaction.resource.title, "total" => total }
+            if resource_type == "Upload"
+              title = CallToAction.find(interaction.resource.call_to_action_id).title
+              type_interactions_info[i] = { 
+                "title" => title.blank? ? "#{resource_type.upcase}" : "#{resource_type.upcase} [#{title}]", 
+                "total" => total
+              }
+            else
+              title = interaction.resource.title
+              type_interactions_info[i] = { 
+                "title" => title.blank? ? "#{resource_type.upcase}" : "#{resource_type.upcase} [#{title}]", 
+                "total" => total
+              }
+            end
           elsif resource_type == "Comment"
             user_comment_interactions = UserCommentInteraction.where(:comment_id => interaction.resource_id)
             total = user_comment_interactions.count
@@ -259,7 +273,11 @@ class Easyadmin::CallToActionController < Easyadmin::EasyadminController
             type_interactions_info[i] = { "total" => total, "approved" => approved }
           else
             total = UserInteraction.where(:interaction_id => interaction.id).count
-            type_interactions_info[i] = { "title" => interaction.resource.title, "total" => total }
+            title = interaction.resource.title
+            type_interactions_info[i] = { 
+              "title" => title.blank? ? "#{resource_type.upcase}" : "#{resource_type.upcase} [#{title}]", 
+              "total" => total
+            }
           end
         end
       end

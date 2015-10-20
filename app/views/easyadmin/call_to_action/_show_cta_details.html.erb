@@ -20,7 +20,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #FF7A59;">
         <div class="details">
-          <span class="content">LIKE [<%= like["title"] %>]</span>
+          <span class="content"><%= like["title"] %></span>
           <span class="value-sm"><%= like["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -34,7 +34,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #DDDDDD;">
         <div class="details">
-          <span class="content">CHECK [<%= check["title"] %>]</span>
+          <span class="content"><%= check["title"] %></span>
           <span class="value-sm"><%= check["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -48,7 +48,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #4D944D;">
         <div class="details">
-          <span class="content">LINK [<%= link["title"][0..25] %>]</span>
+          <span class="content"><%= link["title"][0..25] %></span>
           <span class="value-sm"><%= link["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -62,7 +62,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
         <div class="details">
-          <span class="content">DOWNLOAD [<%= download["title"] %>]</span>
+          <span class="content"><%= download["title"] %></span>
           <span class="value-sm"><%= download["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -76,7 +76,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #FF9DBD;">
         <div class="details">
-          <span class="content">UPLOAD [<%= upload["title"] %>]</span>
+          <span class="content"><%= upload["title"] %></span>
           <span class="value-sm"><%= upload["total"] %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -90,7 +90,7 @@
     <div class="col-md-3 col-sm-6" style="margin-top:15px; margin-bottom:15px;">
       <div class="dashboard-stat primary" style="background-color: #555555;">
         <div class="details">
-          <span class="content">VOTA [<%= vote["title"] %>]</span>
+          <span class="content"><%= vote["title"] %></span>
           <span class="value-sm"><%= vote["total"] %> <%= vote["mean"].nan? ? "" : "(μ #{vote["mean"]})" %></span>
         </div> <!-- /.details -->
         <div class="visual">
@@ -163,9 +163,9 @@
 <% end %>
 
 <% @current_cta.interactions.where("resource_type='Quiz'").each_with_index do |q, i| %>
-	<% if q.resource.quiz_type == "VERSUS" %>
+	<% if q.resource.quiz_type != "TRIVIA" %>
 		<% if i == 0 %>
-    		<h3>VERSUS</h3>
+    		<h3><%= q.resource.quiz_type %></h3>
 			<hr/>
 		<% end %>
     <div class="row">
@@ -270,19 +270,19 @@
       correct_answers = trivia_answer[key]["answer_correct"]
       wrong_answers = trivia_answer[key]["answer_wrong"]
       Morris.Donut({
-            element: "reg-donut-chart-" + key,
-            data: [
-                { label: 'Risposte corrette', value: Math.round(correct_answers * 100 / (correct_answers + wrong_answers))},
-                { label: 'Risposte errate', value: Math.round(wrong_answers * 100 / (correct_answers + wrong_answers))}
-            ],
-            hideHover: true,
-            formatter: function (y) { return y + "%" }
+        element: "reg-donut-chart-" + key,
+        data: [
+            { label: 'Risposte corrette', value: Math.round(correct_answers * 100 / (correct_answers + wrong_answers))},
+            { label: 'Risposte errate', value: Math.round(wrong_answers * 100 / (correct_answers + wrong_answers))}
+        ],
+        hideHover: true,
+        formatter: function (y) { return y + "%" }
       });
     });
   };
 
   function buildVersusDonut() {
-    versus_answer = <%= raw(@versus_answer.to_json) %>;
+    versus_answer = <%= raw(@versus_and_test_answer.to_json) %>;
 
     $.each(versus_answer, function(key, value) {
 
@@ -295,10 +295,10 @@
       });
 
       Morris.Donut({
-            element: "reg-donut-chart-" + key,
-            data: versus_arr,
-            hideHover: true,
-            formatter: function (y) { return y + "%" }
+        element: "reg-donut-chart-" + key,
+        data: versus_arr,
+        hideHover: true,
+        formatter: function (y) { return y + "%" }
       });
 
     });
