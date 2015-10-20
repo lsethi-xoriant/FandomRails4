@@ -31,19 +31,11 @@
         <h4 class="modal-title">Gioca e vinci</h4>
       </div>
       <div class="modal-body iw-model-body">
-        <div ng-if="!aux.instant_win_info.active" class="modal-body">
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <p>Concorso non attivo</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row" ng-if="aux.instant_win_info.active" >
+        <div class="row">
 
           <div class="col-sm-12">
             <div class="panel panel-default iw_panel">
-              <div class="panel-body">
+              <div class="panel-body" ng-if="aux.instant_win_info.active">
                 <div class="col-sm-6">
                   <img id="iw_slot" class="iw_slot" ng-class="{'iw_slot-red': iwNotWin(), 'iw_slot-green': iwWin()}" ng-src="{{aux.assets.extra_fields.iw_cover.url}}">
                 </div>
@@ -77,6 +69,9 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="panel-body text-center" ng-if="!aux.instant_win_info.active">
+                <p style="color: red; font-size: 32px;">CONCORSO TERMINATO</p>
               </div>
             </div>
           </div>

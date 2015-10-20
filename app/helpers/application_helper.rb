@@ -1029,11 +1029,15 @@ module ApplicationHelper
         if iw_cta.extra_fields && iw_cta.extra_fields["instantwin_form_attributes"]
           form_extra_fields = JSON.parse(iw_cta.extra_fields["instantwin_form_attributes"])
         end
+
+        time_now = Time.now.utc
+        iw_active = iw_cta.valid_from >= time_now && time_now <= iw_cta.valid_to  
+
         iw_info = {
           "user" => user_for_registation_form(),
           "interaction_id" => iw_interaction.id,
           "form_extra_fields" => form_extra_fields,
-          "active" => true,
+          "active" => iw_active,
           "win" => iw_user_info[:win],
           "message" => iw_user_info[:message],
           "in_progress" => false,
