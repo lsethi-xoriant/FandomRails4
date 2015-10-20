@@ -1461,6 +1461,17 @@ label {
   transform: rotate(-30deg);
   text-shadow: none;
 }
+.dashboard-stat .visual-without-rotation i {
+  position: absolute;
+  left: 0;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  display: block;
+  height: 72px;
+  font-size: 72px;
+  text-shadow: none;
+}
 .dashboard-stat .more {
   position: absolute;
   top: 10px;

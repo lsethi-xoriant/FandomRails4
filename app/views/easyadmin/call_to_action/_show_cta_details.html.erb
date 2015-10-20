@@ -213,7 +213,7 @@
 
   <div class="row">
 
-    <div class="col-lg-4">
+    <div class="col-md-3">
     	<div class="dashboard-stat">
       	<div class="details">
        		<span class="content">SHARE TOTALI</span>
@@ -225,32 +225,83 @@
       </div>
     </div>
 
-    <div class="col-lg-4">
-    	<div class="dashboard-stat primary" style="background-color: #43609c">
-  		  <div class="details">
-  		    <span class="content">FACEBOOK</span>
-  		    <span><p>Messaggio</p><%= share["providers"]["facebook"]["message"] %></span><hr/>
-  		    <span><p>Descrizione</p><%= share["providers"]["facebook"]["description"] %></span><hr/>
-  		    <span><p>Link</p><%= share["providers"]["facebook"]["link"] %></span>
- 		    </div>
- 		    <div class="visual">
-  		  	<i class="fa fa-facebook" style="color: #FFF"></i>
- 		    </div>
-		  </div>
-    </div>
+    <% if share["providers"]["facebook"] %>
+      <div class="col-md-3">
+      	<div class="dashboard-stat primary" style="background-color: #43609c">
+    		  <div class="details">
+    		    <span class="content">FACEBOOK</span>
+    		    <span><p>Messaggio</p><%= share["providers"]["facebook"]["message"] %></span><hr/>
+    		    <span><p>Descrizione</p><%= share["providers"]["facebook"]["description"] %></span><hr/>
+    		    <span><p>Link</p><%= share["providers"]["facebook"]["link"] %></span>
+   		    </div>
+   		    <div class="visual">
+    		  	<i class="fa fa-facebook" style="color: #FFF"></i>
+   		    </div>
+  		  </div>
+      </div>
+    <% end %>
 
-    <div class="col-lg-4">
-      <div class="dashboard-stat primary" style="background-color: #5eaade">
-  		  <div class="details">
-  		    <span class="content">TWITTER</span>
-  		    <span><p>Messaggio</p><%= share["providers"]["message"] %></span><hr/>
-  		    <span><p>Link</p><%= share["providers"]["link"] %></span>
- 		    </div>
-   		  <div class="visual">
-    		  <i class="fa fa-twitter" style="color: #FFF"></i>
-   		  </div>
-		  </div>
-    </div>
+    <% if share["providers"]["twitter"] %>
+      <div class="col-md-3">
+        <div class="dashboard-stat primary" style="background-color: #5eaade">
+    		  <div class="details">
+    		    <span class="content">TWITTER</span>
+    		    <span><p>Messaggio</p><%= share["providers"]["twitter"]["message"] %></span><hr/>
+    		    <span><p>Link</p><%= share["providers"]["twitter"]["link"] %></span>
+   		    </div>
+     		  <div class="visual">
+      		  <i class="fa fa-twitter" style="color: #FFF"></i>
+     		  </div>
+  		  </div>
+      </div>
+    <% end %>
+
+    <% if share["providers"]["google_plus"] %>
+      <div class="col-md-3">
+        <div class="dashboard-stat primary" style="background-color: #d34836">
+          <div class="details">
+            <span class="content">GOOGLE +</span>
+            <span><p>Messaggio</p><%= share["providers"]["google_plus"]["message"] %></span><hr/>
+            <span><p>Descrizione</p><%= share["providers"]["google_plus"]["description"] %></span><hr/>
+            <span><p>Link</p><%= share["providers"]["google_plus"]["link"] %></span>
+          </div>
+          <div class="visual">
+            <i class="fa fa-google-plus" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if share["providers"]["whatsapp"] %>
+      <div class="col-md-3">
+        <div class="dashboard-stat primary" style="background-color: #43d854">
+          <div class="details">
+            <span class="content">WHATSAPP</span>
+            <span><p>Messaggio</p><%= share["providers"]["whatsapp"]["message"] %></span><hr/>
+            <span><p>Link</p><%= share["providers"]["whatsapp"]["link"] %></span>
+          </div>
+          <div class="visual-without-rotation">
+            <i class="fa fa-whatsapp" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if share["providers"]["linkedin"] %>
+      <div class="col-md-3">
+        <div class="dashboard-stat primary" style="background-color: #0077b5">
+          <div class="details">
+            <span class="content">LINKEDIN</span>
+            <span><p>Messaggio</p><%= share["providers"]["linkedin"]["message"] %></span><hr/>
+            <span><p>Descrizione</p><%= share["providers"]["linkedin"]["description"] %></span><hr/>
+            <span><p>Link</p><%= share["providers"]["linkedin"]["link"] %></span>
+          </div>
+          <div class="visual">
+            <i class="fa fa-linkedin" style="color: #FFF"></i>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
   </div>
   <hr/>
