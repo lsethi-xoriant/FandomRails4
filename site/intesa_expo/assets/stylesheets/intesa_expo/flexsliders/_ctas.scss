@@ -14,7 +14,7 @@
     .flex-direction-nav a {
         text-shadow: none;
         color: #ccc;
-        top: 63px;
+        top: 55px;
     }
     .flex-prev {
         left: 15px;
@@ -60,6 +60,9 @@
     .cta-cover__thumbnail-column {
         padding: 0 !important;
         height: auto !important;
+    }
+    .flex-control-paging {
+        display: none;
     }
 }
 

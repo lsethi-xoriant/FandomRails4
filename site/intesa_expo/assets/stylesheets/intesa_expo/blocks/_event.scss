@@ -1,10 +1,37 @@
-.event-container, .event-miniformat-border {
+.event-container, .event-miniformat-border, .event-header-container {
   padding-left: 2px;
   padding-right: 2px;
 }
 
+.home-main-stripe, .italiadalvivo-branch-container {
+  padding-bottom: 30px;
+  .stripe__title {
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+}
+
+.events-container {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.event-header {
+  background-color: #fff;
+  border-bottom: 1px solid $blue;
+}
+
+.event-header-text {
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: $blue;
+  text-transform: uppercase;
+}
+
 .event-miniformat-border {
-  height: 4px;
+  padding-top: 4px;
+  padding-bottom: 0;
   width: 100%;
   background-color: $blue;
 }

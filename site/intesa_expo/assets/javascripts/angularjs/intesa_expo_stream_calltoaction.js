@@ -66,16 +66,7 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
         $scope.menu_field = "";
       }
 
-      if($scope.calltoaction_info.calltoaction.extra_fields) {
-        contents = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "content_");
-        if(contents.length > 0) {
-          $scope.calltoaction_info.calltoaction.contents = contents;
-        }
-        gallery = $scope.getContentWithPrefixFromExtraFields($scope.calltoaction_info.calltoaction.extra_fields, "photo_gallery_");
-        if(gallery.length > 0) {
-          $scope.calltoaction_info.calltoaction.gallery = gallery;
-        }
-      }
+      adjustGalleryCtaInfo($scope.calltoaction_info);
       
     } else {
       if($scope.aux.tag_menu_item) {
@@ -104,9 +95,30 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       angular.forEach(eventPreviews, function(eventPreview, key) {
         $scope.eventPreviewDates.push([key, eventPreview]);
       });
+
+      if($scope.aux.italiadalvivo_branch_cta_info) {
+        adjustGalleryCtaInfo($scope.aux.italiadalvivo_branch_cta_info);
+      }
     }
 
   };
+
+  $scope.getItaliaDalVivoBranchCtaInfo = function() {
+    return [$scope.aux.italiadalvivo_branch_cta_info];
+  };
+
+  function adjustGalleryCtaInfo(calltoaction_info) {
+    if(calltoaction_info.calltoaction.extra_fields) {
+      contents = $scope.getContentWithPrefixFromExtraFields(calltoaction_info.calltoaction.extra_fields, "content_");
+      if(contents.length > 0) {
+        calltoaction_info.calltoaction.contents = contents;
+      }
+      gallery = $scope.getContentWithPrefixFromExtraFields(calltoaction_info.calltoaction.extra_fields, "photo_gallery_");
+      if(gallery.length > 0) {
+        calltoaction_info.calltoaction.gallery = gallery;
+      }
+    }
+  }
 
   $scope.orderEventPreviewDates = function(eventPreviewDate) {
     return eventPreviewDate[0];
