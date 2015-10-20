@@ -34,14 +34,23 @@ module GalleryHelper
     
     galleries_user_cta_count 
   end
-  
+
   def get_gallery_ctas_carousel
+    get_gallery_ctas_carousel_aux("web") do |galleries, gallery_tag_ids|
+      construct_cta_gallery_info(galleries, gallery_tag_ids)  
+    end
+  end  
+  
+  def get_gallery_ctas_carousel_aux(cache_prefix, &block)
+    timestamp = Tag.select(:updated_at).find_by_name("gallery").updated_at
     if $site.galleries_split_by_property
       property = get_property()
+      timestamp = [timestamp, property.updated_at].max 
     else
       property = nil
     end
-    cache_medium(get_carousel_gallery_cache_key(property.nil? ? nil : property.name)) do
+    cache_key = get_carousel_gallery_cache_key(cache_prefix, from_updated_at_to_timestamp(timestamp), property.nil? ? nil : property.name)
+    cache_forever(cache_key) do
       gallery_tag_ids = get_gallery_ctas_carousel_tag_ids(property)
       
       params = {
@@ -51,10 +60,10 @@ module GalleryHelper
       }
       
       galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
-      construct_cta_gallery_info(galleries, gallery_tag_ids)
+      yield galleries, gallery_tag_ids
     end
   end
-  
+
   def get_gallery_ctas_carousel_tag_ids(property)
     if property
       tag_ids = Tag.select(:id).where(name: ["gallery", property.name]).map { |row| row.id }
@@ -89,23 +98,18 @@ module GalleryHelper
     galleries_info
   end
   
-  # this function is almost a duplicate of get_gallery_ctas_carousel, i leave previous function for retrocompatibility
-  # after refactoring of gallery page gallery carousel will return a list of content preview instead of a custom data structure
+  # This method is very similar to get_gallery_ctas_carousel, the only difference is the return value: here it's a list a content preview,
+  # while in the other method is an ad-hoc list of Hashes geared around an ad-hoc carousel; in the future we should refactor all carousel
+  # to be based on content previews, so the get_gallery_ctas_carousel method can be removed.
+  # Of course a better solution would also be to use the get_content_previews() method instead of this; the only difference is that this method
+  # filter by user_id and only gets ctas (not also tags)
   def get_api_gallery_ctas_carousel
-      gallery_tag_ids = get_tags_with_tag("gallery").map{ |t| t.id}
-      params = {
-        conditions: { 
-          without_user_cta: true 
-        }
-      }
-      galleries = get_ctas_with_tags_in_or(gallery_tag_ids, params)
+    get_gallery_ctas_carousel_aux("api") do |galleries, gallery_tag_ids|
       gallery_carousel = []
       galleries.each do |gallery|
-        #gallery_tag = get_tag_with_tag_about_call_to_action(gallery, "gallery").first
         gallery_carousel << cta_to_content_preview(gallery)
       end
-      
-      gallery_carousel
+    end
   end
   
 end

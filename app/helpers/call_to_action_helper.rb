@@ -109,20 +109,18 @@ module CallToActionHelper
       tag = get_tag_from_params(tag_name)
     end
    
-    if tag || gallery_info
-      
-      if gallery_info
-        cache_key = "gallery_#{tag.name}_#{gallery_info["gallery_calltoaction_id"]}"
-        if gallery_info["gallery_user_id"].present?
-          cache_key = "#{cache_key}_user_#{gallery_info["gallery_user_id"]}"
-        end
-      else
-        cache_key = tag.name
-      end
-      cache_key = "#{cache_key}_#{ordering}"
+    if tag
+      cache_key = tag.name
     else
-      cache_key = "#{ordering}"
+      cache_key = ""
     end
+    if gallery_info
+      cache_key = "gallery_#{cache_key}_#{gallery_info["gallery_calltoaction_id"]}"
+      if gallery_info["gallery_user_id"].present?
+        cache_key = "#{cache_key}_user_#{gallery_info["gallery_user_id"]}"
+      end
+    end
+    cache_key = "#{cache_key}_#{ordering}"
 
     calltoaction_ids_shown = params[:calltoaction_ids_shown]
     if calltoaction_ids_shown
@@ -240,6 +238,7 @@ module CallToActionHelper
         calltoactions = calltoactions.where("call_to_actions.id NOT IN (?)", ugc_calltoactions)
       end
     end
+    calltoactions
   end
 
   def cta_url(cta)
