@@ -12,17 +12,27 @@ module GalleryHelper
     params
   end
   
-  def get_gallery_ctas_count(gallery = nil)
-    if gallery.nil?
-      gallery_tag_ids = get_tags_with_tag("gallery").map{|t| t.id}
-      if gallery_tag_ids.blank?
-        []
-      else
-        CallToAction.active_with_media.includes(:call_to_action_tags).where("call_to_action_tags.tag_id in (?) AND user_id IS NOT NULL", gallery_tag_ids).references(:call_to_action_tags).count
-      end
+  def init_galleries_user_cta_count(gallery_calltoaction_id, property_name, user_id = nil)
+    if user_id
+      get_ctas(property_name, gallery_calltoaction_id).where("user_id = ?", user_id).count
     else
-      CallToAction.active_with_media.joins(call_to_action_tags: :tag).where("tags.name = ? AND call_to_actions.user_id IS NOT NULL", gallery.name).references(:call_to_action_tags, :tags).count
+      get_ctas(property_name, gallery_calltoaction_id).count
     end
+  end
+  
+  def get_gallery_ctas_count(user)
+    gallery_calltoaction_id = "all"
+    
+    if $site.galleries_split_by_property
+      property = get_property()
+      property_name = property.name
+      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, property, user)
+    else
+      property_name = nil
+      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, nil, user)
+    end
+    
+    galleries_user_cta_count 
   end
   
   def get_gallery_ctas_carousel

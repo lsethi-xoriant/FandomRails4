@@ -24,14 +24,6 @@ class GalleryController < ApplicationController
     end
   end
 
-  def init_galleries_user_cta_count(gallery_calltoaction_id, property_name, user_id = nil)
-    if user_id
-      get_ctas(property_name, gallery_calltoaction_id).where("user_id = ?", user_id).count
-    else
-      get_ctas(property_name, gallery_calltoaction_id).count
-    end
-  end
-
   def index
 
     _params = adjust_params_for_gallery(params)
@@ -43,19 +35,16 @@ class GalleryController < ApplicationController
         username: user.username
       }
     end
-
-    gallery_calltoaction_id = "all"
     
     if $site.galleries_split_by_property
       property = get_property()
       property_name = property.name
-      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, property, _params[:user])
     else
       property_name = nil
-      galleries_user_cta_count = init_galleries_user_cta_count(gallery_calltoaction_id, nil, _params[:user])
     end
-
-
+    
+    galleries_user_cta_count = get_gallery_ctas_count(_params[:user])
+    
     _params["page_elements"] = ["like", "comment", "share"]
     
     @calltoaction_info_list, @has_more = get_ctas_for_stream(property_name, _params, $site.init_ctas)
