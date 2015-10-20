@@ -1886,9 +1886,11 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
             // GOOGLE ANALYTICS
             if(data.ga) {
               $scope.update_ga_event(data.ga.category, data.ga.action, data.ga.label, 1);
-              angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
-                $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
-              });
+              if(data.new_outcome) {
+                angular.forEach(data.new_outcome.attributes.reward_name_to_counter, function(value, name) {
+                  $scope.update_ga_event("Reward", "UserReward", name.toLowerCase(), parseInt(value));
+                });
+              }
             }
 
             calltoaction_info = getCallToActionInfo(calltoaction_id);
@@ -2814,10 +2816,15 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     date = new Date(date);
     return date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
   };
-  
+
   $scope.formatFullDate = function(date, language) {
     date = new Date(date);
     return $scope.computeDayName(date.getDay(), language) + " " + date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language) + " " + date.getFullYear();
+  };
+
+  $scope.formatFullDateWithoutYear = function(date, language) {
+    date = new Date(date);
+    return $scope.computeDayName(date.getDay(), language) + " " + date.getDate() + " " + $scope.computeMonthName(date.getMonth(), language);
   };
 
   $scope.extractTimeFromDate = function(date) {

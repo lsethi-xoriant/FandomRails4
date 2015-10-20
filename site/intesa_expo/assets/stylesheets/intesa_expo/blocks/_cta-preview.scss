@@ -66,6 +66,12 @@
   .cta__related__icon--press-release, .cta__related__title--press-release {
     color: $blue_italiadalvivo !important;
   }
+  .cta__related__icon--arrow {
+    color: $blue_italiadalvivo !important;
+  }
+  .cta__evidence__press-widget__element--border {
+    border-bottom: 1px solid whitesmoke;
+  }
 }
 
 .cta__evidence-banner__img {
@@ -80,8 +86,8 @@
 
 .cta__evidence-banner__img--inaugurazione {
   overflow: hidden;
-  height: 250px;
-  margin-bottom: 15px;
+  height: 240px;
+  margin-bottom: 13px;
   background-size: auto 100%;
   background-position: center;
 }

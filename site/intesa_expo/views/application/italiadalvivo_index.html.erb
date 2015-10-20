@@ -17,13 +17,13 @@
                 <h3 class="event-header-text">{{eventPreviewDate[0]}}</h3>
               </div>
             </div>
-            <div class="col-sm-12 event-container" ng-repeat="eventPreview in eventPreviewDate[1] | orderBy:orderEventPreviewDates:false">
+            <div class="col-sm-12 event-container" ng-repeat="eventPreview in eventPreviewDate[2] | orderBy:orderEventPreviewDates:false">
 
               <!-- EVENT --> 
               <div class="panel panel-default event-panel">
-                <div class="panel-body event-panel-body">
-                  <p class="event-time">{{eventPreview[0]}}</p>
-                  <p class="event-title">{{eventPreview[1].title}}</p>
+                <div class="panel-body event-panel-body text-left">
+                  <p class="event-time"><span class="fa fa-clock-o"></span>{{eventPreview[0]}}</p>
+                  <p class="event-title">{{eventPreview[1].title | cut:80}}</p>
                   <img ng-src="{{eventPreview[1].thumb_wide_url}}">
                 </div>
               </div>

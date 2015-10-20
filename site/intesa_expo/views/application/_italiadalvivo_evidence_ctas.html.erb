@@ -17,17 +17,13 @@
               </div>
 
               <div class="col-xs-12 ctas__info">
-                <div class="ctas__info--bottom">
-                  <p class="ctas__flexslider__title hidden-xs" ng-bind-html="calltoaction.title"></p>
-                  <p class="ctas__flexslider__title visible-xs" ng-if="calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.extra_fields.title_mobile"></p>
-                  <p class="ctas__flexslider__title visible-xs" ng-if="!calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.title"></p>
+                <p class="ctas__flexslider__title hidden-xs" ng-bind-html="calltoaction.title"></p>
+                <p class="ctas__flexslider__title visible-xs" ng-if="calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.extra_fields.title_mobile"></p>
+                <p class="ctas__flexslider__title visible-xs" ng-if="!calltoaction.extra_fields.title_mobile" ng-bind-html="calltoaction.title"></p>
 
-                  <div ng-if="getFirstIcalInteractionForContent(calltoaction)">
-                    <p class="ctas__flexslider__description hidden-xs"><span class="fa fa-calendar-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[3]}}</span></p>
-                    <p class="ctas__flexslider__description hidden-xs" ng-if="getFirstIcalInteractionForContent(calltoaction)[2]"><span class="fa fa-clock-o"></span> <span class="ctas__flexslider__extra-field">{{getFirstIcalInteractionForContent(calltoaction)[2]}}</span></p>
-                    <p class="ctas__flexslider__description hidden-xs" ng-if="calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="ctas__flexslider__extra-field">{{calltoaction.extra_fields.guests}}</span></p>
-                  </div>
-
+                <div ng-if="infoEvent = getFirstIcalInteractionForContent(calltoaction)">
+                  <p class="ctas__flexslider__subtitle">{{infoEvent[4]}} - ore {{infoEvent[2]}}</p>
+                  <p class="ctas__flexslider__location" ng-bind-html="infoEvent[5]"></p>
                 </div>
               </div>
             </div>
@@ -53,7 +49,7 @@
       <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
       <div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-inaugurazione">Leggi</a></div>
     </div>
-    <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)">
+    <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)" ng-class="{'cta__evidence__press-widget__element--border': !$last}">
       <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
         <div class="col-xs-12">
           <i class="fa fa-file-text cta__related__icon--press-release"></i>

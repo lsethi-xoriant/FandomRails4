@@ -134,6 +134,28 @@
     background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
 }
 
+.ctas__flexslider--italiadalvivo {
+    .ctas__info {
+        padding: 30px;
+    }
+    .ctas__flexslider__title {
+        margin-bottom: 0;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle {
+        font-size: 18px;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle::first-letter {
+      text-transform: uppercase;
+    }
+    .ctas__flexslider__location {
+        padding-top: 15px;
+        color: $blue_italiadalvivo;
+        font-size: 12px;
+    }
+}
+
 .ctas__info--bottom {
     width: 100%;
     position: absolute;
@@ -201,6 +223,9 @@
     }
     .ctas__flexslider {
         height: 390px;
+    }
+    .ctas__flexslider--italiadalvivo {
+        height: 380px;
     }
 }
 
