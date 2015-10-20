@@ -1,6 +1,6 @@
 <!-- PROFILE -->
 <div class="modal fade" id="modal-update-user" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-sm-3 text-center">
+          <div class="col-sm-12 text-center">
             <div class="row">
               <div class="col-sm-12">
                 <a class="needsclick" ng-click="propagateClickOnFileUploadInput()" style="position: relative; display: inline-block;">
@@ -21,6 +21,12 @@
                 <button class="btn btn-default btn-xs iw_upload-btn" ng-click="propagateClickOnFileUploadInput()">CARICA FOTO</button>
               </div>
             </div>
+            <div class="col-sm-12">
+              <div class="form-group hidden">
+                <input id="upload-input" name="form_data.r_current_user._avatar" ng-file-select="" ng-model="form_data.r_current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.r_current_user._avatar[0])">
+              </div>
+              <button class="btn btn-green modal-update-user__btn" ng-click="updateUserWithAvatar()">AGGIORNA</button>
+            </div>
           </div>
           <div class="col-sm-9">
             <div ng-if="form_data.r_current_user.errors" class="iw-errors">
@@ -30,16 +36,14 @@
               </ul>
             </div>
 
+            <%#
             <div class="form-group">
               <input name="first_name" ng-model="form_data.r_current_user.first_name" class="form-control" placeholder="Nome" ng-readonly="current_user.first_name"></input>
             </div>
             <div class="form-group">
               <input name="last_name" ng-model="form_data.r_current_user.last_name" class="form-control" placeholder="Cognome"ng-readonly="current_user.last_name"></input>
             </div>
-            <div class="form-group hidden">
-              <input id="upload-input" name="form_data.r_current_user._avatar" ng-file-select="" ng-model="form_data.r_current_user._avatar" class="form-control" type="file" ng-file-change="generateThumb(form_data.r_current_user._avatar[0])">
-            </div>
-            <button class="btn btn-green modal-update-user__btn" ng-click="updateUserWithAvatar()">AGGIORNA</button>
+            %>
           </div>    
         </div>
       </div>
