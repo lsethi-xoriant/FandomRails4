@@ -219,20 +219,6 @@
   color: $lightblue !important;
 }
 
-.body-inaugurazione {
-  .cta__related__icon--press-release {
-    position: absolute;
-  }
-  .cta__related__icon--arrow {
-    position: absolute;
-    right: 10px;
-    top: 0px;
-  }
-  .main-row__evidence {
-    margin-bottom: 0;
-  }
-}
-
 .cta__related__title-content {
   color: $lightblue;
   font-size: 12px;
@@ -520,6 +506,15 @@
   font-weight: 300;
   margin-top: 0;
   line-height: inherit;
+}
+
+.italiadalvivo__about-description {
+  color: #000;
+  font-size: 14px;
+  font-weight: 300;
+  margin-top: 0;
+  line-height: inherit;
+  margin-bottom: 30px;
 }
 
 .cta__extra-content__container-fluid--about {

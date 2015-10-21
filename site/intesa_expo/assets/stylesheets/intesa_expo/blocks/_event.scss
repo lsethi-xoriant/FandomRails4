@@ -7,8 +7,41 @@
   padding-bottom: 60px;
   .stripe__title {
     margin-bottom: 30px;
-    margin-top: 30px;
+    margin-top: 60px;
     color: $blue_italiadalvivo;
+  }
+}
+
+.italiadalvivo-branch-container {
+  background-color: #fff;
+  #gallery-carousel {
+    background-color: $lightbrown;
+  }
+  #gallery-carousel .slides li {
+    opacity: 1 !important;
+  }
+  #gallery-carousel .gallery-carousel__img {
+    border-color: #fff;
+  }
+  #gallery-carousel .flex-active-slide .gallery-carousel__img {
+    border-color: $blue_italiadalvivo !important;
+  }
+  .flexslider {
+    box-shadow: none;
+  }
+  #gallery-carousel .flex-direction-nav a {
+    color: $blue_italiadalvivo;
+    opacity: 1;
+  }
+  #gallery-carousel .flex-direction-nav a:hover, #gallery-slider .flex-direction-nav a:focus {
+    -webkit-transition: opacity 300ms ease 0s;
+    transition: opacity 300ms ease 0s;
+    opacity: 0.7 !important;
+  }
+  #gallery-slider .flex-direction-nav a:hover, #gallery-slider .flex-direction-nav a:focus {
+    -webkit-transition: opacity 300ms ease 0s;
+    transition: opacity 300ms ease 0s;
+    opacity: 1;
   }
 }
 

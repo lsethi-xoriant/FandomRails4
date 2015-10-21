@@ -1,0 +1,235 @@
+.lightbrown_bg {
+  background-color: $lightbrown !important;
+}
+
+.body-inaugurazione {
+  .container-bg {
+    background-color: #fff;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+  }
+
+  .main-row__evidence {
+    padding-bottom: 0;
+  }
+
+  //////// FONT ////////
+
+  font-family: 'Open Sans', sans-serif;
+  h1, h2, .ctas__flexslider__title, .cta__extra_fields__title, .cta__related__title {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+  }
+
+  //////// HEADER ////////
+
+  #isp-header {
+    .title-header {
+      background-color: $blue_italiadalvivo !important;
+    }
+  }
+
+  .center-logo {
+    margin: 0; 
+    max-width: 340px;
+    width: 100%;
+  }
+
+  .header-row-inaugurazione {
+    margin-bottom: 30px;
+  }
+
+  .header-info-1 {
+    margin-top: 45px;
+    font-size: 28px;
+    color: #fff;
+  }
+
+  .header-info-2 {
+    font-size: 16px;
+    color: #fff;
+    margin-top: 10px;
+  }
+
+  .header-info-3 {
+    font-family: cursive;
+    font-size: 16px;
+    color: #fff;
+    margin-top: 10px;
+  }
+
+  //////// BROWSE ////////
+
+  .content-browse {
+    background-color: transparent;
+    background-image: none;
+    .container {
+      background-color: #fff;
+      .category-header__title {
+        margin-top: 60px;
+        margin-bottom: 30px;
+        color: $blue_italiadalvivo;
+      }
+      .content-preview__press-release-icon, .content-preview__title--press {
+        color: $blue_italiadalvivo !important;
+      }
+      .content-preview__press-release-icon {
+        margin-top: 5px;
+      }
+      .content-preview__title--press {
+        margin-top: 0;
+        padding-bottom: 5px;
+      }
+      .content-preview--press {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+      }
+      .content-preview__date {
+        padding-bottom: 15px;
+      }
+    }
+  }
+
+  //////// NAVBAR ////////
+
+  .navbar-nav li.active {
+    .navbar__item-text {
+      color: $blue_italiadalvivo;
+    }
+  }
+  .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: $blue_italiadalvivo !important; 
+  }
+
+  //////// HOME ////////
+
+  .cta__evidence__press-widget--inaugurazione {
+    padding-left: 5px;
+
+    .cta__evidence__press-widget__title-container {
+      background-color: $blue_italiadalvivo;
+    }
+
+    .cta__evidence__press-widget__title {
+      color: #fff;
+    }
+
+    .cta__related__icon--press-release, .cta__related__title--press-release {
+      color: $blue_italiadalvivo !important;
+    }
+
+    .cta__related__icon--arrow {
+      color: $blue_italiadalvivo !important;
+    }
+
+    .cta__evidence__press-widget__element--border {
+      border-bottom: 1px solid whitesmoke;
+    }
+
+  }
+
+  .cta__evidence-banner__img--inaugurazione {
+    overflow: hidden;
+    height: 242px;
+    margin-bottom: 15px;
+    background-size: auto 100%;
+    background-position: center;
+  }
+
+  .cta__related__icon--press-release {
+    position: absolute;
+  }
+
+  .cta__related__icon--arrow {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+  }
+
+  .main-row__evidence {
+    margin-bottom: 0;
+  }
+
+  .ctas__flexslider--italiadalvivo {
+    .ctas__info {
+        padding: 30px;
+        background: transparent !important;
+    }
+    .ctas__flexslider__title {
+        margin-bottom: 0;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle {
+        font-size: 18px;
+        color: $blue_italiadalvivo;
+    }
+    .ctas__flexslider__subtitle::first-letter {
+      text-transform: uppercase;
+    }
+    .ctas__flexslider__location {
+        padding-top: 15px;
+        color: $blue_italiadalvivo;
+        font-size: 12px;
+    }
+  }
+
+  .ctas__flexslider.ctas__flexslider--italiadalvivo {
+    border: none !important;  
+  }
+
+  //////// ABOUT ////////
+
+  .italiadalvivo__about-title {
+    text-transform: uppercase;
+    font-size: 26px;
+    color: $blue_italiadalvivo;
+    margin-bottom: 15px;
+    margin-top: 30px;
+    font-weight: 700;
+  }
+
+  .italiadalvivo__about-branch-name {
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: $blue_italiadalvivo;
+  }
+
+  .italiadalvivo__about-address {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #666;
+  }
+
+  .italiadalvivo__about-phone {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #666;
+    font-weight: 700;
+  }
+
+  .italiadalvivo__banner_img {
+    width: 100%;
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+
+}
+
+@media (min-width: $screen-md-min) { 
+  .ctas__flexslider--italiadalvivo {
+      height: 380px;
+  }
+}
+
+@media (min-width: $screen-sm-min) { 
+  .body-inaugurazione {
+    .navbar__container-fluid {
+      border-top: 1px solid #fff;
+    }
+    .navbar__container-fluid {
+      background-color: #fff;
+    }
+  }
+}
+

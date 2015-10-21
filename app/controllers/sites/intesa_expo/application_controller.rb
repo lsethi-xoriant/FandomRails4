@@ -137,31 +137,56 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
 
   def about
     language = $context_root || "it"
-    cta = CallToAction.find("about-#{language}")
 
-    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
+    if language != "inaugurazione"
+      cta = CallToAction.find("about-#{language}")
 
-    if params[:vcode].present?
-      if @calltoaction_info_list[0]["calltoaction"]["vcodes"].include?(params[:vcode])
+      @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta])
 
-        if @calltoaction_info_list[0]["calltoaction"]["vcodes"][0..2].include?(params[:vcode])
-          @calltoaction_info_list[0]["calltoaction"]["vcode"] = params[:vcode]
+      if params[:vcode].present?
+        if @calltoaction_info_list[0]["calltoaction"]["vcodes"].include?(params[:vcode])
+
+          if @calltoaction_info_list[0]["calltoaction"]["vcodes"][0..2].include?(params[:vcode])
+            @calltoaction_info_list[0]["calltoaction"]["vcode"] = params[:vcode]
+          end
+
+          @calltoaction_info_list[0]["calltoaction"]["extra_fields"]["spotlight"] = "<script type=\"text/javascript\">
+            var axel = Math.random() + \"\";
+            var a = axel * 10000000000000;
+            document.write('<iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=' + a + '?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>');
+            </script>
+            <noscript>
+            <iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=1?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>
+            </noscript>"
         end
-
-        @calltoaction_info_list[0]["calltoaction"]["extra_fields"]["spotlight"] = "<script type=\"text/javascript\">
-          var axel = Math.random() + \"\";
-          var a = axel * 10000000000000;
-          document.write('<iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=' + a + '?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>');
-          </script>
-          <noscript>
-          <iframe src=\"http://1412173.fls.doubleclick.net/activityi;src=1412173;type=expoh0;cat=isp_p001;ord=1?\" width=\"1\" height=\"1\" frameborder=\"0\" style=\"display:none\"></iframe>
-          </noscript>"
       end
+
+      complete_cta_for_show(cta)
+
+    else
+      italiadalvivo_about()
     end
 
-    complete_cta_for_show(cta)
+  end
 
-    @aux_other_params[:tag_menu_item] = get_extra_fields!(cta)["menu_item"]
+  def italiadalvivo_about()
+    tag = Tag.find_by_name("about-italiadalvivo")
+    tag_info = { extra_fields: get_extra_fields!(tag) }
+
+    italiadalvivo_branch_cta = CallToAction.find_by_name("italiadalvivo-branch")
+    if italiadalvivo_branch_cta
+      italiadalvivo_branch_cta_info = build_cta_info_list_and_cache_with_max_updated_at([italiadalvivo_branch_cta]).first
+    end
+
+    @aux_other_params = { 
+      tag_menu_item: get_extra_fields!(tag)["menu_item"], 
+      italiadalvivo_branch_cta_info: italiadalvivo_branch_cta_info,
+      about_tag_info: tag_info 
+    }
+    
+    set_seo_info_for_tag(tag)
+
+    render template: "/application/italiadalvivo_about"
   end
 
   def complete_cta_for_show(calltoaction)

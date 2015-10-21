@@ -55,25 +55,6 @@
   }
 }
 
-.cta__evidence__press-widget--inaugurazione {
-  padding-left: 5px;
-  .cta__evidence__press-widget__title-container {
-    background-color: $blue_italiadalvivo;
-  }
-  .cta__evidence__press-widget__title {
-    color: #fff;
-  }
-  .cta__related__icon--press-release, .cta__related__title--press-release {
-    color: $blue_italiadalvivo !important;
-  }
-  .cta__related__icon--arrow {
-    color: $blue_italiadalvivo !important;
-  }
-  .cta__evidence__press-widget__element--border {
-    border-bottom: 1px solid whitesmoke;
-  }
-}
-
 .cta__evidence-banner__img {
   img {
     width: 100%;
@@ -82,14 +63,6 @@
   border: 2px solid #fff;
   border-radius: 2px;
   height: 126px;
-}
-
-.cta__evidence-banner__img--inaugurazione {
-  overflow: hidden;
-  height: 240px;
-  margin-bottom: 13px;
-  background-size: auto 100%;
-  background-position: center;
 }
 
 .cta__evidence-right__title {
