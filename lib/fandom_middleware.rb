@@ -224,6 +224,13 @@ class FandomMiddleware
   end 
 
   def configure_paperclip_for_site(site)
+    if $original_paperclip_s3_settings.nil?
+      $original_paperclip_s3_settings = { 
+        :s3_host_alias => Paperclip::Attachment.default_options[:s3_host_alias], 
+        :url => Paperclip::Attachment.default_options[:url],
+        :path => Paperclip::Attachment.default_options[:path] 
+      } 
+    end
     config = Rails.configuration
     if config.deploy_settings.key?('paperclip')
       bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
@@ -232,11 +239,16 @@ class FandomMiddleware
       end
       Paperclip::Attachment.default_options.merge!(:bucket => bucket_name)
       
-      url = get_deploy_setting("sites/#{$site.id}/paperclip/:url", nil)
-      if url.nil?
-        url = "/:class/:attachment/:id_partition/:style/:filename"
+      s3_host_alias = get_deploy_setting("sites/#{$site.id}/paperclip/:s3_host_alias", nil)
+      if s3_host_alias.nil?
+        s3_host_alias = $original_paperclip_s3_settings[:s3_host_alias]
+        url = $original_paperclip_s3_settings[:url]
+        path = $original_paperclip_s3_settings[:path]
+      else 
+        url = ':s3_alias_url'
+        path = '/:class/:attachment/:id_partition/:style/:filename'
       end
-      Paperclip::Attachment.default_options.merge!(:url => url)
+      Paperclip::Attachment.default_options.merge!(s3_host_alias: s3_host_alias, url: url, path: path)
     end
   end
 
