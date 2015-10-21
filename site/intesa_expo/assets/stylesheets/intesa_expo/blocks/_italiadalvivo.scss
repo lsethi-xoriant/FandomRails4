@@ -1,8 +1,12 @@
-.lightbrown_bg {
-  background-color: $lightbrown !important;
-}
-
 .body-inaugurazione {
+  .lightbrown_bg {
+    background-color: $lightbrown !important;
+  }
+
+  .white-bg {
+    background-color: #fff !important;
+  }
+
   .container-bg {
     background-color: #fff;
     background-size: 100% auto;
@@ -11,6 +15,52 @@
 
   .main-row__evidence {
     padding-bottom: 0;
+  }
+
+  .cta__related__title--press-release, .cta__related__icon--press-release,
+  .cta__related__title, .cta__extra_fields__description__content, .cta__extra_fields__description,
+  .cta__related__title-content, .container-preview__icon-container__month {
+    color: $blue_italiadalvivo !important;
+  }
+
+  //////// SINGLE CTA ////////
+
+  .cta__bottom-subcontainer {
+    padding-top: 30px;
+  }
+
+  .cta__description {
+    margin-top: 0;
+  }
+
+  .cta__title-m {
+    margin-top: 30px;
+  }
+
+  .cta__extra_fields {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .cta__extra_fields__header {
+    padding: 15px;
+    background-color: $blue_italiadalvivo;
+  }
+
+  .cta__extra_fields__body {
+    padding: 15px;
+    background-color: $lightbrown;
+  }
+
+  .cta__title {
+    margin-top: 45px;
+    margin-bottom: 30px;
+    color: #fff;
+  }
+
+  .cta__extra_fields__title {
+    margin-bottom: 0;
+    color: #fff;
   }
 
   //////// FONT ////////
@@ -130,7 +180,7 @@
 
   .cta__evidence-banner__img--inaugurazione {
     overflow: hidden;
-    height: 242px;
+    height: 248px;
     margin-bottom: 15px;
     background-size: auto 100%;
     background-position: center;
@@ -148,6 +198,11 @@
 
   .main-row__evidence {
     margin-bottom: 0;
+    padding: 0;
+  }
+
+  .main-media-row {
+    padding: 0;
   }
 
   .ctas__flexslider--italiadalvivo {
@@ -231,5 +286,79 @@
       background-color: #fff;
     }
   }
+}
+
+.body-inaugurazione {
+
+  ////////////// btn-provider //////////////
+
+  .btn-provider { 
+    background-color: $blue_italiadalvivo; 
+    border-color: $blue_italiadalvivo; 
+  } 
+   
+  .btn-provider:hover, 
+  .btn-provider:focus, 
+  .btn-provider:active, 
+  .btn-provider.active, 
+  .open .dropdown-toggle.btn-provider { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+   
+  .btn-provider.disabled, 
+  .btn-provider[disabled], 
+  fieldset[disabled] .btn-provider, 
+  .btn-provider.disabled:hover, 
+  .btn-provider[disabled]:hover, 
+  fieldset[disabled] .btn-provider:hover, 
+  .btn-provider.disabled:focus, 
+  .btn-provider[disabled]:focus, 
+  fieldset[disabled] .btn-provider:focus, 
+  .btn-provider.disabled:active, 
+  .btn-provider[disabled]:active, 
+  fieldset[disabled] .btn-provider:active, 
+  .btn-provider.disabled.active, 
+  .btn-provider[disabled].active, 
+  fieldset[disabled] .btn-provider.active { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+   
+  ////////////// btn-about-v2 //////////////
+
+  .btn-about-v2 { 
+    background-color: $blue_italiadalvivo; 
+    border-color: $blue_italiadalvivo; 
+  }
+   
+  .btn-about-v2:hover, 
+  .btn-about-v2:focus, 
+  .btn-about-v2:active, 
+  .btn-about-v2.active, 
+  .open .dropdown-toggle.btn-about-v2 { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+
+  .btn-about-v2.disabled, 
+  .btn-about-v2[disabled], 
+  fieldset[disabled] .btn-about-v2, 
+  .btn-about-v2.disabled:hover, 
+  .btn-about-v2[disabled]:hover, 
+  fieldset[disabled] .btn-about-v2:hover, 
+  .btn-about-v2.disabled:focus, 
+  .btn-about-v2[disabled]:focus, 
+  fieldset[disabled] .btn-about-v2:focus, 
+  .btn-about-v2.disabled:active, 
+  .btn-about-v2[disabled]:active, 
+  fieldset[disabled] .btn-about-v2:active, 
+  .btn-about-v2.disabled.active, 
+  .btn-about-v2[disabled].active, 
+  fieldset[disabled] .btn-about-v2.active { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+
 }
 

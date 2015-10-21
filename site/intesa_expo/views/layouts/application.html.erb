@@ -41,6 +41,18 @@
   <% end %>
 </head>
 
+<% if @miniformat_color.present? %>
+  <style type="text/css">
+    .cta__main-column a {
+      color: <%= @miniformat_color %> !important;
+    }
+
+    .cta__main-column a:hover {
+      color: <%= darken_color(@miniformat_color) %> !important;
+    }
+  </style>
+<% end %>
+
 <body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %> body-{{aux.language}}" ng-controller="IntesaExpoStreamCalltoactionCtrl" ng-init="init(null, <%= calltoaction_info_list %>, '<%= get_calltoactions_count(calltoaction_info_list_count, aux) %>', null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
 
   <% if !cookies[:IntesaSanpaoloTracciatura] %>

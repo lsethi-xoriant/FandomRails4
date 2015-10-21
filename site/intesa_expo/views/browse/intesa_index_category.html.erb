@@ -1,7 +1,14 @@
 <% if $context_root == "inaugurazione" %>
-	<div class="container main-container">
-		<%= render partial: "/application/italiadalvivo_header" %>
-	</div>
+  <div class="container-fluid container-bg" ng-style="{'background-image': 'url(' + aux.assets.italiadalvivo_bg_img.url + ')'}">
+  	<div class="container main-container">
+  		<%= render partial: "/application/italiadalvivo_header" %>
+  	</div>
+    <div class="content-browse">
+      <%= render partial: "/browse/index_category_content" %>
+    </div>
+  </div>
+<% else %>
+  <div class="content-browse" <% if get_extra_fields!(@category)['background_image'] %> style="background-size: 100% 100%; background-attachment: fixed; background-image: url(<%= get_upload_extra_field_processor(get_extra_fields!(@category)['background_image'], :original) %>);" <% end %>>
+    <%= render partial: "/browse/index_category_content" %>
+  </div>
 <% end %>
-
-<%= render partial: "/browse/index_category_container" %>
