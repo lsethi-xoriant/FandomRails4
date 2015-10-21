@@ -13,11 +13,12 @@ class Sites::BraunIc::Easyadmin::UserController < Easyadmin::EasyadminController
   end
 
   def export_users
+    user_list = get_user_list(params)
     header = "id;email;first_name;last_name;birth_date;newsletter"
     aux_keys = get_aux_keys()
     header += aux_keys.any? ? ";#{aux_keys.to_a.join(';')}\n" : "\n"
     rows = ""
-    User.all.each do |user|
+    user_list.each do |user|
       if user.anonymous_id.nil?
         rows << build_user_row(user, aux_keys)
       end

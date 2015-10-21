@@ -79,13 +79,6 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     where_conditions = write_where_conditions(params, "approved = false")
     @comment_not_approved = UserCommentInteraction.where(where_conditions).page(page).per(per_page).order("created_at DESC")
 
-    # @user_id_filter = params[:user_id_filter]
-    # @cta_id_filter = params[:cta_id_filter]
-    # @text_filter = params[:text_filter]
-    # @from_date_filter = params[:from_date_filter]
-    # @to_date_filter = params[:to_date_filter]
-    # @profanity_check_filter = params[:profanity_check_filter]
-
     @filters = set_filter_values(params)
 
     @page_size = @comment_not_approved.num_pages
@@ -120,20 +113,6 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
     @page_current = page
     @start_index_row = page == 0 || page == 1 || page.blank? ? 1 : ((page - 1) * per_page + 1)
   end
-
-  def set_filter_values(params, value = nil)
-    filters = {}
-    if params[:filters]
-      params[:filters].each do |k, v|
-        if !value.nil?
-          filters[k] = value
-        else
-          filters[k] = v
-        end
-      end
-    end
-    filters
-  end
   
   def write_where_conditions(params, approved_cond)
     if params[:commit] == "RESET"
@@ -157,8 +136,14 @@ class Easyadmin::CommentsController < Easyadmin::EasyadminController
       end
     end
     if params[:filters]
-      where_conditions << " AND updated_at >= '#{params[:filters]["from_date"]}'" unless params[:filters]["from_date"].blank?
-      where_conditions << " AND updated_at <= '#{params[:filters]["to_date"]}'" unless params[:filters]["to_date"].blank?
+      unless params[:filters]["from_date"].blank?
+        from_date = time_parsed_to_utc("#{params[:filters]["from_date"]} 00:00:00")
+        where_conditions << " AND updated_at >= '#{from_date}'"
+      end
+      unless params[:filters]["to_date"].blank?
+        to_date = time_parsed_to_utc("#{params[:filters]["to_date"]} 23:59:59")
+        where_conditions << " AND updated_at <= '#{to_date}'"
+      end
       where_conditions << " AND user_id IN (#{params[:filters]["user_id"]})" unless params[:filters]["user_id"].blank?
       where_conditions << " AND text ILIKE '%#{params[:filters]["text"].gsub("'", "''")}%'" unless params[:filters]["text"].blank?
     end

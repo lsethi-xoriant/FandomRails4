@@ -136,6 +136,50 @@ module EasyadminHelper
     return RandomResource.find(randomform.object.id).tag rescue nil
   end
 
+  def set_filter_values(params, value = nil)
+    filters = {}
+    params_filters = params[:filters]
+    if params_filters
+      if params_filters.is_a? String
+        params_filters = eval(params_filters)
+      end
+      params_filters.each do |k, v|
+        if !value.nil?
+          filters[k] = value
+        else
+          filters[k] = v
+        end
+      end
+    end
+    filters
+  end
+
+  def get_user_list(filters)
+    where_conditions = ["anonymous_id IS NULL"]
+    where_conditions << "email ILIKE '%#{filters["email"]}%'" unless filters["email"].blank?
+    where_conditions << "username ILIKE '%#{filters["username"]}%'" unless filters["username"].blank?
+    unless filters["from_date"].blank?
+      created_at_from = time_parsed_to_utc("#{filters["from_date"]} 00:00:00")
+      where_conditions << "created_at >= '#{created_at_from}'"
+    end
+    unless filters["to_date"].blank?
+      created_at_to = time_parsed_to_utc("#{filters["to_date"]} 23:59:59")
+      where_conditions << "created_at <= '#{created_at_to}'"
+    end
+
+    where_conditions_string = where_conditions.join(" AND ")
+    User.where(where_conditions_string)
+  end
+
+  def get_users_export_url(filters)
+    url = "/easyadmin/export_users/"
+    filters.reject{|k, v| v.blank?}.each_with_index do |(name, value), i|
+      connector = i == 0 ? "?" : "&"
+      url += "#{connector}#{name}=#{value}" unless value.blank?
+    end
+    url
+  end
+
   def export_user_call_to_actions(call_to_action_ids)
     aux_columns = get_cta_columns_from_json_fields(call_to_action_ids, "aux")
 

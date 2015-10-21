@@ -15,7 +15,8 @@ class Easyadmin::UserController < Easyadmin::EasyadminController
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
 
-    @user_list = User.page(page).per(per_page)
+    @filters = {}
+    @user_list = User.where(:anonymous_id => nil).page(page).per(per_page)
 
     @page_size = @user_list.num_pages
     @page_current = page
@@ -27,11 +28,14 @@ class Easyadmin::UserController < Easyadmin::EasyadminController
   end
   
   def export_users
+    user_list = get_user_list(params)
+
     csv = "id;email;remember_created_at;sign_in_count;current_sign_in_at;last_sign_in_at;"+
         "current_sign_in_ip;last_sign_in_ip;first_name;last_name;avatar_selected;swid;privacy;confirmation_token;confirmed_at;confirmation_sent_at;"+
         "unconfirmed_email;role;authentication_token;created_at;updated_at;avatar_file_name;avatar_content_type;avatar_file_size;avatar_updated_at;"+
         "cap;location;province;address;phone;number;rule;birth_date;username;newsletter;avatar_selected_url;aux;gender\n"
-    User.all.each do |user|
+
+    user_list.each do |user|
     csv << "#{user.id};#{user.email};#{user.remember_created_at};"+
             "#{user.sign_in_count};#{user.current_sign_in_at};#{user.last_sign_in_at};#{user.current_sign_in_ip};#{user.last_sign_in_ip};#{user.first_name};"+
             "#{user.last_name};#{user.avatar_selected};#{user.swid};#{user.privacy};#{user.confirmation_token};#{user.confirmed_at};#{user.confirmation_sent_at};"+
@@ -45,20 +49,16 @@ class Easyadmin::UserController < Easyadmin::EasyadminController
   def filter_user
     page = params[:page].blank? ? 1 : params[:page].to_i
     per_page = 20
-    @user_list = User.page(page).per(per_page)
 
-    @email_filter = params[:email_filter]
-    @username_filter = params[:username_filter]
+    @filters = set_filter_values(params)
 
     if params[:commit] == "APPLICA FILTRO"
-      where_conditions = "true"
-      where_conditions << " AND email ILIKE '%#{@email_filter}%'" unless @email_filter.blank?
-      where_conditions << " AND username ILIKE '%#{@username_filter}%'" unless @username_filter.blank?
-
-      @user_list = User.where(where_conditions).page(page).per(per_page)
+      if @filters.any?
+        @user_list = get_user_list(@filters).page(page).per(per_page)
+      end
     else
-      @email_filter = nil
-      @username_filter = nil
+      @user_list = User.where(:anonymous_id => nil).page(page).per(per_page)
+      @filters = params[:filters] = {}
     end
 
     @page_size = @user_list.num_pages
