@@ -1,40 +1,42 @@
-<div class="container-fluid__blue">
-  <div class="container container--blue footer__container" ng-if="aux.language == 'it'"> 
-    <div class="row main-row">
-      <div class="col-sm-12 text-center">
-        <p class="footer__container__title">{{aux.assets['footer_title_' + aux.language]}}</p>
-      </div>
-      <div class="col-sm-3 col-xs-6 text-center" ng-repeat="n in getNumber(4) track by $index">
-        <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Scopri', aux.assets['footer_seo_' + ($index + 1)], $event)">
-          <img class="img-responsive footer__container__img" ng-src="{{aux.assets['footer_img_' + ($index + 1) + '_' + aux.language].url}}">
-          <p class="footer__container__description">{{aux.assets['footer_description_' + ($index + 1) + '_' + aux.language]}}</p>
-        </a>
+<% if $context_root != "inaugurazione" %>
+  <div class="container-fluid__blue">
+    <div class="container container--blue footer__container" ng-if="aux.language == 'it'"> 
+      <div class="row main-row">
+        <div class="col-sm-12 text-center">
+          <p class="footer__container__title">{{aux.assets['footer_title_' + aux.language]}}</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 text-center" ng-repeat="n in getNumber(4) track by $index">
+          <a href="{{aux.assets['footer_url_' + ($index + 1) + '_' + aux.language]}}" ng-click="intesaExpoGa('Navigation', 'Scopri', aux.assets['footer_seo_' + ($index + 1)], $event)">
+            <img class="img-responsive footer__container__img" ng-src="{{aux.assets['footer_img_' + ($index + 1) + '_' + aux.language].url}}">
+            <p class="footer__container__description">{{aux.assets['footer_description_' + ($index + 1) + '_' + aux.language]}}</p>
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="container-fluid__lightblue">
-  <div class="container container--lightblue"> 
-    <div class="row main-row">
-      <div class="col-sm-4 text-center">
-        <img class="footer__container__img-expo" ng-src="{{aux.assets.footer_expo_img.url}}">
-      </div>
-      <div class="col-sm-8">
-        <div class="row">
-          <div class="col-sm-12">
-            <p class="footer__container__title-expo">{{aux.assets['footer_expo_title_' + aux.language]}}</p>
-          </div>
-          <div class="col-sm-12">
-            <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
-            <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" ng-if="aux.language != 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
-            <a href="http://www.expo.intesasanpaolo.com/about" class="btn btn-blue footer__container__btn" ng-if="aux.language == 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_it']}}</a>
+  <div class="container-fluid__lightblue">
+    <div class="container container--lightblue"> 
+      <div class="row main-row">
+        <div class="col-sm-4 text-center">
+          <img class="footer__container__img-expo" ng-src="{{aux.assets.footer_expo_img.url}}">
+        </div>
+        <div class="col-sm-8">
+          <div class="row">
+            <div class="col-sm-12">
+              <p class="footer__container__title-expo">{{aux.assets['footer_expo_title_' + aux.language]}}</p>
+            </div>
+            <div class="col-sm-12">
+              <p class="footer__container__description-expo" ng-bind-html="aux.assets['footer_expo_description_' + aux.language]"></p>
+              <a href="{{linkTo('/about')}}" class="btn btn-blue footer__container__btn" ng-if="aux.language != 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_' + aux.language]}}</a>
+              <a href="http://www.expo.intesasanpaolo.com/about" class="btn btn-blue footer__container__btn" ng-if="aux.language == 'imprese'" onclick="intesaExpoGaW('Navigation','Footer','Scopri', this);">{{aux.assets['footer_expo_btn_it']}}</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <div id="footer"><!-- Footer -->
     <div id="isp-footer" class="footer small-12 chrome modern mac webkit">

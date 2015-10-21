@@ -74,11 +74,17 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       }
     }
 
-    if($scope.aux.context_root == "inaugurazione" && $scope.aux.event_stripe) {
-      initEventContainer();
+    if($scope.aux.context_root == "inaugurazione") {
+      if($scope.aux.event_stripe) {
+        initEventContainer();
+      }
 
       if($scope.aux.italiadalvivo_branch_cta_info) {
         adjustGalleryCtaInfo($scope.aux.italiadalvivo_branch_cta_info);
+      }
+
+      if($scope.aux.about_tag_info) {
+        google.maps.event.addDomListener(window, 'load', initMap);
       }
     }
 
@@ -495,5 +501,72 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
       this.playerManager.seekTo(time, true);
     };
   };
+
+  ////////////////////////// GOOGLE MAPS //////////////////////////
+
+  function initMapStyles() {
+    return [
+      {
+        stylers: [
+          { hue: "#c0e8e9" },
+          { saturation: -20 }
+        ]
+      },{
+        featureType: "road",
+        elementType: "geometry",
+        stylers: [
+          { lightness: 100 },
+          { visibility: "simplified" }
+        ]
+      },{
+        featureType: "road",
+        elementType: "labels",
+        stylers: [
+          { visibility: "off" }
+        ]
+      }
+    ];
+  }
+
+  function initMarkers(map, mapInfo) {
+    var markers = mapInfo.markers.split(";");
+    angular.forEach(markers, function(marker) {
+      markerInfo = marker.split(",")
+      var infowindow = new google.maps.InfoWindow({
+        content: markerInfo[2]
+      });
+
+      var marker = new google.maps.Marker({
+        position: { lat: parseFloat(markerInfo[0]), lng: parseFloat(markerInfo[1]) },
+        map: map
+      });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    });
+  }
+ 
+  function initMap() {
+    var styles = initMapStyles()
+    var styledMap = new google.maps.StyledMapType(styles, { name: "BlueMap" });
+
+    var mapInfo = $scope.aux.about_tag_info.extra_fields;
+
+    var mapOptions = {
+      zoom: parseInt(mapInfo.map_zoom),
+      center: new google.maps.LatLng(parseFloat(mapInfo.map_lat), parseFloat(mapInfo.map_lng)),
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+      }
+    };
+
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+      map.mapTypes.set('map_style', styledMap);
+      map.setMapTypeId('map_style');
+
+    initMarkers(map, mapInfo);
+
+  }
 
 }
