@@ -172,13 +172,6 @@ module Fandom
     Paperclip.options[:command_path] = "/usr/local/bin"
     if config.deploy_settings.key?('paperclip')
       config.paperclip_defaults = config.deploy_settings['paperclip']
-      config.paperclip_defaults[:bucket] = lambda do |attachment| 
-        bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
-        if bucket_name.nil?
-          log_error("missing paperclip bucket configuration for tenant", { site: $site.id })
-        end
-        bucket_name
-      end
     end
 
     # this extra security of the breach-mitigation-rails gem is disabled for performance reason;

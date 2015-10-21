@@ -137,6 +137,7 @@ class FandomMiddleware
       self.class.configure_all_mailers_for_site($site)
       configure_environment_for_site($site)
       configure_omniauth_for_site($site)
+      configure_paperclip_for_site($site)
     end
   end
 
@@ -221,6 +222,23 @@ class FandomMiddleware
   def configure_omniauth_for_site(site)
     # TODO: 
   end 
+
+  def configure_paperclip_for_site(site)
+    config = Rails.configuration
+    if config.deploy_settings.key?('paperclip')
+      bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
+      if bucket_name.nil?
+        log_error("missing paperclip bucket configuration for tenant", { site: $site.id })
+      end
+      Paperclip::Attachment.default_options.merge!(:bucket => bucket_name)
+      
+      url = get_deploy_setting("sites/#{$site.id}/paperclip/:url", nil)
+      if url.nil?
+        url = "/:class/:attachment/:id_partition/:style/:filename"
+      end
+      Paperclip::Attachment.default_options.merge!(:url => url)
+    end
+  end
 
   #####################################################################
   #
