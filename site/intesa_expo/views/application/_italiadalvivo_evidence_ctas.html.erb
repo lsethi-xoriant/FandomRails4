@@ -8,12 +8,8 @@
           <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('Navigation', 'Carousel', calltoaction.slug, $event)">
             <div class="row">
 
-              <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
-                <img ng-src="{{calltoaction.thumb_medium_url}}">
-              </div>
-
-              <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
-                <img ng-src="{{calltoaction.thumb_wide_url}}">
+              <div class="col-xs-12 ctas__flexslider__img-container">
+                <img ng-src="{{getUploadExtraFieldProcessor(calltoaction.extra_fields.carousel_img, 'original')}}">
               </div>
 
               <div class="col-xs-12 ctas__info">
@@ -34,7 +30,7 @@
   </div>
 
   <!-- BANNER -->
-  <div class="col-md-3 col-sm-6 cta__evidence-banner">
+  <div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux['press-release_stripe'].contents.length > 1">
     <div class="cta__evidence-banner__img--inaugurazione" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
     </div> 
     <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
@@ -43,9 +39,19 @@
     </a>
   </div>
 
+  <!-- BANNER LONG -->
+  <div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux['press-release_stripe'].contents.length < 2">
+    <div class="cta__evidence-banner__img--inaugurazione cta__evidence-banner__img--inaugurazione--tall" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language + '_tall'].url + ')'}">
+    </div> 
+    <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
+      <div class="cta__evidence-banner__img--inaugurazione cta__evidence-banner__img--inaugurazione--tall" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language + '_tall'].url + ')'}">
+      </div>
+    </a>
+  </div>
+
   <!-- OFFICE AREA -->
   <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione hidden-xs">
-    <div class="cta__evidence__press-widget__title-container">
+    <div class="cta__evidence__press-widget__title-container" ng-if="aux['press-release_stripe'].contents.length > 1">
       <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
       <div class="col-xs-4 text-right"><a class="read" href="/inaugurazione/browse/category/press-release-inaugurazione">Leggi</a></div>
     </div>
