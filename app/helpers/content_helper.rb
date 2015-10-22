@@ -200,6 +200,8 @@ module ContentHelper
       tags: tags,
       extra_fields: get_extra_fields!(tag),
       layout: get_content_preview_layout(tag),
+      # keep these two fields without converting into int for compatibility with intesa calendar
+      # don't know if they are used but to avoid regression i leave them [MATTEO]
       start: tag.valid_from,
       end: tag.valid_to
     )
@@ -220,11 +222,12 @@ module ContentHelper
     # content_preview.votes = get_number_of_interaction_type_for_cta("Vote", cta)
     content_preview.aux = build_content_preview_aux(cta)
     content_preview.interactions = interactions
-    content_preview.valid_from = cta.valid_from
-    content_preview.valid_to = cta.valid_to
+    
+    # ical_id, start and and are used to setup calendar widget and comes from ical interaction attached to cta
     content_preview.ical_id = event_date_info[:ical_id]
     content_preview.start = event_date_info[:start_date]
     content_preview.end = event_date_info[:end_date]
+    
     content_preview
   end
   
@@ -240,7 +243,9 @@ module ContentHelper
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,
       detail_url: cta_url(cta),
-      created_at: cta.created_at.to_time.to_i,
+      created_at: cta.created_at.to_i,
+      valid_from: cta.valid_from.nil? ? nil : cta.valid_from.to_i,
+      valid_to: cta.valid_to.nil? ? nil : cta.valid_to.to_i,
       comments: nil,
       likes: nil,
       status: nil,
@@ -266,7 +271,7 @@ module ContentHelper
       description: populate_desc ? truncate(cta.description, :length => 150, :separator => ' ') : nil,
       long_description: populate_desc ? cta.description : nil,
       detail_url: (cta_url(cta) rescue ""),
-      created_at: (cta.created_at.to_time.to_i rescue nil),
+      created_at: (cta.created_at.to_i rescue nil),
       comments: nil,
       likes: nil,
       status: reward.cost,

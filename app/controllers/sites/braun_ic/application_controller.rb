@@ -151,80 +151,69 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     rewards.first
   end
 
+  def show
+    cta_id = params[:id]
+    descendent_id = params[:descendent_id]
+
+    cta = compute_cta(cta_id, descendent_id)
+
+    tip_tag = Tag.find("test")
+    is_cta_tagged_with_test = CallToActionTag.where(call_to_action_id: cta.id, tag_id: tip_tag.id).any?
+    
+    if is_cta_tagged_with_test
+      show_computation(cta)
+      render template: "/call_to_action/show"
+    else
+      index_computation(cta)
+      render template: "/application/index"
+    end
+  end
+
   def index
+    index_computation
+  end
+
+  def show_computation(cta = nil)
+    @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta], ["quiz", "share"])
+
+    if current_user
+      params = { "page_elements" => ["quiz", "share"] }
+      badges_for_calltoaction_info_list, has_more = get_ctas_for_stream("test", params, 15)
+    else
+      badges_for_calltoaction_info_list = @calltoaction_info_list
+    end
+
+    badges = compute_badges(badges_for_calltoaction_info_list)
+
+    @aux_other_params = { 
+      calltoaction_evidence_info: true,
+      badges: badges
+    }
+  end
+
+  def index_computation(cta = nil)
     if current_user
       compute_save_and_notify_context_rewards(current_user)
     end
 
     return if cookie_based_redirect?
 
-    cta_id = params[:id]
-    descendent_id = params[:descendent_id]
-
     params = { "page_elements" => ["quiz", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream("test", params, 15)
 
-    cta_ids = @calltoaction_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
-    
-    badge_tag = Tag.find("badge")
-    ctas = CallToAction.where(id: cta_ids)
-
-    badges = {}
- 
-    @calltoaction_info_list.each do |cta_info|
-      cta = find_in_calltoactions(ctas, cta_info["calltoaction"]["id"])
-      
-      category_tag = get_cta_tag_tagged_with(cta, "test")
-      reward_ids = get_rewards_with_tags_in_and([category_tag, badge_tag]).map { |r| r.id }
-
-      rewards = Reward.includes(:user_rewards).where("rewards.id IN (?)", reward_ids)
-      if current_user
-        reward = rewards.where("user_rewards.user_id = ?", current_user.id).references(:user_rewards).order(cost: :desc).first
-        if reward
-          inactive = false
-        else
-          reward = rewards.order(cost: :asc).first 
-          inactive = true
-        end
-      else
-        reward = rewards.order(cost: :asc).first
-        inactive = true
-      end
-
-      parent_cta_info = get_parent_cta(cta_info)
-      activated_at = parent_cta_info["calltoaction"]["activated_at"]
-      name = parent_cta_info["calltoaction"]["name"]
-      badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, activated_at, name)
-    end
-
+    badges = compute_badges(@calltoaction_info_list)
+   
     product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
-    if cta_id
-      cta = CallToAction.find(cta_id)
-
-      set_seo_info_for_cta(cta)
+    if cta
       anchor_to = cta.slug
-      compute_seo()
 
-      if cta.extra_fields["share_img"].present?
-        update_seo_value(cta.extra_fields["share_img"]["url"], "meta_image")
-      end
-
+      # if the cta shown in params is a tips he must put in the top
       tip_tag = Tag.find("tip")
       is_cta_tagged_with_tip = CallToActionTag.where(call_to_action_id: cta.id, tag_id: tip_tag.id).any?
       if is_cta_tagged_with_tip
         top_cta_info = build_cta_info_list_and_cache_with_max_updated_at([cta], ["share"])
       end
-      
-      if descendent_id
-        calltoaction_to_share = CallToAction.find(descendent_id)
-        extra_fields = calltoaction_to_share.extra_fields
 
-        image = strip_tags(extra_fields["linked_result_image"]["url"]) rescue nil
-
-        update_seo_value(strip_tags(extra_fields["linked_result_title"]), "title")
-        update_seo_value(strip_tags(extra_fields["linked_result_description"]), "meta_description")
-        update_seo_value(image, "meta_image")
-      end
     else 
       compute_seo()
     end
@@ -260,6 +249,66 @@ class Sites::BraunIc::ApplicationController < ApplicationController
         has_more: has_more_products
       }
     }
+  end
+
+  def compute_cta(cta_id, descendent_id = nil)
+    cta = CallToAction.includes(:interactions).active.references(:interactions).find(cta_id)
+
+    set_seo_info_for_cta(cta)
+    compute_seo()
+
+    if cta.extra_fields["share_img"].present?
+      update_seo_value(cta.extra_fields["share_img"]["url"], "meta_image")
+    end
+    
+    if descendent_id
+      calltoaction_to_share = CallToAction.find(descendent_id)
+      extra_fields = calltoaction_to_share.extra_fields
+
+      image = strip_tags(extra_fields["linked_result_image"]["url"]) rescue nil
+
+      update_seo_value(strip_tags(extra_fields["linked_result_title"]), "title")
+      update_seo_value(strip_tags(extra_fields["linked_result_description"]), "meta_description")
+      update_seo_value(image, "meta_image")
+    end
+
+    cta
+  end
+
+  def compute_badges(cta_info_list)
+    cta_ids = cta_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
+    ctas = CallToAction.where(id: cta_ids)
+
+    badge_tag = Tag.find("badge")
+    badges = {}
+ 
+    cta_info_list.each do |cta_info|
+      cta = find_in_calltoactions(ctas, cta_info["calltoaction"]["id"])
+      
+      category_tag = get_cta_tag_tagged_with(cta, "test")
+      reward_ids = get_rewards_with_tags_in_and([category_tag, badge_tag]).map { |r| r.id }
+
+      rewards = Reward.includes(:user_rewards).where("rewards.id IN (?)", reward_ids)
+      if current_user
+        reward = rewards.where("user_rewards.user_id = ?", current_user.id).references(:user_rewards).order(cost: :desc).first
+        if reward
+          inactive = false
+        else
+          reward = rewards.order(cost: :asc).first 
+          inactive = true
+        end
+      else
+        reward = rewards.order(cost: :asc).first
+        inactive = true
+      end
+
+      parent_cta_info = get_parent_cta(cta_info)
+      activated_at = parent_cta_info["calltoaction"]["activated_at"]
+      name = parent_cta_info["calltoaction"]["name"]
+      badges[get_parent_cta_name(cta_info)] = adjust_braun_ic_reward(reward, inactive, activated_at, name)
+    end
+
+    badges
   end
 
   def index_tips

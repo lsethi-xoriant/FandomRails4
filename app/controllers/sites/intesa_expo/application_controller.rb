@@ -13,7 +13,17 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     render '/application/iframe_stripe', :layout => 'stripe' 
   end
   
-  def index
+  before_filter :basic_http_security_check_italiadalvivo, only: :index
+
+  def basic_http_security_check_italiadalvivo 
+    if $context_root == "inaugurazione" # italiadalvivo  
+      authenticate_or_request_with_http_basic do |username, password|
+        username == "intesa" && password == "italiadalvivo"
+      end
+    end
+  end
+
+  def index    
     if current_user
       compute_save_and_notify_context_rewards(current_user)
     end
@@ -44,7 +54,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       render template: "/application/imprese_index"
     
     elsif $context_root == "inaugurazione" # italiadalvivo
-      
+
       inaugurazione_index
 
     else
