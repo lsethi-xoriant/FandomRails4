@@ -179,7 +179,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     end
 
     @aux_other_params = { 
-      tag_menu_item: "home", 
+      tag_menu_item: "about", 
       italiadalvivo_branch_cta_info: italiadalvivo_branch_cta_info,
       about_tag_info: tag_info 
     }
