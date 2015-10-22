@@ -169,7 +169,7 @@ class User < ActiveRecordWithJSON
   end
   
   def set_current_avatar
-    self.avatar_selected_url = avatar.url(:thumb) if avatar.present?
+    self.avatar_selected_url = avatar.url(:thumb) if avatar.present? && avatar_selected == "upload"
   end
   
   def default_values
