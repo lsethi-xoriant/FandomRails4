@@ -39,7 +39,7 @@ class Sites::Disney::CallToActionController < CallToActionController
       calltoaction_info_list: calltoaction_info_list,
       has_more: has_more
     }
-    
+
     respond_to do |format|
       format.json { render json: response.to_json }
     end 

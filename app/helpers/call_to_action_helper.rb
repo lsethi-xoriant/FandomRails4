@@ -171,6 +171,10 @@ module CallToActionHelper
       gallery_user_id = gallery_info["gallery_user_id"]
     end
 
+    if gallery_info && $site.id == "disney"
+      tag = nil
+    end
+
     calltoactions = get_ctas(tag, gallery_calltoaction_id)
 
     # Append other scenario
@@ -189,11 +193,19 @@ module CallToActionHelper
 
     case ordering
     when "comment"
-      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-      gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
+      if calltoactions.size > 0
+        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+        gets_ctas_ordered_by_comments(calltoaction_ids, limit_ctas)
+      else
+        []
+      end
     when "view"
-      calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
-      gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
+      if calltoactions.size > 0
+        calltoaction_ids = from_ctas_to_cta_ids_sql(calltoactions)
+        gets_ctas_ordered_by_views(calltoaction_ids, limit_ctas)
+      else
+        []
+      end
     else
       calltoactions.limit(limit_ctas).to_a
     end
@@ -210,7 +222,7 @@ module CallToActionHelper
       return get_ctas_not_in_gallery(tag)
     end
   end
-  
+
   def get_ctas_in_gallery(tag, gallery_cta_id_or_all)
     if gallery_cta_id_or_all == "all"
       if tag
@@ -293,10 +305,11 @@ module CallToActionHelper
     #      "WHERE interactions.resource_type = 'Comment' AND call_to_actions.id in (#{calltoaction_ids}) " +
     #      "GROUP BY call_to_actions.id " +
     #      "ORDER BY sum DESC limit #{cta_count};"
-    query = "SELECT interactions.call_to_action_id AS id " +
-            "FROM interactions LEFT OUTER JOIN view_counters ON interactions.id = view_counters.ref_id " +
-            "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'interaction') AND interactions.call_to_action_id IN (#{calltoaction_ids}) AND interactions.resource_type = 'Comment' " +
-            "ORDER BY coalesce(view_counters.counter, 0) DESC limit #{cta_count};"
+    query = 
+      "SELECT interactions.call_to_action_id AS id " +
+      "FROM interactions LEFT OUTER JOIN view_counters ON interactions.id = view_counters.ref_id " +
+      "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'interaction') AND interactions.call_to_action_id IN (#{calltoaction_ids}) AND interactions.resource_type = 'Comment' " +
+      "ORDER BY coalesce(view_counters.counter, 0) DESC limit #{cta_count};"
     execute_sql_and_get_ctas_ordered(query)
   end
 

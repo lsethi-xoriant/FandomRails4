@@ -160,8 +160,7 @@ Fandom::Application.routes.draw do
         end
 
         resources :call_to_action, only: :show
-        
-        get "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
+
         get "rss", :to => "rss#calltoactions", defaults: { format: 'rss' }
         post "/update_interaction", :to => "call_to_action#update_interaction", defaults: { format: 'json' }
         post "/append_calltoaction", :to => "call_to_action#append_calltoaction", defaults: { format: 'json' }
@@ -315,6 +314,8 @@ Fandom::Application.routes.draw do
   post "/user_cookies", to: "application#user_cookies", defaults: { format: 'json' }
 
   get "/random_calltoaction", to: "call_to_action#random_calltoaction", defaults: { format: 'json' }
+
+  get "ordering_ctas", to: "call_to_action#ordering_ctas" , defaults: { format: 'json' }
 
   get "/file_upload_too_large", to: "application#file_upload_too_large"
 

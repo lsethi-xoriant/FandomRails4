@@ -71,11 +71,14 @@ class CallToActionController < ApplicationController
   end
 
   def ordering_ctas
-    init_ctas = $site.init_ctas
-    tag_name = get_property()
+    tag = get_property()
     tag_name = tag.present? ? tag.name : nil
-    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, init_ctas)
+    params[:page_elements] = ["like", "comment", "share"]
 
+    if params["other_params"]
+      params["other_params"] = JSON.parse(params["other_params"])
+    end
+    calltoaction_info_list, has_more = get_ctas_for_stream(tag_name, params, $site.init_ctas)
     response = {
       calltoaction_info_list: calltoaction_info_list,
       has_more: has_more
