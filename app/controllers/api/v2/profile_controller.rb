@@ -270,7 +270,8 @@ class Api::V2::ProfileController < Api::V2::BaseController
     my_position, total = get_my_position(rank.name)
     response["ranking_list"] = []
     
-    response["ranking_list"] << prepare_ranking(property_rank, "point")
+    response["ranking_list"] << prepare_ranking(property_rank, "point", property_rank[:total])
+    
     if my_position && my_position > 10
       response["ranking_list"].first["position_list"].unshift(prepare_my_position(my_position, rank.reward.name))
     end
@@ -303,8 +304,9 @@ class Api::V2::ProfileController < Api::V2::BaseController
     
     galleries.each do |gallery|
       rank = get_full_vote_rank(gallery, page)
+      
       if rank[:rank_list].count > 0
-        gallery_rankings << prepare_ranking(rank, "vote")
+        gallery_rankings << prepare_ranking(rank, "vote", rank[:total])
       end
     end
     
@@ -338,7 +340,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
     
   end
   
-  def prepare_ranking(rank, type)
+  def prepare_ranking(rank, type, total = 0)
     ranking_element = {}
     ranking_element["title"] = rank[:ranking].title
     ranking_element["name"] = rank[:ranking].name
@@ -356,6 +358,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
       }
     end
     ranking_element["position_list"] = position_list
+    ranking_element["total"] = total
     
     ranking_element
   end
@@ -377,6 +380,7 @@ class Api::V2::ProfileController < Api::V2::BaseController
       end
     end
     ranking_element["position_list"] = position_list
+    ranking_element["total"] = position_list.count
     
     ranking_element
   end
