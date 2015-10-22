@@ -96,7 +96,7 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
       "italiadalvivo_branch_cta_info" => italiadalvivo_branch_cta_info,
       "event_stripe" => events,
       "press-release_stripe" => get_intesa_expo_ctas_with_tag("press-release"),
-      "tag_menu_item" => "home"
+      "tag_menu_item" => "inaugurazione-home"
     }
 
     render template: "/application/italiadalvivo_index"

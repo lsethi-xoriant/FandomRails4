@@ -5,7 +5,7 @@
     <div class="flexslider ctas__flexslider ctas__flexslider--italiadalvivo">
       <ul class="slides">
         <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
+          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('Navigation', 'Carousel', calltoaction.slug, $event)">
             <div class="row">
 
               <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
