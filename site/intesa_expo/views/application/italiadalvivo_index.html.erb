@@ -1,4 +1,4 @@
-<div class="container-fluid lightbrown_bg container-bg" ng-style="{'background-image': 'url(' + aux.assets.italiadalvivo_bg_img.url + ')'}">
+<div class="lightbrown_bg container-bg" ng-style="{'background-image': 'url(' + aux.assets.italiadalvivo_bg_img.url + ')'}">
   <div class="container main-container home-main-stripe">
     <%= render partial: "/application/italiadalvivo_header" %>
 
@@ -12,7 +12,7 @@
       </div>
       <div class="col-sm-12 text-center events-container">
         <div class="row">
-          <div class="col-sm-4" ng-repeat="eventPreviewDate in eventPreviewDates | orderBy:orderEventPreviewDates:false">
+          <div class="col-sm-4 events-day-container" ng-repeat="eventPreviewDate in eventPreviewDates | orderBy:orderEventPreviewDates:false">
             <div class="row">
               <div class="col-sm-12 text-center event-header-container">
                 <div class="event-header">

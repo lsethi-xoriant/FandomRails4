@@ -162,6 +162,11 @@
 
   //////// HOME ////////
 
+  .ctas__flexslider__container {
+    padding-left: 0; 
+    padding-right: 0;
+  }
+
   .cta__evidence__press-widget--inaugurazione {
     padding-left: 5px;
 
@@ -293,6 +298,79 @@
     }
     .navbar__container-fluid {
       background-color: #fff;
+    }
+  }
+}
+
+@media (max-width: $screen-sm-max) { 
+  .body-inaugurazione {
+    .cta__evidence__press-widget {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media (max-width: $screen-xs-max) { 
+  .body-inaugurazione {
+    .header-info-1 {
+      margin-top: 15px;
+    }
+    .navbar__logo {
+      height: 80px;
+      margin-top: 0px;
+      margin-bottom: 17px;
+    }
+    .ctas__flexslider__container {
+      margin-left: -15px;
+      margin-right: -15px;
+      margin-bottom: 15px;
+    }
+    .ctas__info {
+      padding: 15px !important;
+    }
+    .ctas__flexslider__title {
+      font-size: 18px;
+      line-height: 22px;
+    }
+    .ctas__flexslider__subtitle {
+      font-size: 14px !important;
+    }
+    .ctas__flexslider__location {
+      font-size: 10px !important;
+      padding-top: 5px !important;
+    }
+    .cta__evidence-banner {
+      padding: 0;
+    }
+    .events-container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .stripe__title {
+      margin-top: 45px;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+    .events-day-container {
+      margin-bottom: 15px;
+    }
+    .italiadalvivo-branch-container {
+      padding-bottom: 0;
+    }
+    .cta__evidence-banner__img--inaugurazione {
+      margin-bottom: 0;
+    }
+    .italiadalvivo__banner_img {
+      margin-bottom: 0;
+    }
+    .map-container {
+      padding: 0;
+      margin-left: -15px;
+      margin-right: -15px;
+      .embed-responsive-16by9 {
+        padding-bottom: 75%;
+        margin-top: 30px;
+      }
     }
   }
 }
