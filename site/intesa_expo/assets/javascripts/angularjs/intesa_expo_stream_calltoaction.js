@@ -234,6 +234,14 @@ function IntesaExpoStreamCalltoactionCtrl($scope, $window, $http, $timeout, $int
     }
     return ical_info_list.length > 0;
   };
+
+  $scope.checkAndGenerateLinkInteractionForView = function(calltoaction_info) {
+    linkInteraction = $scope.getInteraction(calltoaction_info, 'link');
+    if (angular.isUndefined(calltoaction_info.linkInteraction) && linkInteraction) { 
+      calltoaction_info.linkInteraction = linkInteraction;
+    }
+    return (linkInteraction != null);
+  };
   
   $scope.showSearch = function(hidden){
 	if('search' != $scope.menu_field){

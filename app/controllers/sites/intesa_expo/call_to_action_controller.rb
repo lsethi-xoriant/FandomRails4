@@ -15,13 +15,14 @@ class Sites::IntesaExpo::CallToActionController < CallToActionController
 
   def show
     cta = CallToAction.active.find(params[:id])
-    if get_intesa_property() == "imprese"
+    property = get_intesa_property()
+    if property == "imprese"
       if cta_has_priority_tag(cta, "it-priority") 
         go_to_context(cta, "expo_url")
       else
         super
       end
-    elsif get_intesa_property() == "it"
+    elsif property == "it"
       if cta_has_priority_tag(cta, "imprese-priority") 
         go_to_context(cta, "imprese_url")
       else
@@ -29,6 +30,11 @@ class Sites::IntesaExpo::CallToActionController < CallToActionController
       end
     else
       super
+
+      if property == "inaugurazione"
+        @miniformat_color = @calltoaction_info_list[0]["miniformat"]["extra_fields"]["label-background"] rescue nil
+      end
+
     end
   end
 

@@ -1,8 +1,12 @@
-.lightbrown_bg {
-  background-color: $lightbrown !important;
-}
-
 .body-inaugurazione {
+  .lightbrown_bg {
+    background-color: $lightbrown !important;
+  }
+
+  .white-bg {
+    background-color: #fff !important;
+  }
+
   .container-bg {
     background-color: #fff;
     background-size: 100% auto;
@@ -13,12 +17,67 @@
     padding-bottom: 0;
   }
 
+  .cta__related__title--press-release, .cta__related__icon--press-release,
+  .cta__related__title, .cta__extra_fields__description__content, .cta__extra_fields__description,
+  .cta__related__title-content, .container-preview__icon-container__month {
+    color: $blue_italiadalvivo !important;
+  }
+
+  //////// SINGLE CTA ////////
+
+  .cta__bottom-subcontainer {
+    padding-top: 30px;
+  }
+
+  .cta__description {
+    margin-top: 0;
+  }
+
+  .cta__title-m {
+    margin-top: 30px;
+  }
+
+  .cta__extra_fields {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .cta__extra_fields__header {
+    padding: 15px;
+    background-color: $blue_italiadalvivo;
+  }
+
+  .cta__extra_fields__body {
+    padding: 15px;
+    background-color: $lightbrown;
+  }
+
+  .cta__title {
+    margin-top: 45px;
+    margin-bottom: 30px;
+    color: #fff;
+  }
+
+  .cta__extra_fields__title {
+    margin-bottom: 0;
+    color: #fff;
+  }
+
+  .cta__extra_fields__body .btn-about-v2 {
+    margin-bottom: 0 !important;
+  }
+
   //////// FONT ////////
 
   font-family: 'Open Sans', sans-serif;
   h1, h2, .ctas__flexslider__title, .cta__extra_fields__title, .cta__related__title {
     font-family: 'Open Sans', sans-serif;
     font-weight: 700;
+  }
+
+  .btn-about-v2 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
   }
 
   //////// HEADER ////////
@@ -103,6 +162,11 @@
 
   //////// HOME ////////
 
+  .ctas__flexslider__container {
+    padding-left: 0; 
+    padding-right: 0;
+  }
+
   .cta__evidence__press-widget--inaugurazione {
     padding-left: 5px;
 
@@ -130,7 +194,7 @@
 
   .cta__evidence-banner__img--inaugurazione {
     overflow: hidden;
-    height: 242px;
+    height: 248px;
     margin-bottom: 15px;
     background-size: auto 100%;
     background-position: center;
@@ -148,6 +212,11 @@
 
   .main-row__evidence {
     margin-bottom: 0;
+    padding: 0;
+  }
+
+  .main-media-row {
+    padding: 0;
   }
 
   .ctas__flexslider--italiadalvivo {
@@ -231,5 +300,152 @@
       background-color: #fff;
     }
   }
+}
+
+@media (max-width: $screen-sm-max) { 
+  .body-inaugurazione {
+    .cta__evidence__press-widget {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media (max-width: $screen-xs-max) { 
+  .body-inaugurazione {
+    .header-info-1 {
+      margin-top: 15px;
+    }
+    .navbar__logo {
+      height: 80px;
+      margin-top: 0px;
+      margin-bottom: 17px;
+    }
+    .ctas__flexslider__container {
+      margin-left: -15px;
+      margin-right: -15px;
+      margin-bottom: 15px;
+    }
+    .ctas__info {
+      padding: 15px !important;
+    }
+    .ctas__flexslider__title {
+      font-size: 18px;
+      line-height: 22px;
+    }
+    .ctas__flexslider__subtitle {
+      font-size: 14px !important;
+    }
+    .ctas__flexslider__location {
+      font-size: 10px !important;
+      padding-top: 5px !important;
+    }
+    .cta__evidence-banner {
+      padding: 0;
+    }
+    .events-container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .stripe__title {
+      margin-top: 45px;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+    .events-day-container {
+      margin-bottom: 15px;
+    }
+    .italiadalvivo-branch-container {
+      padding-bottom: 0;
+    }
+    .cta__evidence-banner__img--inaugurazione {
+      margin-bottom: 0;
+    }
+    .italiadalvivo__banner_img {
+      margin-bottom: 0;
+    }
+    .map-container {
+      padding: 0;
+      margin-left: -15px;
+      margin-right: -15px;
+      .embed-responsive-16by9 {
+        padding-bottom: 75%;
+        margin-top: 30px;
+      }
+    }
+  }
+}
+
+.body-inaugurazione {
+
+  ////////////// btn-provider //////////////
+
+  .btn-provider { 
+    background-color: $blue_italiadalvivo; 
+    border-color: $blue_italiadalvivo; 
+  } 
+   
+  .btn-provider:hover, 
+  .btn-provider:focus, 
+  .btn-provider:active, 
+  .btn-provider.active, 
+  .open .dropdown-toggle.btn-provider { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+   
+  .btn-provider.disabled, 
+  .btn-provider[disabled], 
+  fieldset[disabled] .btn-provider, 
+  .btn-provider.disabled:hover, 
+  .btn-provider[disabled]:hover, 
+  fieldset[disabled] .btn-provider:hover, 
+  .btn-provider.disabled:focus, 
+  .btn-provider[disabled]:focus, 
+  fieldset[disabled] .btn-provider:focus, 
+  .btn-provider.disabled:active, 
+  .btn-provider[disabled]:active, 
+  fieldset[disabled] .btn-provider:active, 
+  .btn-provider.disabled.active, 
+  .btn-provider[disabled].active, 
+  fieldset[disabled] .btn-provider.active { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+   
+  ////////////// btn-about-v2 //////////////
+
+  .btn-about-v2 { 
+    background-color: $blue_italiadalvivo; 
+    border-color: $blue_italiadalvivo; 
+  }
+   
+  .btn-about-v2:hover, 
+  .btn-about-v2:focus, 
+  .btn-about-v2:active, 
+  .btn-about-v2.active, 
+  .open .dropdown-toggle.btn-about-v2 { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+
+  .btn-about-v2.disabled, 
+  .btn-about-v2[disabled], 
+  fieldset[disabled] .btn-about-v2, 
+  .btn-about-v2.disabled:hover, 
+  .btn-about-v2[disabled]:hover, 
+  fieldset[disabled] .btn-about-v2:hover, 
+  .btn-about-v2.disabled:focus, 
+  .btn-about-v2[disabled]:focus, 
+  fieldset[disabled] .btn-about-v2:focus, 
+  .btn-about-v2.disabled:active, 
+  .btn-about-v2[disabled]:active, 
+  fieldset[disabled] .btn-about-v2:active, 
+  .btn-about-v2.disabled.active, 
+  .btn-about-v2[disabled].active, 
+  fieldset[disabled] .btn-about-v2.active { 
+    background-color: $lightblue_italiadalvivo; 
+    border-color: $lightblue_italiadalvivo; 
+  } 
+
 }
 

@@ -1,11 +1,11 @@
 <div class="row main-row__evidence">
 
   <!-- SLIDER -->
-  <div class="col-md-9 ctas__flexslider__container" style="padding-left: 0; padding-right: 0;" ng-if="aux.calltoaction_evidence_info">
+  <div class="col-md-9 ctas__flexslider__container" ng-if="aux.calltoaction_evidence_info">
     <div class="flexslider ctas__flexslider ctas__flexslider--italiadalvivo">
       <ul class="slides">
         <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;">
+          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('Navigation', 'Carousel', calltoaction.slug, $event)">
             <div class="row">
 
               <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
@@ -44,10 +44,10 @@
   </div>
 
   <!-- OFFICE AREA -->
-  <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione">
+  <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione hidden-xs">
     <div class="cta__evidence__press-widget__title-container">
       <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
-      <div class="col-xs-4 text-right"><a class="read" href="/browse/category/press-release-inaugurazione">Leggi</a></div>
+      <div class="col-xs-4 text-right"><a class="read" href="/inaugurazione/browse/category/press-release-inaugurazione">Leggi</a></div>
     </div>
     <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)" ng-class="{'cta__evidence__press-widget__element--border': !$last}">
       <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">

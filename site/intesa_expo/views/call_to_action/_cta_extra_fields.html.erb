@@ -13,50 +13,99 @@
 </div>
 %>
 
-<div ng-if="checkLocationExtraField(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
-  <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
+<!-- CUSTOM WHERE AND WHEN WIDGET -->
+<% if $context_root == "inaugurazione" %>
+<% else %>
+  <div ng-if="checkLocationExtraField(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+    <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
 
-  <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
-  <hr class="cta__extra_fields__hr">
-  <div class="cta__extra_fields__info">
-    <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.custom_time}}</span></p>
+    <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
+    <hr class="cta__extra_fields__hr">
+    <div class="cta__extra_fields__info">
+      <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.custom_time}}</span></p>
+      
+      <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.custom_location && !calltoaction_info.calltoaction.extra_fields.custom_location_url"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.custom_location}}</span></p>
+
+      <a href="{{calltoaction_info.calltoaction.extra_fields.custom_location_url}}" ng-if="calltoaction_info.calltoaction.extra_fields.custom_location && calltoaction_info.calltoaction.extra_fields.custom_location_url" target="_blank">
+        <p class="cta__extra_fields__description"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content" style="text-decoration: underline;">{{calltoaction_info.calltoaction.extra_fields.custom_location}}</span></p>
+      </a>
+
+    </div>
+  </div>
+<% end %>
+
+<!-- WHERE AND WHEN WIDGET -->
+<% if $context_root == "inaugurazione" %>
+  <div ng-if="checkAndGenerateIcalForView(calltoaction_info) || checkAndGenerateLinkInteractionForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+    <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
     
-    <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.custom_location && !calltoaction_info.calltoaction.extra_fields.custom_location_url"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.custom_location}}</span></p>
+    <!-- HEADER WIDGET -->
+    <div class="cta__extra_fields__header">
+      <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
+    </div>
 
-    <a href="{{calltoaction_info.calltoaction.extra_fields.custom_location_url}}" ng-if="calltoaction_info.calltoaction.extra_fields.custom_location && calltoaction_info.calltoaction.extra_fields.custom_location_url" target="_blank">
-      <p class="cta__extra_fields__description"><span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content" style="text-decoration: underline;">{{calltoaction_info.calltoaction.extra_fields.custom_location}}</span></p>
-    </a>
+    <!-- BODY WIDGET -->
+    <div class="cta__extra_fields__body">
+      <div ng-repeat="n in ical.n" class="cta__extra_fields__info" ng-if="checkAndGenerateIcalForView(calltoaction_info)">
+        
+        <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2 btn-download-ical" title="Aggiungi al calendario">
+          <i class="fa fa-calendar"></i>
+        </button>
+
+        <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
+
+        <p class="cta__extra_fields__description" ng-if="ical.dates[$index] != ical.dates_to[$index] || !(ical.times[$index] == '00:00' && ical.times_to[$index] == '23:59')"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
+
+        <p class="cta__extra_fields__description cta__extra_fields__description--location" ng-if="!ical.location_urls[$index]">
+          <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span>
+        </p>
+
+        <a href="{{ical.location_urls[$index]}}" ng-if="ical.location_urls[$index]">
+          <p class="cta__extra_fields__description cta__extra_fields__description--location">
+            <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content" style="text-decoration: underline;">{{ical.locations[$index]}}</span>
+          </p>
+        </a>
+
+        <hr class="cta__extra_fields__hr" ng-if="!$last">
+      </div>
+      <div class="text-center" ng-if="checkAndGenerateLinkInteractionForView(calltoaction_info)">
+        <a target="_blank" href="{{calltoaction_info.linkInteraction.interaction.resource.url}}" class="btn btn-about-v2">{{calltoaction_info.linkInteraction.interaction.resource.title}}</a>
+      </div>
+    </div>
 
   </div>
-</div>
+<% else %>
+  <div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+    <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
+    <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
+    <hr class="cta__extra_fields__hr">
+    <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
+      <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2 btn-download-ical" title="Aggiungi al calendario"><i class="fa fa-calendar"></i></button>
+      <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
 
-<div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
-  <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
-  <p class="cta__extra_fields__title">{{aux.assets["event_widget_when_" + aux.language]}}</p>
-  <hr class="cta__extra_fields__hr">
-  <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
-    <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2" style="position: absolute; top: -15px; right: 0;" title="Aggiungi al calendario"><i class="fa fa-calendar"></i></button>
-    <p class="cta__extra_fields__description"><span class="fa fa-calendar-o"></span> <span class="cta__extra_fields__description__content">{{ical.dates[$index]}}</span></p>
+      <p class="cta__extra_fields__description" ng-if="ical.dates[$index] != ical.dates_to[$index] || !(ical.times[$index] == '00:00' && ical.times_to[$index] == '23:59')"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
 
-    <p class="cta__extra_fields__description" ng-if="ical.dates[$index] != ical.dates_to[$index] || !(ical.times[$index] == '00:00' && ical.times_to[$index] == '23:59')"><span class="fa fa-clock-o"></span> <span class="cta__extra_fields__description__content">{{ical.times[$index]}}</span></p>
-
-    <p class="cta__extra_fields__description cta__extra_fields__description--location" ng-if="!ical.location_urls[$index]">
-      <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span>
-    </p>
-
-    <a href="{{ical.location_urls[$index]}}" ng-if="ical.location_urls[$index]">
-      <p class="cta__extra_fields__description cta__extra_fields__description--location">
-        <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content" style="text-decoration: underline;">{{ical.locations[$index]}}</span>
+      <p class="cta__extra_fields__description cta__extra_fields__description--location" ng-if="!ical.location_urls[$index]">
+        <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content">{{ical.locations[$index]}}</span>
       </p>
-    </a>
 
-    <hr class="cta__extra_fields__hr" ng-if="!$last">
+      <a href="{{ical.location_urls[$index]}}" ng-if="ical.location_urls[$index]">
+        <p class="cta__extra_fields__description cta__extra_fields__description--location">
+          <span class="fa fa-map-marker"></span> <span class="cta__extra_fields__description__content" style="text-decoration: underline;">{{ical.locations[$index]}}</span>
+        </p>
+      </a>
+
+      <hr class="cta__extra_fields__hr" ng-if="!$last">
+    </div>
   </div>
-</div>
+<% end %>
 
-<div ng-if="calltoaction_info.calltoaction.extra_fields.guests" class="cta__extra_fields <%= top_class %>">
-  <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.guests">{{aux.assets["event_widget_guests_" + aux.language]}}</p>
-  <hr class="cta__extra_fields__hr">
-  <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
-</div>
+<% if $context_root == "inaugurazione" %>
+<% else %>
+  <div ng-if="calltoaction_info.calltoaction.extra_fields.guests" class="cta__extra_fields <%= top_class %>">
+    <p class="cta__extra_fields__title" ng-if="calltoaction_info.calltoaction.extra_fields.guests">{{aux.assets["event_widget_guests_" + aux.language]}}</p>
+    <hr class="cta__extra_fields__hr">
+    <p class="cta__extra_fields__description" ng-if="calltoaction_info.calltoaction.extra_fields.guests"><span class="fa fa-user"></span> <span class="cta__extra_fields__description__content">{{calltoaction_info.calltoaction.extra_fields.guests}}</span></p>
+  </div>
+<% end %>
 

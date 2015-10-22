@@ -137,6 +137,7 @@ class FandomMiddleware
       self.class.configure_all_mailers_for_site($site)
       configure_environment_for_site($site)
       configure_omniauth_for_site($site)
+      configure_paperclip_for_site($site)
     end
   end
 
@@ -221,6 +222,39 @@ class FandomMiddleware
   def configure_omniauth_for_site(site)
     # TODO: 
   end 
+
+  def configure_paperclip_for_site(site)
+    # the first time this routine is executed, the original paperclip settings are saved; in this way
+    # they can be restored for those tenants that do not define specific paperclip settings.
+    # Warning: to save this information a global variable is used
+    if $original_paperclip_s3_settings.nil?
+      $original_paperclip_s3_settings = { 
+        :s3_host_alias => Paperclip::Attachment.default_options[:s3_host_alias], 
+        :url => Paperclip::Attachment.default_options[:url],
+        :path => Paperclip::Attachment.default_options[:path] 
+      } 
+    end
+    
+    config = Rails.configuration
+    if config.deploy_settings.key?('paperclip')
+      bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
+      if bucket_name.nil?
+        log_error("missing paperclip bucket configuration for tenant", { site: $site.id })
+      end
+      Paperclip::Attachment.default_options.merge!(:bucket => bucket_name)
+      
+      s3_host_alias = get_deploy_setting("sites/#{$site.id}/paperclip/:s3_host_alias", nil)
+      if s3_host_alias.nil?
+        s3_host_alias = $original_paperclip_s3_settings[:s3_host_alias]
+        url = $original_paperclip_s3_settings[:url]
+        path = $original_paperclip_s3_settings[:path]
+      else 
+        url = ':s3_alias_url'
+        path = '/:class/:attachment/:id_partition/:style/:filename'
+      end
+      Paperclip::Attachment.default_options.merge!(s3_host_alias: s3_host_alias, url: url, path: path)
+    end
+  end
 
   #####################################################################
   #
