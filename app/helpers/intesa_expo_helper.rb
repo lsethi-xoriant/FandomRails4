@@ -151,7 +151,7 @@ module IntesaExpoHelper
     if other && other.has_key?(:calltoaction_evidence_info)
       calltoaction_evidence_info = cache_short(get_evidence_calltoactions_cache_key($context_root)) do  
         
-        ctas_evidence_count = 4
+        ctas_evidence_count = 5
         highlight_calltoactions = get_intesa_expo_highlight_calltoactions()
         ctas = get_intesa_expo_ctas()
         
@@ -172,7 +172,7 @@ module IntesaExpoHelper
           result_ctas = result_ctas + ctas.limit(ctas_evidence_count).to_a
         end
 
-        interactions = get_cta_to_interactions_map(ctas.map { |cta| cta.id })
+        interactions = get_cta_to_interactions_map(result_ctas.map { |cta| cta.id })
 
         calltoaction_evidence_info = []
         result_ctas.each do |calltoaction|
