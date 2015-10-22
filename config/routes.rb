@@ -22,8 +22,8 @@ Fandom::Application.routes.draw do
         post "/play", :to => "instantwin#play_ticket", defaults: { format: 'json' }
         get "/", to: "application#index"
         get "/tips", to: "application#index_tips"
-        get "/call_to_action/:id", to: "application#index"
-        get "/call_to_action/:id/:descendent_id", to: "application#index"
+        get "/call_to_action/:id", to: "application#show"
+        get "/call_to_action/:id/:descendent_id", to: "application#show"
         post "/reset_redo_user_interactions", to: "application#reset_redo_user_interactions", defaults: { format: 'json' }
         post "/append_tips", to: "application#append_tips", defaults: { format: 'json' }
         get "/ranking", to: "ranking#show"

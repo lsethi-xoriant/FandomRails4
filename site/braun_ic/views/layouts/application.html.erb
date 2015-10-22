@@ -97,6 +97,18 @@
 
     <%= yield %>
 
+    <div class="container interaction-feedback-container" ng-if="ctaHasFeedback(calltoaction_info)" ng-repeat="calltoaction_info in calltoactions">
+      <div class="row">
+        <div class="col-sm-12 interaction-feedback-main-child">
+          <div class="interaction-feedback-circle text-center">
+            <span class="glyphicon glyphicon-ok"></span>
+          </div>
+          <p class="interaction-feedback-text">Complimenti!</p> 
+          <p class="interaction-feedback-description">Hai guadagnato +1 biglietto.</p>
+        </div> 
+      </div>
+    </div>
+
     <%= render partial: "/application/footer_braun" %>
     <%= render partial: "/application/cookies_bar" %>
 
