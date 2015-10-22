@@ -224,6 +224,9 @@ class FandomMiddleware
   end 
 
   def configure_paperclip_for_site(site)
+    # the first time this routine is executed, the original paperclip settings are saved; in this way
+    # they can be restored for those tenants that do not define specific paperclip settings.
+    # Warning: to save this information a global variable is used
     if $original_paperclip_s3_settings.nil?
       $original_paperclip_s3_settings = { 
         :s3_host_alias => Paperclip::Attachment.default_options[:s3_host_alias], 
@@ -231,6 +234,7 @@ class FandomMiddleware
         :path => Paperclip::Attachment.default_options[:path] 
       } 
     end
+    
     config = Rails.configuration
     if config.deploy_settings.key?('paperclip')
       bucket_name = get_deploy_setting("sites/#{$site.id}/paperclip/:bucket", nil)
