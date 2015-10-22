@@ -200,6 +200,11 @@
     background-position: center;
   }
 
+  .cta__evidence-banner__img--inaugurazione--tall {
+    height: 390px;
+    margin-bottom: 0;
+  }
+
   .cta__related__icon--press-release {
     position: absolute;
   }
@@ -227,6 +232,7 @@
     .ctas__flexslider__title {
         margin-bottom: 0;
         color: $blue_italiadalvivo;
+        width: 60%;
     }
     .ctas__flexslider__subtitle {
         font-size: 18px;
