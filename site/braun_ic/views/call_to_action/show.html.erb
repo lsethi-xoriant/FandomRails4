@@ -6,21 +6,21 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <p class="cta_tip-container__title">SCOPRI GLI ALTRI TEST</p>
+        <p class="cta_tip-container__title">Scopri gli altri test</p>
       </div>
       <div class="col-sm-6 text-center">
-        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_1_url}}">
-          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_1_img.url}}">
+        <a href="{{getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.test_1_url}}">
+          <img class="cta-test_placeholder" ng-src="{{getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.test_1_img.url}}">
         </a>
       </div>
       <div class="col-sm-6 text-center">
-        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_2_url}}">
-          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_2_img.url}}">
+        <a href="{{getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.test_2_url}}">
+          <img class="cta-test_placeholder" ng-src="{{getParentCtaInfo(calltoaction_info)calltoaction.extra_fields.test_2_img.url}}">
         </a>
       </div>
-      <div class="col-sm-12 text-center" ng-if="calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_img">
-        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_url}}">
-          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_img.url}}">
+      <div class="col-sm-12 text-center" ng-if="getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.product_banner_img">
+        <a href="{{getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.product_banner_url}}">
+          <img class="cta-test_placeholder" ng-src="{{getParentCtaInfo(calltoaction_info).calltoaction.extra_fields.product_banner_img.url}}">
         </a>
       </div>
     </div>
