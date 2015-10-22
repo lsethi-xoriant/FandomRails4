@@ -25,11 +25,12 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     sign_up_params["password_confirmation"] = sign_up_params["password"]
+    required_attrs = ["privacy"]
 
     if stored_anonymous_user?
-      self.resource = adjust_anonymous_user(sign_up_params)
+      self.resource = adjust_anonymous_user(sign_up_params.merge(required_attrs: required_attrs))
     else
-      build_resource(sign_up_params)
+      build_resource(sign_up_params.merge(required_attrs: required_attrs))
     end
 
     # Hooks provider data if the method has been invoked after an unsuccessful oauth
