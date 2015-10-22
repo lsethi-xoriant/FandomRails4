@@ -63,12 +63,21 @@
     color: #fff;
   }
 
+  .cta__extra_fields__body .btn-about-v2 {
+    margin-bottom: 0 !important;
+  }
+
   //////// FONT ////////
 
   font-family: 'Open Sans', sans-serif;
   h1, h2, .ctas__flexslider__title, .cta__extra_fields__title, .cta__related__title {
     font-family: 'Open Sans', sans-serif;
     font-weight: 700;
+  }
+
+  .btn-about-v2 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
   }
 
   //////// HEADER ////////

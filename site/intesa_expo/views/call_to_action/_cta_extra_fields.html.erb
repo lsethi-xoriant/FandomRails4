@@ -36,7 +36,7 @@
 
 <!-- WHERE AND WHEN WIDGET -->
 <% if $context_root == "inaugurazione" %>
-  <div ng-if="checkAndGenerateIcalForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
+  <div ng-if="checkAndGenerateIcalForView(calltoaction_info) || checkAndGenerateLinkInteractionForView(calltoaction_info)" class="cta__extra_fields <%= top_class %>">
     <img class="cta__flag--extra_fields" ng-src="{{calltoaction_info.flag.extra_fields['image_' + aux.language].url}}" ng-if="calltoaction_info.flag">
     
     <!-- HEADER WIDGET -->
@@ -46,7 +46,7 @@
 
     <!-- BODY WIDGET -->
     <div class="cta__extra_fields__body">
-      <div ng-repeat="n in ical.n" class="cta__extra_fields__info">
+      <div ng-repeat="n in ical.n" class="cta__extra_fields__info" ng-if="checkAndGenerateIcalForView(calltoaction_info)">
         
         <button ng-click="updateInteractionDownloadIcal(ical.interaction_ids[$index], icalTimestamp(calltoaction_info.calltoaction.slug, ical.datetimes[$index]))" class="btn btn-about-v2 btn-download-ical" title="Aggiungi al calendario">
           <i class="fa fa-calendar"></i>
@@ -67,6 +67,9 @@
         </a>
 
         <hr class="cta__extra_fields__hr" ng-if="!$last">
+      </div>
+      <div class="text-center" ng-if="checkAndGenerateLinkInteractionForView(calltoaction_info)">
+        <a target="_blank" href="{{calltoaction_info.linkInteraction.interaction.resource.url}}" class="btn btn-about-v2">{{calltoaction_info.linkInteraction.interaction.resource.title}}</a>
       </div>
     </div>
 
