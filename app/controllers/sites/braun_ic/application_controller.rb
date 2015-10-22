@@ -184,7 +184,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
       badges_for_calltoaction_info_list = @calltoaction_info_list
     end
 
-    badges = compute_badges(badges_for_calltoaction_info_list)
+    badges = compute_badges_for_user_bar(badges_for_calltoaction_info_list)
 
     @aux_other_params = { 
       calltoaction_evidence_info: true,
@@ -203,7 +203,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     params = { "page_elements" => ["quiz", "share"] }
     @calltoaction_info_list, @has_more = get_ctas_for_stream("test", params, 15)
 
-    badges = compute_badges(@calltoaction_info_list)
+    badges = compute_badges_for_user_bar(@calltoaction_info_list)
    
     product_info_list, has_more_products = get_ctas_for_stream("product", params, 15)
     if cta
@@ -277,7 +277,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
     cta
   end
 
-  def compute_badges(cta_info_list)
+  def compute_badges_for_user_bar(cta_info_list)
     cta_ids = cta_info_list.map { |cta_info| cta_info["calltoaction"]["id"] }
     ctas = CallToAction.where(id: cta_ids)
 
