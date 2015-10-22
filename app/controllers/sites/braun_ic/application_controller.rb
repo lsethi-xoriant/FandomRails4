@@ -175,6 +175,7 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
   def show_computation(cta = nil)
     @calltoaction_info_list = build_cta_info_list_and_cache_with_max_updated_at([cta], ["quiz", "share"])
+    anchor_to = cta.slug
 
     if current_user
       params = { "page_elements" => ["quiz", "share"] }
@@ -187,7 +188,8 @@ class Sites::BraunIc::ApplicationController < ApplicationController
 
     @aux_other_params = { 
       calltoaction_evidence_info: true,
-      badges: badges
+      badges: badges,
+      anchor_to: anchor_to
     }
   end
 
