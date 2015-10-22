@@ -1,4 +1,28 @@
 <%= render partial: "/application/header" %>
 <%= render partial: "/call_to_action/user_bar" %>
 <%= render partial: "/call_to_action/tests" %>
-<%= render partial: "/application/footer" %>
+
+<div class="default-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="cta_tip-container__title">SCOPRI GLI ALTRI TEST</p>
+      </div>
+      <div class="col-sm-6 text-center">
+        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_1_url}}">
+          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_1_img.url}}">
+        </a>
+      </div>
+      <div class="col-sm-6 text-center">
+        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_2_url}}">
+          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.test_2_img.url}}">
+        </a>
+      </div>
+      <div class="col-sm-12 text-center" ng-if="calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_img">
+        <a href="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_url}}">
+          <img class="cta-test_placeholder" ng-src="{{calltoaction_info.optional_history.parent_cta_info.calltoaction.extra_fields.product_banner_img.url}}">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
