@@ -63,6 +63,21 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def update
+    user_params = params[:user]
+    required_attrs = ["username"]
+    user_params = user_params.merge(required_attrs: required_attrs)
+
+    current_user.update_with_password(user_params)
+
+    if current_user.errors.blank?
+      flash[:notice] = "Il tuo account è stato aggiornato"
+      redirect_to "/users/edit"
+    else
+      render :edit
+    end
+  end
+
   def set_account_up    
     create_user_interaction_for_registration()
     SystemMailer.welcome_mail(current_user).deliver_now

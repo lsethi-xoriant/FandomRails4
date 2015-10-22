@@ -16,7 +16,15 @@ module ProfileHelper
       end
       avatar
     else
-      anon_avatar()
+      anon_avatar
+    end
+  end
+
+  def user_uploaded_avatar user
+    if !anonymous_user?(user) && user.avatar_selected_url.present?
+      avatar = user.avatar_selected_url
+    else
+      anon_avatar
     end
   end
 

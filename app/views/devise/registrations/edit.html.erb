@@ -50,7 +50,7 @@
               <div class="col-sm-4 text-center">
                 <div class="fileinput fileinput-new" data-provides="fileinput">
                   <div class="fileinput-new thumbnail" style="width: 150px; height: 115px;">
-                    <img src="<%= current_user.avatar %>">
+                    <img src="<%= user_uploaded_avatar current_user %>">
                   </div>
                   <div class="fileinput-preview fileinput-exists thumbnail" style="width: 150px; height: 115px;"></div>
                   <span class="btn btn-default btn btn-xs btn-file btn-block" style="vertical-align: top;"><span class="fileinput-new">Cambia immagine</span><span class="fileinput-exists">Modifica</span><%= f.file_field :avatar %></span>
@@ -127,6 +127,12 @@
               <label class="col-xs-3 control-label text-right">Email</label>
               <div class="col-xs-9">
                 <%= f.text_field :email, :class => "form-control", readonly: "true" %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label text-right">Username</label>
+              <div class="col-xs-9">
+                <%= f.text_field :username, :class => "form-control" %>
               </div>
             </div>
           </div>
