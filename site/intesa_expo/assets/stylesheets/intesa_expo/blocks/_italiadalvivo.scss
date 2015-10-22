@@ -151,6 +151,10 @@
 
   //////// NAVBAR ////////
 
+  .navbar__item-text {
+    font-family: 'Open Sans', sans-serif !important;
+  }
+
   .navbar-nav li.active {
     .navbar__item-text {
       color: $blue_italiadalvivo;
