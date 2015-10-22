@@ -585,7 +585,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
       .success(function(data) { 
 
         if(data.active == false) {
-          console.log("AAA");
           $scope.aux.instant_win_info.active = data.active;
           return;
         }
@@ -1925,7 +1924,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
 
   $scope.shareWith = function(cta_info, interaction_info, provider, enable_linked_share) {
     $("#cta-" + cta_info.calltoaction.id + "-share-modal").modal("hide");
-
     if(angular.isUndefined(enable_linked_share)) {
       enable_linked_share = false;
     }
@@ -2038,8 +2036,8 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           button.attr('disabled', false);
           button.html(current_button_html);
 
-          if(!data.share.result) { 
-            interaction_info.user_interaction.errors = data.share.exception;
+          if(!data.share.result) {
+            interaction_info.errors = data.share.exception;
             return;
           }
 
