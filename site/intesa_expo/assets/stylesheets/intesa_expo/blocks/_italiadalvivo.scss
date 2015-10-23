@@ -323,6 +323,14 @@
 
 @media (max-width: $screen-xs-max) { 
   .body-inaugurazione {
+    .events-stripe__title {
+      margin-top: 15px !important;
+    }
+
+    .event-miniformat-border {
+      border: none;
+    }
+
     .container-bg {
       background-image: none !important;
     }
@@ -333,7 +341,6 @@
 
     .ctas__info {
       height: 75%;
-      width: 50%;
     }
 
     .main-row {

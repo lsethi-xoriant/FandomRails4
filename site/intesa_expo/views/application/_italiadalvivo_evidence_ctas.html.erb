@@ -30,7 +30,7 @@
   </div>
 
   <!-- BANNER -->
-  <div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux['press-release_stripe'].contents.length > 1">
+  <div class="col-md-3 col-sm-6 cta__evidence-banner hidden-xs" ng-if="aux['press-release_stripe'].contents.length > 1">
     <div class="cta__evidence-banner__img--inaugurazione" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
     </div> 
     <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
@@ -40,7 +40,7 @@
   </div>
 
   <!-- BANNER LONG -->
-  <div class="col-md-3 col-sm-6 cta__evidence-banner" ng-if="aux['press-release_stripe'].contents.length < 2">
+  <div class="col-md-3 col-sm-6 cta__evidence-banner hidden-xs" ng-if="aux['press-release_stripe'].contents.length < 2">
     <div class="cta__evidence-banner__img--inaugurazione cta__evidence-banner__img--inaugurazione--tall" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language + '_tall'].url + ')'}">
     </div> 
     <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}" target="_blank">
