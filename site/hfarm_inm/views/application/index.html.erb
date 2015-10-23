@@ -1,1 +1,11 @@
-here
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3" ng-repeat="calltoaction_info_list in getGroupingGalleries(calltoactions, 4)">
+      <div class="row" ng-repeat="calltoaction_info in calltoaction_info_list" >
+        <div class="col-sm-12">
+          <%= render partial: "/call_to_action/cover_calltoaction" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

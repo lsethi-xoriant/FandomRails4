@@ -11,6 +11,14 @@ Fandom::Application.routes.draw do
 
   get '/sitemap', to: 'sitemap#index', defaults: { format: 'xml' }
 
+  constraints(SiteMatcher.new('hfarm_inm')) do
+    scope module: "sites" do
+      scope module: "hfarm_inm" do
+        get "/", to: "application#index"
+      end
+    end
+  end
+
   constraints(SiteMatcher.new('braun_ic')) do
     scope module: "sites" do
       scope module: "braun_ic" do

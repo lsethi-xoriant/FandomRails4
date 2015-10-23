@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    
+
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'">
+      <div class="media-youtube embed-responsive embed-responsive-4by3">             
+        <!-- IFRAME VIDEO -->
+        <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
+      </div>
+    </div>
+
+    <!-- MAIN MEDIA IMAGE -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
+      <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+    </div>
+
+    {{calltoaction_info.calltoaction.name}}
+
+  </div>
+</div>

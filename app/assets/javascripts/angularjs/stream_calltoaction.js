@@ -99,7 +99,6 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
     $scope.groupingGalleryArrs.push(rArr); 
   }
 
-
   $scope.iwWin = function() {
     return ($scope.aux.instant_win_info.win == true);
   };
@@ -1778,6 +1777,18 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
   
   //////////////////////// FLOWPLAYER API /////////////////////////////
 
+  $scope.pauseVideosExceptMe = function(me_id) {
+    angular.forEach($scope.calltoactions, function(calltoaction_info) {
+      if(calltoaction_info.calltoaction.media_type == "FLOWPLAYER") {
+        if(calltoaction_info.calltoaction.id != me_id) {
+          if(calltoaction_info.calltoaction.player && calltoaction_info.calltoaction.player.playerManager) {
+            calltoaction_info.calltoaction.player.playerManager.pause();
+          }
+        }
+      }
+    });
+  }
+
   function flowplayerPlayer(playerId, media_data) {
     this.playerManager = null;
     this.playerId = playerId;
@@ -1810,6 +1821,7 @@ function StreamCalltoactionCtrl($scope, $window, $http, $timeout, $interval, $do
           } else {
             // SECONDARY MEDIA
           }   
+          //$scope.pauseVideosExceptMe(calltoaction_id);
         }).bind("finish", function(e, api) {
           $scope.$apply(function() {
             updateEndVideoInteraction(fplayer.calltoaction_id);
