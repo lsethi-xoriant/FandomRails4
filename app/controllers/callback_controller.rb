@@ -108,7 +108,7 @@ class CallbackController < ApplicationController
       user_id = auth ? auth.user_id : anonymous_user.id
       return { 
         "title" => media["caption"]["text"][0..100], 
-        "upload" => open(media["images"]["standard_resolution"]["url"]),
+        "upload" => media["videos"] ? open(media["videos"]["standard_resolution"]["url"]) : open(media["images"]["standard_resolution"]["url"]),
         "user_id" => user_id, 
         "extra_fields" => { "layout" => "instagram", "instagram_avatar" => media["user"]["profile_picture"], "instagram_username" => media["user"]["username"] }
       }
