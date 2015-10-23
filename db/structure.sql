@@ -52,6 +52,13 @@ CREATE SCHEMA forte;
 
 
 --
+-- Name: hfarm_inm; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA hfarm_inm;
+
+
+--
 -- Name: intesa_expo; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -1628,7 +1635,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -3513,7 +3521,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -5398,7 +5407,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -7283,7 +7293,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -9168,7 +9179,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -11053,7 +11065,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -12938,7 +12951,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -14823,7 +14837,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 
@@ -16708,7 +16723,8 @@ CREATE TABLE user_comment_interactions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     approved boolean,
-    aux json
+    aux json,
+    like_counter integer DEFAULT 0
 );
 
 

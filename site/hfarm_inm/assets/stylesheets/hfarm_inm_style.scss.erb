@@ -1,0 +1,72 @@
+$green: #72BF44;
+$darkgreen: #479b22;
+$blue: blue;
+$grey: grey;
+$yellow: #f3d33f;
+
+$container-tablet:             100% !default;
+$container-sm:                 $container-tablet !default;
+
+$container-desktop:            1024px !default;
+$container-md:                 $container-desktop !default;
+
+$container-large-desktop:      1024px !default; //1220px
+$container-lg:                 $container-large-desktop !default;
+
+$panel-border-radius:          0px !default;
+
+// Navbar
+
+$navbar-default-color:                      #fff !default;
+$navbar-default-bg:                         #000 !default;
+$navbar-default-border:                     darken($navbar-default-bg, 10%) !default;
+
+$navbar-default-link-color:                 #fff !default;
+$navbar-default-link-hover-color:           #000 !default;
+$navbar-default-link-hover-bg:              $green !default;
+$navbar-default-link-active-color:          $navbar-default-link-hover-color !default;
+$navbar-default-link-active-bg:             $blue !default;
+$navbar-default-link-disabled-color:        #444 !default;
+$navbar-default-link-disabled-bg:           transparent !default;
+
+$navbar-default-brand-color:                $navbar-default-link-color !default;
+$navbar-default-brand-hover-color:          #42C5ED !default;
+$navbar-default-brand-hover-bg:             transparent !default;
+
+$navbar-default-toggle-hover-bg:            darken($navbar-default-bg, 10%) !default;
+$navbar-default-toggle-icon-bar-bg:         #fff !default;
+$navbar-default-toggle-border-color:        #fff !default;
+
+$navbar-border-radius:                      0 !default;
+
+// Inverted navbar
+// Reset inverted navbar basics
+$navbar-inverse-color:                      #999 !default;
+$navbar-inverse-bg:                         #fff !default;
+$navbar-inverse-border:                     darken($navbar-inverse-bg, 10%) !default;
+
+// Inverted navbar links
+$navbar-inverse-link-color:                 #999 !default;
+$navbar-inverse-link-hover-color:           #999 !default;
+$navbar-inverse-link-hover-bg:              darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-link-active-color:          $navbar-inverse-link-hover-color !default;
+$navbar-inverse-link-active-bg:             darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-link-disabled-color:        #444 !default;
+$navbar-inverse-link-disabled-bg:           transparent !default;
+
+// Inverted navbar brand label
+$navbar-inverse-brand-color:                $navbar-inverse-link-color !default;
+$navbar-inverse-brand-hover-color:          #fff !default;
+$navbar-inverse-brand-hover-bg:             transparent !default;
+
+// Inverted navbar toggle
+$navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-toggle-icon-bar-bg:         #fff !default;
+$navbar-inverse-toggle-border-color:        #999 !default;
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+//import style folders
+@import "hfarm_inm/**/*";
+@import "hfarm_inm_reset";

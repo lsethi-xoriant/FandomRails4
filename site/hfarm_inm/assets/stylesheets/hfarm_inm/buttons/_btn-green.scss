@@ -1,0 +1,63 @@
+.btn-green { 
+  color: #FFFFFF; 
+  border-color: $green; 
+  border-radius: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+
+  background: $green;
+} 
+ 
+.btn-green:hover, 
+.btn-green:focus, 
+.btn-green:active, 
+.btn-green.active, 
+.open .dropdown-toggle.btn-green { 
+  color: #FFFFFF; 
+  background: #85C75F; 
+  border-color: $green; 
+} 
+ 
+.btn-green:active, 
+.btn-green.active, 
+.open .dropdown-toggle.btn-green { 
+  background-image: none; 
+} 
+ 
+.btn-green.disabled, 
+.btn-green[disabled], 
+fieldset[disabled] .btn-green, 
+.btn-green.disabled:hover, 
+.btn-green[disabled]:hover, 
+fieldset[disabled] .btn-green:hover, 
+.btn-green.disabled:focus, 
+.btn-green[disabled]:focus, 
+fieldset[disabled] .btn-green:focus, 
+.btn-green.disabled:active, 
+.btn-green[disabled]:active, 
+fieldset[disabled] .btn-green:active, 
+.btn-green.disabled.active, 
+.btn-green[disabled].active, 
+fieldset[disabled] .btn-green.active { 
+  background: $green; 
+  border-color: $green; 
+} 
+ 
+.btn-green .badge { 
+  color: $green; 
+  background-color: #FFFFFF; 
+}
+
+.btn-green-userbar-container {
+  display: inline-block;
+  margin-top: 35px;
+  position: relative;
+}
+
+@media (max-width: $screen-md-min) {
+  .btn-green-userbar {
+    font-size: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

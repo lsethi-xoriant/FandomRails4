@@ -1,0 +1,57 @@
+/********************* BTN TWITTER *********************/
+
+.btn-twitter { 
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50px;
+  font-size: 22px;
+  padding: 0;
+  color: #ffffff; 
+  border-color: #55ACEE; 
+  background: #55ACEE;
+} 
+ 
+.btn-twitter:hover, 
+.btn-twitter:focus, 
+.btn-twitter:active, 
+.btn-twitter.active, 
+.open .dropdown-toggle.btn-twitter { 
+  color: #ffffff; 
+  background: #55ACEE; 
+  border-color: #218BDB; 
+} 
+ 
+.btn-twitter:active, 
+.btn-twitter.active, 
+.open .dropdown-toggle.btn-twitter { 
+  background-image: none; 
+} 
+ 
+.btn-twitter.disabled, 
+.btn-twitter[disabled], 
+fieldset[disabled] .btn-twitter, 
+.btn-twitter.disabled:hover, 
+.btn-twitter[disabled]:hover, 
+fieldset[disabled] .btn-twitter:hover, 
+.btn-twitter.disabled:focus, 
+.btn-twitter[disabled]:focus, 
+fieldset[disabled] .btn-twitter:focus, 
+.btn-twitter.disabled:active, 
+.btn-twitter[disabled]:active, 
+fieldset[disabled] .btn-twitter:active, 
+.btn-twitter.disabled.active, 
+.btn-twitter[disabled].active, 
+fieldset[disabled] .btn-twitter.active { 
+  background: #55ACEE; 
+  border-color: #218BDB; 
+  -webkit-box-shadow: 0px 4px 0px 0px #218BDB;
+  -moz-box-shadow: 0px 4px 0px 0px #218BDB;
+  box-shadow: 0px 4px 0px 0px #218BDB;
+} 
+ 
+.btn-twitter:active, 
+.btn-twitter.active, 
+.open .dropdown-toggle.btn-twitter { 
+  box-shadow: outer none;
+} 

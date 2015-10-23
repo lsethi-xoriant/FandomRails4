@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+
+  <% calltoaction_info_list = (@calltoaction_info_list.present? ? @calltoaction_info_list.to_json : {}) %>
+  <% calltoaction_info_list_count = (@calltoaction_info_list.present? ? @calltoaction_info_list.count : 0) %>
+
+  <% aux = init_aux(@aux_other_params, @calltoaction_info_list) %>  
+  
+  <%= render partial: "/layouts/seo_head" %>
+
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="fragment" content="!">
+  
+  <link rel="shortcut icon" href="/favicon/hfarm_inm/favicon.ico">
+
+  <!--[if lte IE 9]>
+    <script>
+      FileAPI = {
+        jsUrl: "<%= asset_path('FileAPI.js') %>",
+        flashUrl: "<%= asset_path('FileAPI.flash.swf') %>"
+      }
+    </script>
+  <![endif]-->
+
+  <%= stylesheet_link_tag "hfarm_inm_application", :media => "all" %>
+  <%= javascript_include_tag "hfarm_inm_application" %>
+
+  <!--[if lte IE 9]>
+    <link href="<%= asset_path("hfarm_inm_application.css").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" media="all" rel="stylesheet" type="text/css" />
+    <script src="<%= asset_path("hfarm_inm_application.js").sub(/.*#{Rails.configuration.deploy_settings["asset_host"]}/, "") %>" type="text/javascript"></script>  
+  <![endif]-->
+
+  <!--[if lt IE 10]>
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $('[placeholder]').focus(function() {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
+              input.val('');
+              input.removeClass('placeholder');
+            }
+          }).blur(function() {
+            var input = $(this);
+            if (input.val() == '' || input.val() == input.attr('placeholder')) {
+              input.addClass('placeholder');
+              input.val(input.attr('placeholder'));
+            }
+          }).blur();
+        });
+    </script>
+  <![endif]-->
+
+  <%= csrf_meta_tags %>
+
+</head>
+
+<body ng-app="FandomApp" class="bg-fluid <%= yield (:body_class) %>" ng-controller="HfarmInmStreamCalltoactionCtrl" ng-init="init(<%= build_current_user().to_json %>, <%= calltoaction_info_list %>, null, null, '<%= ga_code() %>', null, <%= aux.to_json %>)">
+
+  <div ng-cloak>
+
+    <%= render partial: "/application/header" %>
+
+    <%= yield %>
+
+    <%= render partial: "/application/footer" %>
+
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      is_last_rewards_flexslider_slide = new Object();
+      $('.relateds-flexslider').flexslider({
+        animation: "slide",
+        slideshow: false,
+        animationLoop: false,
+        touch: true,
+        itemWidth: 215, //258
+        itemMargin: 15,
+        controlNav: false,
+        prevText: "",
+        nextText: "",
+        start: function(slider) {
+          if(slider.pagingCount == 1) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          }
+        },
+        before: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = false;
+          $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+        },
+        after: function(slider) {
+          if(is_last_rewards_flexslider_slide[$(slider).attr("id")]) {
+            $(slider).find(".flex-viewport-shadow").addClass("hidden");
+          } else {
+            $(slider).find(".flex-viewport-shadow").removeClass("hidden");
+          }  
+        },
+        end: function(slider) {
+          is_last_rewards_flexslider_slide[$(slider).attr("id")] = true;
+        }
+      });
+      
+    });
+
+  </script>
+
+</body>
+</html>
