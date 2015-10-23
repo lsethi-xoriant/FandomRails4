@@ -175,6 +175,8 @@ module FandomUtils
     $site = Rails.configuration.id_to_site[tenant]
     Apartment::Tenant.switch!(tenant);
     FandomMiddleware.configure_all_mailers_for_site($site)
+    FandomMiddleware.configure_paperclip_for_site($site)
+    # this is only shown when the method is called from rails console    
     "The Apartment gem and the $site global variable have been set to tenant #{tenant}"
   end
 

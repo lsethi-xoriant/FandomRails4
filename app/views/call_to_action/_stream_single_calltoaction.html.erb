@@ -65,7 +65,7 @@
             </a><span class="comment-interaction__cta__info__text">{{interaction_info.interaction.resource.comment_info.comments_total_count}}<span class="hidden-xs"> commenti</span></span>
         </div>
       </div>
-      <div ng-repeat="interaction_info in commentInteractions(calltoaction_info)" class="col-xs-6 text-right">
+      <div ng-repeat="interaction_info in calltoaction_info.calltoaction.interaction_info_list | filter:filterShareInteractions" class="col-xs-6 text-right">
         <%= render partial: "/call_to_action/share_interaction" %>
       </div>
     </div>
