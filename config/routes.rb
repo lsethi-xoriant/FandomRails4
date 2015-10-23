@@ -177,6 +177,7 @@ Fandom::Application.routes.draw do
         get "/", to: "application#index"
         get "/live", to: "application#live"
         get "/about", :to => "application#about"
+        get "/nuove-filiali", :to => "application#about"
         get "/zerowaste", to: "application#appzerowaste"
         get "/calendar", :to => "calendar#index"
         get "/calendar/:day", :to => "calendar#index"
