@@ -316,7 +316,7 @@ module CallToActionHelper
   def gets_ctas_ordered_by_views(calltoaction_ids, cta_count)
     query = "SELECT call_to_actions.id " +
             "FROM call_to_actions LEFT OUTER JOIN view_counters ON call_to_actions.id = view_counters.ref_id " +
-            "WHERE (view_counters.ref_type is null OR view_counters.ref_type = 'cta') AND call_to_actions.id in (#{calltoaction_ids}) " +
+            "AND (view_counters.ref_type is null OR view_counters.ref_type = 'cta') WHERE call_to_actions.id in (#{calltoaction_ids}) " +
             "ORDER BY (coalesce(view_counters.counter, 0) / (extract('epoch' from (now() - coalesce(call_to_actions.activated_at, call_to_actions.created_at) )) / 3600 / 24)) DESC, call_to_actions.activated_at DESC limit #{cta_count};"
     execute_sql_and_get_ctas_ordered(query)
   end
