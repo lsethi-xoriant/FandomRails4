@@ -13,8 +13,6 @@ class Sites::IntesaExpo::ApplicationController < ApplicationController
     render '/application/iframe_stripe', :layout => 'stripe' 
   end
   
-  before_filter :basic_http_security_check_italiadalvivo, only: :index
-
   def basic_http_security_check_italiadalvivo 
     if $context_root == "inaugurazione" # italiadalvivo  
       authenticate_or_request_with_http_basic do |username, password|
