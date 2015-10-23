@@ -2,7 +2,7 @@ module Fandom
   class Application < Rails::Application
     register_fandom_site(
       id: 'hfarm_inm', 
-      domains: ['ilnostromomento.fandom.localdomain', 'ilnostromomento.live.fandomlab.com', 'ilnostromomento.dev.fandomlab.com', 'ilnostromomento.stage.fandomlab.com'],
+      domains: ['hfarm-inm.fandom.localdomain', 'hfarm-inm.live.fandomlab.com', 'hfarm-inm.dev.fandomlab.com', 'hfarm-inm.stage.fandomlab.com'],
       assets_precompile: ['hfarm_inm_application.css', 'hfarm_inm_application.js'],
       periodicity_kinds: [PERIOD_KIND_DAILY],
       free_provider_share: true,
