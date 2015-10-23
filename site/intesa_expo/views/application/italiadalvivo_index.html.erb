@@ -10,6 +10,8 @@
       <div class="col-sm-12 text-center">
         <h2 class="stripe__title events-stripe__title">{{aux.assets["home_event_stripe_" + aux.language]}}</h2>
       </div>
+    </div>
+    <div class="row main-row main-row_events">
       <div class="col-sm-12 text-center events-container">
         <div class="row">
           <div class="col-sm-4 events-day-container" ng-repeat="eventPreviewDate in eventPreviewDates | orderBy:orderEventPreviewDates:false">
@@ -48,7 +50,7 @@
         <h2 class="stripe__title">{{calltoaction_info.calltoaction.title}}</h2>
       </div>
     </div>
-    <div class="row main-row main-row_photo_gallery">  
+    <div class="row main-row">  
       <div class="col-sm-10 col-sm-offset-1">
         <%= render partial: "/application/photo_gallery" %>
       </div>

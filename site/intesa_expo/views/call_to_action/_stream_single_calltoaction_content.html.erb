@@ -1,5 +1,5 @@
 <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID' || calltoaction_info.calltoaction.gallery"> 
-  <div class="row main-row">
+  <div class="row main-row" ng-class="{'miniformat-title-container': aux.mobile}">
     <div class="col-sm-6 col-xs-8 cta__miniformat-col" ng-if="aux.context_root != 'inaugurazione'">
       <p ng-if="calltoaction_info.miniformat" class="cta__miniformat-text" ng-style="{'background-color': calltoaction_info.miniformat.label_background, 'color': calltoaction_info.miniformat.label_color}">
         <img ng-src="{{calltoaction_info.miniformat.icon.url}}">
@@ -36,7 +36,7 @@
   <!-- ITALIADALVIVO PROPERTY -->
   <div class="container" ng-if="calltoaction_info.calltoaction.media_type != 'VOID'"> 
     <div class="row main-row main-media-row">
-      <div ng-class="{'col-sm-8 col-sm-offset-2': aux.is_live_cta, 'col-sm-12': !aux.is_live_cta}">
+      <div class="italiadalvivo__media-container" ng-class="{'col-sm-8 col-sm-offset-2': aux.is_live_cta, 'col-sm-12': !aux.is_live_cta}">
         <%= render partial: "/call_to_action/stream_single_calltoaction_media" %>
       </div>
     </div>

@@ -8,8 +8,12 @@
           <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('Navigation', 'Carousel', calltoaction.slug, $event)">
             <div class="row">
 
-              <div class="col-xs-12 ctas__flexslider__img-container">
+              <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
                 <img ng-src="{{getUploadExtraFieldProcessor(calltoaction.extra_fields.carousel_img, 'original')}}">
+              </div>
+
+              <div class="col-xs-12 ctas__flexslider__img-container visible-xs">
+                <img ng-src="{{calltoaction.thumb_medium_url}}">
               </div>
 
               <div class="col-xs-12 ctas__info">
