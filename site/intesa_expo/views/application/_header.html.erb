@@ -68,9 +68,15 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-nav-center">
           <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-            <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
-              <p class="navbar__item-text">{{menu_item.title}}</p>
-            </a>
+            <% if $context_root != "inaugurazione" %>
+              <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
+                <p class="navbar__item-text">{{menu_item.title}}</p>
+              </a>
+            <% else %>
+              <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('ItaliadalVivo', 'tab', menu_item.title, $event)">
+                <p class="navbar__item-text">{{menu_item.title}}</p>
+              </a>
+            <% end %>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -112,9 +118,15 @@
         <span class="navbar-inverse__menu">MENU</span>
       </button>
       <div class="text-center">
-        <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">
-          <img class="navbar__logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">
-        </a>
+        <% if $context_root != "inaugurazione" %>
+          <a href="/<%= $context_root %>" ng-click="intesaExpoGa('Navigation', 'Header', 'Expo_Sito', $event)">
+            <img class="navbar__logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">
+          </a>
+        <% else %>
+          <a href="/<%= $context_root %>">
+            <img class="navbar__logo" ng-src="{{aux.assets['logo_' + aux.language].url}}">
+          </a>
+        <% end %>
       </div>
     </div>
 
@@ -131,9 +143,15 @@
           </a>
         </li>
         <li ng-class="{'active': (menu_field && menu_field == menu_item.extra_fields.menu_item)}" ng-repeat="menu_item in aux.menu_items">
-          <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
-            <p class="navbar__item-text">{{menu_item.title}}</p>
-          </a>
+          <% if $context_root != "inaugurazione" %>
+            <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('Navigation', 'Menu', menu_item.title, $event)">
+              <p class="navbar__item-text">{{menu_item.title}}</p>
+            </a>
+          <% else %>
+            <a href="{{menu_item.extra_fields.browse_url}}" ng-click="intesaExpoGa('ItaliadalVivo', 'tab', menu_item.title, $event)">
+              <p class="navbar__item-text">{{menu_item.title}}</p>
+            </a>
+          <% end %>
         </li>
         <hr style="margin-top: 5px; margin-bottom: 5px;">
         <li ng-class="{'active': ('search' == aux.page_tag.miniformat.name)}" class="navbar__language">

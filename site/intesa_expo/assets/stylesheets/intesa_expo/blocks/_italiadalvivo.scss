@@ -106,9 +106,16 @@
     padding-bottom: 30px;
   }
 
-  .header-info-1 {
+  .header-title {
     margin-top: 45px;
-    font-size: 28px;
+    margin-bottom: 0;
+    font-size: 30px;
+    color: #fff;
+  }
+
+  .header-info-1 {
+    margin-top: 0;
+    font-size: 24px;
     color: #fff;
   }
 
@@ -120,7 +127,7 @@
 
   .header-info-3 {
     font-family: cursive;
-    font-size: 16px;
+    font-size: 24px;
     color: #fff;
     margin-top: 10px;
   }
@@ -376,9 +383,13 @@
       background-color: $blue_italiadalvivo;
     }
 
+    .header-title {
+      margin-top: 25px;
+      font-size: 28px;
+    }
+
     .header-info-1 {
-      margin-top: 15px;
-      font-size: 26px;
+      font-size: 22px;
     }
 
     .header-info-2 {
@@ -386,7 +397,7 @@
     }
 
     .header-info-3 {
-      font-size: 14px;
+      font-size: 22px;
     }
 
     .navbar__logo {

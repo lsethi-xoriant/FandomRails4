@@ -5,7 +5,7 @@
     <div class="flexslider ctas__flexslider ctas__flexslider--italiadalvivo">
       <ul class="slides">
         <li ng-repeat="calltoaction in aux.calltoaction_evidence_info" class="filters__flexslider-item">
-          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('Navigation', 'Carousel', calltoaction.slug, $event)">
+          <a href="{{evidenceLinkTo(calltoaction)}}" style="text-decoration: none;" ng-click="intesaExpoGa('ItaliadalVivo', 'slideBanner', calltoaction.slug, $event)">
             <div class="row">
 
               <div class="col-xs-12 ctas__flexslider__img-container hidden-xs">
@@ -35,9 +35,7 @@
 
   <!-- BANNER -->
   <div class="col-md-3 col-sm-6 cta__evidence-banner hidden-xs" ng-if="aux['press-release_stripe'].contents.length > 1">
-    <div class="cta__evidence-banner__img--inaugurazione" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
-    </div> 
-    <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}">
+    <a href="{{aux.assets['banner_url_1_' + aux.language]}}" ng-click="intesaExpoGa('ItaliadalVivo', 'SpazioperVoi', aux.assets['banner_url_1_' + aux.language], $event)">
       <div class="cta__evidence-banner__img--inaugurazione" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language].url + ')'}">
       </div>
     </a>
@@ -45,9 +43,7 @@
 
   <!-- BANNER LONG -->
   <div class="col-md-3 col-sm-6 cta__evidence-banner hidden-xs" ng-if="aux['press-release_stripe'].contents.length < 2">
-    <div class="cta__evidence-banner__img--inaugurazione cta__evidence-banner__img--inaugurazione--tall" ng-if="aux.assets['banner_img_1_' + aux.language] && aux.assets['banner_url_1_' + aux.language] == '#'" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language + '_tall'].url + ')'}">
-    </div> 
-    <a ng-if="aux.assets['banner_url_1_' + aux.language] != '#'" href="{{aux.assets['banner_url_1_' + aux.language]}}">
+    <a href="{{aux.assets['banner_url_1_' + aux.language]}}" ng-click="intesaExpoGa('ItaliadalVivo', 'SpazioperVoi', aux.assets['banner_url_1_' + aux.language], $event)">
       <div class="cta__evidence-banner__img--inaugurazione cta__evidence-banner__img--inaugurazione--tall" ng-style="{'background-image': 'url(' + aux.assets['banner_img_1_' + aux.language + '_tall'].url + ')'}">
       </div>
     </a>
@@ -57,10 +53,10 @@
   <div class="col-md-3 col-sm-6 cta__evidence__press-widget cta__evidence__press-widget--inaugurazione hidden-xs">
     <div class="cta__evidence__press-widget__title-container" ng-if="aux['press-release_stripe'].contents.length > 1">
       <div class="col-xs-8 cta__evidence__press-widget__title">AREA STAMPA</div>
-      <div class="col-xs-4 text-right"><a class="read" href="/inaugurazione/browse/category/press-release-inaugurazione">Leggi</a></div>
+      <div class="col-xs-4 text-right"><a class="read" href="/inaugurazione/browse/category/press-release-inaugurazione" ng-click="intesaExpoGa('ItaliadalVivo', 'AreaStampaBox', '/inaugurazione/browse/category/press-release-inaugurazione', $event)">Leggi</a></div>
     </div>
     <div class="cta__evidence__press-widget__element" ng-repeat="content in aux['press-release_stripe'].contents.slice(0,2)" ng-class="{'cta__evidence__press-widget__element--border': !$last}">
-      <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a">
+      <a ng-href="{{linkToValidFrom(content)}}" class="cta__related__a" ng-click="intesaExpoGa('ItaliadalVivo', 'AreaStampaBox', linkToValidFrom(content), $event)">
         <div class="col-xs-12">
           <i class="fa fa-file-text cta__related__icon--press-release"></i>
           <div class="cta__related__title--press-release_info-container">

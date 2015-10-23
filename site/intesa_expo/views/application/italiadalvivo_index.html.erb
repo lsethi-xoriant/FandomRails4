@@ -24,7 +24,7 @@
               <div class="col-sm-12 event-container" ng-repeat="eventPreview in eventPreviewDate[2] | orderBy:orderEventPreviewDates:false">
 
                 <!-- EVENT --> 
-                <a href="{{linkTo(eventPreview[1].detail_url)}}">
+                <a href="{{linkTo(eventPreview[1].detail_url)}}" ng-click="intesaExpoGa('ItaliadalVivo', 'eventi', eventPreview[1].name, $event)">
                   <div class="panel panel-default event-panel">
                     <div class="panel-body event-panel-body text-left">
                       <p class="event-time"><span class="fa fa-clock-o"></span>{{eventPreview[0]}}</p>
