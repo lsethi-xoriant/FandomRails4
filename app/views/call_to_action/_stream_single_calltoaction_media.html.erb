@@ -65,7 +65,7 @@
   <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}" style="width: 100%;">
   
   <div class="col-sm-12 twitter-description" ng-if="calltoaction_info.calltoaction.extra_fields && calltoaction_info.calltoaction.extra_fields.layout == 'twitter'">
-    <p>{{calltoaction_info.calltoaction.description}}</p>
+    <p ng-bind-html="calltoaction_info.calltoaction.html_description"></p>
   </div>
 
   <%= render partial: "/call_to_action/over_media_interactions" %>

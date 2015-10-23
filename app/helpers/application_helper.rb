@@ -37,6 +37,8 @@ module ApplicationHelper
   include TagHelper
   include ProfileHelper
   include GalleryHelper
+  include Twitter::Autolink
+  
 
   def adjust_user_and_log_data_with_utm(user, log_data)
     aux = user.aux || {}

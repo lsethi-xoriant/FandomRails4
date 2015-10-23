@@ -458,6 +458,10 @@ module CallToActionHelper
             "status" => compute_call_to_action_completed_or_reward_status(get_main_reward_name(), calltoaction, anonymous_user),
             "reward_info" => calltoaction_reward_info
         }
+        
+        if calltoaction_info["calltoaction"]["extra_fields"].fetch("layout", nil) == "twitter"
+          calltoaction_info["calltoaction"]["html_description"] = auto_link(calltoaction_info["calltoaction"]["description"])
+        end
 
         calltoaction_info_list << calltoaction_info
 

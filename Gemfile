@@ -22,6 +22,7 @@ gem "omniauth-google-oauth2"
 gem 'omniauth-linkedin-oauth2'
 gem 'koala'
 gem 'twitter'
+gem 'twitter-text'
 gem 'hirb'
 gem 'httparty'
 gem 'htmlentities', '~> 4.3.4'
