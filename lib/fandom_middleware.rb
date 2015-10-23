@@ -137,7 +137,7 @@ class FandomMiddleware
       self.class.configure_all_mailers_for_site($site)
       configure_environment_for_site($site)
       configure_omniauth_for_site($site)
-      configure_paperclip_for_site($site)
+      self.class.configure_paperclip_for_site($site)
     end
   end
 
@@ -223,7 +223,7 @@ class FandomMiddleware
     # TODO: 
   end 
 
-  def configure_paperclip_for_site(site)
+  def self.configure_paperclip_for_site(site)
     # the first time this routine is executed, the original paperclip settings are saved; in this way
     # they can be restored for those tenants that do not define specific paperclip settings.
     # Warning: to save this information a global variable is used
