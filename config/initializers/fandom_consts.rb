@@ -47,7 +47,7 @@ unless defined? FILTER_OPERATOR_CONTAINS
   COMMENT_APPROVED_LABEL = "Commento approvato"
   USER_CTA_INTERACTIONS_LABEL = "Interazioni su cta utente"
   
-  MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "KALTURA", "FLOWPLAYER", "IFRAME", "HTML5 VIDEO"]
+  MEDIA_TYPES = ["VOID", "IMAGE", "YOUTUBE", "KALTURA", "FLOWPLAYER", "IFRAME", "HTML5VIDEO"]
   ALLOWED_UPLOAD_MEDIA_TYPES = ["FLOWPLAYER"]
   PERIOD_TYPES = ["GIORNALIERA", "SETTIMANALE", "MENSILE", "GLOBALE"]
   RANKING_TYPES = {"full" => "Top10", "my_position" => "La mia posizione", "trirank" => "Triclassifica", "full_compressed" => "Triclassifica (smart)"}

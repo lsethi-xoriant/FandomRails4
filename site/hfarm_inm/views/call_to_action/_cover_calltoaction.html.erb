@@ -1,20 +1,33 @@
-<div class="panel panel-default">
-  <div class="panel-body">
+<div class="panel panel-default content-panel">
+  <div class="panel-body content-panel-body">
     
-
     <div ng-if="calltoaction_info.calltoaction.media_type == 'FLOWPLAYER'">
-      <div class="media-youtube embed-responsive embed-responsive-4by3">             
+      <div class="embed-responsive embed-responsive-4by3">             
         <!-- IFRAME VIDEO -->
         <div id="main-media-iframe-{{calltoaction_info.calltoaction.id}}" main-media="main" calltoaction-id="{{calltoaction_info.calltoaction.id}}" class="embed-responsive-item"></div>
       </div>
     </div>
 
-    <!-- MAIN MEDIA IMAGE -->
-    <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" id="main-media-{{calltoaction_info.calltoaction.id}}" class="media-image">
-      <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'HTML5VIDEO'">
+      <div class="embed-responsive embed-responsive-4by3">             
+        <video class="embed-responsive-item" controls>
+          <source ng-src="{{calltoaction_info.calltoaction.media_data | trustAsResourceUrl}}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </div>
 
-    {{calltoaction_info.calltoaction.name}}
+    <!-- MAIN MEDIA IMAGE -->
+    <div ng-if="calltoaction_info.calltoaction.media_type == 'IMAGE'" class="media_container">
+      <img class="img-responsive" ng-src="{{calltoaction_info.calltoaction.media_image}}">
+      <div class="img_icon"><span class="icon-plusboard"></span></div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="entry-summary">{{calltoaction_info.calltoaction.title}}</p>
+      </div>
+    </div>
 
   </div>
 </div>
