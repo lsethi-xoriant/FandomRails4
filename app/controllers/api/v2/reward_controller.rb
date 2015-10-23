@@ -79,7 +79,7 @@ class Api::V2::RewardController < Api::V2::BaseController
       buy_reward(current_user, reward)
       
       response["unlocked"] = true 
-      response["message"] = "Premio sbloccato hai ancora #{get_counter_about_user_reward(reward.currency.name)} #{reward.currency.name} crediti"
+      response["message"] = "Premio sbloccato, hai ancora #{get_counter_about_user_reward(reward.currency.name)} #{reward.currency.name} crediti"
     else
       response["unlocked"] = false
       response["message"] = "#{reward.currency.name} insufficienti per sbloccare il premio"
